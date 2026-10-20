@@ -204,6 +204,37 @@
     };
   }
 
+  function getEffectiveSortPct(item, sortMetric) {
+    const metric = String(sortMetric || 'DAY').toUpperCase();
+    if (metric === 'TOTAL' && Number(item.shares || 0) > 0) {
+      return Number(item.unrealizedPnlPct ?? item.changePct ?? 0);
+    }
+    return Number(item.changePct ?? 0);
+  }
+
+  function applyClientSideSort() {
+    if (!state.profile || !Array.isArray(state.profile.portfolios)) return;
+    const sortOrder = String(state.watchSettings?.sortByPctOrder || 'ASC').toUpperCase();
+    const sortMetric = String(state.watchSettings?.sortByPctMetric || 'DAY').toUpperCase();
+    if (state.profile.watchSettings) {
+      state.profile.watchSettings.sortByPctOrder = sortOrder;
+      state.profile.watchSettings.sortByPctMetric = sortMetric;
+    }
+
+    state.profile.portfolios.forEach(port => {
+      if (!Array.isArray(port.items)) return;
+      port.items.sort((a, b) => {
+        if (sortOrder === 'NONE') {
+          return (a.origIdx ?? 0) - (b.origIdx ?? 0);
+        }
+        const valA = getEffectiveSortPct(a, sortMetric);
+        const valB = getEffectiveSortPct(b, sortMetric);
+        if (valA === valB) return (a.origIdx ?? 0) - (b.origIdx ?? 0);
+        return sortOrder === 'ASC' ? valA - valB : valB - valA;
+      });
+    });
+  }
+
   async function loadPortfolio(syncKey = state.syncKey) {
     const cleanKey = String(syncKey || 'VENU2-88').trim().toUpperCase();
     state.syncKey = cleanKey;
@@ -216,6 +247,7 @@
     state.watchSettings = { ...state.profile.watchSettings };
     state.license = state.profile.license;
     state.autoSwipeRemainingSec = state.watchSettings.autoSwipeSec;
+    applyClientSideSort();
 
     if (state.activePortfolioIndex >= (state.profile.portfolios?.length || 0)) {
       state.activePortfolioIndex = 0;
@@ -463,9 +495,40 @@
       const metric = String(btn.getAttribute('data-sort-metric') || 'DAY').toUpperCase();
       const isActive = metric === activeSortMetric;
       btn.className = isActive
-        ? 'sort-metric-btn px-2.5 py-1 rounded-lg bg-cyan/20 text-cyan ring-1 ring-cyan/35 font-semibold spring-transition'
-        : 'sort-metric-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-alabaster spring-transition';
+        ? 'sort-metric-btn px-2.5 py-1 rounded-lg bg-cyan/20 text-cyan ring-1 ring-cyan/35 font-semibold spring-transition cursor-pointer'
+        : 'sort-metric-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-alabaster spring-transition cursor-pointer';
     });
+
+    const sortModeBadge = el('sortLiveModeBadge');
+    const sortTopBottomText = el('sortLiveTopBottomText');
+    if (sortModeBadge || sortTopBottomText) {
+      const mShort = activeSortMetric === 'TOTAL' ? 'Total %' : 'Day %';
+      if (sortModeBadge) {
+        if (activeSortOrder === 'ASC') {
+          sortModeBadge.textContent = `▲ ติดลบ → กำไร (${mShort})`;
+          sortModeBadge.className = 'text-crimson font-semibold';
+        } else if (activeSortOrder === 'DESC') {
+          sortModeBadge.textContent = `▼ กำไร → ติดลบ (${mShort})`;
+          sortModeBadge.className = 'text-emerald font-semibold';
+        } else {
+          sortModeBadge.textContent = '• ลำดับปกติ (Manual)';
+          sortModeBadge.className = 'text-cyan font-semibold';
+        }
+      }
+      if (sortTopBottomText) {
+        const activePort = getActivePortfolio();
+        const items = activePort?.items || [];
+        if (items.length > 0) {
+          const first = items[0];
+          const last = items[items.length - 1];
+          const firstPct = formatSignedPct(getEffectiveSortPct(first, activeSortMetric));
+          const lastPct = formatSignedPct(getEffectiveSortPct(last, activeSortMetric));
+          sortTopBottomText.textContent = `บนสุด: ${first.symbol} (${firstPct}) → ล่างสุด: ${last.symbol} (${lastPct})`;
+        } else {
+          sortTopBottomText.textContent = 'ยังไม่มีรายการหุ้นในพอร์ต';
+        }
+      }
+    }
 
     const devIdInput = el('watchDeviceIdInput');
     if (devIdInput && document.activeElement !== devIdInput) {
@@ -1227,41 +1290,67 @@
 
     function getSortOrderLabel(order, metric) {
       const mLabel = metric === 'TOTAL' ? '% กำไรรวม' : '% Change วันนี้';
-      if (order === 'ASC') return `เรียง ${mLabel}: ติดลบ → กำไร (บนลงล่าง)`;
-      if (order === 'DESC') return `เรียง ${mLabel}: กำไร → ติดลบ (บนลงล่าง)`;
+      if (order === 'ASC') return `เรียง ${mLabel}: ▲ ติดลบ → กำไร (บนลงล่าง)`;
+      if (order === 'DESC') return `เรียง ${mLabel}: ▼ กำไร → ติดลบ (บนลงล่าง)`;
       return 'เรียงตามลำดับปกติที่เพิ่มเข้าพอร์ต (Manual)';
     }
 
-    document.querySelectorAll('.sort-order-btn').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const order = String(btn.getAttribute('data-sort-order') || 'ASC').toUpperCase();
-        state.watchSettings.sortByPctOrder = ['ASC', 'DESC', 'NONE'].includes(order) ? order : 'ASC';
-        state.activeSymbolIndex = 0;
-        state.watchScrollOffset = 0;
-        await savePortfolioState(getSortOrderLabel(state.watchSettings.sortByPctOrder, state.watchSettings.sortByPctMetric));
-      });
-    });
-
-    document.querySelectorAll('.sort-metric-btn').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const metric = String(btn.getAttribute('data-sort-metric') || 'DAY').toUpperCase();
-        state.watchSettings.sortByPctMetric = metric === 'TOTAL' ? 'TOTAL' : 'DAY';
+    async function applyAndSyncSortSettings(newOrder, newMetric) {
+      if (newOrder !== undefined) {
+        const cleanOrder = String(newOrder || 'ASC').toUpperCase();
+        state.watchSettings.sortByPctOrder = ['ASC', 'DESC', 'NONE'].includes(cleanOrder) ? cleanOrder : 'ASC';
+      }
+      if (newMetric !== undefined) {
+        const cleanMetric = String(newMetric || 'DAY').toUpperCase();
+        state.watchSettings.sortByPctMetric = cleanMetric === 'TOTAL' ? 'TOTAL' : 'DAY';
         if (state.watchSettings.sortByPctOrder === 'NONE') {
           state.watchSettings.sortByPctOrder = 'ASC';
         }
         state.watchPnlMode = state.watchSettings.sortByPctMetric === 'TOTAL' ? 'total' : 'day';
-        state.activeSymbolIndex = 0;
-        state.watchScrollOffset = 0;
-        await savePortfolioState(getSortOrderLabel(state.watchSettings.sortByPctOrder, state.watchSettings.sortByPctMetric));
+      }
+
+      state.activeSymbolIndex = 0;
+      state.watchScrollOffset = 0;
+      applyClientSideSort();
+      resetAutoSwipeCountdown();
+      renderAll();
+
+      const watchListEl = el('watchHoldingsList');
+      if (watchListEl) {
+        watchListEl.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      const label = getSortOrderLabel(state.watchSettings.sortByPctOrder, state.watchSettings.sortByPctMetric);
+      showToast(label);
+
+      try {
+        await savePortfolioState(null);
+      } catch (err) {
+        console.error('Failed to sync sort setting:', err);
+      }
+    }
+
+    document.querySelectorAll('.sort-order-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        const order = String(btn.getAttribute('data-sort-order') || 'ASC').toUpperCase();
+        applyAndSyncSortSettings(order, undefined);
       });
     });
 
-    const toggleSortDirection = async () => {
+    document.querySelectorAll('.sort-metric-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        const metric = String(btn.getAttribute('data-sort-metric') || 'DAY').toUpperCase();
+        applyAndSyncSortSettings(undefined, metric);
+      });
+    });
+
+    const toggleSortDirection = e => {
+      if (e) e.preventDefault();
       const cur = String(state.watchSettings.sortByPctOrder || 'ASC').toUpperCase();
-      state.watchSettings.sortByPctOrder = cur === 'ASC' ? 'DESC' : 'ASC';
-      state.activeSymbolIndex = 0;
-      state.watchScrollOffset = 0;
-      await savePortfolioState(getSortOrderLabel(state.watchSettings.sortByPctOrder, state.watchSettings.sortByPctMetric));
+      const nextOrder = cur === 'ASC' ? 'DESC' : 'ASC';
+      applyAndSyncSortSettings(nextOrder, undefined);
     };
 
     el('flipSortDirectionBtn')?.addEventListener('click', toggleSortDirection);

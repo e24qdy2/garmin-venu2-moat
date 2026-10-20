@@ -495,8 +495,14 @@ async function buildEnrichedPayload(profile, queryOpts = {}) {
     const sortedHoldings = [...enrichedHoldings];
     if (sortOrder === "ASC" || sortOrder === "DESC") {
       sortedHoldings.sort((a, b) => {
-        const valA = sortMetric === "TOTAL" ? Number(a.totalPnlPct || 0) : Number(a.changePct || 0);
-        const valB = sortMetric === "TOTAL" ? Number(b.totalPnlPct || 0) : Number(b.changePct || 0);
+        const valA =
+          sortMetric === "TOTAL" && Number(a.shares || 0) > 0
+            ? Number(a.totalPnlPct || 0)
+            : Number(a.changePct || 0);
+        const valB =
+          sortMetric === "TOTAL" && Number(b.shares || 0) > 0
+            ? Number(b.totalPnlPct || 0)
+            : Number(b.changePct || 0);
         if (valA === valB) return (a.origIdx ?? 0) - (b.origIdx ?? 0);
         return sortOrder === "ASC" ? valA - valB : valB - valA;
       });
@@ -1305,11 +1311,19 @@ async function handleRequest(req, res) {
       return res.end("Not Found");
     }
     const ext = path.extname(filePath).toLowerCase();
-    const isNoCache = safePath === "/admin.html" || safePath === "/admin.js";
+    const isDynamicAsset = [".html", ".js", ".css", ".json"].includes(ext);
     res.writeHead(200, {
       ...SECURITY_HEADERS,
       "Content-Type": MIME_TYPES[ext] || "application/octet-stream",
-      ...(isNoCache ? { "Cache-Control": "no-store, no-cache, must-revalidate, private" } : {})
+      ...(isDynamicAsset
+        ? {
+            "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+            Pragma: "no-cache",
+            Expires: "0",
+            "CDN-Cache-Control": "no-store",
+            "Cloudflare-CDN-Cache-Control": "no-store"
+          }
+        : {})
     });
     res.end(content);
   });

@@ -32,7 +32,7 @@
       }
     };
   </script>
-  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/styles.css?v=20261021-sortfix" />
 </head>
 <body class="bg-void text-alabaster font-sans antialiased selection:bg-emerald/30 selection:text-alabaster min-h-[100dvh] overflow-x-hidden">
 
@@ -811,18 +811,24 @@
                   <button
                     type="button"
                     data-sort-metric="DAY"
-                    class="sort-metric-btn px-2.5 py-1 rounded-lg bg-cyan/20 text-cyan font-semibold spring-transition"
+                    class="sort-metric-btn px-2.5 py-1 rounded-lg bg-cyan/20 text-cyan font-semibold spring-transition cursor-pointer"
                   >
                     % Change วันนี้ (Day %)
                   </button>
                   <button
                     type="button"
                     data-sort-metric="TOTAL"
-                    class="sort-metric-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-alabaster spring-transition"
+                    class="sort-metric-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-alabaster spring-transition cursor-pointer"
                   >
                     % กำไรรวม (Total P&amp;L %)
                   </button>
                 </div>
+              </div>
+
+              <!-- Live Sort Order Status & Top/Bottom Preview -->
+              <div id="sortLivePreviewBox" class="rounded-xl bg-white/[0.03] ring-1 ring-white/[0.06] px-3 py-2 text-[11px] font-mono text-slate-300 flex flex-wrap items-center justify-between gap-2">
+                <span id="sortLiveModeBadge" class="text-crimson font-semibold">▲ ติดลบ → กำไร (Day %)</span>
+                <span id="sortLiveTopBottomText" class="text-slate-400">กำลังจัดเรียงรายการ...</span>
               </div>
             </div>
 
@@ -1260,6 +1266,6 @@
     </div>
   </div>
 
-  <script src="/app.js"></script>
+  <script src="/app.js?v=20261021-sortfix"></script>
 </body>
 </html>
