@@ -1,0 +1,78 @@
+[ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailDelegate.mc"; @line = 1; @symbol_importdef<0> = [Toybox,1,7,13]; @symbol_importdef<1> = [Lang,1,14,18]; ]
+import Toybox.Lang;
+[ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailDelegate.mc"; @line = 2; @symbol_importdef<0> = [Toybox,2,7,13]; @symbol_importdef<1> = [WatchUi,2,14,21]; ]
+import Toybox.WatchUi;
+[ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailDelegate.mc"; @line = 4; @symbol_classdef = [SymbolDetailDelegate,4,6,26]; @symbol_extends<0> = [WatchUi,4,35,42]; @symbol_extends<1> = [BehaviorDelegate,4,43,59]; ]
+class SymbolDetailDelegate extends WatchUi.BehaviorDelegate {
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailDelegate.mc"; @line = 4; ]
+    <init> {
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailDelegate.mc"; @line = 4; ]
+    static
+    <init> {
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailDelegate.mc"; @line = 5; @position = 16; @symbol_vardef = [_view,5,16,21]; @symbol_type<0> = [SymbolDetailView,5,25,41]; ]
+    private
+    var _view as SymbolDetailView;
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailDelegate.mc"; @line = 7; @symbol_functiondef = [initialize,7,13,23]; @symbol_param<0> = [view,7,24,28]; @symbol_param<0>_type<0> = [SymbolDetailView,7,32,48]; ]
+    function initialize(view as SymbolDetailView) as Void {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailDelegate_mc_7_50_10_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailDelegate.mc" 8 8 ]
+        symbol [ BehaviorDelegate %tmp.2 8 8 24 ];
+        %tmp.2 = getv ? :BehaviorDelegate;
+        symbol [ initialize %tmp.3 8 25 35 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailDelegate.mc" 9 8 ]
+        %tmp.4 = lgetv %view;
+        symbol [ view %tmp.4 9 16 20 ];
+        symbol [ _view ? 9 8 13 ];
+        putv self :_view %tmp.4;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailDelegate_mc_7_50_10_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailDelegate.mc"; @line = 13; @symbol_functiondef = [onSelect,13,13,21]; @symbol_return<0> = [Boolean,13,27,34]; ]
+    function onSelect() as Boolean {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailDelegate_mc_13_35_17_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailDelegate.mc" 14 8 ]
+        symbol [ _view %tmp.1 14 8 13 ];
+        %tmp.1 = getv self :_view;
+        symbol [ _view %tmp.3 14 31 36 ];
+        %tmp.3 = getv ? :_view;
+        symbol [ showBollinger %tmp.4 14 37 50 ];
+        %tmp.4 = getv %tmp.3 :showBollinger;
+        %tmp.5 = not %tmp.4;
+        symbol [ showBollinger ? 14 14 27 ];
+        putv %tmp.1 :showBollinger %tmp.5;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailDelegate.mc" 15 8 ]
+        symbol [ WatchUi %tmp.6 15 8 15 ];
+        %tmp.6 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.7 15 16 29 ];
+        %tmp.7 = getv function %tmp.6 :requestUpdate;
+        invoke %tmp.6 %tmp.7();
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailDelegate.mc" 16 8 ]
+        %tmp.8 = true;
+        ret %tmp.8;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailDelegate_mc_13_35_17_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailDelegate.mc"; @line = 20; @symbol_functiondef = [onBack,20,13,19]; @symbol_return<0> = [Boolean,20,25,32]; ]
+    function onBack() as Boolean {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailDelegate_mc_20_33_23_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailDelegate.mc" 21 8 ]
+        symbol [ WatchUi %tmp.1 21 8 15 ];
+        %tmp.1 = getm $.Toybox.WatchUi;
+        symbol [ popView %tmp.2 21 16 23 ];
+        %tmp.2 = getv function %tmp.1 :popView;
+        symbol [ WatchUi %tmp.3 21 24 31 ];
+        %tmp.3 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_RIGHT %tmp.4 21 32 43 ];
+        %tmp.4 = getv %tmp.3 :SLIDE_RIGHT;
+        invoke %tmp.1 %tmp.2(%tmp.4);
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailDelegate.mc" 22 8 ]
+        %tmp.5 = true;
+        ret %tmp.5;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailDelegate_mc_20_33_23_4_stop:
+    }
+}
+[ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailDelegate.mc"; @line = 1; ]
+<init> {
+}

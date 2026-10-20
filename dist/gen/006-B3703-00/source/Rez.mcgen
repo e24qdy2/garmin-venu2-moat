@@ -1,0 +1,22 @@
+import Toybox.Lang;
+using Toybox.WatchUi;
+using Toybox.WatchUi as Ui;
+using Toybox.Graphics;
+using Toybox.Graphics as Gfx;
+
+module Rez {
+    module Drawables {
+        (:initialized) var LauncherIcon as ResourceId;
+    } // Drawables
+
+    module Strings {
+        (:initialized) var AutoSwipeEnabledTitle as ResourceId;
+        (:initialized) var ShowBollingerTitle as ResourceId;
+        (:initialized) var AutoSwipeSecTitle as ResourceId;
+        (:initialized) var ApiUrlTitle as ResourceId;
+        (:initialized) var ActivationKeyTitle as ResourceId;
+        (:initialized) var SyncKeyTitle as ResourceId;
+        (:initialized) var AlwaysOnDisplayTitle as ResourceId;
+        (:initialized) var AppName as ResourceId;
+    } // Strings
+} // Rez

@@ -1,0 +1,10 @@
+<properties>
+  <property id="syncKey" type="string">VENU2-88</property>
+  <property id="apiUrl" type="string">https://moat.readybyte.top</property>
+  <property id="showBollinger" type="boolean">true</property>
+  <property id="autoSwipeEnabled" type="boolean">true</property>
+  <property id="autoSwipeSec" type="number">5</property>
+  <property id="alwaysOnDisplay" type="boolean">false</property>
+  <property id="activationKey" type="string">
+  </property>
+</properties>

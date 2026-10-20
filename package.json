@@ -1,0 +1,16 @@
+{
+  "name": "venu2-moat-portfolio",
+  "version": "2.0.0",
+  "description": "Easymoat-style Portfolio & WebMemo Companion for Garmin Venu 2 with Auto-Swipe, Always-On Display, 14-Day Trial & Per-Device Licensing Admin Portal",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node tests/sdlc.test.js",
+    "build:watch": "powershell -NoProfile -ExecutionPolicy Bypass -File ./build-and-sideload.ps1",
+    "git:sync": "powershell -NoProfile -ExecutionPolicy Bypass -File ./sync-github.ps1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

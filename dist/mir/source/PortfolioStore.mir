@@ -1,0 +1,1897 @@
+[ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 1; @symbol_importdef<0> = [Toybox,1,7,13]; @symbol_importdef<1> = [Application,1,14,25]; ]
+import Toybox.Application;
+[ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 2; @symbol_importdef<0> = [Toybox,2,7,13]; @symbol_importdef<1> = [Attention,2,14,23]; ]
+import Toybox.Attention;
+[ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 3; @symbol_importdef<0> = [Toybox,3,7,13]; @symbol_importdef<1> = [Communications,3,14,28]; ]
+import Toybox.Communications;
+[ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 4; @symbol_importdef<0> = [Toybox,4,7,13]; @symbol_importdef<1> = [Lang,4,14,18]; ]
+import Toybox.Lang;
+[ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 5; @symbol_importdef<0> = [Toybox,5,7,13]; @symbol_importdef<1> = [System,5,14,20]; ]
+import Toybox.System;
+[ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 6; @symbol_importdef<0> = [Toybox,6,7,13]; @symbol_importdef<1> = [Timer,6,14,19]; ]
+import Toybox.Timer;
+[ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 7; @symbol_importdef<0> = [Toybox,7,7,13]; @symbol_importdef<1> = [WatchUi,7,14,21]; ]
+import Toybox.WatchUi;
+[ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 9; @symbol_classdef = [PortfolioStore,9,6,20]; ]
+class PortfolioStore {
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 9; ]
+    <init> {
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 9; ]
+    static
+    <init> {
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 10; @position = 15; @symbol_vardef = [payload,10,15,22]; @symbol_type<0> = [Dictionary,10,26,36]; ]
+    public
+    var payload as Dictionary or Null;
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 11; @position = 15; @symbol_vardef = [activePortfolioIdx,11,15,33]; @symbol_type<0> = [Number,11,37,43]; ]
+    public
+    var activePortfolioIdx as Number = 0;
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 12; @position = 15; @symbol_vardef = [scrollRowOffset,12,15,30]; @symbol_type<0> = [Number,12,34,40]; ]
+    public
+    var scrollRowOffset as Number = 0;
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 13; @position = 15; @symbol_vardef = [showTotalReturn,13,15,30]; @symbol_type<0> = [Boolean,13,34,41]; ]
+    public
+    var showTotalReturn as Boolean = false;
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 14; @position = 15; @symbol_vardef = [isSyncing,14,15,24]; @symbol_type<0> = [Boolean,14,28,35]; ]
+    public
+    var isSyncing as Boolean = false;
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 15; @position = 15; @symbol_vardef = [lastStatus,15,15,25]; @symbol_type<0> = [String,15,29,35]; ]
+    public
+    var lastStatus as String = "READY";
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 18; @position = 15; @symbol_vardef = [autoSwipeEnabled,18,15,31]; @symbol_type<0> = [Boolean,18,35,42]; ]
+    public
+    var autoSwipeEnabled as Boolean = true;
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 19; @position = 15; @symbol_vardef = [autoSwipeSec,19,15,27]; @symbol_type<0> = [Number,19,31,37]; ]
+    public
+    var autoSwipeSec as Number = 5;
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 20; @position = 15; @symbol_vardef = [alwaysOnDisplay,20,15,30]; @symbol_type<0> = [Boolean,20,34,41]; ]
+    public
+    var alwaysOnDisplay as Boolean = false;
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 21; @position = 15; @symbol_vardef = [inDetailView,21,15,27]; @symbol_type<0> = [Boolean,21,31,38]; ]
+    public
+    var inDetailView as Boolean = false;
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 24; @position = 15; @symbol_vardef = [deviceId,24,15,23]; @symbol_type<0> = [String,24,27,33]; ]
+    public
+    var deviceId as String = "V2-88VENU20";
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 25; @position = 15; @symbol_vardef = [activationKey,25,15,28]; @symbol_type<0> = [String,25,32,38]; ]
+    public
+    var activationKey as String = "";
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 26; @position = 15; @symbol_vardef = [licenseStatus,26,15,28]; @symbol_type<0> = [String,26,32,38]; ]
+    public
+    var licenseStatus as String = "TRIAL";
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 27; @position = 15; @symbol_vardef = [trialDaysLeft,27,15,28]; @symbol_type<0> = [Number,27,32,38]; ]
+    public
+    var trialDaysLeft as Number = 14;
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 28; @position = 15; @symbol_vardef = [trialExpired,28,15,27]; @symbol_type<0> = [Boolean,28,31,38]; ]
+    public
+    var trialExpired as Boolean = false;
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 29; @position = 15; @symbol_vardef = [ownerEmail,29,15,25]; @symbol_type<0> = [String,29,29,35]; ]
+    public
+    var ownerEmail as String = "saharabu@scg.com";
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 31; @position = 16; @symbol_vardef = [_runtimeTimer,31,16,29]; @symbol_type<0> = [Timer,31,33,38]; @symbol_type<1> = [Timer,31,39,44]; ]
+    private
+    var _runtimeTimer as Timer.Timer or Null;
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 32; @position = 16; @symbol_vardef = [_swipeElapsedSec,32,16,32]; @symbol_type<0> = [Number,32,36,42]; ]
+    private
+    var _swipeElapsedSec as Number = 0;
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 33; @position = 16; @symbol_vardef = [_backlightTick,33,16,30]; @symbol_type<0> = [Number,33,34,40]; ]
+    private
+    var _backlightTick as Number = 0;
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 35; @symbol_functiondef = [initialize,35,13,23]; ]
+    function initialize() as Void {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_35_26_38_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 36 8 ]
+        %tmp.1 = self;
+        symbol [ initHardwareDeviceId %tmp.2 36 8 28 ];
+        %tmp.2 = getv function %tmp.1 :initHardwareDeviceId;
+        invoke %tmp.1 %tmp.2();
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 37 8 ]
+        %tmp.3 = self;
+        symbol [ loadLocalProperties %tmp.4 37 8 27 ];
+        %tmp.4 = getv function %tmp.3 :loadLocalProperties;
+        invoke %tmp.3 %tmp.4();
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_35_26_38_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 40; @symbol_functiondef = [initHardwareDeviceId,40,13,33]; ]
+    function initHardwareDeviceId() as Void {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_40_44_51_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 41 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_40_44_51_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_40_44_51_4_stop" ]
+        %devSettings.1 = local;
+        symbol [ devSettings %devSettings.1 41 12 23 ];
+        symbol [ System %tmp.1 41 26 32 ];
+        %tmp.1 = getm $.Toybox.System;
+        symbol [ getDeviceSettings %tmp.2 41 33 50 ];
+        %tmp.2 = getv function %tmp.1 :getDeviceSettings;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %devSettings.1 %tmp.3;
+        symbol [ devSettings %devSettings.1 41 12 23 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 42 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_42_8_50_8_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_42_12_42_52_begin:
+        %tmp.4 = lgetv %devSettings.1;
+        symbol [ devSettings %tmp.4 42 12 23 ];
+        %tmp.5 = null;
+        %tmp.6 = ne %tmp.4 %tmp.5;
+        bf %tmp.6 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_42_8_50_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_42_35_42_52_true:
+        %tmp.7 = lgetv %devSettings.1;
+        symbol [ devSettings %tmp.7 42 35 46 ];
+        %tmp.8 = as %tmp.7 { (!Null) };
+        %tmp.10 = const :uniqueIdentifier;
+        symbol [ uniqueIdentifier %tmp.10 42 52 68 const ];
+        %tmp.11 = canhazplz %tmp.8 %tmp.10;
+        push %tmp.11;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_42_35_42_52_end:
+        %tmp.12 = phi [%tmp.6 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_42_12_42_52_begin] [%tmp.11 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_42_35_42_52_true] [%tmp.12 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_42_35_42_52_end];
+        bf %tmp.12 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_42_8_50_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_42_8_50_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_42_70_50_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 43 12 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_42_70_50_8_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_42_70_50_8_stop" ]
+        %uid.2 = local;
+        symbol [ uid %uid.2 43 16 19 ];
+        %tmp.13 = lgetv %devSettings.1;
+        symbol [ devSettings %tmp.13 43 22 33 ];
+        %tmp.14 = as %tmp.13 { (interface { var uniqueIdentifier; }) && (!Null) };
+        symbol [ uniqueIdentifier %tmp.15 43 34 50 ];
+        %tmp.15 = getv %tmp.14 :uniqueIdentifier;
+        lputv %uid.2 %tmp.15;
+        symbol [ uid %uid.2 43 16 19 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 44 12 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_44_12_49_12_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_44_16_44_47_begin:
+        %tmp.16 = lgetv %uid.2;
+        symbol [ uid %tmp.16 44 16 19 ];
+        %tmp.17 = null;
+        %tmp.18 = ne %tmp.16 %tmp.17;
+        bf %tmp.18 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_44_12_49_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_44_31_44_47_true:
+        %tmp.19 = lgetv %uid.2;
+        symbol [ uid %tmp.19 44 31 34 ];
+        %tmp.20 = as %tmp.19 { (!Null) };
+        symbol [ length %tmp.21 44 35 41 ];
+        %tmp.21 = getv function %tmp.20 :length;
+        %tmp.22 = invoke %tmp.20 %tmp.21();
+        %tmp.23 = 6;
+        %tmp.24 = gte %tmp.22 %tmp.23;
+        push %tmp.24;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_44_31_44_47_end:
+        %tmp.25 = phi [%tmp.18 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_44_16_44_47_begin] [%tmp.24 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_44_31_44_47_true] [%tmp.25 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_44_31_44_47_end];
+        bf %tmp.25 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_44_12_49_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_44_12_49_12_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_44_50_49_12_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 45 16 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_44_50_49_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_44_50_49_12_stop" ]
+        %tail.3 = local;
+        symbol [ tail %tail.3 45 20 24 ];
+        %tmp.26 = lgetv %uid.2;
+        symbol [ uid %tmp.26 45 27 30 ];
+        %tmp.27 = as %tmp.26 { (!Null) };
+        symbol [ substring %tmp.28 45 31 40 ];
+        %tmp.28 = getv function %tmp.27 :substring;
+        %tmp.29 = lgetv %uid.2;
+        symbol [ uid %tmp.29 45 41 44 ];
+        %tmp.30 = as %tmp.29 { (!Null) };
+        symbol [ length %tmp.31 45 45 51 ];
+        %tmp.31 = getv function %tmp.30 :length;
+        %tmp.32 = invoke %tmp.30 %tmp.31();
+        %tmp.33 = 8;
+        %tmp.34 = sub %tmp.32 %tmp.33;
+        %tmp.35 = lgetv %uid.2;
+        symbol [ uid %tmp.35 45 59 62 ];
+        %tmp.36 = as %tmp.35 { (!Null) };
+        symbol [ length %tmp.37 45 63 69 ];
+        %tmp.37 = getv function %tmp.36 :length;
+        %tmp.38 = invoke %tmp.36 %tmp.37();
+        %tmp.39 = invoke %tmp.27 %tmp.28(%tmp.34, %tmp.38);
+        lputv %tail.3 %tmp.39;
+        symbol [ tail %tail.3 45 20 24 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 46 16 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_46_16_48_16_if_stmt:
+        %tmp.40 = lgetv %tail.3;
+        symbol [ tail %tmp.40 46 20 24 ];
+        %tmp.41 = null;
+        %tmp.42 = ne %tmp.40 %tmp.41;
+        bf %tmp.42 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_46_16_48_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_46_16_48_16_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_46_34_48_16_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 47 20 ]
+        %tmp.43 = "V2-";
+        %tmp.44 = lgetv %tail.3;
+        symbol [ tail %tmp.44 47 39 43 ];
+        %tmp.45 = as %tmp.44 { (!Null) };
+        symbol [ toUpper %tmp.46 47 44 51 ];
+        %tmp.46 = getv function %tmp.45 :toUpper;
+        %tmp.47 = invoke %tmp.45 %tmp.46();
+        %tmp.48 = add %tmp.43 %tmp.47;
+        symbol [ deviceId ? 47 20 28 ];
+        putv self :deviceId %tmp.48;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_46_34_48_16_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_46_16_48_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_46_16_48_16_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_44_50_49_12_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_44_12_49_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_44_12_49_12_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_42_70_50_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_42_8_50_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_42_8_50_8_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_40_44_51_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 53; @symbol_functiondef = [loadLocalProperties,53,13,32]; ]
+    function loadLocalProperties() as Void {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_53_43_70_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 54 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_53_43_70_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_53_43_70_4_stop" ]
+        %propAsw.1 = local;
+        symbol [ propAsw %propAsw.1 54 12 19 ];
+        symbol [ Application %tmp.1 54 22 33 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Properties %tmp.2 54 34 44 ];
+        %tmp.2 = getv %tmp.1 :Properties;
+        symbol [ getValue %tmp.3 54 45 53 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.4 = "autoSwipeEnabled";
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        %tmp.6 = as %tmp.5 Boolean or Null;
+        symbol [ Boolean %tmp.6 54 77 84 ];
+        lputv %propAsw.1 %tmp.6;
+        symbol [ propAsw %propAsw.1 54 12 19 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 55 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_55_8_57_8_if_stmt:
+        %tmp.7 = lgetv %propAsw.1;
+        symbol [ propAsw %tmp.7 55 12 19 ];
+        %tmp.8 = null;
+        %tmp.9 = ne %tmp.7 %tmp.8;
+        bf %tmp.9 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_55_8_57_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_55_8_57_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_55_29_57_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 56 12 ]
+        %tmp.10 = lgetv %propAsw.1;
+        symbol [ propAsw %tmp.10 56 31 38 ];
+        %tmp.11 = as %tmp.10 { (!Null) };
+        symbol [ autoSwipeEnabled ? 56 12 28 ];
+        putv self :autoSwipeEnabled %tmp.11;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_55_29_57_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_55_8_57_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_55_8_57_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 58 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_53_43_70_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_53_43_70_4_stop" ]
+        %propSec.2 = local;
+        symbol [ propSec %propSec.2 58 12 19 ];
+        symbol [ Application %tmp.12 58 22 33 ];
+        %tmp.12 = getm $.Toybox.Application;
+        symbol [ Properties %tmp.13 58 34 44 ];
+        %tmp.13 = getv %tmp.12 :Properties;
+        symbol [ getValue %tmp.14 58 45 53 ];
+        %tmp.14 = getv function %tmp.13 :getValue;
+        %tmp.15 = "autoSwipeSec";
+        %tmp.16 = invoke %tmp.13 %tmp.14(%tmp.15);
+        %tmp.17 = as %tmp.16 Number or Null;
+        symbol [ Number %tmp.17 58 73 79 ];
+        lputv %propSec.2 %tmp.17;
+        symbol [ propSec %propSec.2 58 12 19 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 59 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_59_8_61_8_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_59_12_59_58_begin:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_59_12_59_42_begin:
+        %tmp.18 = lgetv %propSec.2;
+        symbol [ propSec %tmp.18 59 12 19 ];
+        %tmp.19 = null;
+        %tmp.20 = ne %tmp.18 %tmp.19;
+        bf %tmp.20 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_59_8_61_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_59_31_59_42_true:
+        %tmp.21 = lgetv %propSec.2;
+        symbol [ propSec %tmp.21 59 31 38 ];
+        %tmp.22 = as %tmp.21 { (!Null) };
+        %tmp.23 = 2;
+        %tmp.24 = gte %tmp.22 %tmp.23;
+        push %tmp.24;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_59_31_59_42_end:
+        %tmp.25 = phi [%tmp.20 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_59_12_59_42_begin] [%tmp.24 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_59_31_59_42_true] [%tmp.25 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_59_31_59_42_end];
+        bf %tmp.25 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_59_8_61_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_59_47_59_58_true:
+        %tmp.26 = lgetv %propSec.2;
+        symbol [ propSec %tmp.26 59 47 54 ];
+        %tmp.27 = as %tmp.26 { (!Null) };
+        %tmp.28 = 120;
+        %tmp.29 = lte %tmp.27 %tmp.28;
+        push %tmp.29;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_59_47_59_58_end:
+        %tmp.30 = phi [%tmp.25 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_59_12_59_58_begin] [%tmp.29 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_59_47_59_58_true] [%tmp.30 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_59_47_59_58_end];
+        bf %tmp.30 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_59_8_61_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_59_8_61_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_59_63_61_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 60 12 ]
+        %tmp.31 = lgetv %propSec.2;
+        symbol [ propSec %tmp.31 60 27 34 ];
+        %tmp.32 = as %tmp.31 { (!Null) };
+        symbol [ autoSwipeSec ? 60 12 24 ];
+        putv self :autoSwipeSec %tmp.32;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_59_63_61_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_59_8_61_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_59_8_61_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 62 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_53_43_70_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_53_43_70_4_stop" ]
+        %propAon.3 = local;
+        symbol [ propAon %propAon.3 62 12 19 ];
+        symbol [ Application %tmp.33 62 22 33 ];
+        %tmp.33 = getm $.Toybox.Application;
+        symbol [ Properties %tmp.34 62 34 44 ];
+        %tmp.34 = getv %tmp.33 :Properties;
+        symbol [ getValue %tmp.35 62 45 53 ];
+        %tmp.35 = getv function %tmp.34 :getValue;
+        %tmp.36 = "alwaysOnDisplay";
+        %tmp.37 = invoke %tmp.34 %tmp.35(%tmp.36);
+        %tmp.38 = as %tmp.37 Boolean or Null;
+        symbol [ Boolean %tmp.38 62 76 83 ];
+        lputv %propAon.3 %tmp.38;
+        symbol [ propAon %propAon.3 62 12 19 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 63 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_63_8_65_8_if_stmt:
+        %tmp.39 = lgetv %propAon.3;
+        symbol [ propAon %tmp.39 63 12 19 ];
+        %tmp.40 = null;
+        %tmp.41 = ne %tmp.39 %tmp.40;
+        bf %tmp.41 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_63_8_65_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_63_8_65_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_63_29_65_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 64 12 ]
+        %tmp.42 = lgetv %propAon.3;
+        symbol [ propAon %tmp.42 64 30 37 ];
+        %tmp.43 = as %tmp.42 { (!Null) };
+        symbol [ alwaysOnDisplay ? 64 12 27 ];
+        putv self :alwaysOnDisplay %tmp.43;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_63_29_65_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_63_8_65_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_63_8_65_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 66 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_53_43_70_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_53_43_70_4_stop" ]
+        %propKey.4 = local;
+        symbol [ propKey %propKey.4 66 12 19 ];
+        symbol [ Application %tmp.44 66 22 33 ];
+        %tmp.44 = getm $.Toybox.Application;
+        symbol [ Properties %tmp.45 66 34 44 ];
+        %tmp.45 = getv %tmp.44 :Properties;
+        symbol [ getValue %tmp.46 66 45 53 ];
+        %tmp.46 = getv function %tmp.45 :getValue;
+        %tmp.47 = "activationKey";
+        %tmp.48 = invoke %tmp.45 %tmp.46(%tmp.47);
+        %tmp.49 = as %tmp.48 String or Null;
+        symbol [ String %tmp.49 66 74 80 ];
+        lputv %propKey.4 %tmp.49;
+        symbol [ propKey %propKey.4 66 12 19 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 67 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_67_8_69_8_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_67_12_67_50_begin:
+        %tmp.50 = lgetv %propKey.4;
+        symbol [ propKey %tmp.50 67 12 19 ];
+        %tmp.51 = null;
+        %tmp.52 = ne %tmp.50 %tmp.51;
+        bf %tmp.52 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_67_8_69_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_67_31_67_50_true:
+        %tmp.53 = lgetv %propKey.4;
+        symbol [ propKey %tmp.53 67 31 38 ];
+        %tmp.54 = as %tmp.53 { (!Null) };
+        symbol [ length %tmp.55 67 39 45 ];
+        %tmp.55 = getv function %tmp.54 :length;
+        %tmp.56 = invoke %tmp.54 %tmp.55();
+        %tmp.57 = 0;
+        %tmp.58 = gt %tmp.56 %tmp.57;
+        push %tmp.58;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_67_31_67_50_end:
+        %tmp.59 = phi [%tmp.52 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_67_12_67_50_begin] [%tmp.58 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_67_31_67_50_true] [%tmp.59 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_67_31_67_50_end];
+        bf %tmp.59 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_67_8_69_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_67_8_69_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_67_53_69_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 68 12 ]
+        %tmp.60 = lgetv %propKey.4;
+        symbol [ propKey %tmp.60 68 28 35 ];
+        %tmp.61 = as %tmp.60 { (!Null) };
+        symbol [ activationKey ? 68 12 25 ];
+        putv self :activationKey %tmp.61;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_67_53_69_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_67_8_69_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_67_8_69_8_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_53_43_70_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 72; @symbol_functiondef = [startRuntimeTimer,72,13,30]; ]
+    function startRuntimeTimer() as Void {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_72_41_78_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 73 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_73_8_76_8_if_stmt:
+        symbol [ _runtimeTimer %tmp.2 73 12 25 ];
+        %tmp.2 = getv ? :_runtimeTimer;
+        %tmp.3 = null;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_73_8_76_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_73_8_76_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_73_35_76_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 74 12 ]
+        symbol [ Timer %tmp.7 74 32 37 ];
+        %tmp.7 = getm $.Toybox.Timer;
+        symbol [ Timer %tmp.8 74 38 43 ];
+        %tmp.8 = getv function ? %tmp.7 :Timer;
+        %tmp.5 = newc %tmp.8 ();
+        symbol [ _runtimeTimer ? 74 12 25 ];
+        putv self :_runtimeTimer %tmp.5;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 75 12 ]
+        symbol [ _runtimeTimer %tmp.10 75 12 25 ];
+        %tmp.10 = getv ? :_runtimeTimer;
+        symbol [ start %tmp.11 75 26 31 ];
+        %tmp.11 = getv function %tmp.10 :start;
+        %tmp.12 = self;
+        symbol [ method %tmp.13 75 32 38 ];
+        %tmp.13 = getv function %tmp.12 :method;
+        %tmp.15 = const :onRuntimeTick;
+        symbol [ onRuntimeTick %tmp.15 75 40 53 const ];
+        %tmp.16 = invoke %tmp.12 %tmp.13(%tmp.15);
+        %tmp.17 = 1000;
+        %tmp.18 = true;
+        invoke %tmp.10 %tmp.11(%tmp.16, %tmp.17, %tmp.18);
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_73_35_76_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_73_8_76_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_73_8_76_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 77 8 ]
+        %tmp.19 = self;
+        symbol [ applyBacklightIfEnabled %tmp.20 77 8 31 ];
+        %tmp.20 = getv function %tmp.19 :applyBacklightIfEnabled;
+        invoke %tmp.19 %tmp.20();
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_72_41_78_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 80; @symbol_functiondef = [stopRuntimeTimer,80,13,29]; ]
+    function stopRuntimeTimer() as Void {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_80_40_85_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 81 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_81_8_84_8_if_stmt:
+        symbol [ _runtimeTimer %tmp.2 81 12 25 ];
+        %tmp.2 = getv ? :_runtimeTimer;
+        %tmp.3 = null;
+        %tmp.4 = ne %tmp.2 %tmp.3;
+        bf %tmp.4 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_81_8_84_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_81_8_84_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_81_35_84_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 82 12 ]
+        symbol [ _runtimeTimer %tmp.6 82 12 25 ];
+        %tmp.6 = getv ? :_runtimeTimer;
+        %tmp.7 = as %tmp.6 { (!Null) };
+        symbol [ stop %tmp.8 82 26 30 ];
+        %tmp.8 = getv function %tmp.7 :stop;
+        invoke %tmp.7 %tmp.8();
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 83 12 ]
+        %tmp.9 = null;
+        symbol [ _runtimeTimer ? 83 12 25 ];
+        putv self :_runtimeTimer %tmp.9;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_81_35_84_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_81_8_84_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_81_8_84_8_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_80_40_85_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 87; @symbol_functiondef = [resetSwipeTimer,87,13,28]; ]
+    function resetSwipeTimer() as Void {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_87_39_89_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 88 8 ]
+        %tmp.1 = 0;
+        symbol [ _swipeElapsedSec ? 88 8 24 ];
+        putv self :_swipeElapsedSec %tmp.1;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_87_39_89_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 91; @symbol_functiondef = [applyBacklightIfEnabled,91,13,36]; ]
+    function applyBacklightIfEnabled() as Void {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_91_47_99_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 92 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_92_8_98_8_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_92_12_92_56_begin:
+        symbol [ alwaysOnDisplay %tmp.2 92 12 27 ];
+        %tmp.2 = getv ? :alwaysOnDisplay;
+        bf %tmp.2 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_92_8_98_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_92_31_92_56_true:
+        symbol [ Attention %tmp.3 92 32 41 ];
+        %tmp.3 = getm $.Toybox.Attention;
+        %tmp.5 = const :backlight;
+        symbol [ backlight %tmp.5 92 47 56 const ];
+        %tmp.6 = canhazplz %tmp.3 %tmp.5;
+        push %tmp.6;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_92_31_92_56_end:
+        %tmp.7 = phi [%tmp.2 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_92_12_92_56_begin] [%tmp.6 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_92_31_92_56_true] [%tmp.7 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_92_31_92_56_end];
+        bf %tmp.7 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_92_8_98_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_92_8_98_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_92_59_98_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 93 12 ]
+        try @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_93_12_97_12_beginTry @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_93_12_97_12_endTry @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_93_12_97_12_catch @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_93_12_97_12_finally;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_93_12_97_12_beginTry:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_93_16_95_12_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 94 16 ]
+        symbol [ Attention %tmp.8 94 16 25 ];
+        %tmp.8 = getm $.Toybox.Attention;
+        symbol [ backlight %tmp.9 94 26 35 ];
+        %tmp.9 = getv function %tmp.8 :backlight;
+        %tmp.10 = true;
+        invoke %tmp.8 %tmp.9(%tmp.10);
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_93_16_95_12_stop:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_93_12_97_12_endTry:
+        jsr @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_93_12_97_12_finally;
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_93_12_97_12_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_93_12_97_12_catch:
+        %tmp.11 = exception;
+        push %tmp.11;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 95 14 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_93_12_97_12_catch" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_95_14_97_12_end" ]
+        %ex.1 = local;
+        symbol [ ex %ex.1 95 21 23 ];
+        %tmp.12 = dup %tmp.11;
+        lputv %ex.1 %tmp.12;
+        symbol [ ex %ex.1 95 21 23 ];
+        jsr @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_93_12_97_12_finally;
+        pop;
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_93_12_97_12_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_95_14_97_12_end:
+        try @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_93_12_97_12_catch @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_95_14_97_12_end @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_95_14_97_12_end @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_93_12_97_12_finally;
+        jsr @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_93_12_97_12_finally;
+        throw %tmp.11;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_93_12_97_12_finally:
+        jsrret;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_93_12_97_12_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_92_59_98_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_92_8_98_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_92_8_98_8_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_91_47_99_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 101; @symbol_functiondef = [onRuntimeTick,101,13,26]; ]
+    function onRuntimeTick() as Void {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_101_37_119_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 103 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_103_8_109_8_if_stmt:
+        symbol [ alwaysOnDisplay %tmp.2 103 12 27 ];
+        %tmp.2 = getv ? :alwaysOnDisplay;
+        bf %tmp.2 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_103_8_109_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_103_8_109_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_103_29_109_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 104 12 ]
+        symbol [ _backlightTick %tmp.3 104 12 26 ];
+        %tmp.3 = getv self :_backlightTick;
+        %tmp.4 = 1;
+        %tmp.5 = add %tmp.3 %tmp.4;
+        symbol [ _backlightTick ? 104 12 26 ];
+        putv self :_backlightTick dup %tmp.5;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 105 12 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_105_12_108_12_if_stmt:
+        symbol [ _backlightTick %tmp.7 105 16 30 ];
+        %tmp.7 = getv ? :_backlightTick;
+        %tmp.8 = 4;
+        %tmp.9 = gte %tmp.7 %tmp.8;
+        bf %tmp.9 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_105_12_108_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_105_12_108_12_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_105_37_108_12_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 106 16 ]
+        %tmp.10 = 0;
+        symbol [ _backlightTick ? 106 16 30 ];
+        putv self :_backlightTick %tmp.10;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 107 16 ]
+        %tmp.11 = self;
+        symbol [ applyBacklightIfEnabled %tmp.12 107 16 39 ];
+        %tmp.12 = getv function %tmp.11 :applyBacklightIfEnabled;
+        invoke %tmp.11 %tmp.12();
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_105_37_108_12_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_105_12_108_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_105_12_108_12_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_103_29_109_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_103_8_109_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_103_8_109_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 112 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_112_8_118_8_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_112_12_112_50_begin:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_112_12_112_33_begin:
+        symbol [ autoSwipeEnabled %tmp.14 112 12 28 ];
+        %tmp.14 = getv ? :autoSwipeEnabled;
+        bf %tmp.14 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_112_8_118_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_112_32_112_33_true:
+        symbol [ trialExpired %tmp.16 112 33 45 ];
+        %tmp.16 = getv ? :trialExpired;
+        %tmp.17 = not %tmp.16;
+        push %tmp.17;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_112_32_112_33_end:
+        %tmp.18 = phi [%tmp.14 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_112_12_112_33_begin] [%tmp.17 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_112_32_112_33_true] [%tmp.18 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_112_32_112_33_end];
+        bf %tmp.18 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_112_8_118_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_112_49_112_50_true:
+        symbol [ inDetailView %tmp.20 112 50 62 ];
+        %tmp.20 = getv ? :inDetailView;
+        %tmp.21 = not %tmp.20;
+        push %tmp.21;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_112_49_112_50_end:
+        %tmp.22 = phi [%tmp.18 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_112_12_112_50_begin] [%tmp.21 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_112_49_112_50_true] [%tmp.22 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_112_49_112_50_end];
+        bf %tmp.22 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_112_8_118_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_112_8_118_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_112_64_118_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 113 12 ]
+        symbol [ _swipeElapsedSec %tmp.23 113 12 28 ];
+        %tmp.23 = getv self :_swipeElapsedSec;
+        %tmp.24 = 1;
+        %tmp.25 = add %tmp.23 %tmp.24;
+        symbol [ _swipeElapsedSec ? 113 12 28 ];
+        putv self :_swipeElapsedSec dup %tmp.25;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 114 12 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_114_12_117_12_if_stmt:
+        symbol [ _swipeElapsedSec %tmp.27 114 16 32 ];
+        %tmp.27 = getv ? :_swipeElapsedSec;
+        symbol [ autoSwipeSec %tmp.29 114 36 48 ];
+        %tmp.29 = getv ? :autoSwipeSec;
+        %tmp.30 = gte %tmp.27 %tmp.29;
+        bf %tmp.30 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_114_12_117_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_114_12_117_12_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_114_50_117_12_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 115 16 ]
+        %tmp.31 = 0;
+        symbol [ _swipeElapsedSec ? 115 16 32 ];
+        putv self :_swipeElapsedSec %tmp.31;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 116 16 ]
+        %tmp.32 = self;
+        symbol [ stepAutoSwipe %tmp.33 116 16 29 ];
+        %tmp.33 = getv function %tmp.32 :stepAutoSwipe;
+        invoke %tmp.32 %tmp.33();
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_114_50_117_12_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_114_12_117_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_114_12_117_12_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_112_64_118_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_112_8_118_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_112_8_118_8_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_101_37_119_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 122; @symbol_functiondef = [stepAutoSwipe,122,13,26]; ]
+    function stepAutoSwipe() as Void {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_122_37_141_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 123 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_122_37_141_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_122_37_141_4_stop" ]
+        %list.1 = local;
+        symbol [ list %list.1 123 12 16 ];
+        %tmp.1 = self;
+        symbol [ getPortfolios %tmp.2 123 19 32 ];
+        %tmp.2 = getv function %tmp.1 :getPortfolios;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %list.1 %tmp.3;
+        symbol [ list %list.1 123 12 16 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 124 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_124_8_126_8_if_stmt:
+        %tmp.4 = lgetv %list.1;
+        symbol [ list %tmp.4 124 12 16 ];
+        symbol [ size %tmp.5 124 17 21 ];
+        %tmp.5 = getv function %tmp.4 :size;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = 0;
+        %tmp.8 = eq %tmp.6 %tmp.7;
+        bf %tmp.8 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_124_8_126_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_124_8_126_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_124_30_126_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 125 12 ]
+        ret ?;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_124_30_126_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_124_8_126_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_124_8_126_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 127 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_122_37_141_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_122_37_141_4_stop" ]
+        %port.2 = local;
+        symbol [ port %port.2 127 12 16 ];
+        %tmp.9 = self;
+        symbol [ getActivePortfolio %tmp.10 127 19 37 ];
+        %tmp.10 = getv function %tmp.9 :getActivePortfolio;
+        %tmp.11 = invoke %tmp.9 %tmp.10();
+        lputv %port.2 %tmp.11;
+        symbol [ port %port.2 127 12 16 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 128 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_128_8_130_8_if_stmt:
+        %tmp.12 = lgetv %port.2;
+        symbol [ port %tmp.12 128 12 16 ];
+        %tmp.13 = null;
+        %tmp.14 = eq %tmp.12 %tmp.13;
+        bf %tmp.14 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_128_8_130_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_128_8_130_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_128_26_130_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 129 12 ]
+        ret ?;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_128_26_130_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_128_8_130_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_128_8_130_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 131 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_122_37_141_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_122_37_141_4_stop" ]
+        %items.3 = local;
+        symbol [ items %items.3 131 12 17 ];
+        %tmp.15 = lgetv %port.2;
+        symbol [ port %tmp.15 131 20 24 ];
+        symbol [ get %tmp.16 131 25 28 ];
+        %tmp.16 = getv function %tmp.15 :get;
+        %tmp.17 = "s";
+        %tmp.18 = invoke %tmp.15 %tmp.16(%tmp.17);
+        %tmp.19 = as %tmp.18 Array or Null;
+        symbol [ Array %tmp.19 131 37 42 ];
+        lputv %items.3 %tmp.19;
+        symbol [ items %items.3 131 12 17 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 132 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_122_37_141_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_122_37_141_4_stop" ]
+        %itemCount.4 = local;
+        symbol [ itemCount %itemCount.4 132 12 21 ];
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_132_24_132_57_begin:
+        %tmp.20 = lgetv %items.3;
+        symbol [ items %tmp.20 132 25 30 ];
+        %tmp.21 = null;
+        %tmp.22 = ne %tmp.20 %tmp.21;
+        bf %tmp.22 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_132_24_132_57_else_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_132_24_132_57_true:
+        %tmp.23 = lgetv %items.3;
+        symbol [ items %tmp.23 132 42 47 ];
+        %tmp.24 = as %tmp.23 { (!Null) };
+        symbol [ size %tmp.25 132 48 52 ];
+        %tmp.25 = getv function %tmp.24 :size;
+        %tmp.26 = invoke %tmp.24 %tmp.25();
+        push %tmp.26;
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_132_24_132_57_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_132_24_132_57_else_false:
+        %tmp.27 = 0;
+        push %tmp.27;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_132_24_132_57_end:
+        %tmp.28 = phi [%tmp.22 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_132_24_132_57_begin] [%tmp.26 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_132_24_132_57_true] [%tmp.27 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_132_24_132_57_else_false] [%tmp.28 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_132_24_132_57_end];
+        lputv %itemCount.4 %tmp.28;
+        symbol [ itemCount %itemCount.4 132 12 21 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 134 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_134_8_139_8_if_stmt:
+        symbol [ scrollRowOffset %tmp.30 134 12 27 ];
+        %tmp.30 = getv ? :scrollRowOffset;
+        %tmp.31 = 4;
+        %tmp.32 = add %tmp.30 %tmp.31;
+        %tmp.33 = lgetv %itemCount.4;
+        symbol [ itemCount %tmp.33 134 34 43 ];
+        %tmp.34 = lt %tmp.32 %tmp.33;
+        bf %tmp.34 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_134_8_139_8_if_else_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_134_8_139_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_134_45_136_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 135 12 ]
+        symbol [ scrollRowOffset %tmp.35 135 12 27 ];
+        %tmp.35 = getv self :scrollRowOffset;
+        %tmp.36 = 4;
+        %tmp.37 = add %tmp.35 %tmp.36;
+        symbol [ scrollRowOffset ? 135 12 27 ];
+        putv self :scrollRowOffset dup %tmp.37;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_134_45_136_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_134_8_139_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_134_8_139_8_if_else_false:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_136_15_139_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 137 12 ]
+        %tmp.38 = 0;
+        symbol [ scrollRowOffset ? 137 12 27 ];
+        putv self :scrollRowOffset %tmp.38;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 138 12 ]
+        symbol [ activePortfolioIdx %tmp.40 138 34 52 ];
+        %tmp.40 = getv ? :activePortfolioIdx;
+        %tmp.41 = 1;
+        %tmp.42 = add %tmp.40 %tmp.41;
+        %tmp.43 = lgetv %list.1;
+        symbol [ list %tmp.43 138 60 64 ];
+        symbol [ size %tmp.44 138 65 69 ];
+        %tmp.44 = getv function %tmp.43 :size;
+        %tmp.45 = invoke %tmp.43 %tmp.44();
+        %tmp.46 = mod %tmp.42 %tmp.45;
+        symbol [ activePortfolioIdx ? 138 12 30 ];
+        putv self :activePortfolioIdx %tmp.46;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_136_15_139_8_stop:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_134_8_139_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 140 8 ]
+        symbol [ WatchUi %tmp.47 140 8 15 ];
+        %tmp.47 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.48 140 16 29 ];
+        %tmp.48 = getv function %tmp.47 :requestUpdate;
+        invoke %tmp.47 %tmp.48();
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_122_37_141_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 143; @symbol_functiondef = [applyRemoteConfigAndLicense,143,13,40]; @symbol_param<0> = [data,143,41,45]; @symbol_param<0>_type<0> = [Dictionary,143,49,59]; ]
+    function applyRemoteConfigAndLicense(data as Dictionary) as Void {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_143_69_200_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 144 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_144_8_165_8_if_stmt:
+        %tmp.1 = lgetv %data;
+        symbol [ data %tmp.1 144 12 16 ];
+        symbol [ hasKey %tmp.2 144 17 23 ];
+        %tmp.2 = getv function %tmp.1 :hasKey;
+        %tmp.3 = "cfg";
+        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
+        bf %tmp.4 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_144_8_165_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_144_8_165_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_144_32_165_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 145 12 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_144_32_165_8_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_144_32_165_8_stop" ]
+        %cfg.1 = local;
+        symbol [ cfg %cfg.1 145 16 19 ];
+        %tmp.5 = lgetv %data;
+        symbol [ data %tmp.5 145 22 26 ];
+        symbol [ get %tmp.6 145 27 30 ];
+        %tmp.6 = getv function %tmp.5 :get;
+        %tmp.7 = "cfg";
+        %tmp.8 = invoke %tmp.5 %tmp.6(%tmp.7);
+        %tmp.9 = as %tmp.8 Dictionary or Null;
+        symbol [ Dictionary %tmp.9 145 41 51 ];
+        lputv %cfg.1 %tmp.9;
+        symbol [ cfg %cfg.1 145 16 19 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 146 12 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_146_12_164_12_if_stmt:
+        %tmp.10 = lgetv %cfg.1;
+        symbol [ cfg %tmp.10 146 16 19 ];
+        %tmp.11 = null;
+        %tmp.12 = ne %tmp.10 %tmp.11;
+        bf %tmp.12 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_146_12_164_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_146_12_164_12_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_146_29_164_12_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 147 16 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_147_16_150_16_if_stmt:
+        %tmp.13 = lgetv %cfg.1;
+        symbol [ cfg %tmp.13 147 20 23 ];
+        %tmp.14 = as %tmp.13 { (!Null) };
+        symbol [ hasKey %tmp.15 147 24 30 ];
+        %tmp.15 = getv function %tmp.14 :hasKey;
+        %tmp.16 = "asw";
+        %tmp.17 = invoke %tmp.14 %tmp.15(%tmp.16);
+        bf %tmp.17 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_147_16_150_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_147_16_150_16_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_147_39_150_16_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 148 20 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_147_39_150_16_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_147_39_150_16_stop" ]
+        %aswVal.2 = local;
+        symbol [ aswVal %aswVal.2 148 24 30 ];
+        %tmp.18 = lgetv %cfg.1;
+        symbol [ cfg %tmp.18 148 33 36 ];
+        %tmp.19 = as %tmp.18 { (!Null) };
+        symbol [ get %tmp.20 148 37 40 ];
+        %tmp.20 = getv function %tmp.19 :get;
+        %tmp.21 = "asw";
+        %tmp.22 = invoke %tmp.19 %tmp.20(%tmp.21);
+        %tmp.23 = as %tmp.22 Number or Null;
+        symbol [ Number %tmp.23 148 51 57 ];
+        lputv %aswVal.2 %tmp.23;
+        symbol [ aswVal %aswVal.2 148 24 30 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 149 20 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_149_40_149_68_begin:
+        %tmp.24 = lgetv %aswVal.2;
+        symbol [ aswVal %tmp.24 149 40 46 ];
+        %tmp.25 = null;
+        %tmp.26 = ne %tmp.24 %tmp.25;
+        %tmp.27 = dup %tmp.26;
+        bf %tmp.27 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_149_58_149_68_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_149_58_149_68_true:
+        %tmp.28 = lgetv %aswVal.2;
+        symbol [ aswVal %tmp.28 149 58 64 ];
+        %tmp.29 = as %tmp.28 { (!Null) };
+        %tmp.30 = 1;
+        %tmp.31 = eq %tmp.29 %tmp.30;
+        %tmp.32 = and %tmp.26 %tmp.31;
+        push %tmp.32;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_149_58_149_68_end:
+        %tmp.33 = phi [%tmp.27 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_149_40_149_68_begin] [%tmp.32 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_149_58_149_68_true] [%tmp.33 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_149_58_149_68_end];
+        symbol [ autoSwipeEnabled ? 149 20 36 ];
+        putv self :autoSwipeEnabled %tmp.33;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_147_39_150_16_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_147_16_150_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_147_16_150_16_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 151 16 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_151_16_156_16_if_stmt:
+        %tmp.34 = lgetv %cfg.1;
+        symbol [ cfg %tmp.34 151 20 23 ];
+        %tmp.35 = as %tmp.34 { (!Null) };
+        symbol [ hasKey %tmp.36 151 24 30 ];
+        %tmp.36 = getv function %tmp.35 :hasKey;
+        %tmp.37 = "asec";
+        %tmp.38 = invoke %tmp.35 %tmp.36(%tmp.37);
+        bf %tmp.38 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_151_16_156_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_151_16_156_16_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_151_40_156_16_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 152 20 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_151_40_156_16_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_151_40_156_16_stop" ]
+        %asecVal.3 = local;
+        symbol [ asecVal %asecVal.3 152 24 31 ];
+        %tmp.39 = lgetv %cfg.1;
+        symbol [ cfg %tmp.39 152 34 37 ];
+        %tmp.40 = as %tmp.39 { (!Null) };
+        symbol [ get %tmp.41 152 38 41 ];
+        %tmp.41 = getv function %tmp.40 :get;
+        %tmp.42 = "asec";
+        %tmp.43 = invoke %tmp.40 %tmp.41(%tmp.42);
+        %tmp.44 = as %tmp.43 Number or Null;
+        symbol [ Number %tmp.44 152 53 59 ];
+        lputv %asecVal.3 %tmp.44;
+        symbol [ asecVal %asecVal.3 152 24 31 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 153 20 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_153_20_155_20_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_153_24_153_70_begin:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_153_24_153_54_begin:
+        %tmp.45 = lgetv %asecVal.3;
+        symbol [ asecVal %tmp.45 153 24 31 ];
+        %tmp.46 = null;
+        %tmp.47 = ne %tmp.45 %tmp.46;
+        bf %tmp.47 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_153_20_155_20_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_153_43_153_54_true:
+        %tmp.48 = lgetv %asecVal.3;
+        symbol [ asecVal %tmp.48 153 43 50 ];
+        %tmp.49 = as %tmp.48 { (!Null) };
+        %tmp.50 = 2;
+        %tmp.51 = gte %tmp.49 %tmp.50;
+        push %tmp.51;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_153_43_153_54_end:
+        %tmp.52 = phi [%tmp.47 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_153_24_153_54_begin] [%tmp.51 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_153_43_153_54_true] [%tmp.52 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_153_43_153_54_end];
+        bf %tmp.52 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_153_20_155_20_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_153_59_153_70_true:
+        %tmp.53 = lgetv %asecVal.3;
+        symbol [ asecVal %tmp.53 153 59 66 ];
+        %tmp.54 = as %tmp.53 { (!Null) };
+        %tmp.55 = 120;
+        %tmp.56 = lte %tmp.54 %tmp.55;
+        push %tmp.56;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_153_59_153_70_end:
+        %tmp.57 = phi [%tmp.52 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_153_24_153_70_begin] [%tmp.56 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_153_59_153_70_true] [%tmp.57 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_153_59_153_70_end];
+        bf %tmp.57 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_153_20_155_20_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_153_20_155_20_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_153_75_155_20_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 154 24 ]
+        %tmp.58 = lgetv %asecVal.3;
+        symbol [ asecVal %tmp.58 154 39 46 ];
+        %tmp.59 = as %tmp.58 { (!Null) };
+        symbol [ autoSwipeSec ? 154 24 36 ];
+        putv self :autoSwipeSec %tmp.59;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_153_75_155_20_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_153_20_155_20_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_153_20_155_20_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_151_40_156_16_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_151_16_156_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_151_16_156_16_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 157 16 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_157_16_163_16_if_stmt:
+        %tmp.60 = lgetv %cfg.1;
+        symbol [ cfg %tmp.60 157 20 23 ];
+        %tmp.61 = as %tmp.60 { (!Null) };
+        symbol [ hasKey %tmp.62 157 24 30 ];
+        %tmp.62 = getv function %tmp.61 :hasKey;
+        %tmp.63 = "aon";
+        %tmp.64 = invoke %tmp.61 %tmp.62(%tmp.63);
+        bf %tmp.64 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_157_16_163_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_157_16_163_16_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_157_39_163_16_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 158 20 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_157_39_163_16_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_157_39_163_16_stop" ]
+        %aonVal.4 = local;
+        symbol [ aonVal %aonVal.4 158 24 30 ];
+        %tmp.65 = lgetv %cfg.1;
+        symbol [ cfg %tmp.65 158 33 36 ];
+        %tmp.66 = as %tmp.65 { (!Null) };
+        symbol [ get %tmp.67 158 37 40 ];
+        %tmp.67 = getv function %tmp.66 :get;
+        %tmp.68 = "aon";
+        %tmp.69 = invoke %tmp.66 %tmp.67(%tmp.68);
+        %tmp.70 = as %tmp.69 Number or Null;
+        symbol [ Number %tmp.70 158 51 57 ];
+        lputv %aonVal.4 %tmp.70;
+        symbol [ aonVal %aonVal.4 158 24 30 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 159 20 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_159_39_159_67_begin:
+        %tmp.71 = lgetv %aonVal.4;
+        symbol [ aonVal %tmp.71 159 39 45 ];
+        %tmp.72 = null;
+        %tmp.73 = ne %tmp.71 %tmp.72;
+        %tmp.74 = dup %tmp.73;
+        bf %tmp.74 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_159_57_159_67_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_159_57_159_67_true:
+        %tmp.75 = lgetv %aonVal.4;
+        symbol [ aonVal %tmp.75 159 57 63 ];
+        %tmp.76 = as %tmp.75 { (!Null) };
+        %tmp.77 = 1;
+        %tmp.78 = eq %tmp.76 %tmp.77;
+        %tmp.79 = and %tmp.73 %tmp.78;
+        push %tmp.79;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_159_57_159_67_end:
+        %tmp.80 = phi [%tmp.74 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_159_39_159_67_begin] [%tmp.79 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_159_57_159_67_true] [%tmp.80 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_159_57_159_67_end];
+        symbol [ alwaysOnDisplay ? 159 20 35 ];
+        putv self :alwaysOnDisplay %tmp.80;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 160 20 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_160_20_162_20_if_stmt:
+        symbol [ alwaysOnDisplay %tmp.82 160 24 39 ];
+        %tmp.82 = getv ? :alwaysOnDisplay;
+        bf %tmp.82 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_160_20_162_20_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_160_20_162_20_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_160_41_162_20_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 161 24 ]
+        %tmp.83 = self;
+        symbol [ applyBacklightIfEnabled %tmp.84 161 24 47 ];
+        %tmp.84 = getv function %tmp.83 :applyBacklightIfEnabled;
+        invoke %tmp.83 %tmp.84();
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_160_41_162_20_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_160_20_162_20_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_160_20_162_20_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_157_39_163_16_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_157_16_163_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_157_16_163_16_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_146_29_164_12_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_146_12_164_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_146_12_164_12_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_144_32_165_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_144_8_165_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_144_8_165_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 167 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_167_8_199_8_if_stmt:
+        %tmp.85 = lgetv %data;
+        symbol [ data %tmp.85 167 12 16 ];
+        symbol [ hasKey %tmp.86 167 17 23 ];
+        %tmp.86 = getv function %tmp.85 :hasKey;
+        %tmp.87 = "lic";
+        %tmp.88 = invoke %tmp.85 %tmp.86(%tmp.87);
+        bf %tmp.88 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_167_8_199_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_167_8_199_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_167_32_199_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 168 12 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_167_32_199_8_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_167_32_199_8_stop" ]
+        %lic.5 = local;
+        symbol [ lic %lic.5 168 16 19 ];
+        %tmp.89 = lgetv %data;
+        symbol [ data %tmp.89 168 22 26 ];
+        symbol [ get %tmp.90 168 27 30 ];
+        %tmp.90 = getv function %tmp.89 :get;
+        %tmp.91 = "lic";
+        %tmp.92 = invoke %tmp.89 %tmp.90(%tmp.91);
+        %tmp.93 = as %tmp.92 Dictionary or Null;
+        symbol [ Dictionary %tmp.93 168 41 51 ];
+        lputv %lic.5 %tmp.93;
+        symbol [ lic %lic.5 168 16 19 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 169 12 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_169_12_198_12_if_stmt:
+        %tmp.94 = lgetv %lic.5;
+        symbol [ lic %tmp.94 169 16 19 ];
+        %tmp.95 = null;
+        %tmp.96 = ne %tmp.94 %tmp.95;
+        bf %tmp.96 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_169_12_198_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_169_12_198_12_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_169_29_198_12_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 170 16 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_170_16_175_16_if_stmt:
+        %tmp.97 = lgetv %lic.5;
+        symbol [ lic %tmp.97 170 20 23 ];
+        %tmp.98 = as %tmp.97 { (!Null) };
+        symbol [ hasKey %tmp.99 170 24 30 ];
+        %tmp.99 = getv function %tmp.98 :hasKey;
+        %tmp.100 = "did";
+        %tmp.101 = invoke %tmp.98 %tmp.99(%tmp.100);
+        bf %tmp.101 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_170_16_175_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_170_16_175_16_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_170_39_175_16_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 171 20 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_170_39_175_16_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_170_39_175_16_stop" ]
+        %didStr.6 = local;
+        symbol [ didStr %didStr.6 171 24 30 ];
+        %tmp.102 = lgetv %lic.5;
+        symbol [ lic %tmp.102 171 33 36 ];
+        %tmp.103 = as %tmp.102 { (!Null) };
+        symbol [ get %tmp.104 171 37 40 ];
+        %tmp.104 = getv function %tmp.103 :get;
+        %tmp.105 = "did";
+        %tmp.106 = invoke %tmp.103 %tmp.104(%tmp.105);
+        %tmp.107 = as %tmp.106 String or Null;
+        symbol [ String %tmp.107 171 51 57 ];
+        lputv %didStr.6 %tmp.107;
+        symbol [ didStr %didStr.6 171 24 30 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 172 20 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_172_20_174_20_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_172_24_172_60_begin:
+        %tmp.108 = lgetv %didStr.6;
+        symbol [ didStr %tmp.108 172 24 30 ];
+        %tmp.109 = null;
+        %tmp.110 = ne %tmp.108 %tmp.109;
+        bf %tmp.110 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_172_20_174_20_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_172_42_172_60_true:
+        %tmp.111 = lgetv %didStr.6;
+        symbol [ didStr %tmp.111 172 42 48 ];
+        %tmp.112 = as %tmp.111 { (!Null) };
+        symbol [ length %tmp.113 172 49 55 ];
+        %tmp.113 = getv function %tmp.112 :length;
+        %tmp.114 = invoke %tmp.112 %tmp.113();
+        %tmp.115 = 0;
+        %tmp.116 = gt %tmp.114 %tmp.115;
+        push %tmp.116;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_172_42_172_60_end:
+        %tmp.117 = phi [%tmp.110 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_172_24_172_60_begin] [%tmp.116 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_172_42_172_60_true] [%tmp.117 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_172_42_172_60_end];
+        bf %tmp.117 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_172_20_174_20_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_172_20_174_20_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_172_63_174_20_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 173 24 ]
+        %tmp.118 = lgetv %didStr.6;
+        symbol [ didStr %tmp.118 173 35 41 ];
+        %tmp.119 = as %tmp.118 { (!Null) };
+        symbol [ deviceId ? 173 24 32 ];
+        putv self :deviceId %tmp.119;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_172_63_174_20_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_172_20_174_20_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_172_20_174_20_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_170_39_175_16_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_170_16_175_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_170_16_175_16_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 176 16 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_176_16_181_16_if_stmt:
+        %tmp.120 = lgetv %lic.5;
+        symbol [ lic %tmp.120 176 20 23 ];
+        %tmp.121 = as %tmp.120 { (!Null) };
+        symbol [ hasKey %tmp.122 176 24 30 ];
+        %tmp.122 = getv function %tmp.121 :hasKey;
+        %tmp.123 = "st";
+        %tmp.124 = invoke %tmp.121 %tmp.122(%tmp.123);
+        bf %tmp.124 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_176_16_181_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_176_16_181_16_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_176_38_181_16_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 177 20 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_176_38_181_16_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_176_38_181_16_stop" ]
+        %stStr.7 = local;
+        symbol [ stStr %stStr.7 177 24 29 ];
+        %tmp.125 = lgetv %lic.5;
+        symbol [ lic %tmp.125 177 32 35 ];
+        %tmp.126 = as %tmp.125 { (!Null) };
+        symbol [ get %tmp.127 177 36 39 ];
+        %tmp.127 = getv function %tmp.126 :get;
+        %tmp.128 = "st";
+        %tmp.129 = invoke %tmp.126 %tmp.127(%tmp.128);
+        %tmp.130 = as %tmp.129 String or Null;
+        symbol [ String %tmp.130 177 49 55 ];
+        lputv %stStr.7 %tmp.130;
+        symbol [ stStr %stStr.7 177 24 29 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 178 20 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_178_20_180_20_if_stmt:
+        %tmp.131 = lgetv %stStr.7;
+        symbol [ stStr %tmp.131 178 24 29 ];
+        %tmp.132 = null;
+        %tmp.133 = ne %tmp.131 %tmp.132;
+        bf %tmp.133 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_178_20_180_20_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_178_20_180_20_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_178_39_180_20_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 179 24 ]
+        %tmp.134 = lgetv %stStr.7;
+        symbol [ stStr %tmp.134 179 40 45 ];
+        %tmp.135 = as %tmp.134 { (!Null) };
+        symbol [ licenseStatus ? 179 24 37 ];
+        putv self :licenseStatus %tmp.135;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_178_39_180_20_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_178_20_180_20_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_178_20_180_20_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_176_38_181_16_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_176_16_181_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_176_16_181_16_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 182 16 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_182_16_187_16_if_stmt:
+        %tmp.136 = lgetv %lic.5;
+        symbol [ lic %tmp.136 182 20 23 ];
+        %tmp.137 = as %tmp.136 { (!Null) };
+        symbol [ hasKey %tmp.138 182 24 30 ];
+        %tmp.138 = getv function %tmp.137 :hasKey;
+        %tmp.139 = "days";
+        %tmp.140 = invoke %tmp.137 %tmp.138(%tmp.139);
+        bf %tmp.140 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_182_16_187_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_182_16_187_16_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_182_40_187_16_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 183 20 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_182_40_187_16_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_182_40_187_16_stop" ]
+        %dLeft.8 = local;
+        symbol [ dLeft %dLeft.8 183 24 29 ];
+        %tmp.141 = lgetv %lic.5;
+        symbol [ lic %tmp.141 183 32 35 ];
+        %tmp.142 = as %tmp.141 { (!Null) };
+        symbol [ get %tmp.143 183 36 39 ];
+        %tmp.143 = getv function %tmp.142 :get;
+        %tmp.144 = "days";
+        %tmp.145 = invoke %tmp.142 %tmp.143(%tmp.144);
+        %tmp.146 = as %tmp.145 Number or Null;
+        symbol [ Number %tmp.146 183 51 57 ];
+        lputv %dLeft.8 %tmp.146;
+        symbol [ dLeft %dLeft.8 183 24 29 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 184 20 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_184_20_186_20_if_stmt:
+        %tmp.147 = lgetv %dLeft.8;
+        symbol [ dLeft %tmp.147 184 24 29 ];
+        %tmp.148 = null;
+        %tmp.149 = ne %tmp.147 %tmp.148;
+        bf %tmp.149 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_184_20_186_20_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_184_20_186_20_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_184_39_186_20_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 185 24 ]
+        %tmp.150 = lgetv %dLeft.8;
+        symbol [ dLeft %tmp.150 185 40 45 ];
+        %tmp.151 = as %tmp.150 { (!Null) };
+        symbol [ trialDaysLeft ? 185 24 37 ];
+        putv self :trialDaysLeft %tmp.151;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_184_39_186_20_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_184_20_186_20_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_184_20_186_20_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_182_40_187_16_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_182_16_187_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_182_16_187_16_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 188 16 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_188_16_191_16_if_stmt:
+        %tmp.152 = lgetv %lic.5;
+        symbol [ lic %tmp.152 188 20 23 ];
+        %tmp.153 = as %tmp.152 { (!Null) };
+        symbol [ hasKey %tmp.154 188 24 30 ];
+        %tmp.154 = getv function %tmp.153 :hasKey;
+        %tmp.155 = "exp";
+        %tmp.156 = invoke %tmp.153 %tmp.154(%tmp.155);
+        bf %tmp.156 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_188_16_191_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_188_16_191_16_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_188_39_191_16_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 189 20 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_188_39_191_16_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_188_39_191_16_stop" ]
+        %expVal.9 = local;
+        symbol [ expVal %expVal.9 189 24 30 ];
+        %tmp.157 = lgetv %lic.5;
+        symbol [ lic %tmp.157 189 33 36 ];
+        %tmp.158 = as %tmp.157 { (!Null) };
+        symbol [ get %tmp.159 189 37 40 ];
+        %tmp.159 = getv function %tmp.158 :get;
+        %tmp.160 = "exp";
+        %tmp.161 = invoke %tmp.158 %tmp.159(%tmp.160);
+        %tmp.162 = as %tmp.161 Number or Null;
+        symbol [ Number %tmp.162 189 51 57 ];
+        lputv %expVal.9 %tmp.162;
+        symbol [ expVal %expVal.9 189 24 30 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 190 20 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_190_36_190_64_begin:
+        %tmp.163 = lgetv %expVal.9;
+        symbol [ expVal %tmp.163 190 36 42 ];
+        %tmp.164 = null;
+        %tmp.165 = ne %tmp.163 %tmp.164;
+        %tmp.166 = dup %tmp.165;
+        bf %tmp.166 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_190_54_190_64_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_190_54_190_64_true:
+        %tmp.167 = lgetv %expVal.9;
+        symbol [ expVal %tmp.167 190 54 60 ];
+        %tmp.168 = as %tmp.167 { (!Null) };
+        %tmp.169 = 1;
+        %tmp.170 = eq %tmp.168 %tmp.169;
+        %tmp.171 = and %tmp.165 %tmp.170;
+        push %tmp.171;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_190_54_190_64_end:
+        %tmp.172 = phi [%tmp.166 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_190_36_190_64_begin] [%tmp.171 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_190_54_190_64_true] [%tmp.172 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_190_54_190_64_end];
+        symbol [ trialExpired ? 190 20 32 ];
+        putv self :trialExpired %tmp.172;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_188_39_191_16_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_188_16_191_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_188_16_191_16_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 192 16 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_192_16_197_16_if_stmt:
+        %tmp.173 = lgetv %lic.5;
+        symbol [ lic %tmp.173 192 20 23 ];
+        %tmp.174 = as %tmp.173 { (!Null) };
+        symbol [ hasKey %tmp.175 192 24 30 ];
+        %tmp.175 = getv function %tmp.174 :hasKey;
+        %tmp.176 = "own";
+        %tmp.177 = invoke %tmp.174 %tmp.175(%tmp.176);
+        bf %tmp.177 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_192_16_197_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_192_16_197_16_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_192_39_197_16_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 193 20 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_192_39_197_16_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_192_39_197_16_stop" ]
+        %ownStr.10 = local;
+        symbol [ ownStr %ownStr.10 193 24 30 ];
+        %tmp.178 = lgetv %lic.5;
+        symbol [ lic %tmp.178 193 33 36 ];
+        %tmp.179 = as %tmp.178 { (!Null) };
+        symbol [ get %tmp.180 193 37 40 ];
+        %tmp.180 = getv function %tmp.179 :get;
+        %tmp.181 = "own";
+        %tmp.182 = invoke %tmp.179 %tmp.180(%tmp.181);
+        %tmp.183 = as %tmp.182 String or Null;
+        symbol [ String %tmp.183 193 51 57 ];
+        lputv %ownStr.10 %tmp.183;
+        symbol [ ownStr %ownStr.10 193 24 30 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 194 20 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_194_20_196_20_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_194_24_194_60_begin:
+        %tmp.184 = lgetv %ownStr.10;
+        symbol [ ownStr %tmp.184 194 24 30 ];
+        %tmp.185 = null;
+        %tmp.186 = ne %tmp.184 %tmp.185;
+        bf %tmp.186 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_194_20_196_20_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_194_42_194_60_true:
+        %tmp.187 = lgetv %ownStr.10;
+        symbol [ ownStr %tmp.187 194 42 48 ];
+        %tmp.188 = as %tmp.187 { (!Null) };
+        symbol [ length %tmp.189 194 49 55 ];
+        %tmp.189 = getv function %tmp.188 :length;
+        %tmp.190 = invoke %tmp.188 %tmp.189();
+        %tmp.191 = 0;
+        %tmp.192 = gt %tmp.190 %tmp.191;
+        push %tmp.192;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_194_42_194_60_end:
+        %tmp.193 = phi [%tmp.186 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_194_24_194_60_begin] [%tmp.192 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_194_42_194_60_true] [%tmp.193 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_194_42_194_60_end];
+        bf %tmp.193 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_194_20_196_20_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_194_20_196_20_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_194_63_196_20_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 195 24 ]
+        %tmp.194 = lgetv %ownStr.10;
+        symbol [ ownStr %tmp.194 195 37 43 ];
+        %tmp.195 = as %tmp.194 { (!Null) };
+        symbol [ ownerEmail ? 195 24 34 ];
+        putv self :ownerEmail %tmp.195;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_194_63_196_20_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_194_20_196_20_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_194_20_196_20_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_192_39_197_16_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_192_16_197_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_192_16_197_16_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_169_29_198_12_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_169_12_198_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_169_12_198_12_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_167_32_199_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_167_8_199_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_167_8_199_8_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_143_69_200_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 202; @symbol_functiondef = [loadCached,202,13,23]; ]
+    function loadCached() as Void {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_202_34_209_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 203 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_202_34_209_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_202_34_209_4_stop" ]
+        %saved.1 = local;
+        symbol [ saved %saved.1 203 12 17 ];
+        symbol [ Application %tmp.1 203 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 203 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 203 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.4 = "venu2moat_payload";
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        %tmp.6 = as %tmp.5 Dictionary or Null;
+        symbol [ Dictionary %tmp.6 203 73 83 ];
+        lputv %saved.1 %tmp.6;
+        symbol [ saved %saved.1 203 12 17 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 204 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_204_8_208_8_if_stmt:
+        %tmp.7 = lgetv %saved.1;
+        symbol [ saved %tmp.7 204 12 17 ];
+        %tmp.8 = null;
+        %tmp.9 = ne %tmp.7 %tmp.8;
+        bf %tmp.9 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_204_8_208_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_204_8_208_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_204_27_208_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 205 12 ]
+        %tmp.10 = lgetv %saved.1;
+        symbol [ saved %tmp.10 205 22 27 ];
+        %tmp.11 = as %tmp.10 { (!Null) };
+        symbol [ payload ? 205 12 19 ];
+        putv self :payload %tmp.11;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 206 12 ]
+        %tmp.12 = self;
+        symbol [ applyRemoteConfigAndLicense %tmp.13 206 12 39 ];
+        %tmp.13 = getv function %tmp.12 :applyRemoteConfigAndLicense;
+        %tmp.14 = lgetv %saved.1;
+        symbol [ saved %tmp.14 206 40 45 ];
+        %tmp.15 = as %tmp.14 { (!Null) };
+        invoke %tmp.12 %tmp.13(%tmp.15);
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 207 12 ]
+        %tmp.16 = "CACHED";
+        symbol [ lastStatus ? 207 12 22 ];
+        putv self :lastStatus %tmp.16;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_204_27_208_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_204_8_208_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_204_8_208_8_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_202_34_209_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 211; @symbol_functiondef = [getSyncKey,211,13,23]; @symbol_return<0> = [String,211,29,35]; ]
+    function getSyncKey() as String {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_211_36_217_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 212 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_211_36_217_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_211_36_217_4_stop" ]
+        %key.1 = local;
+        symbol [ key %key.1 212 12 15 ];
+        symbol [ Application %tmp.1 212 18 29 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Properties %tmp.2 212 30 40 ];
+        %tmp.2 = getv %tmp.1 :Properties;
+        symbol [ getValue %tmp.3 212 41 49 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.4 = "syncKey";
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        %tmp.6 = as %tmp.5 String or Null;
+        symbol [ String %tmp.6 212 64 70 ];
+        lputv %key.1 %tmp.6;
+        symbol [ key %key.1 212 12 15 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 213 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_213_8_215_8_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_213_12_213_43_begin:
+        %tmp.7 = lgetv %key.1;
+        symbol [ key %tmp.7 213 12 15 ];
+        %tmp.8 = null;
+        %tmp.9 = eq %tmp.7 %tmp.8;
+        bt %tmp.9 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_213_8_215_8_if_true;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_213_27_213_43_false:
+        %tmp.10 = lgetv %key.1;
+        symbol [ key %tmp.10 213 27 30 ];
+        %tmp.11 = as %tmp.10 { (!Null) };
+        symbol [ length %tmp.12 213 31 37 ];
+        %tmp.12 = getv function %tmp.11 :length;
+        %tmp.13 = invoke %tmp.11 %tmp.12();
+        %tmp.14 = 0;
+        %tmp.15 = eq %tmp.13 %tmp.14;
+        push %tmp.15;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_213_27_213_43_end:
+        %tmp.16 = phi [%tmp.9 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_213_12_213_43_begin] [%tmp.15 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_213_27_213_43_false] [%tmp.16 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_213_27_213_43_end];
+        bf %tmp.16 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_213_8_215_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_213_8_215_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_213_46_215_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 214 12 ]
+        %tmp.17 = "VENU2-88";
+        ret %tmp.17;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_213_46_215_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_213_8_215_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_213_8_215_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 216 8 ]
+        %tmp.18 = lgetv %key.1;
+        symbol [ key %tmp.18 216 15 18 ];
+        ret %tmp.18;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_211_36_217_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 219; @symbol_functiondef = [getApiBaseUrl,219,13,26]; @symbol_return<0> = [String,219,32,38]; ]
+    function getApiBaseUrl() as String {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_219_39_225_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 220 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_219_39_225_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_219_39_225_4_stop" ]
+        %url.1 = local;
+        symbol [ url %url.1 220 12 15 ];
+        symbol [ Application %tmp.1 220 18 29 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Properties %tmp.2 220 30 40 ];
+        %tmp.2 = getv %tmp.1 :Properties;
+        symbol [ getValue %tmp.3 220 41 49 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.4 = "apiUrl";
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        %tmp.6 = as %tmp.5 String or Null;
+        symbol [ String %tmp.6 220 63 69 ];
+        lputv %url.1 %tmp.6;
+        symbol [ url %url.1 220 12 15 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 221 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_221_8_223_8_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_221_12_221_43_begin:
+        %tmp.7 = lgetv %url.1;
+        symbol [ url %tmp.7 221 12 15 ];
+        %tmp.8 = null;
+        %tmp.9 = eq %tmp.7 %tmp.8;
+        bt %tmp.9 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_221_8_223_8_if_true;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_221_27_221_43_false:
+        %tmp.10 = lgetv %url.1;
+        symbol [ url %tmp.10 221 27 30 ];
+        %tmp.11 = as %tmp.10 { (!Null) };
+        symbol [ length %tmp.12 221 31 37 ];
+        %tmp.12 = getv function %tmp.11 :length;
+        %tmp.13 = invoke %tmp.11 %tmp.12();
+        %tmp.14 = 0;
+        %tmp.15 = eq %tmp.13 %tmp.14;
+        push %tmp.15;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_221_27_221_43_end:
+        %tmp.16 = phi [%tmp.9 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_221_12_221_43_begin] [%tmp.15 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_221_27_221_43_false] [%tmp.16 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_221_27_221_43_end];
+        bf %tmp.16 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_221_8_223_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_221_8_223_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_221_46_223_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 222 12 ]
+        %tmp.17 = "https://moat.readybyte.top";
+        ret %tmp.17;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_221_46_223_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_221_8_223_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_221_8_223_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 224 8 ]
+        %tmp.18 = lgetv %url.1;
+        symbol [ url %tmp.18 224 15 18 ];
+        ret %tmp.18;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_219_39_225_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 227; @symbol_functiondef = [fetchRemote,227,13,24]; ]
+    function fetchRemote() as Void {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_227_35_239_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 228 8 ]
+        %tmp.1 = true;
+        symbol [ isSyncing ? 228 8 17 ];
+        putv self :isSyncing %tmp.1;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 229 8 ]
+        %tmp.2 = "SYNCING";
+        symbol [ lastStatus ? 229 8 18 ];
+        putv self :lastStatus %tmp.2;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 230 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_227_35_239_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_227_35_239_4_stop" ]
+        %url.1 = local;
+        symbol [ url %url.1 230 12 15 ];
+        %tmp.3 = self;
+        symbol [ getApiBaseUrl %tmp.4 230 18 31 ];
+        %tmp.4 = getv function %tmp.3 :getApiBaseUrl;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        %tmp.6 = "/api/watch?key=";
+        %tmp.7 = add %tmp.5 %tmp.6;
+        %tmp.8 = self;
+        symbol [ getSyncKey %tmp.9 230 56 66 ];
+        %tmp.9 = getv function %tmp.8 :getSyncKey;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        %tmp.11 = add %tmp.7 %tmp.10;
+        %tmp.12 = "&did=";
+        %tmp.13 = add %tmp.11 %tmp.12;
+        symbol [ deviceId %tmp.15 230 81 89 ];
+        %tmp.15 = getv ? :deviceId;
+        %tmp.16 = add %tmp.13 %tmp.15;
+        lputv %url.1 %tmp.16;
+        symbol [ url %url.1 230 12 15 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 231 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_231_8_233_8_if_stmt:
+        symbol [ activationKey %tmp.18 231 12 25 ];
+        %tmp.18 = getv ? :activationKey;
+        symbol [ length %tmp.19 231 26 32 ];
+        %tmp.19 = getv function %tmp.18 :length;
+        %tmp.20 = invoke %tmp.18 %tmp.19();
+        %tmp.21 = 0;
+        %tmp.22 = gt %tmp.20 %tmp.21;
+        bf %tmp.22 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_231_8_233_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_231_8_233_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_231_40_233_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 232 12 ]
+        %tmp.23 = lgetv %url.1;
+        symbol [ url %tmp.23 232 18 21 ];
+        %tmp.24 = "&akey=";
+        %tmp.25 = add %tmp.23 %tmp.24;
+        symbol [ activationKey %tmp.27 232 35 48 ];
+        %tmp.27 = getv ? :activationKey;
+        %tmp.28 = add %tmp.25 %tmp.27;
+        lputv %url.1 %tmp.28;
+        symbol [ url %url.1 232 12 15 ];
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_231_40_233_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_231_8_233_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_231_8_233_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 234 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_227_35_239_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_227_35_239_4_stop" ]
+        %options.2 = local;
+        symbol [ options %options.2 234 12 19 ];
+        %tmp.29 = newd 2;
+        %tmp.31 = const :method;
+        symbol [ method %tmp.31 235 13 19 const ];
+        symbol [ Communications %tmp.32 235 23 37 ];
+        %tmp.32 = getm $.Toybox.Communications;
+        symbol [ HTTP_REQUEST_METHOD_GET %tmp.33 235 38 61 ];
+        %tmp.33 = getv %tmp.32 :HTTP_REQUEST_METHOD_GET;
+        %tmp.34 = dup %tmp.29;
+        %tmp.35 = aputv %tmp.34 %tmp.31 %tmp.33;
+        %tmp.37 = const :responseType;
+        symbol [ responseType %tmp.37 236 13 25 const ];
+        symbol [ Communications %tmp.38 236 29 43 ];
+        %tmp.38 = getm $.Toybox.Communications;
+        symbol [ HTTP_RESPONSE_CONTENT_TYPE_JSON %tmp.39 236 44 75 ];
+        %tmp.39 = getv %tmp.38 :HTTP_RESPONSE_CONTENT_TYPE_JSON;
+        %tmp.40 = dup %tmp.35;
+        %tmp.41 = aputv %tmp.40 %tmp.37 %tmp.39;
+        lputv %options.2 %tmp.41;
+        symbol [ options %options.2 234 12 19 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 238 8 ]
+        symbol [ Communications %tmp.42 238 8 22 ];
+        %tmp.42 = getm $.Toybox.Communications;
+        symbol [ makeWebRequest %tmp.43 238 23 37 ];
+        %tmp.43 = getv function %tmp.42 :makeWebRequest;
+        %tmp.44 = lgetv %url.1;
+        symbol [ url %tmp.44 238 38 41 ];
+        %tmp.45 = null;
+        %tmp.46 = lgetv %options.2;
+        symbol [ options %tmp.46 238 49 56 ];
+        %tmp.47 = self;
+        symbol [ method %tmp.48 238 58 64 ];
+        %tmp.48 = getv function %tmp.47 :method;
+        %tmp.50 = const :onReceivePayload;
+        symbol [ onReceivePayload %tmp.50 238 66 82 const ];
+        %tmp.51 = invoke %tmp.47 %tmp.48(%tmp.50);
+        invoke %tmp.42 %tmp.43(%tmp.44, %tmp.45, %tmp.46, %tmp.51);
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_227_35_239_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 241; @symbol_functiondef = [onReceivePayload,241,13,29]; @symbol_param<0> = [responseCode,241,30,42]; @symbol_param<0>_type<0> = [Number,241,46,52]; @symbol_param<1> = [data,241,54,58]; @symbol_param<1>_type<0> = [Dictionary,241,62,72]; @symbol_param<1>_type<1> = [String,241,76,82]; ]
+    function onReceivePayload(responseCode as Number, data as Dictionary or String or Null) as Void {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_241_100_252_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 242 8 ]
+        %tmp.1 = false;
+        symbol [ isSyncing ? 242 8 17 ];
+        putv self :isSyncing %tmp.1;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 243 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_243_8_250_8_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_243_12_243_51_begin:
+        %tmp.2 = lgetv %responseCode;
+        symbol [ responseCode %tmp.2 243 12 24 ];
+        %tmp.3 = 200;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_243_8_250_8_if_else_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_243_35_243_51_true:
+        %tmp.5 = lgetv %data;
+        symbol [ data %tmp.5 243 35 39 ];
+        symbol [ Dictionary %tmp.7 243 51 61 ];
+        %tmp.7 = getv ? :Dictionary;
+        %tmp.8 = isa %tmp.5 %tmp.7;
+        push %tmp.8;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_243_35_243_51_end:
+        %tmp.9 = phi [%tmp.4 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_243_12_243_51_begin] [%tmp.8 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_243_35_243_51_true] [%tmp.9 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_243_35_243_51_end];
+        bf %tmp.9 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_243_8_250_8_if_else_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_243_8_250_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_243_63_248_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 244 12 ]
+        %tmp.10 = lgetv %data;
+        symbol [ data %tmp.10 244 22 26 ];
+        %tmp.11 = as %tmp.10 { (Dictionary) };
+        %tmp.12 = as %tmp.11 Dictionary;
+        symbol [ Dictionary %tmp.12 244 30 40 ];
+        symbol [ payload ? 244 12 19 ];
+        putv self :payload %tmp.12;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 245 12 ]
+        %tmp.13 = self;
+        symbol [ applyRemoteConfigAndLicense %tmp.14 245 12 39 ];
+        %tmp.14 = getv function %tmp.13 :applyRemoteConfigAndLicense;
+        symbol [ payload %tmp.16 245 40 47 ];
+        %tmp.16 = getv ? :payload;
+        invoke %tmp.13 %tmp.14(%tmp.16);
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 246 12 ]
+        symbol [ Application %tmp.17 246 12 23 ];
+        %tmp.17 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.18 246 24 31 ];
+        %tmp.18 = getv %tmp.17 :Storage;
+        symbol [ setValue %tmp.19 246 32 40 ];
+        %tmp.19 = getv function %tmp.18 :setValue;
+        %tmp.20 = "venu2moat_payload";
+        symbol [ payload %tmp.22 246 62 69 ];
+        %tmp.22 = getv ? :payload;
+        invoke %tmp.18 %tmp.19(%tmp.20, %tmp.22);
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 247 12 ]
+        %tmp.23 = "LIVE";
+        symbol [ lastStatus ? 247 12 22 ];
+        putv self :lastStatus %tmp.23;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_243_63_248_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_243_8_250_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_243_8_250_8_if_else_false:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_248_15_250_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 249 12 ]
+        %tmp.24 = "OFFLINE (";
+        %tmp.25 = lgetv %responseCode;
+        symbol [ responseCode %tmp.25 249 39 51 ];
+        symbol [ toString %tmp.26 249 52 60 ];
+        %tmp.26 = getv function %tmp.25 :toString;
+        %tmp.27 = invoke %tmp.25 %tmp.26();
+        %tmp.28 = add %tmp.24 %tmp.27;
+        %tmp.29 = ")";
+        %tmp.30 = add %tmp.28 %tmp.29;
+        symbol [ lastStatus ? 249 12 22 ];
+        putv self :lastStatus %tmp.30;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_248_15_250_8_stop:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_243_8_250_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 251 8 ]
+        symbol [ WatchUi %tmp.31 251 8 15 ];
+        %tmp.31 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.32 251 16 29 ];
+        %tmp.32 = getv function %tmp.31 :requestUpdate;
+        invoke %tmp.31 %tmp.32();
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_241_100_252_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 254; @symbol_functiondef = [getPortfolios,254,13,26]; @symbol_return<0> = [Array,254,32,37]; ]
+    function getPortfolios() as Array {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_254_38_259_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 255 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_255_8_257_8_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_255_12_255_49_begin:
+        symbol [ payload %tmp.2 255 12 19 ];
+        %tmp.2 = getv ? :payload;
+        %tmp.3 = null;
+        %tmp.4 = ne %tmp.2 %tmp.3;
+        bf %tmp.4 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_255_8_257_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_255_31_255_49_true:
+        symbol [ payload %tmp.6 255 31 38 ];
+        %tmp.6 = getv ? :payload;
+        %tmp.7 = as %tmp.6 { (!Null) };
+        symbol [ hasKey %tmp.8 255 39 45 ];
+        %tmp.8 = getv function %tmp.7 :hasKey;
+        %tmp.9 = "p";
+        %tmp.10 = invoke %tmp.7 %tmp.8(%tmp.9);
+        push %tmp.10;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_255_31_255_49_end:
+        %tmp.11 = phi [%tmp.4 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_255_12_255_49_begin] [%tmp.10 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_255_31_255_49_true] [%tmp.11 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_255_31_255_49_end];
+        bf %tmp.11 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_255_8_257_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_255_8_257_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_255_52_257_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 256 12 ]
+        symbol [ payload %tmp.13 256 19 26 ];
+        %tmp.13 = getv ? :payload;
+        symbol [ get %tmp.14 256 27 30 ];
+        %tmp.14 = getv function %tmp.13 :get;
+        %tmp.15 = "p";
+        %tmp.16 = invoke %tmp.13 %tmp.14(%tmp.15);
+        %tmp.17 = as %tmp.16 Array;
+        symbol [ Array %tmp.17 256 39 44 ];
+        ret %tmp.17;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_255_52_257_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_255_8_257_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_255_8_257_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 258 8 ]
+        %tmp.18 = newa 0;
+        ret %tmp.18;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_254_38_259_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 261; @symbol_functiondef = [getActivePortfolio,261,13,31]; @symbol_return<0> = [Dictionary,261,37,47]; ]
+    function getActivePortfolio() as Dictionary or Null {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_261_49_270_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 262 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_261_49_270_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_261_49_270_4_stop" ]
+        %list.1 = local;
+        symbol [ list %list.1 262 12 16 ];
+        %tmp.1 = self;
+        symbol [ getPortfolios %tmp.2 262 19 32 ];
+        %tmp.2 = getv function %tmp.1 :getPortfolios;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %list.1 %tmp.3;
+        symbol [ list %list.1 262 12 16 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 263 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_263_8_265_8_if_stmt:
+        %tmp.4 = lgetv %list.1;
+        symbol [ list %tmp.4 263 12 16 ];
+        symbol [ size %tmp.5 263 17 21 ];
+        %tmp.5 = getv function %tmp.4 :size;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = 0;
+        %tmp.8 = eq %tmp.6 %tmp.7;
+        bf %tmp.8 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_263_8_265_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_263_8_265_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_263_30_265_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 264 12 ]
+        %tmp.9 = null;
+        ret %tmp.9;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_263_30_265_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_263_8_265_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_263_8_265_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 266 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_266_8_268_8_if_stmt:
+        symbol [ activePortfolioIdx %tmp.11 266 12 30 ];
+        %tmp.11 = getv ? :activePortfolioIdx;
+        %tmp.12 = lgetv %list.1;
+        symbol [ list %tmp.12 266 34 38 ];
+        symbol [ size %tmp.13 266 39 43 ];
+        %tmp.13 = getv function %tmp.12 :size;
+        %tmp.14 = invoke %tmp.12 %tmp.13();
+        %tmp.15 = gte %tmp.11 %tmp.14;
+        bf %tmp.15 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_266_8_268_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_266_8_268_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_266_47_268_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 267 12 ]
+        %tmp.16 = 0;
+        symbol [ activePortfolioIdx ? 267 12 30 ];
+        putv self :activePortfolioIdx %tmp.16;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_266_47_268_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_266_8_268_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_266_8_268_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 269 8 ]
+        %tmp.17 = lgetv %list.1;
+        symbol [ list %tmp.17 269 15 19 ];
+        symbol [ activePortfolioIdx %tmp.19 269 20 38 ];
+        %tmp.19 = getv ? :activePortfolioIdx;
+        %tmp.20 = agetv %tmp.17 %tmp.19;
+        %tmp.21 = as %tmp.20 Dictionary;
+        symbol [ Dictionary %tmp.21 269 43 53 ];
+        ret %tmp.21;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_261_49_270_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 272; @symbol_functiondef = [nextPortfolio,272,13,26]; ]
+    function nextPortfolio() as Void {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_272_37_280_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 273 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_272_37_280_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_272_37_280_4_stop" ]
+        %list.1 = local;
+        symbol [ list %list.1 273 12 16 ];
+        %tmp.1 = self;
+        symbol [ getPortfolios %tmp.2 273 19 32 ];
+        %tmp.2 = getv function %tmp.1 :getPortfolios;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %list.1 %tmp.3;
+        symbol [ list %list.1 273 12 16 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 274 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_274_8_279_8_if_stmt:
+        %tmp.4 = lgetv %list.1;
+        symbol [ list %tmp.4 274 12 16 ];
+        symbol [ size %tmp.5 274 17 21 ];
+        %tmp.5 = getv function %tmp.4 :size;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = 0;
+        %tmp.8 = gt %tmp.6 %tmp.7;
+        bf %tmp.8 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_274_8_279_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_274_8_279_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_274_29_279_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 275 12 ]
+        symbol [ activePortfolioIdx %tmp.10 275 34 52 ];
+        %tmp.10 = getv ? :activePortfolioIdx;
+        %tmp.11 = 1;
+        %tmp.12 = add %tmp.10 %tmp.11;
+        %tmp.13 = lgetv %list.1;
+        symbol [ list %tmp.13 275 60 64 ];
+        symbol [ size %tmp.14 275 65 69 ];
+        %tmp.14 = getv function %tmp.13 :size;
+        %tmp.15 = invoke %tmp.13 %tmp.14();
+        %tmp.16 = mod %tmp.12 %tmp.15;
+        symbol [ activePortfolioIdx ? 275 12 30 ];
+        putv self :activePortfolioIdx %tmp.16;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 276 12 ]
+        %tmp.17 = 0;
+        symbol [ scrollRowOffset ? 276 12 27 ];
+        putv self :scrollRowOffset %tmp.17;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 277 12 ]
+        %tmp.18 = self;
+        symbol [ resetSwipeTimer %tmp.19 277 12 27 ];
+        %tmp.19 = getv function %tmp.18 :resetSwipeTimer;
+        invoke %tmp.18 %tmp.19();
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 278 12 ]
+        symbol [ WatchUi %tmp.20 278 12 19 ];
+        %tmp.20 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.21 278 20 33 ];
+        %tmp.21 = getv function %tmp.20 :requestUpdate;
+        invoke %tmp.20 %tmp.21();
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_274_29_279_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_274_8_279_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_274_8_279_8_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_272_37_280_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 282; @symbol_functiondef = [prevPortfolio,282,13,26]; ]
+    function prevPortfolio() as Void {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_282_37_290_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 283 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_282_37_290_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_282_37_290_4_stop" ]
+        %list.1 = local;
+        symbol [ list %list.1 283 12 16 ];
+        %tmp.1 = self;
+        symbol [ getPortfolios %tmp.2 283 19 32 ];
+        %tmp.2 = getv function %tmp.1 :getPortfolios;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %list.1 %tmp.3;
+        symbol [ list %list.1 283 12 16 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 284 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_284_8_289_8_if_stmt:
+        %tmp.4 = lgetv %list.1;
+        symbol [ list %tmp.4 284 12 16 ];
+        symbol [ size %tmp.5 284 17 21 ];
+        %tmp.5 = getv function %tmp.4 :size;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = 0;
+        %tmp.8 = gt %tmp.6 %tmp.7;
+        bf %tmp.8 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_284_8_289_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_284_8_289_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_284_29_289_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 285 12 ]
+        symbol [ activePortfolioIdx %tmp.10 285 34 52 ];
+        %tmp.10 = getv ? :activePortfolioIdx;
+        %tmp.11 = 1;
+        %tmp.12 = sub %tmp.10 %tmp.11;
+        %tmp.13 = lgetv %list.1;
+        symbol [ list %tmp.13 285 59 63 ];
+        symbol [ size %tmp.14 285 64 68 ];
+        %tmp.14 = getv function %tmp.13 :size;
+        %tmp.15 = invoke %tmp.13 %tmp.14();
+        %tmp.16 = add %tmp.12 %tmp.15;
+        %tmp.17 = lgetv %list.1;
+        symbol [ list %tmp.17 285 74 78 ];
+        symbol [ size %tmp.18 285 79 83 ];
+        %tmp.18 = getv function %tmp.17 :size;
+        %tmp.19 = invoke %tmp.17 %tmp.18();
+        %tmp.20 = mod %tmp.16 %tmp.19;
+        symbol [ activePortfolioIdx ? 285 12 30 ];
+        putv self :activePortfolioIdx %tmp.20;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 286 12 ]
+        %tmp.21 = 0;
+        symbol [ scrollRowOffset ? 286 12 27 ];
+        putv self :scrollRowOffset %tmp.21;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 287 12 ]
+        %tmp.22 = self;
+        symbol [ resetSwipeTimer %tmp.23 287 12 27 ];
+        %tmp.23 = getv function %tmp.22 :resetSwipeTimer;
+        invoke %tmp.22 %tmp.23();
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc" 288 12 ]
+        symbol [ WatchUi %tmp.24 288 12 19 ];
+        %tmp.24 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.25 288 20 33 ];
+        %tmp.25 = getv function %tmp.24 :requestUpdate;
+        invoke %tmp.24 %tmp.25();
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_284_29_289_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_284_8_289_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_284_8_289_8_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_PortfolioStore_mc_282_37_290_4_stop:
+    }
+}
+[ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 1; ]
+<init> {
+}

@@ -1,0 +1,10 @@
+<strings>
+    <string id="AppName">Venu2Moat</string>
+    <string id="SyncKeyTitle">Sync Key (Venu2Moat Web)</string>
+    <string id="ApiUrlTitle">Server HTTPS Base URL</string>
+    <string id="ShowBollingerTitle">Show SMA20 + Bollinger Bands</string>
+    <string id="AutoSwipeEnabledTitle">Auto-Swipe Next Screen</string>
+    <string id="AutoSwipeSecTitle">Auto-Swipe Interval (Seconds)</string>
+    <string id="AlwaysOnDisplayTitle">Always-On Screen While Open</string>
+    <string id="ActivationKeyTitle">Device Activation Code (Paid)</string>
+</strings>

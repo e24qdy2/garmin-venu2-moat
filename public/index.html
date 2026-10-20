@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Venu2Moat — Portfolio &amp; WebMemo Telemetry for Garmin Venu 2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/light/style.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          colors: {
+            void: '#050608',
+            core: '#0B0E14',
+            rim: '#161B24',
+            alabaster: '#F2F5F8',
+            emerald: '#10B981',
+            crimson: '#F43F5E',
+            cyan: '#06B6D4',
+            amber: '#F59E0B'
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body class="bg-void text-alabaster font-sans antialiased selection:bg-emerald/30 selection:text-alabaster min-h-[100dvh] overflow-x-hidden">
+
+  <!-- Fixed Ambient Radial Mesh (GPU-safe, non-scrolling) -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <div class="ambient-orb ambient-orb-emerald"></div>
+    <div class="ambient-orb ambient-orb-cyan"></div>
+  </div>
+
+  <!-- Fixed Film Grain Overlay (strictly fixed pointer-events-none per guardrail) -->
+  <div class="fixed inset-0 pointer-events-none z-40 noise-overlay" aria-hidden="true"></div>
+
+  <!-- Floating Fluid Island Navbar -->
+  <header class="sticky top-6 z-30 px-4">
+    <nav class="mx-auto w-max max-w-full rounded-full bg-void/75 backdrop-blur-2xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.16)] px-3 py-2 flex items-center gap-3 sm:gap-5 spring-transition">
+      <a href="#top" class="flex items-center gap-2.5 pl-2 pr-1">
+        <span class="relative flex h-2.5 w-2.5">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald"></span>
+        </span>
+        <span class="font-bold tracking-tight text-sm text-alabaster">Venu2Moat</span>
+        <span class="hidden md:inline-block font-mono text-[11px] text-slate-400 bg-white/[0.04] px-2 py-0.5 rounded-full ring-1 ring-white/10">416×416 AMOLED</span>
+      </a>
+
+      <!-- Sync Key Pill -->
+      <button id="openSyncModalBtn" type="button" class="group flex items-center gap-2 rounded-full bg-white/[0.04] hover:bg-white/[0.08] ring-1 ring-white/10 px-3.5 py-1.5 text-xs spring-transition active:scale-[0.98]" title="เปลี่ยนรหัส Sync Key ของนาฬิกา Venu 2">
+        <i class="ph-light ph-watch text-cyan text-sm"></i>
+        <span class="text-slate-400 hidden sm:inline">Sync Key:</span>
+        <span id="navSyncKeyDisplay" class="font-mono font-semibold text-alabaster">VENU2-88</span>
+      </button>
+
+      <!-- License Status Badge -->
+      <a href="#watchSettingsCard" id="navLicenseBadge" class="hidden md:flex items-center gap-1.5 rounded-full bg-emerald/15 ring-1 ring-emerald/30 px-3 py-1 text-[11px] font-mono text-emerald spring-transition hover:bg-emerald/25" title="สถานะสิทธิ์การใช้งาน Garmin Venu 2 (14-Day Trial / Pro)">
+        <i class="ph-light ph-shield-check text-xs"></i>
+        <span id="navLicenseText">TRIAL 14D</span>
+      </a>
+
+      <!-- Admin Subdomain Link -->
+      <a href="https://admin-moat.readybyte.top" target="_blank" rel="noopener" id="navAdminPortalLink" class="hidden lg:flex items-center gap-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] ring-1 ring-white/10 px-3 py-1.5 text-[11px] font-mono text-slate-300 spring-transition" title="เปิดหน้า Web Admin (Cloudflare OTP Protected)">
+        <i class="ph-light ph-key text-amber text-xs"></i>
+        <span>Admin</span>
+      </a>
+
+      <!-- Base Currency Switcher -->
+      <div class="flex items-center rounded-full bg-white/[0.04] ring-1 ring-white/10 p-0.5 text-xs font-mono">
+        <button id="curThbBtn" type="button" class="px-2.5 py-1 rounded-full spring-transition font-semibold bg-emerald/20 text-emerald">฿ THB</button>
+        <button id="curUsdBtn" type="button" class="px-2.5 py-1 rounded-full spring-transition text-slate-400 hover:text-alabaster">$ USD</button>
+      </div>
+
+      <!-- Refresh Quotes Button -->
+      <button id="refreshQuotesBtn" type="button" class="flex items-center gap-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] ring-1 ring-white/10 px-3 py-1.5 text-xs text-slate-300 spring-transition active:scale-[0.98]" title="ดึงราคาตลาดล่าสุดจาก Yahoo Finance">
+        <i id="refreshSpinnerIcon" class="ph-light ph-arrows-clockwise text-sm text-emerald"></i>
+        <span class="hidden sm:inline">อัปเดตราคา</span>
+      </button>
+
+      <!-- Morphing 2-Line Hamburger Button -->
+      <button id="menuToggleBtn" type="button" aria-label="เปิดเมนูเครื่องมือและคู่มือการซิงก์ Garmin Venu 2" aria-expanded="false" class="relative w-9 h-9 rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 flex items-center justify-center spring-transition active:scale-[0.96]">
+        <span class="hamburger-line hamburger-line-top"></span>
+        <span class="hamburger-line hamburger-line-bottom"></span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Full-Screen Glass Modal Menu (Fluid Island Reveal) -->
+  <div id="islandMenuOverlay" class="fixed inset-0 z-20 bg-void/85 backdrop-blur-3xl opacity-0 pointer-events-none spring-transition flex flex-col justify-center items-center px-6">
+    <div class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Card 1: Garmin Venu 2 Endpoint & Sync -->
+      <div class="menu-reveal-item translate-y-12 opacity-0 spring-transition delay-100 double-bezel-shell">
+        <div class="double-bezel-core p-6 h-full flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-mono text-cyan">GARMIN CONNECT IQ</span>
+              <i class="ph-light ph-broadcast text-xl text-cyan"></i>
+            </div>
+            <h3 class="text-lg font-bold text-alabaster mb-2">Watch JSON Endpoint</h3>
+            <p class="text-xs text-slate-400 leading-relaxed mb-4">
+              URL ที่แอปบนนาฬิกา Garmin Venu 2 ใช้ดึงข้อมูลพอร์ตและกราฟราคาผ่าน <code class="font-mono text-alabaster">makeWebRequest</code>
+            </p>
+            <div class="rounded-2xl bg-void/80 ring-1 ring-white/10 p-3 font-mono text-[11px] text-emerald break-all" id="watchEndpointUrlBox">
+              /api/watch?key=VENU2-88
+            </div>
+          </div>
+          <button id="copyWatchApiBtn" type="button" class="mt-5 w-full rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 py-2.5 px-4 text-xs font-medium flex items-center justify-center gap-2 spring-transition active:scale-[0.98]">
+            <i class="ph-light ph-copy text-sm"></i>
+            <span>คัดลอก Watch API URL</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 2: Import / Export Portfolio -->
+      <div class="menu-reveal-item translate-y-12 opacity-0 spring-transition delay-150 double-bezel-shell">
+        <div class="double-bezel-core p-6 h-full flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-mono text-emerald">PORTFOLIO BACKUP</span>
+              <i class="ph-light ph-file-arrow-down text-xl text-emerald"></i>
+            </div>
+            <h3 class="text-lg font-bold text-alabaster mb-2">Import &amp; Export พอร์ต</h3>
+            <p class="text-xs text-slate-400 leading-relaxed mb-4">
+              สำรองข้อมูลพอร์ตและบันทึก WebMemo ทั้งหมดเป็นไฟล์ JSON/CSV หรือนำเข้าพอร์ตจากไฟล์ที่มีอยู่
+            </p>
+          </div>
+          <div class="space-y-2.5">
+            <button id="exportJsonBtn" type="button" class="w-full rounded-full bg-emerald/15 hover:bg-emerald/25 ring-1 ring-emerald/30 text-emerald py-2.5 px-4 text-xs font-semibold flex items-center justify-center gap-2 spring-transition active:scale-[0.98]">
+              <i class="ph-light ph-download-simple text-sm"></i>
+              <span>ดาวน์โหลดพอร์ต (JSON)</span>
+            </button>
+            <button id="exportCsvBtn" type="button" class="w-full rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 text-alabaster py-2.5 px-4 text-xs font-medium flex items-center justify-center gap-2 spring-transition active:scale-[0.98]">
+              <i class="ph-light ph-table text-sm"></i>
+              <span>ส่งออกตารางหุ้น (CSV)</span>
+            </button>
+            <label class="w-full rounded-full bg-white/[0.04] hover:bg-white/[0.09] ring-1 ring-white/10 text-slate-300 py-2.5 px-4 text-xs font-medium flex items-center justify-center gap-2 cursor-pointer spring-transition active:scale-[0.98]">
+              <i class="ph-light ph-upload-simple text-sm"></i>
+              <span>นำเข้าไฟล์พอร์ต (JSON)</span>
+              <input id="importJsonInput" type="file" accept=".json" class="hidden" />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Connect IQ Build & Sideload Guide -->
+      <div class="menu-reveal-item translate-y-12 opacity-0 spring-transition delay-200 double-bezel-shell">
+        <div class="double-bezel-core p-6 h-full flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-mono text-amber">VENU 2 HARDWARE</span>
+              <i class="ph-light ph-cpu text-xl text-amber"></i>
+            </div>
+            <h3 class="text-lg font-bold text-alabaster mb-2">ติดตั้งลง Garmin Venu 2</h3>
+            <p class="text-xs text-slate-400 leading-relaxed mb-3">
+              ซอร์สโค้ด Monkey C สำหรับ Garmin Venu 2 อยู่ในโฟลเดอร์ <code class="font-mono text-alabaster">garmin-venu2-app/</code> พร้อมสคริปต์ Build &amp; Sideload ลงนาฬิกาผ่านสาย USB
+            </p>
+            <div class="rounded-2xl bg-void/80 ring-1 ring-white/10 p-3 font-mono text-[11px] text-slate-300">
+              .\build-and-sideload.ps1 -SyncKey VENU2-88
+            </div>
+          </div>
+          <button id="inspectPayloadBtn" type="button" class="mt-5 w-full rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 py-2.5 px-4 text-xs font-medium flex items-center justify-center gap-2 spring-transition active:scale-[0.98]">
+            <i class="ph-light ph-code text-sm"></i>
+            <span>ดูข้อมูลดิบที่ส่งเข้า Venu 2</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Editorial Split + Asymmetrical Bento Workspace -->
+  <main id="top" class="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-8 pt-12 pb-28 md:py-20">
+
+    <!-- Hero Telemetry Chronometer Bridge -->
+    <section class="reveal-on-scroll mb-12">
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
+        <div>
+          <div class="inline-flex items-center gap-2 rounded-full bg-white/[0.04] ring-1 ring-white/10 px-3.5 py-1 mb-4">
+            <span class="h-1.5 w-1.5 rounded-full bg-cyan"></span>
+            <span class="text-xs font-medium text-slate-300">Garmin Venu 2 Portfolio &amp; WebMemo Companion</span>
+          </div>
+          <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-alabaster leading-[1.12]">
+            พอร์ตหุ้นและบันทึกช่วยจำ<br class="hidden sm:inline" />บนข้อมือ Garmin Venu 2 ของคุณ
+          </h1>
+        </div>
+        <p class="text-sm text-slate-400 max-w-md leading-relaxed">
+          จัดการหลายพอร์ตการลงทุน คำนวณกำไร-ขาดทุนจริงตั้งแต่วันที่ซื้อ ตั้งเตือนราคาเป้าหมาย และซิงก์โน้ตย่อเข้าหน้าจอสัมผัส AMOLED 416×416 พิกเซลของ Venu 2 ทันที
+        </p>
+      </div>
+
+      <!-- Unified Chronometer Summary Tray (Double-Bezel Architecture) -->
+      <div class="double-bezel-shell">
+        <div class="double-bezel-core p-6 sm:p-8">
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+            <!-- Net Worth Readout (5 cols) -->
+            <div class="md:col-span-5 md:border-r md:border-white/[0.07] md:pr-6">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs text-slate-400 font-medium">มูลค่าพอร์ตรวมสุทธิ (Net Worth)</span>
+                <span id="lastUpdatedBadge" class="font-mono text-[11px] text-slate-400">ซิงก์ล่าสุด --:--</span>
+              </div>
+              <div id="grandTotalValue" class="font-mono text-3xl sm:text-4xl font-bold tracking-tight text-alabaster tabular-nums">
+                ฿0.00
+              </div>
+              <div class="mt-2 flex flex-wrap items-center gap-3 text-xs font-mono">
+                <span class="text-slate-400">ต้นทุนรวม: <strong id="grandTotalCost" class="text-slate-200 font-medium">฿0.00</strong></span>
+                <span class="text-slate-600">|</span>
+                <span class="text-slate-400">USD/THB: <strong id="fxRateReadout" class="text-cyan font-medium">33.85</strong></span>
+              </div>
+            </div>
+
+            <!-- Daily P&L + Total Unrealized Return + Alerts (7 cols) -->
+            <div class="md:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <!-- Daily P&L -->
+              <div class="rounded-2xl bg-white/[0.025] ring-1 ring-white/[0.06] p-4">
+                <div class="text-xs text-slate-400 mb-1">เปลี่ยนแปลงวันนี้ (Day P&amp;L)</div>
+                <div id="grandDayPnl" class="font-mono text-lg font-bold tabular-nums text-emerald">+฿0.00</div>
+                <div id="grandDayPct" class="font-mono text-xs tabular-nums text-emerald/80 mt-0.5">+0.00%</div>
+              </div>
+
+              <!-- Total Unrealized Return -->
+              <div class="rounded-2xl bg-white/[0.025] ring-1 ring-white/[0.06] p-4">
+                <div class="text-xs text-slate-400 mb-1">กำไร/ขาดทุนสะสม (Total Return)</div>
+                <div id="grandTotalPnl" class="font-mono text-lg font-bold tabular-nums text-emerald">+฿0.00</div>
+                <div id="grandTotalPct" class="font-mono text-xs tabular-nums text-emerald/80 mt-0.5">+0.00%</div>
+              </div>
+
+              <!-- Active Target Alerts -->
+              <div class="rounded-2xl bg-white/[0.025] ring-1 ring-white/[0.06] p-4 flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs text-slate-400">สัญญาณเตือนบนนาฬิกา</span>
+                  <i class="ph-light ph-bell-ringing text-amber text-base"></i>
+                </div>
+                <div class="mt-1 flex items-baseline gap-2">
+                  <span id="activeAlertCount" class="font-mono text-xl font-bold text-alabaster tabular-nums">0</span>
+                  <span class="text-xs text-slate-400">รายการถึงเป้า/จุดเฝ้าระวัง</span>
+                </div>
+                <div id="portfolioCountSummary" class="text-[11px] font-mono text-slate-400 mt-0.5">3 พอร์ต · 13 สินทรัพย์</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Primary Editorial Split: Left 7 Cols (Portfolio Ledger) | Right 5 Cols (Interactive Venu 2 Watch Bench) -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- LEFT 7 COLUMNS: MULTI-PORTFOLIO WORKSPACE & WEBMEMO LEDGER -->
+      <div class="lg:col-span-7 space-y-6 reveal-on-scroll">
+
+        <!-- Multi-Portfolio Tabs + Add Portfolio Button -->
+        <div class="double-bezel-shell">
+          <div class="double-bezel-core p-4 sm:p-5">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <div id="portfolioTabsContainer" class="flex flex-wrap items-center gap-2" role="tablist">
+                <!-- Populated dynamically by app.js -->
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button id="addPortfolioBtn" type="button" class="rounded-full bg-white/[0.05] hover:bg-white/[0.1] ring-1 ring-white/10 px-3.5 py-1.5 text-xs font-medium text-alabaster flex items-center gap-1.5 spring-transition active:scale-[0.97]">
+                  <i class="ph-light ph-folder-plus text-sm text-cyan"></i>
+                  <span>สร้างพอร์ตใหม่</span>
+                </button>
+                <button id="deletePortfolioBtn" type="button" class="rounded-full bg-white/[0.03] hover:bg-crimson/20 ring-1 ring-white/10 hover:ring-crimson/40 p-2 text-xs text-slate-400 hover:text-crimson spring-transition" title="ลบพอร์ตนี้">
+                  <i class="ph-light ph-trash text-sm"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Active Portfolio Sub-Summary Bar -->
+            <div class="rounded-2xl bg-void/70 ring-1 ring-white/[0.06] px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <div class="flex items-center gap-2">
+                  <h2 id="activePortfolioTitle" class="text-base font-bold text-alabaster">US Core &amp; AI Moat</h2>
+                  <button id="renamePortfolioBtn" type="button" class="text-slate-400 hover:text-alabaster text-xs p-1 rounded-lg" title="เปลี่ยนชื่อพอร์ต">
+                    <i class="ph-light ph-pencil-simple"></i>
+                  </button>
+                </div>
+                <p class="text-xs text-slate-400 font-mono" id="activePortfolioMeta">รหัสบนนาฬิกา: US MOAT</p>
+              </div>
+
+              <div class="flex items-center gap-6 font-mono text-right">
+                <div>
+                  <div class="text-[11px] text-slate-400">มูลค่าพอร์ตนี้</div>
+                  <div id="activePortValue" class="text-sm font-bold text-alabaster tabular-nums">฿0.00</div>
+                </div>
+                <div>
+                  <div class="text-[11px] text-slate-400">วันนี้ (Day)</div>
+                  <div id="activePortDayPnl" class="text-sm font-semibold text-emerald tabular-nums">+0.00%</div>
+                </div>
+                <div>
+                  <div class="text-[11px] text-slate-400">กำไรรวม (Return)</div>
+                  <div id="activePortTotalPnl" class="text-sm font-semibold text-emerald tabular-nums">+0.00%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Symbol Search & Add Holding Tray (Double-Bezel) -->
+        <div class="double-bezel-shell">
+          <div class="double-bezel-core p-5 sm:p-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+              <div>
+                <h3 class="text-base font-bold text-alabaster flex items-center gap-2">
+                  <i class="ph-light ph-magnifying-glass text-emerald"></i>
+                  <span>เพิ่มสินทรัพย์หรือโน้ตเข้าพอร์ต</span>
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">
+                  พิมพ์ชื่อย่อหุ้นสหรัฐฯ (<code class="font-mono text-slate-200">NVDA</code>), หุ้นไทย (<code class="font-mono text-slate-200">ADVANC.BK</code>), คริปโต (<code class="font-mono text-slate-200">BTC-USD</code>) หรือทองคำ (<code class="font-mono text-slate-200">GC=F</code>)
+                </p>
+              </div>
+              <!-- Primary CTA with Button-in-Button Architecture -->
+              <button id="openAddModalBtn" type="button" class="group rounded-full bg-emerald text-void font-bold text-xs pl-5 pr-1.5 py-1.5 flex items-center gap-3 self-start sm:self-auto spring-transition active:scale-[0.98] shadow-lg shadow-emerald/15">
+                <span>เพิ่มรายการใหม่</span>
+                <span class="w-7 h-7 rounded-full bg-void/15 flex items-center justify-center spring-transition group-hover:translate-x-0.5 group-hover:-translate-y-[1px] group-hover:scale-105">
+                  <i class="ph-light ph-plus text-sm text-void font-bold"></i>
+                </span>
+              </button>
+            </div>
+
+            <!-- Live Autocomplete Input -->
+            <div class="relative">
+              <div class="flex items-center rounded-2xl bg-void/90 ring-1 ring-white/10 focus-within:ring-emerald/60 px-4 py-2.5 gap-3 spring-transition">
+                <i class="ph-light ph-sparkle text-emerald text-base"></i>
+                <input
+                  id="quickSearchInput"
+                  type="text"
+                  placeholder="ค้นหาด่วน เช่น AAPL, TSLA, SCB.BK, AOT.BK, SOL-USD แล้วคลิกเพื่อเพิ่มลงพอร์ต..."
+                  autocomplete="off"
+                  class="w-full bg-transparent text-xs sm:text-sm text-alabaster placeholder-slate-500 focus:outline-none font-mono"
+                />
+                <span id="searchStatusBadge" class="text-[11px] font-mono text-slate-500 whitespace-nowrap">Yahoo Live</span>
+              </div>
+
+              <!-- Autocomplete Dropdown -->
+              <div id="searchDropdown" class="hidden absolute left-0 right-0 top-full mt-2 z-30 rounded-2xl bg-core ring-1 ring-white/15 shadow-2xl overflow-hidden divide-y divide-white/[0.06]">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Holdings & WebMemo Ledger Table (Double-Bezel) -->
+        <div class="double-bezel-shell">
+          <div class="double-bezel-core p-4 sm:p-6">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 class="text-base font-bold text-alabaster">รายการสินทรัพย์และ WebMemo</h3>
+                <p class="text-xs text-slate-400">คลิกที่แถวหุ้นเพื่อจำลองหน้าจอกราฟและโน้ตบนนาฬิกา Garmin Venu 2 ทางขวา</p>
+              </div>
+              <div class="flex items-center gap-2 text-xs font-mono text-slate-400">
+                <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald"></span>ถึงเป้า</span>
+                <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber"></span>ใกล้เป้า</span>
+                <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-crimson"></span>หลุดแนวรับ</span>
+              </div>
+            </div>
+
+            <!-- Responsive Ledger List -->
+            <div id="holdingsListContainer" class="space-y-3">
+              <!-- Populated dynamically by app.js -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT 5 COLUMNS: STICKY 1:1 GARMIN VENU 2 (416x416 AMOLED) HARDWARE BENCH -->
+      <div class="lg:col-span-5 lg:sticky lg:top-24 space-y-6 reveal-on-scroll">
+        <div class="double-bezel-shell">
+          <div class="double-bezel-core p-5 sm:p-7 flex flex-col items-center">
+
+            <!-- Bench Header & Screen Mode Switcher -->
+            <div class="w-full flex flex-wrap items-center justify-between gap-2 mb-5">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="h-2 w-2 rounded-full bg-emerald"></span>
+                  <h3 class="text-sm font-bold text-alabaster">Garmin Venu 2 Hardware Preview</h3>
+                </div>
+                <p class="text-[11px] text-slate-400 font-mono mt-0.5">416×416 Round AMOLED · สัมผัสหน้าจอหรือกดปุ่มข้างตัวเรือนได้จริง</p>
+              </div>
+
+              <!-- Watch Screen Mode Pills -->
+              <div class="flex items-center rounded-full bg-void ring-1 ring-white/10 p-0.5 text-[11px] font-mono">
+                <button data-watch-mode="glance" type="button" class="watch-mode-btn px-2.5 py-1 rounded-full text-slate-400 hover:text-alabaster spring-transition">Glance</button>
+                <button data-watch-mode="list" type="button" class="watch-mode-btn px-2.5 py-1 rounded-full bg-cyan/20 text-cyan font-semibold spring-transition">Portfolio</button>
+                <button data-watch-mode="detail" type="button" class="watch-mode-btn px-2.5 py-1 rounded-full text-slate-400 hover:text-alabaster spring-transition">Chart+Memo</button>
+              </div>
+            </div>
+
+            <!-- Physical Garmin Venu 2 Watch Chassis + Pushers -->
+            <div class="relative flex items-center justify-center my-2 select-none">
+              <!-- Top Watch Strap Lug -->
+              <div class="venu2-strap venu2-strap-top" aria-hidden="true"></div>
+              <!-- Bottom Watch Strap Lug -->
+              <div class="venu2-strap venu2-strap-bottom" aria-hidden="true"></div>
+
+              <!-- Physical Right-Top Pusher Button (Action / Select / Toggle P&L Mode) -->
+              <button
+                id="venuBtnTop"
+                type="button"
+                class="venu2-pusher venu2-pusher-top group"
+                title="ปุ่มบนขวา (Select / สลับโหมดดู Day P&L กับ Total Return / เปิด-ปิด Bollinger Bands)"
+              >
+                <span class="venu2-pusher-cap"></span>
+                <span class="venu2-pusher-label">A · SELECT</span>
+              </button>
+
+              <!-- Physical Right-Bottom Pusher Button (Back / Glance) -->
+              <button
+                id="venuBtnBottom"
+                type="button"
+                class="venu2-pusher venu2-pusher-bottom group"
+                title="ปุ่มล่างขวา (Back ย้อนกลับ / สลับไปหน้า Glance Widget)"
+              >
+                <span class="venu2-pusher-cap"></span>
+                <span class="venu2-pusher-label">B · BACK</span>
+              </button>
+
+              <!-- Stainless Steel Bezel + Minute Chapter Ring + 416x416 Round AMOLED Viewport -->
+              <div class="venu2-bezel">
+                <div class="venu2-chapter-ring">
+                  <div id="venuScreenViewport" class="venu2-amoled-screen" role="region" aria-label="หน้าจอจำลอง Garmin Venu 2 ขนาด 416x416 พิกเซล">
+
+                    <!-- VIEW 1: GLANCE WIDGET CAROUSEL MODE -->
+                    <div id="watchViewGlance" class="watch-view hidden w-full h-full flex flex-col justify-between py-9 px-8 text-center">
+                      <div class="font-mono text-[11px] text-slate-400 tracking-wider" id="watchGlanceClock">10:10</div>
+
+                      <!-- Unfocused upper widget hint -->
+                      <div class="opacity-35 scale-95 flex items-center justify-between px-4 py-2 rounded-2xl bg-white/[0.04] text-left">
+                        <div class="flex items-center gap-2">
+                          <i class="ph-light ph-heartbeat text-crimson text-base"></i>
+                          <span class="text-xs font-semibold text-slate-300">Heart Rate</span>
+                        </div>
+                        <span class="font-mono text-xs text-slate-300">62 bpm</span>
+                      </div>
+
+                      <!-- Active Focused Venu2Moat Glance Bar (Tap to launch full app) -->
+                      <button id="glanceLaunchBtn" type="button" class="w-full rounded-3xl bg-gradient-to-r from-emerald/20 via-core to-cyan/15 ring-1 ring-emerald/40 px-4 py-3.5 text-left flex items-center justify-between shadow-lg spring-transition hover:scale-[1.02] active:scale-[0.98]">
+                        <div class="flex items-center gap-3">
+                          <div class="w-9 h-9 rounded-2xl bg-emerald/20 ring-1 ring-emerald/40 flex items-center justify-center text-emerald font-mono font-bold text-sm">
+                            M
+                          </div>
+                          <div>
+                            <div class="flex items-center gap-1.5">
+                              <span class="text-xs font-bold text-alabaster">Venu2Moat</span>
+                              <span id="glanceAlertDot" class="w-2 h-2 rounded-full bg-amber hidden"></span>
+                            </div>
+                            <div id="glanceNetWorth" class="font-mono text-sm font-bold text-alabaster tabular-nums">฿1,482,910</div>
+                          </div>
+                        </div>
+                        <div class="text-right font-mono">
+                          <div id="glanceDayPnl" class="text-xs font-bold text-emerald tabular-nums">+฿18,420</div>
+                          <div id="glanceDayPct" class="text-[11px] text-emerald/80 tabular-nums">+1.25%</div>
+                        </div>
+                      </button>
+
+                      <!-- Unfocused lower widget hint -->
+                      <div class="opacity-35 scale-95 flex items-center justify-between px-4 py-2 rounded-2xl bg-white/[0.04] text-left">
+                        <div class="flex items-center gap-2">
+                          <i class="ph-light ph-battery-charging text-cyan text-base"></i>
+                          <span class="text-xs font-semibold text-slate-300">Body Battery</span>
+                        </div>
+                        <span class="font-mono text-xs text-slate-300">84 / 100</span>
+                      </div>
+
+                      <div class="text-[10px] font-mono text-slate-400">แตะการ์ดกลางจอเพื่อเปิดแอปเต็ม</div>
+                    </div>
+
+                    <!-- VIEW 2: MAIN PORTFOLIO & HOLDINGS LIST MODE -->
+                    <div id="watchViewList" class="watch-view w-full h-full flex flex-col justify-between pt-6 pb-7 px-6">
+                      <!-- Curved Top Header: Clock + Portfolio Carousel Dots -->
+                      <div class="text-center">
+                        <div class="flex items-center justify-center gap-1.5 text-[10px] font-mono text-slate-400">
+                          <span id="watchListClock">10:10</span>
+                          <span>·</span>
+                          <span id="watchListSyncKey" class="text-cyan">VENU2-88</span>
+                          <span id="watchBadgeAutoSwipe" class="px-1.5 py-0.2 rounded-full bg-cyan/15 text-cyan text-[9px]">AUTO 5s</span>
+                          <span id="watchBadgeAlwaysOn" class="hidden px-1.5 py-0.2 rounded-full bg-amber/20 text-amber text-[9px]">AON</span>
+                        </div>
+
+                        <!-- Portfolio Switcher Row -->
+                        <div class="mt-1 flex items-center justify-center gap-2">
+                          <button id="watchPrevPortBtn" type="button" class="w-6 h-6 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300 text-xs" title="พอร์ตก่อนหน้า">
+                            <i class="ph-light ph-caret-left"></i>
+                          </button>
+                          <div id="watchPortShortName" class="font-sans text-xs font-extrabold tracking-wide text-cyan">
+                            US MOAT
+                          </div>
+                          <button id="watchNextPortBtn" type="button" class="w-6 h-6 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300 text-xs" title="พอร์ตถัดไป">
+                            <i class="ph-light ph-caret-right"></i>
+                          </button>
+                        </div>
+
+                        <!-- Portfolio Net Value & Toggleable Delta -->
+                        <button id="watchTogglePnlModeBtn" type="button" class="mt-0.5 inline-flex flex-col items-center group" title="คลิกเพื่อสลับดู Day P&L หรือ Total Return">
+                          <div id="watchPortTotalVal" class="font-mono text-lg font-bold text-alabaster tabular-nums leading-tight">
+                            ฿1,120,450
+                          </div>
+                          <div class="flex items-center gap-1.5 font-mono text-[11px]">
+                            <span id="watchPortPnlModeLabel" class="text-slate-400 text-[10px]">DAY:</span>
+                            <span id="watchPortDeltaText" class="font-semibold text-emerald tabular-nums">+฿14,200 (+1.28%)</span>
+                          </div>
+                        </button>
+                      </div>
+
+                      <!-- Divider -->
+                      <div class="w-4/5 mx-auto h-[1px] bg-white/10 my-1"></div>
+
+                      <!-- Scrollable Holdings Rows inside 416x416 Circle -->
+                      <div id="watchHoldingsList" class="flex-1 overflow-y-auto watch-scroll space-y-1.5 px-1">
+                        <!-- Populated dynamically by app.js -->
+                      </div>
+
+                      <!-- Bottom Circular Footer Dots -->
+                      <div class="pt-1 flex flex-col items-center">
+                        <div id="watchPortDots" class="flex items-center gap-1.5"></div>
+                        <div class="text-[9px] font-mono text-slate-500 mt-0.5">แตะชื่อหุ้นเพื่อดูกราฟ &amp; โน้ต</div>
+                      </div>
+                    </div>
+
+                    <!-- VIEW 3: SYMBOL DETAIL + SPARKLINE CHART + SMA/BOLLINGER + WEBMEMO -->
+                    <div id="watchViewDetail" class="watch-view hidden w-full h-full flex flex-col justify-between pt-6 pb-7 px-7">
+                      <!-- Top Symbol Header -->
+                      <div class="text-center">
+                        <div class="flex items-center justify-center gap-2">
+                          <button id="watchBackToListBtn" type="button" class="w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-[10px] text-alabaster" title="กลับหน้ารายการ">
+                            <i class="ph-light ph-arrow-left"></i>
+                          </button>
+                          <span id="watchDetailSymbol" class="font-mono text-sm font-extrabold text-alabaster">NVDA</span>
+                          <span id="watchDetailAlertBadge" class="text-[9px] font-mono px-1.5 py-0.5 rounded-full bg-emerald/20 text-emerald">ACTIVE</span>
+                        </div>
+                        <div class="mt-0.5 flex items-baseline justify-center gap-2 font-mono">
+                          <span id="watchDetailPrice" class="text-base font-bold text-alabaster tabular-nums">$138.60</span>
+                          <span id="watchDetailChange" class="text-xs font-semibold text-emerald tabular-nums">+2.82%</span>
+                        </div>
+                      </div>
+
+                      <!-- High-DPI AMOLED Sparkline + SMA20 + Bollinger Canvas -->
+                      <div class="relative my-1 rounded-2xl bg-white/[0.03] ring-1 ring-white/[0.08] p-2">
+                        <div class="flex items-center justify-between text-[9px] font-mono text-slate-400 mb-1 px-1">
+                          <span id="watchChartLowLabel">L: $135.10</span>
+                          <button id="watchToggleBbBtn" type="button" class="text-cyan hover:underline">SMA20 + BB</button>
+                          <span id="watchChartHighLabel">H: $139.90</span>
+                        </div>
+                        <canvas id="watchSparklineCanvas" width="260" height="74" class="w-full h-[74px] block"></canvas>
+                      </div>
+
+                      <!-- Position & Target Summary Strip -->
+                      <div class="grid grid-cols-2 gap-1.5 font-mono text-[10px] bg-white/[0.03] rounded-xl px-2.5 py-1.5 ring-1 ring-white/[0.06]">
+                        <div>
+                          <span class="text-slate-400">ทุน/หุ้น:</span>
+                          <span id="watchDetailPos" class="text-alabaster font-semibold ml-1">45 @ $98.5</span>
+                        </div>
+                        <div class="text-right">
+                          <span class="text-slate-400">กำไร:</span>
+                          <span id="watchDetailPnl" class="text-emerald font-semibold ml-1">+40.7%</span>
+                        </div>
+                        <div>
+                          <span class="text-slate-400">เป้า ▲:</span>
+                          <span id="watchDetailTarget" class="text-emerald ml-1">$155.0</span>
+                        </div>
+                        <div class="text-right">
+                          <span class="text-slate-400">รับ ▼:</span>
+                          <span id="watchDetailStop" class="text-crimson ml-1">$112.0</span>
+                        </div>
+                      </div>
+
+                      <!-- WebMemo Note Box on Watch -->
+                      <div class="mt-1 rounded-2xl bg-cyan/[0.07] ring-1 ring-cyan/25 px-3 py-2 text-center">
+                        <div class="text-[9px] font-mono text-cyan mb-0.5">WEBMEMO NOTE</div>
+                        <p id="watchDetailMemo" class="text-[11px] text-alabaster leading-snug line-clamp-2">
+                          Blackwell rack ramp Q4. Trim 10 sh &gt; $155, hold core.
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- VIEW 4: 14-DAY TRIAL EXPIRED / ACTIVATION REQUIRED LOCK SCREEN -->
+                    <div id="watchViewExpired" class="watch-view hidden w-full h-full flex flex-col justify-between items-center py-9 px-7 text-center bg-gradient-to-b from-crimson/15 via-void to-void">
+                      <div class="text-[10px] font-mono text-crimson tracking-widest uppercase">LICENSE LOCKED</div>
+                      <div class="flex flex-col items-center">
+                        <div class="w-11 h-11 rounded-full bg-crimson/20 ring-1 ring-crimson/50 flex items-center justify-center text-crimson mb-2">
+                          <i class="ph-light ph-lock-key text-xl"></i>
+                        </div>
+                        <div class="font-sans text-sm font-extrabold text-alabaster">TRIAL 14D EXPIRED</div>
+                        <div class="text-[10px] text-slate-400 mt-0.5">หมดเวลาทดลองใช้ฟรี 14 วัน</div>
+                        <div class="mt-2.5 rounded-xl bg-white/[0.04] ring-1 ring-white/10 px-3 py-1.5 font-mono text-[10px]">
+                          <span class="text-slate-400">DEVICE ID:</span>
+                          <span id="watchExpiredDeviceId" class="text-cyan font-bold ml-1">V2-88VENU20</span>
+                        </div>
+                        <div class="mt-2.5 rounded-2xl bg-amber/10 ring-1 ring-amber/30 px-3 py-2">
+                          <div class="text-[9px] font-mono text-amber uppercase">Contact App Owner (Paid Version)</div>
+                          <div id="watchExpiredOwnerEmail" class="font-mono text-xs font-bold text-alabaster mt-0.5">saharabu@scg.com</div>
+                        </div>
+                      </div>
+                      <div class="text-[9px] font-mono text-slate-400">กรอกรหัส Activate บนหน้าเว็บเพื่อปลดล็อก</div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Interactive Watch Controls Legend -->
+            <div class="w-full mt-4 pt-4 border-t border-white/[0.07] grid grid-cols-3 gap-2 text-center text-[11px] text-slate-400">
+              <div class="rounded-xl bg-white/[0.025] p-2">
+                <div class="font-mono text-alabaster font-semibold">ปุ่มบนขวา (A)</div>
+                <div class="mt-0.5">สลับ Day / Total P&amp;L</div>
+              </div>
+              <div class="rounded-xl bg-white/[0.025] p-2">
+                <div class="font-mono text-alabaster font-semibold">แตะแถวหุ้น</div>
+                <div class="mt-0.5">เปิดกราฟ + อ่าน Note</div>
+              </div>
+              <div class="rounded-xl bg-white/[0.025] p-2">
+                <div class="font-mono text-alabaster font-semibold">ปุ่มล่างขวา (B)</div>
+                <div class="mt-0.5">ย้อนกลับ / Glance</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- WATCH DISPLAY SETTINGS (AUTO-SWIPE & ALWAYS-ON) + DEVICE LICENSE ACTIVATION CARD -->
+        <div id="watchSettingsCard" class="double-bezel-shell">
+          <div class="double-bezel-core p-5 sm:p-6 space-y-5">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="flex items-center gap-2">
+                  <i class="ph-light ph-sliders-horizontal text-cyan text-base"></i>
+                  <h3 class="text-sm font-bold text-alabaster">ตั้งค่าหน้าจอนาฬิกา &amp; สิทธิ์การใช้งาน (Venu 2 Settings)</h3>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-0.5">ซิงก์การเลื่อนหน้าจออัตโนมัติ (Auto-Swipe), โหมดจอไม่ดับ (Always-On) และสถานะ License เข้าสู่นาฬิกา</p>
+              </div>
+              <span id="autoSwipeCountdownBadge" class="font-mono text-[11px] px-2.5 py-1 rounded-full bg-cyan/15 text-cyan ring-1 ring-cyan/30">Auto 5s</span>
+            </div>
+
+            <!-- 1. Auto-Swipe Screen Setting (Default 5s + Custom Seconds) -->
+            <div class="rounded-2xl bg-void/70 ring-1 ring-white/[0.07] p-4 space-y-3">
+              <div class="flex items-center justify-between gap-3">
+                <div>
+                  <div class="text-xs font-bold text-alabaster flex items-center gap-1.5">
+                    <span>เลื่อนหน้าจอหุ้นอัตโนมัติ (Auto-Swipe Next Screen)</span>
+                  </div>
+                  <p class="text-[11px] text-slate-400">สลับหน้าดูหุ้นทุกตัวและทุกพอร์ตจนครบอัตโนมัติ (ค่าเริ่มต้นทุก 5 วินาที)</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input id="autoSwipeToggle" type="checkbox" checked class="sr-only peer" />
+                  <div class="w-10 h-5 bg-white/10 rounded-full peer peer-checked:bg-emerald/80 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-alabaster after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5"></div>
+                </label>
+              </div>
+
+              <div class="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-white/[0.05]">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[11px] text-slate-400">ความเร็ว (วินาที):</span>
+                  <button type="button" data-swipe-preset="3" class="swipe-preset-btn px-2 py-0.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.1] text-[11px] font-mono text-slate-300">3s</button>
+                  <button type="button" data-swipe-preset="5" class="swipe-preset-btn px-2 py-0.5 rounded-lg bg-cyan/20 ring-1 ring-cyan/40 text-[11px] font-mono text-cyan font-semibold">5s (Default)</button>
+                  <button type="button" data-swipe-preset="10" class="swipe-preset-btn px-2 py-0.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.1] text-[11px] font-mono text-slate-300">10s</button>
+                  <button type="button" data-swipe-preset="15" class="swipe-preset-btn px-2 py-0.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.1] text-[11px] font-mono text-slate-300">15s</button>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <input id="autoSwipeSecInput" type="number" min="2" max="120" value="5" class="w-16 rounded-xl bg-core ring-1 ring-white/15 focus:ring-cyan px-2.5 py-1 text-xs font-mono text-alabaster text-center focus:outline-none" />
+                  <span class="text-[11px] font-mono text-slate-400">sec</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Always-On Display Setting (Optional / Not Forced) -->
+            <div class="rounded-2xl bg-void/70 ring-1 ring-white/[0.07] p-4 flex items-center justify-between gap-3">
+              <div>
+                <div class="text-xs font-bold text-alabaster flex items-center gap-1.5">
+                  <span>เปิดหน้าจอค้างไว้เมื่อเปิดแอป (Always-On Screen)</span>
+                  <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-white/[0.06] text-slate-400">Optional</span>
+                </div>
+                <p class="text-[11px] text-slate-400">ป้องกันไม่ให้หน้าจอ Garmin Venu 2 ดับขณะเปิดดูพอร์ต (ไม่บังคับเปิด เลือกเปิด/ปิดได้ตลอดเวลา)</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                <input id="alwaysOnToggle" type="checkbox" class="sr-only peer" />
+                <div class="w-10 h-5 bg-white/10 rounded-full peer peer-checked:bg-amber/80 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-alabaster after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5"></div>
+              </label>
+            </div>
+
+            <!-- 3. Device ID & 14-Day Trial / Paid Activation System -->
+            <div class="rounded-2xl bg-void/70 ring-1 ring-white/[0.07] p-4 space-y-3">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <div class="text-[11px] font-mono text-slate-400">GARMIN DEVICE LICENSE (14-DAY TRIAL)</div>
+                  <div class="flex items-center gap-2 mt-0.5">
+                    <span class="text-xs text-slate-400">Device ID:</span>
+                    <input id="watchDeviceIdInput" type="text" value="V2-88VENU20" class="w-32 rounded-lg bg-core ring-1 ring-white/10 px-2 py-0.5 font-mono text-xs font-bold text-cyan uppercase focus:outline-none focus:ring-cyan" title="รหัสประจำเครื่องนาฬิกา Garmin Venu 2" />
+                  </div>
+                </div>
+                <span id="licenseStatusPill" class="font-mono text-[11px] px-2.5 py-1 rounded-full bg-emerald/15 text-emerald ring-1 ring-emerald/30 font-semibold">
+                  TRIAL · 14d left
+                </span>
+              </div>
+
+              <div id="licenseDetailBanner" class="rounded-xl bg-white/[0.03] ring-1 ring-white/[0.06] px-3 py-2 text-[11px] text-slate-300 flex flex-wrap items-center justify-between gap-2">
+                <span id="licenseExpiryText">ทดลองใช้ฟรี 14 วัน · หากหมดเวลาติดต่อเวอร์ชันเต็มที่ <strong class="font-mono text-amber">saharabu@scg.com</strong></span>
+              </div>
+
+              <!-- Activation Code Input Row -->
+              <div class="flex flex-col sm:flex-row gap-2">
+                <input
+                  id="activationKeyInput"
+                  type="text"
+                  placeholder="กรอกรหัส Activate (MOAT-XXXX-XXXX-XXXX)"
+                  class="flex-1 rounded-xl bg-core ring-1 ring-white/15 focus:ring-emerald px-3 py-2 font-mono text-xs text-alabaster uppercase placeholder-slate-500 focus:outline-none"
+                />
+                <button
+                  id="activateDeviceBtn"
+                  type="button"
+                  class="rounded-xl bg-emerald text-void font-bold text-xs px-4 py-2 font-sans spring-transition active:scale-[0.98] whitespace-nowrap"
+                >
+                  Activate เครื่องนี้
+                </button>
+              </div>
+
+              <div class="flex items-center justify-between text-[11px] pt-1 border-t border-white/[0.05]">
+                <span class="text-slate-400">สำหรับผู้ดูแลระบบ (ออกรหัส Activate รายเครื่อง):</span>
+                <a href="https://admin-moat.readybyte.top" target="_blank" rel="noopener" id="openAdminPortalBtn" class="font-mono text-cyan hover:underline flex items-center gap-1">
+                  <i class="ph-light ph-shield-star"></i>
+                  <span>admin-moat.readybyte.top</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Secondary Bento Section: Garmin Venu 2 Connect IQ Companion Architecture & Sideload Guide -->
+    <section class="mt-24 reveal-on-scroll">
+      <div class="mb-8">
+        <div class="inline-flex items-center gap-2 rounded-full bg-white/[0.04] ring-1 ring-white/10 px-3.5 py-1 mb-3">
+          <span class="h-1.5 w-1.5 rounded-full bg-emerald"></span>
+          <span class="text-xs font-medium text-slate-300">Connect IQ Monkey C Native App Included</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-alabaster tracking-tight">
+          พร้อมติดตั้งลงนาฬิกา Garmin Venu 2 จริงของคุณ
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <!-- Asymmetric Bento Col 8 -->
+        <div class="md:col-span-8 double-bezel-shell">
+          <div class="double-bezel-core p-6 sm:p-8 h-full flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="font-mono text-xs text-emerald">garmin-venu2-app/source/*.mc</span>
+                <span class="font-mono text-xs text-slate-400">Target: venu2 / venu2plus / venu2s</span>
+              </div>
+              <h3 class="text-xl font-bold text-alabaster mb-2">
+                สถาปัตยกรรมแบบเดียวกับ Easymoat MarketWatch + WebMemo แต่คุณเป็นเจ้าของเอง 100%
+              </h3>
+              <p class="text-sm text-slate-400 leading-relaxed mb-6">
+                ตัวแอปภาษา Monkey C ถูกออกแบบมาให้ใช้หน่วยความจำต่ำและเรนเดอร์กราฟแบบ Anti-Aliased บนหน้าจอ AMOLED 416×416 ของ Garmin Venu 2 โดยเฉพาะ พร้อมระบบแคชข้อมูลลง <code class="font-mono text-alabaster">Application.Storage</code> ทำให้เปิดดูพอร์ตและโน้ตได้ทันทีแม้ในจังหวะที่ไม่ได้เชื่อมต่อบลูทูธกับมือถือ
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 font-mono text-xs">
+              <div class="rounded-2xl bg-void/70 ring-1 ring-white/[0.07] p-4">
+                <div class="text-cyan font-semibold mb-1">1. Glance Widget</div>
+                <p class="text-slate-400 font-sans text-xs">แสดงมูลค่าพอร์ตรวมและกำไรรายวันบนหน้ารวมวิจิตของนาฬิกาโดยไม่ต้องกดเข้าแอป</p>
+              </div>
+              <div class="rounded-2xl bg-void/70 ring-1 ring-white/[0.07] p-4">
+                <div class="text-emerald font-semibold mb-1">2. Multi-Portfolio</div>
+                <p class="text-slate-400 font-sans text-xs">ปัดซ้าย-ขวาบนหน้าจอสัมผัส Venu 2 เพื่อสลับพอร์ต หุ้นสหรัฐฯ หุ้นไทย และคริปโต</p>
+              </div>
+              <div class="rounded-2xl bg-void/70 ring-1 ring-white/[0.07] p-4">
+                <div class="text-amber font-semibold mb-1">3. Chart &amp; WebMemo</div>
+                <p class="text-slate-400 font-sans text-xs">แตะรายชื่อหุ้นเพื่อดูกราฟ Sparkline + เส้น SMA20 / Bollinger และโน้ตช่วยจำของคุณ</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Asymmetric Bento Col 4 -->
+        <div class="md:col-span-4 double-bezel-shell">
+          <div class="double-bezel-core p-6 sm:p-8 h-full flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="font-mono text-xs text-cyan">1-CLICK USB SIDELOAD</span>
+                <i class="ph-light ph-usb text-xl text-cyan"></i>
+              </div>
+              <h3 class="text-lg font-bold text-alabaster mb-2">วิธีนำเข้าสู่นาฬิกา Venu 2</h3>
+              <ol class="space-y-2.5 text-xs text-slate-300 list-decimal list-inside leading-relaxed">
+                <li>เสียบสายชาร์จ Garmin Venu 2 เข้ากับคอมพิวเตอร์</li>
+                <li>รันสคริปต์ <code class="font-mono text-emerald">.\build-and-sideload.ps1</code> เพื่อคอมไพล์ไฟล์ <code class="font-mono text-alabaster">Venu2Moat.prg</code></li>
+                <li>สคริปต์จะคัดลอกไฟล์เข้าโฟลเดอร์ <code class="font-mono text-alabaster">GARMIN\APPS</code> บนนาฬิกาโดยอัตโนมัติ</li>
+              </ol>
+            </div>
+
+            <button id="openPayloadModalFromBentoBtn" type="button" class="group mt-6 w-full rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 pl-5 pr-2 py-2 text-xs font-semibold text-alabaster flex items-center justify-between spring-transition active:scale-[0.98]">
+              <span>ตรวจสอบ JSON สำหรับ Venu 2</span>
+              <span class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center spring-transition group-hover:translate-x-0.5 group-hover:-translate-y-[1px]">
+                <i class="ph-light ph-arrow-up-right text-sm text-cyan"></i>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL 1: ADD / EDIT HOLDING & WEBMEMO NOTE -->
+  <div id="holdingModal" class="fixed inset-0 z-50 bg-void/80 backdrop-blur-2xl hidden items-center justify-center p-4">
+    <div class="w-full max-w-lg double-bezel-shell">
+      <div class="double-bezel-core p-6 sm:p-7">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h3 id="holdingModalTitle" class="text-lg font-bold text-alabaster">แก้ไขรายการสินทรัพย์ &amp; WebMemo</h3>
+            <p class="text-xs text-slate-400">ใส่จำนวนหุ้น = 0 หากต้องการติดตามราคาอย่างเดียวในโหมด Watchlist</p>
+          </div>
+          <button id="closeHoldingModalBtn" type="button" class="w-8 h-8 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300">
+            <i class="ph-light ph-x"></i>
+          </button>
+        </div>
+
+        <form id="holdingForm" class="space-y-4">
+          <input type="hidden" id="holdingEditOriginalSymbol" value="" />
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1" for="holdingSymbolInput">ชื่อย่อ (Symbol)</label>
+              <input id="holdingSymbolInput" type="text" required placeholder="เช่น NVDA, PTT.BK" class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3.5 py-2.5 text-sm font-mono text-alabaster uppercase focus:outline-none" />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-xs text-slate-400 mb-1" for="holdingNameInput">ชื่อบริษัท / สินทรัพย์</label>
+              <input id="holdingNameInput" type="text" placeholder="เว้นว่างเพื่อให้ดึงจาก Yahoo อัตโนมัติ" class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3.5 py-2.5 text-sm text-alabaster focus:outline-none" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1" for="holdingCurrencySelect">สกุลเงิน</label>
+              <select id="holdingCurrencySelect" class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3 py-2.5 text-sm font-mono text-alabaster focus:outline-none">
+                <option value="USD">USD ($)</option>
+                <option value="THB">THB (฿)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1" for="holdingSharesInput">จำนวนหุ้น (Shares)</label>
+              <input id="holdingSharesInput" type="number" step="any" min="0" value="0" class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3.5 py-2.5 text-sm font-mono text-alabaster focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1" for="holdingAvgCostInput">ราคาทุนเฉลี่ย (Avg Cost)</label>
+              <input id="holdingAvgCostInput" type="number" step="any" min="0" value="0" class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3.5 py-2.5 text-sm font-mono text-alabaster focus:outline-none" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-emerald mb-1" for="holdingTargetInput">ราคาเป้าหมาย (Target Alert ▲)</label>
+              <input id="holdingTargetInput" type="number" step="any" min="0" placeholder="0 = ไม่ตั้งเตือน" class="w-full rounded-xl bg-void ring-1 ring-emerald/30 focus:ring-emerald px-3.5 py-2.5 text-sm font-mono text-alabaster focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs text-crimson mb-1" for="holdingStopInput">จุดเฝ้าระวัง/คัทลอส (Stop Alert ▼)</label>
+              <input id="holdingStopInput" type="number" step="any" min="0" placeholder="0 = ไม่ตั้งเตือน" class="w-full rounded-xl bg-void ring-1 ring-crimson/30 focus:ring-crimson px-3.5 py-2.5 text-sm font-mono text-alabaster focus:outline-none" />
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-xs text-cyan font-medium" for="holdingNoteInput">บันทึกช่วยจำบนนาฬิกา (WebMemo Note)</label>
+              <span class="text-[11px] font-mono text-slate-500">สูงสุด 140 ตัวอักษร</span>
+            </div>
+            <textarea id="holdingNoteInput" rows="2" maxlength="140" placeholder="เช่น รอขายทำกำไรบางส่วนที่ $155 / ถือรับปันผล XD เดือนเม.ย." class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2.5 text-sm text-alabaster focus:outline-none"></textarea>
+          </div>
+
+          <div class="flex items-center justify-between pt-2">
+            <button id="deleteHoldingBtn" type="button" class="hidden rounded-full bg-crimson/15 hover:bg-crimson/25 text-crimson ring-1 ring-crimson/30 px-4 py-2 text-xs font-semibold spring-transition">
+              ลบรายการนี้
+            </button>
+            <div class="flex items-center gap-2 ml-auto">
+              <button id="cancelHoldingModalBtn" type="button" class="rounded-full bg-white/[0.06] hover:bg-white/[0.12] px-5 py-2.5 text-xs font-medium text-slate-300">
+                ยกเลิก
+              </button>
+              <button type="submit" class="group rounded-full bg-emerald text-void font-bold text-xs pl-5 pr-2 py-2 flex items-center gap-2.5 spring-transition active:scale-[0.98]">
+                <span>บันทึกและซิงก์เข้า Venu 2</span>
+                <span class="w-6 h-6 rounded-full bg-void/15 flex items-center justify-center">
+                  <i class="ph-light ph-check text-xs font-bold"></i>
+                </span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: SYNC KEY & WATCH PAYLOAD INSPECTOR -->
+  <div id="syncModal" class="fixed inset-0 z-50 bg-void/80 backdrop-blur-2xl hidden items-center justify-center p-4">
+    <div class="w-full max-w-2xl double-bezel-shell">
+      <div class="double-bezel-core p-6 sm:p-7">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="text-lg font-bold text-alabaster">ตั้งค่า Sync Key &amp; ตรวจสอบ JSON สำหรับ Garmin Venu 2</h3>
+            <p class="text-xs text-slate-400">ใช้รหัส Sync Key เดียวกันนี้ในตั้งค่าแอป Garmin Connect บนมือถือของคุณ</p>
+          </div>
+          <button id="closeSyncModalBtn" type="button" class="w-8 h-8 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300">
+            <i class="ph-light ph-x"></i>
+          </button>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3 mb-5">
+          <input id="syncKeyInput" type="text" value="VENU2-88" placeholder="เช่น VENU2-88" class="flex-1 rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-4 py-2.5 font-mono text-sm text-alabaster uppercase focus:outline-none" />
+          <button id="applySyncKeyBtn" type="button" class="rounded-full bg-cyan text-void font-bold text-xs px-6 py-2.5 spring-transition active:scale-[0.98]">
+            โหลด / สลับ Sync Key
+          </button>
+        </div>
+
+        <div class="mb-2 flex items-center justify-between text-xs font-mono">
+          <span class="text-slate-400">Compact Payload (<code id="modalWatchEndpointLabel" class="text-emerald">/api/watch?key=VENU2-88</code>)</span>
+          <span id="payloadByteSizeLabel" class="text-cyan">0 bytes</span>
+        </div>
+        <pre id="watchJsonPreview" class="rounded-2xl bg-void ring-1 ring-white/10 p-4 font-mono text-[11px] text-slate-300 max-h-72 overflow-auto"></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastBanner" class="fixed bottom-6 right-6 z-50 translate-y-20 opacity-0 pointer-events-none spring-transition">
+    <div class="rounded-full bg-core/95 backdrop-blur-xl ring-1 ring-emerald/40 px-5 py-3 shadow-2xl flex items-center gap-3">
+      <span class="w-2 h-2 rounded-full bg-emerald"></span>
+      <span id="toastMessage" class="text-xs font-medium text-alabaster">บันทึกข้อมูลพอร์ตเรียบร้อยแล้ว</span>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

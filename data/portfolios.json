@@ -1,0 +1,90 @@
+{
+  "VENU2-88": {
+    "syncKey": "VENU2-88",
+    "baseCurrency": "THB",
+    "updatedAt": "2026-10-20T14:18:02.345Z",
+    "watchSettings": {
+      "autoSwipeEnabled": true,
+      "autoSwipeSec": 5,
+      "alwaysOnDisplay": false,
+      "deviceId": "V2-88VENU20",
+      "activationKey": ""
+    },
+    "portfolios": [
+      {
+        "id": "us-moat",
+        "name": "US Core & AI Moat",
+        "shortName": "US MOAT",
+        "items": [
+          {
+            "symbol": "NVDA",
+            "name": "NVIDIA Corp.",
+            "currency": "USD",
+            "shares": 0,
+            "avgCost": 0,
+            "targetPrice": 0,
+            "stopPrice": 0,
+            "note": "Blackwell rack ramp Q4. Trim 10 sh > $155, hold core."
+          },
+          {
+            "symbol": "AAPL",
+            "name": "Apple Inc.",
+            "currency": "USD",
+            "shares": 0,
+            "avgCost": 0,
+            "targetPrice": 0,
+            "stopPrice": 0,
+            "note": "Services margin expansion + cycle upgrade. Core compounder."
+          },
+          {
+            "symbol": "TSM",
+            "name": "Taiwan Semiconductor",
+            "currency": "USD",
+            "shares": 35,
+            "avgCost": 148,
+            "targetPrice": 215,
+            "stopPrice": 165,
+            "note": "CoWoS packaging monopoly + N2 node pricing power."
+          }
+        ]
+      },
+      {
+        "id": "macro-crypto",
+        "name": "Crypto & Hard Assets",
+        "shortName": "MACRO",
+        "items": [
+          {
+            "symbol": "BTC-USD",
+            "name": "Bitcoin USD",
+            "currency": "USD",
+            "shares": 0,
+            "avgCost": 0,
+            "targetPrice": 0,
+            "stopPrice": 0,
+            "note": "Cold storage allocation. Halving cycle + ETF institutional inflow."
+          },
+          {
+            "symbol": "GC=F",
+            "name": "Gold Futures (XAU/USD)",
+            "currency": "USD",
+            "shares": 0,
+            "avgCost": 0,
+            "targetPrice": 0,
+            "stopPrice": 0,
+            "note": "Central bank reserve hedge against sovereign debt expansion."
+          },
+          {
+            "symbol": "THB=X",
+            "name": "USD / THB Exchange Rate",
+            "currency": "THB",
+            "shares": 0,
+            "avgCost": 0,
+            "targetPrice": 36,
+            "stopPrice": 32.8,
+            "note": "[FX Watch] Convert THB to USD when rate dips below 33.50."
+          }
+        ]
+      }
+    ]
+  }
+}

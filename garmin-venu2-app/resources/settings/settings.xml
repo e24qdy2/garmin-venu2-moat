@@ -1,0 +1,23 @@
+<settings>
+    <setting propertyKey="@Properties.syncKey" title="@Strings.SyncKeyTitle">
+        <settingConfig type="alphaNumeric" />
+    </setting>
+    <setting propertyKey="@Properties.apiUrl" title="@Strings.ApiUrlTitle">
+        <settingConfig type="alphaNumeric" />
+    </setting>
+    <setting propertyKey="@Properties.showBollinger" title="@Strings.ShowBollingerTitle">
+        <settingConfig type="boolean" />
+    </setting>
+    <setting propertyKey="@Properties.autoSwipeEnabled" title="@Strings.AutoSwipeEnabledTitle">
+        <settingConfig type="boolean" />
+    </setting>
+    <setting propertyKey="@Properties.autoSwipeSec" title="@Strings.AutoSwipeSecTitle">
+        <settingConfig type="numeric" min="2" max="120" />
+    </setting>
+    <setting propertyKey="@Properties.alwaysOnDisplay" title="@Strings.AlwaysOnDisplayTitle">
+        <settingConfig type="boolean" />
+    </setting>
+    <setting propertyKey="@Properties.activationKey" title="@Strings.ActivationKeyTitle">
+        <settingConfig type="alphaNumeric" />
+    </setting>
+</settings>
