@@ -107,3 +107,13 @@ if (-not $Sideloaded) {
 if (-not $Sideloaded) {
     Write-Host "[i] No USB/MTP Garmin Venu 2 detected right now. Binary is ready at $OutputPrg" -ForegroundColor Yellow
 }
+
+# 6. Auto-sync any source/binary changes to GitHub repository
+$SyncScript = Join-Path $PSScriptRoot "sync-github.ps1"
+if (Test-Path $SyncScript) {
+    try {
+        & $SyncScript -Message "chore(build): rebuild Venu2Moat.prg and sync source changes"
+    } catch {
+        Write-Warning "GitHub auto-sync warning: $_"
+    }
+}
