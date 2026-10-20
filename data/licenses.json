@@ -8,7 +8,7 @@
       "syncKey": "VENU2-88",
       "status": "TRIAL",
       "firstSeenAt": "2026-10-20T14:14:52.889Z",
-      "lastSeenAt": "2026-10-20T14:18:11.851Z",
+      "lastSeenAt": "2026-10-20T14:33:10.838Z",
       "trialStartMs": 1792505882342,
       "trialExpiresMs": 1793715482342,
       "activatedKey": "",
@@ -32,6 +32,22 @@
     }
   },
   "auditLogs": [
+    {
+      "id": "AUD-C777B1",
+      "timestamp": "2026-10-20T14:34:44.872Z",
+      "actor": "saharabu@scg.com",
+      "action": "ADMIN_LOGIN_SUCCESS",
+      "deviceId": "-",
+      "detail": "Admin authenticated via OTP_VERIFIED"
+    },
+    {
+      "id": "AUD-148FAC",
+      "timestamp": "2026-10-20T14:34:30.809Z",
+      "actor": "saharabu@scg.com",
+      "action": "ADMIN_OTP_ISSUED",
+      "deviceId": "-",
+      "detail": "Issued 6-digit Admin OTP for saharabu@scg.com"
+    },
     {
       "id": "AUD-753045",
       "timestamp": "2026-10-20T14:18:02.343Z",
