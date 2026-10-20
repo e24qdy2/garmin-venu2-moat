@@ -241,19 +241,19 @@ function fetchJsonHttps(targetUrl) {
 
 // Deterministic realistic fallback generator if offline or rate-limited
 const FALLBACK_BASE = {
-  "NVDA": { price: 138.60, prevClose: 134.80, currency: "USD", name: "NVIDIA Corp" },
-  "MSFT": { price: 428.50, prevClose: 424.10, currency: "USD", name: "Microsoft Corp" },
-  "AAPL": { price: 231.20, prevClose: 229.40, currency: "USD", name: "Apple Inc" },
-  "GOOGL": { price: 181.40, prevClose: 179.10, currency: "USD", name: "Alphabet Inc" },
-  "BRK-B": { price: 454.80, prevClose: 452.00, currency: "USD", name: "Berkshire Hathaway B" },
-  "ADVANC.BK": { price: 284.00, prevClose: 281.00, currency: "THB", name: "Advanced Info Service" },
-  "DELTA.BK": { price: 129.50, prevClose: 126.00, currency: "THB", name: "Delta Electronics Thai" },
-  "PTTEP.BK": { price: 126.50, prevClose: 128.00, currency: "THB", name: "PTT Exploration" },
-  "BDMS.BK": { price: 28.75, prevClose: 28.50, currency: "THB", name: "Bangkok Dusit Med" },
-  "BTC-USD": { price: 89450.00, prevClose: 87920.00, currency: "USD", name: "Bitcoin USD" },
-  "SCHD": { price: 29.15, prevClose: 28.98, currency: "USD", name: "Schwab US Dividend ETF" },
-  "QQQ": { price: 508.40, prevClose: 504.10, currency: "USD", name: "Invesco QQQ Trust" },
-  "THB=X": { price: 34.45, prevClose: 34.52, currency: "THB", name: "USD/THB" }
+  "NVDA": { price: 138.60, prevClose: 134.80, dayHigh: 139.90, dayLow: 135.10, currency: "USD", name: "NVIDIA Corp" },
+  "MSFT": { price: 428.50, prevClose: 424.10, dayHigh: 430.80, dayLow: 423.20, currency: "USD", name: "Microsoft Corp" },
+  "AAPL": { price: 231.20, prevClose: 229.40, dayHigh: 232.90, dayLow: 228.70, currency: "USD", name: "Apple Inc" },
+  "GOOGL": { price: 181.40, prevClose: 179.10, dayHigh: 182.75, dayLow: 178.60, currency: "USD", name: "Alphabet Inc" },
+  "BRK-B": { price: 454.80, prevClose: 452.00, dayHigh: 456.50, dayLow: 451.10, currency: "USD", name: "Berkshire Hathaway B" },
+  "ADVANC.BK": { price: 284.00, prevClose: 281.00, dayHigh: 286.00, dayLow: 280.00, currency: "THB", name: "Advanced Info Service" },
+  "DELTA.BK": { price: 129.50, prevClose: 126.00, dayHigh: 131.00, dayLow: 125.50, currency: "THB", name: "Delta Electronics Thai" },
+  "PTTEP.BK": { price: 126.50, prevClose: 128.00, dayHigh: 128.50, dayLow: 125.50, currency: "THB", name: "PTT Exploration" },
+  "BDMS.BK": { price: 28.75, prevClose: 28.50, dayHigh: 29.00, dayLow: 28.25, currency: "THB", name: "Bangkok Dusit Med" },
+  "BTC-USD": { price: 89450.00, prevClose: 87920.00, dayHigh: 90200.00, dayLow: 87450.00, currency: "USD", name: "Bitcoin USD" },
+  "SCHD": { price: 29.15, prevClose: 28.98, dayHigh: 29.32, dayLow: 28.90, currency: "USD", name: "Schwab US Dividend ETF" },
+  "QQQ": { price: 508.40, prevClose: 504.10, dayHigh: 510.20, dayLow: 503.40, currency: "USD", name: "Invesco QQQ Trust" },
+  "THB=X": { price: 34.45, prevClose: 34.52, dayHigh: 34.60, dayLow: 34.35, currency: "THB", name: "USD/THB" }
 };
 
 function computeTechnicals(closes) {
@@ -288,10 +288,17 @@ async function fetchSymbolMarketData(symbol) {
     if (!result) throw new Error("No chart result");
 
     const meta = result.meta || {};
-    const rawCloses = result.indicators?.quote?.[0]?.close || [];
+    const quote0 = result.indicators?.quote?.[0] || {};
+    const rawCloses = quote0.close || [];
+    const rawHighs = (quote0.high || []).filter((n) => typeof n === "number" && Number.isFinite(n));
+    const rawLows = (quote0.low || []).filter((n) => typeof n === "number" && Number.isFinite(n));
     const closes = rawCloses.filter((n) => typeof n === "number" && Number.isFinite(n));
     const price = Number((meta.regularMarketPrice ?? closes[closes.length - 1] ?? 100).toFixed(2));
     const prevClose = Number((meta.chartPreviousClose ?? meta.previousClose ?? closes[closes.length - 2] ?? price).toFixed(2));
+    const rawDayHigh = meta.regularMarketDayHigh ?? rawHighs[rawHighs.length - 1] ?? Math.max(price, prevClose);
+    const rawDayLow = meta.regularMarketDayLow ?? rawLows[rawLows.length - 1] ?? Math.min(price, prevClose);
+    const dayHigh = Number(Math.max(rawDayHigh, price).toFixed(2));
+    const dayLow = Number(Math.min(rawDayLow, price).toFixed(2));
     const change = Number((price - prevClose).toFixed(2));
     const changePct = prevClose > 0 ? Number(((change / prevClose) * 100).toFixed(2)) : 0;
     const currency = meta.currency || (sym.endsWith(".BK") ? "THB" : "USD");
@@ -303,6 +310,8 @@ async function fetchSymbolMarketData(symbol) {
       currency,
       price,
       prevClose,
+      dayHigh,
+      dayLow,
       change,
       changePct,
       ...tech,
@@ -314,6 +323,8 @@ async function fetchSymbolMarketData(symbol) {
     const fb = FALLBACK_BASE[sym] || {
       price: 100.0,
       prevClose: 98.5,
+      dayHigh: 101.2,
+      dayLow: 97.8,
       currency: sym.endsWith(".BK") ? "THB" : "USD",
       name: sym
     };
@@ -325,6 +336,8 @@ async function fetchSymbolMarketData(symbol) {
       closes.push(Number((fb.price * (1 - i * 0.002 + noise)).toFixed(2)));
     }
     closes.push(fb.price);
+    const dayHigh = Number((fb.dayHigh ?? Math.max(fb.price, fb.prevClose) * 1.012).toFixed(2));
+    const dayLow = Number((fb.dayLow ?? Math.min(fb.price, fb.prevClose) * 0.988).toFixed(2));
     const change = Number((fb.price - fb.prevClose).toFixed(2));
     const changePct = Number(((change / fb.prevClose) * 100).toFixed(2));
     const tech = computeTechnicals(closes);
@@ -334,6 +347,8 @@ async function fetchSymbolMarketData(symbol) {
       currency: fb.currency,
       price: fb.price,
       prevClose: fb.prevClose,
+      dayHigh,
+      dayLow,
       change,
       changePct,
       ...tech,
@@ -415,6 +430,8 @@ async function buildEnrichedPayload(profile, queryOpts = {}) {
         currency: p.currency || "USD",
         price: h.avgCost || 100,
         prevClose: h.avgCost || 100,
+        dayHigh: (h.avgCost || 100) * 1.01,
+        dayLow: (h.avgCost || 100) * 0.99,
         change: 0,
         changePct: 0,
         sparkline: [100, 100],
@@ -451,6 +468,8 @@ async function buildEnrichedPayload(profile, queryOpts = {}) {
         avgCost: Number(avgCost.toFixed(2)),
         price: q.price,
         prevClose: q.prevClose,
+        dayHigh: Number((q.dayHigh ?? q.price).toFixed(2)),
+        dayLow: Number((q.dayLow ?? q.price).toFixed(2)),
         change: q.change,
         changePct: q.changePct,
         marketValue: Number(marketValue.toFixed(2)),
@@ -583,6 +602,8 @@ async function buildEnrichedPayload(profile, queryOpts = {}) {
             cur: h.currency,
             p: h.price,
             px: h.price,
+            hi: h.dayHigh,
+            lo: h.dayLow,
             c: h.changePct,
             pct: h.changePct,
             sh: h.shares,

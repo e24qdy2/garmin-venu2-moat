@@ -439,7 +439,7 @@ async function runSdlcSuite() {
   console.log("[PASS] 10. Auto-Sort % Change Setting (ASC: Negative->Positive / DESC: Positive->Negative) verified");
 
   // Restore default ASC sort order & keep V2-88VENU20 active
-  await httpRequest("PUT", "/api/portfolio", {
+  const finalPortfolioRes = await httpRequest("PUT", "/api/portfolio", {
     syncKey: "VENU2-88",
     watchSettings: {
       autoSwipeEnabled: true,
@@ -450,9 +450,20 @@ async function runSdlcSuite() {
       deviceId: "V2-88VENU20"
     }
   });
+  const firstWebHolding = finalPortfolioRes.json.web.portfolios[0].holdings[0];
+  const firstWatchHolding = finalPortfolioRes.json.watch.p[0].s[0];
+  assert.ok(typeof firstWebHolding.price === "number" && firstWebHolding.price > 0, "Web holding must include current price");
+  assert.ok(typeof firstWebHolding.sma20 === "number" && firstWebHolding.sma20 > 0, "Web holding must include sma20");
+  assert.ok(typeof firstWebHolding.dayHigh === "number" && firstWebHolding.dayHigh >= firstWebHolding.price, "Web holding must include dayHigh >= price");
+  assert.ok(typeof firstWebHolding.dayLow === "number" && firstWebHolding.dayLow <= firstWebHolding.price, "Web holding must include dayLow <= price");
+  assert.ok(typeof firstWatchHolding.px === "number" && firstWatchHolding.px > 0, "Watch holding must include px (current price)");
+  assert.ok(typeof firstWatchHolding.sma === "number" && firstWatchHolding.sma > 0, "Watch holding must include sma (SMA20)");
+  assert.ok(typeof firstWatchHolding.hi === "number" && firstWatchHolding.hi >= firstWatchHolding.px, "Watch holding must include hi (Day High)");
+  assert.ok(typeof firstWatchHolding.lo === "number" && firstWatchHolding.lo <= firstWatchHolding.px, "Watch holding must include lo (Day Low)");
+  console.log("[PASS] 11. Watch & Web Stock Metrics (Current Price, SMA20, Day High & Day Low) verified");
 
   console.log("\n==================================================================");
-  console.log("  ALL 10 SDLC + SECURITY VA + AUTO-SORT SUITES PASSED (100%)");
+  console.log("  ALL 11 SDLC + SECURITY VA + WATCH METRICS SUITES PASSED (100%)");
   console.log("==================================================================");
 }
 

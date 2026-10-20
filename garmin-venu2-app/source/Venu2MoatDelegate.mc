@@ -9,17 +9,21 @@ class Venu2MoatDelegate extends WatchUi.BehaviorDelegate {
         _store = store;
     }
 
-    // Physical Top-Right / START Button -> Toggle Day P&L vs Total Return (or re-verify license if expired)
-    function onSelect() as Boolean {
-        _store.resetSwipeTimer();
-        _store.applyBacklightIfEnabled();
-        if (_store.trialExpired) {
-            _store.fetchRemote();
+    // Physical Top-Right / START Button (handled via KeyEvent so BehaviorDelegate does not intercept touchscreen taps on Venu 2)
+    function onKey(evt as KeyEvent) as Boolean {
+        var key = evt.getKey();
+        if (key == WatchUi.KEY_ENTER || key == WatchUi.KEY_START) {
+            _store.resetSwipeTimer();
+            _store.applyBacklightIfEnabled();
+            if (_store.trialExpired) {
+                _store.fetchRemote();
+                return true;
+            }
+            _store.showTotalReturn = !_store.showTotalReturn;
+            WatchUi.requestUpdate();
             return true;
         }
-        _store.showTotalReturn = !_store.showTotalReturn;
-        WatchUi.requestUpdate();
-        return true;
+        return false;
     }
 
     // Long-press Menu -> Trigger fresh network sync & license check
@@ -98,8 +102,16 @@ class Venu2MoatDelegate extends WatchUi.BehaviorDelegate {
         return false;
     }
 
-    // Touch Tap Handling -> Open Symbol Detail + Sparkline Chart + WebMemo View
+    // Touch Tap & Firm Press Handling -> Open Symbol Detail + Sparkline Chart + SMA20 + Day High/Low + WebMemo View
     function onTap(evt as ClickEvent) as Boolean {
+        return handleTouchClick(evt);
+    }
+
+    function onHold(evt as ClickEvent) as Boolean {
+        return handleTouchClick(evt);
+    }
+
+    function handleTouchClick(evt as ClickEvent) as Boolean {
         _store.resetSwipeTimer();
         _store.applyBacklightIfEnabled();
 
@@ -109,38 +121,67 @@ class Venu2MoatDelegate extends WatchUi.BehaviorDelegate {
         }
 
         var coords = evt.getCoordinates();
+        if (coords == null || coords.size() < 2) {
+            return false;
+        }
+        var x = coords[0];
         var y = coords[1];
+        var w = _store.screenW;
         var h = _store.screenH;
 
         // Tap on top clock/mode bar toggles Auto-Swipe on/off quickly on watch
-        if (y < (h * 10) / 100) {
+        if (y < (h * 9) / 100) {
             _store.autoSwipeEnabled = !_store.autoSwipeEnabled;
             WatchUi.requestUpdate();
             return true;
         }
 
-        // Tap on header toggles Day P&L / Total Return
-        if (y >= (h * 14) / 100 && y < _store.rowStartY) {
+        // Tap on portfolio title (< US MOAT >) switches portfolio left/right
+        if (y >= (h * 9) / 100 && y < (h * 15) / 100) {
+            if (x < (w / 2)) {
+                _store.prevPortfolio();
+            } else {
+                _store.nextPortfolio();
+            }
+            return true;
+        }
+
+        // Tap on Net Worth / P&L header toggles Day P&L / Total Return
+        if (y >= (h * 15) / 100 && y < (_store.rowStartY - 6)) {
             _store.showTotalReturn = !_store.showTotalReturn;
             WatchUi.requestUpdate();
             return true;
         }
 
-        // Tap on a holding row
+        // Tap on any holding row opens the Individual Stock Chart + SMA20 + Day High/Low + WebMemo screen
         var rowsBottomY = _store.rowStartY + (_store.visibleRows * _store.rowHeight);
-        if (y >= _store.rowStartY && y <= rowsBottomY) {
-            var rowSlot = (y - _store.rowStartY) / _store.rowHeight;
-            var itemIdx = _store.scrollRowOffset + rowSlot;
+        if (y >= (_store.rowStartY - 6) && y <= (rowsBottomY + 14)) {
             var port = _store.getActivePortfolio();
             if (port != null) {
-                var items = port.get("s") as Array;
-                if (itemIdx >= 0 && itemIdx < items.size()) {
-                    var item = items[itemIdx] as Dictionary;
-                    _store.inDetailView = true;
-                    var detailView = new SymbolDetailView(item);
-                    var detailDelegate = new SymbolDetailDelegate(detailView);
-                    WatchUi.pushView(detailView, detailDelegate, WatchUi.SLIDE_LEFT);
-                    return true;
+                var items = port.get("s") as Array?;
+                if (items != null && items.size() > 0) {
+                    var relY = y - _store.rowStartY;
+                    if (relY < 0) {
+                        relY = 0;
+                    }
+                    var rowSlot = relY / _store.rowHeight;
+                    if (rowSlot < 0) {
+                        rowSlot = 0;
+                    }
+                    if (rowSlot >= _store.visibleRows) {
+                        rowSlot = _store.visibleRows - 1;
+                    }
+                    var itemIdx = _store.scrollRowOffset + rowSlot;
+                    if (itemIdx >= items.size()) {
+                        itemIdx = items.size() - 1;
+                    }
+                    if (itemIdx >= 0 && itemIdx < items.size()) {
+                        _store.inDetailView = true;
+                        var detailView = new SymbolDetailView(_store, itemIdx);
+                        var detailDelegate = new SymbolDetailDelegate(_store, detailView);
+                        WatchUi.pushView(detailView, detailDelegate, WatchUi.SLIDE_LEFT);
+                        return true;
+                    }
                 }
             }
         }

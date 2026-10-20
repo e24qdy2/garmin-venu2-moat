@@ -132,14 +132,14 @@ class Venu2MoatView extends WatchUi.View {
         dc.drawText(cx, (h * 10) / 100, Graphics.FONT_XTINY, "< " + portName + pageSuffix + " >", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Portfolio Net Value
-        var portVal = port.get("val") as Number;
+        var portVal = _store.toNum(port.get("val"), 0);
         var valFont = (h < 300) ? Graphics.FONT_SMALL : Graphics.FONT_MEDIUM;
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, (h * 15) / 100, valFont, curSym + portVal.toString(), Graphics.TEXT_JUSTIFY_CENTER);
 
         // Day P&L vs Total Return Toggle Line
-        var pnlVal = _store.showTotalReturn ? (port.get("tp") as Number) : (port.get("dp") as Number);
-        var pnlPct = _store.showTotalReturn ? (port.get("tPct") as Float) : (port.get("dPct") as Float);
+        var pnlVal = _store.showTotalReturn ? _store.toNum(port.get("tp"), 0) : _store.toNum(port.get("dp"), 0);
+        var pnlPct = _store.showTotalReturn ? _store.toFloat(port.get("tPct"), 0.0) : _store.toFloat(port.get("dPct"), 0.0);
         var modePrefix = _store.showTotalReturn ? "TOTAL: " : "DAY: ";
         var sign = (pnlVal >= 0) ? "+" : "";
         var pnlColor = (pnlVal >= 0) ? 0x10B981 : 0xF43F5E;
@@ -163,7 +163,8 @@ class Venu2MoatView extends WatchUi.View {
         var startIdx = _store.scrollRowOffset;
         var rowY = _store.rowStartY;
         var rowHeight = _store.rowHeight;
-        var symFont = (h < 340) ? Graphics.FONT_XTINY : Graphics.FONT_SMALL;
+        var xtinyH = dc.getFontHeight(Graphics.FONT_XTINY);
+        var showSubMetrics = ((rowHeight - 4) >= ((xtinyH * 2) - 4));
 
         for (var i = 0; i < visRows; i++) {
             var itemIdx = startIdx + i;
@@ -172,19 +173,23 @@ class Venu2MoatView extends WatchUi.View {
             }
             var item = items[itemIdx] as Dictionary;
             var sym = (item.hasKey("sym") ? item.get("sym") : item.get("s")) as String;
-            var px = (item.hasKey("px") ? item.get("px") : item.get("p")) as Float;
+            var px = _store.getDictFloat(item, "px", "p", 0.0);
             var pct = _store.showTotalReturn
-                ? ((item.hasKey("pPct") ? item.get("pPct") : item.get("tPct")) as Float)
-                : ((item.hasKey("pct") ? item.get("pct") : item.get("c")) as Float);
+                ? _store.getDictFloat(item, "pPct", "tPct", 0.0)
+                : _store.getDictFloat(item, "pct", "c", 0.0);
+            var sma = _store.getDictFloat(item, "sma", null, px);
+            var dayHi = _store.getDictFloat(item, "hi", null, px);
+            var dayLo = _store.getDictFloat(item, "lo", null, px);
             var alrt = item.hasKey("alrt") ? (item.get("alrt") as String) : "NORMAL";
-            var itemCur = (item.get("cur") as String).equals("USD") ? "$" : "฿";
+            var itemCurStr = item.hasKey("cur") ? (item.get("cur") as String) : "USD";
+            var itemCur = itemCurStr.equals("USD") ? "$" : "฿";
 
             // Rounded Row Tray
             dc.setColor(0x0D131C, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(sidePad, rowY, w - (sidePad * 2), rowHeight - 5, 10);
+            dc.fillRoundedRectangle(sidePad, rowY, w - (sidePad * 2), rowHeight - 4, 10);
 
-            var dotX = sidePad + 12;
-            var dotY = rowY + ((rowHeight - 5) / 2);
+            var dotX = sidePad + 10;
+            var dotY = showSubMetrics ? (rowY + (xtinyH / 2) + 2) : (rowY + ((rowHeight - 4) / 2));
 
             // Target / Stop Alert Dot
             if (alrt.equals("TARGET_HIT")) {
@@ -198,20 +203,47 @@ class Venu2MoatView extends WatchUi.View {
                 dc.fillCircle(dotX, dotY, 4);
             }
 
-            // Symbol Name
-            var textOffsetY = (rowHeight - 24) / 2;
-            if (textOffsetY < 4) { textOffsetY = 4; }
-            dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(sidePad + 22, rowY + textOffsetY, symFont, sym, Graphics.TEXT_JUSTIFY_LEFT);
-
-            // Price & Delta %
             var rowSign = (pct >= 0) ? "+" : "";
             var rowColor = (pct >= 0) ? 0x10B981 : 0xF43F5E;
-            dc.setColor(0xCBD5E1, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w - sidePad - ((w * 20) / 100), rowY + textOffsetY + 2, Graphics.FONT_XTINY, itemCur + px.format("%.2f"), Graphics.TEXT_JUSTIFY_RIGHT);
 
-            dc.setColor(rowColor, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w - sidePad - 10, rowY + textOffsetY + 2, Graphics.FONT_XTINY, rowSign + pct.format("%.2f") + "%", Graphics.TEXT_JUSTIFY_RIGHT);
+            if (showSubMetrics) {
+                var topLineY = rowY + 1;
+                var subLineY = rowY + xtinyH - 2;
+
+                // Line 1: Symbol + Current Price + % Change
+                dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(sidePad + 18, topLineY, Graphics.FONT_XTINY, sym, Graphics.TEXT_JUSTIFY_LEFT);
+
+                dc.setColor(0xE2E8F0, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(w - sidePad - ((w * 20) / 100), topLineY, Graphics.FONT_XTINY, itemCur + px.format("%.2f"), Graphics.TEXT_JUSTIFY_RIGHT);
+
+                dc.setColor(rowColor, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(w - sidePad - 8, topLineY, Graphics.FONT_XTINY, rowSign + pct.format("%.2f") + "%", Graphics.TEXT_JUSTIFY_RIGHT);
+
+                // Line 2: SMA20 + Day Low (L) / Day High (H)
+                dc.setColor(0x38BDF8, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(sidePad + 18, subLineY, Graphics.FONT_XTINY, "SMA:" + sma.format("%.1f"), Graphics.TEXT_JUSTIFY_LEFT);
+
+                dc.setColor(0x94A3B8, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(
+                    w - sidePad - 8,
+                    subLineY,
+                    Graphics.FONT_XTINY,
+                    "L:" + dayLo.format("%.1f") + " H:" + dayHi.format("%.1f"),
+                    Graphics.TEXT_JUSTIFY_RIGHT
+                );
+            } else {
+                var textOffsetY = (rowHeight - xtinyH) / 2;
+                if (textOffsetY < 2) { textOffsetY = 2; }
+                dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(sidePad + 18, rowY + textOffsetY, Graphics.FONT_XTINY, sym, Graphics.TEXT_JUSTIFY_LEFT);
+
+                dc.setColor(0xCBD5E1, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(w - sidePad - ((w * 20) / 100), rowY + textOffsetY, Graphics.FONT_XTINY, itemCur + px.format("%.2f"), Graphics.TEXT_JUSTIFY_RIGHT);
+
+                dc.setColor(rowColor, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(w - sidePad - 8, rowY + textOffsetY, Graphics.FONT_XTINY, rowSign + pct.format("%.2f") + "%", Graphics.TEXT_JUSTIFY_RIGHT);
+            }
 
             rowY += rowHeight;
         }

@@ -321,4 +321,53 @@ class PortfolioStore {
             WatchUi.requestUpdate();
         }
     }
+
+    // Safe runtime conversion helpers so JSON Numbers (e.g. 45, 284) never crash Float.format("%.2f") on physical Garmin hardware
+    function toFloat(val as Object?, fallback as Float) as Float {
+        if (val == null) {
+            return fallback;
+        }
+        if (val instanceof Lang.Float) {
+            return val as Float;
+        }
+        if (val instanceof Lang.Number) {
+            return (val as Number).toFloat();
+        }
+        if (val instanceof Lang.Double) {
+            return (val as Double).toFloat();
+        }
+        if (val instanceof Lang.Long) {
+            return (val as Long).toFloat();
+        }
+        return fallback;
+    }
+
+    function toNum(val as Object?, fallback as Number) as Number {
+        if (val == null) {
+            return fallback;
+        }
+        if (val instanceof Lang.Number) {
+            return val as Number;
+        }
+        if (val instanceof Lang.Float) {
+            return (val as Float).toNumber();
+        }
+        if (val instanceof Lang.Double) {
+            return (val as Double).toNumber();
+        }
+        if (val instanceof Lang.Long) {
+            return (val as Long).toNumber();
+        }
+        return fallback;
+    }
+
+    function getDictFloat(dict as Dictionary, key1 as String, key2 as String?, fallback as Float) as Float {
+        if (dict.hasKey(key1)) {
+            return toFloat(dict.get(key1), fallback);
+        }
+        if (key2 != null && dict.hasKey(key2)) {
+            return toFloat(dict.get(key2), fallback);
+        }
+        return fallback;
+    }
 }

@@ -111,6 +111,10 @@
         const bbUpperSeries = spark.map(() => Number(h.upperBB || (h.price || 100) * 1.03));
         const bbLowerSeries = spark.map(() => Number(h.lowerBB || (h.price || 100) * 0.97));
 
+        const dayLowVal = Number((h.dayLow ?? Math.min(h.price || minSpark, h.prevClose || minSpark)).toFixed(2));
+        const dayHighVal = Number((h.dayHigh ?? Math.max(h.price || maxSpark, h.prevClose || maxSpark)).toFixed(2));
+        const sma20Val = Number((h.sma20 ?? h.price ?? 100).toFixed(2));
+
         return {
           origIdx: h.origIdx !== undefined ? Number(h.origIdx) : hIdx,
           symbol: h.symbol,
@@ -122,8 +126,10 @@
           prevClose: Number(h.prevClose ?? h.price ?? 0),
           change: Number(h.change ?? 0),
           changePct: Number(h.changePct ?? 0),
-          low: Number(minSpark.toFixed(2)),
-          high: Number(maxSpark.toFixed(2)),
+          dayLow: dayLowVal,
+          dayHigh: dayHighVal,
+          low: dayLowVal,
+          high: dayHighVal,
           marketValueNative: Number(h.marketValue ?? (h.shares || 0) * (h.price || 0)),
           marketValueBase: Number(h.marketValueBase ?? 0),
           unrealizedPnlNative: Number(h.totalPnl ?? 0),
@@ -135,7 +141,7 @@
           note: h.memo !== undefined ? h.memo : h.note || '',
           memo: h.memo !== undefined ? h.memo : h.note || '',
           sparkline: spark,
-          sma20: h.sma20,
+          sma20: sma20Val,
           upperBB: h.upperBB,
           lowerBB: h.lowerBB,
           smaSeries,
@@ -679,6 +685,10 @@
                          <span>·</span>
                          <span>สัดส่วน: <strong class="text-cyan">${item.allocationPct}%</strong></span>`
                   }
+                  <span>·</span>
+                  <span class="text-cyan">SMA20: <strong>${formatMoney(item.sma20, item.currency)}</strong></span>
+                  <span>·</span>
+                  <span>Day L: <strong class="text-crimson/90">${formatMoney(item.dayLow ?? item.low, item.currency)}</strong> / H: <strong class="text-emerald/90">${formatMoney(item.dayHigh ?? item.high, item.currency)}</strong></span>
                 </div>
               </div>
             </div>
@@ -843,22 +853,28 @@
         <button
           type="button"
           data-watch-item-idx="${idx}"
-          class="watch-holding-item w-full rounded-xl px-3 py-1.5 flex items-center justify-between font-mono text-xs transition ${
+          class="watch-holding-item w-full rounded-xl px-2.5 py-1.5 flex flex-col gap-0.5 font-mono text-xs transition ${
             idx === state.activeSymbolIndex
               ? 'bg-white/[0.11] ring-1 ring-cyan/40'
               : 'bg-white/[0.035] hover:bg-white/[0.08]'
           }"
         >
-          <div class="flex items-center gap-1.5 text-left">
-            ${alertDot}
-            <span class="font-bold text-alabaster">${escapeHtml(symShort)}</span>
-            ${it.note ? '<i class="ph-light ph-note text-[10px] text-cyan"></i>' : ''}
+          <div class="w-full flex items-center justify-between">
+            <div class="flex items-center gap-1.5 text-left">
+              ${alertDot}
+              <span class="font-bold text-alabaster">${escapeHtml(symShort)}</span>
+              ${it.note ? '<i class="ph-light ph-note text-[10px] text-cyan"></i>' : ''}
+            </div>
+            <div class="flex items-center gap-2 tabular-nums">
+              <span class="text-slate-100 font-semibold">${formatMoney(it.price, it.currency)}</span>
+              <span class="font-semibold min-w-[50px] text-right ${rowPos ? 'text-emerald' : 'text-crimson'}">
+                ${formatSignedPct(pctToShow)}
+              </span>
+            </div>
           </div>
-          <div class="flex items-center gap-2.5 tabular-nums">
-            <span class="text-slate-200">${formatMoney(it.price, it.currency)}</span>
-            <span class="font-semibold min-w-[52px] text-right ${rowPos ? 'text-emerald' : 'text-crimson'}">
-              ${formatSignedPct(pctToShow)}
-            </span>
+          <div class="w-full flex items-center justify-between text-[9px] tabular-nums text-slate-400">
+            <span class="text-cyan/90">SMA20: ${formatMoney(it.sma20, it.currency)}</span>
+            <span>L: ${formatMoney(it.dayLow ?? it.low, it.currency)} · H: ${formatMoney(it.dayHigh ?? it.high, it.currency)}</span>
           </div>
         </button>
       `;
@@ -906,9 +922,9 @@
       badge.className = 'text-[9px] font-mono px-1.5 py-0.5 rounded-full bg-white/10 text-slate-300';
     }
 
-    el('watchChartLowLabel').textContent = `L: ${formatMoney(item.low, item.currency)}`;
-    el('watchChartHighLabel').textContent = `H: ${formatMoney(item.high, item.currency)}`;
-    el('watchToggleBbBtn').textContent = state.watchShowBb ? 'SMA20 + BB: ON' : 'SMA20 + BB: OFF';
+    el('watchChartLowLabel').textContent = `Day L: ${formatMoney(item.dayLow ?? item.low, item.currency)}`;
+    el('watchChartHighLabel').textContent = `Day H: ${formatMoney(item.dayHigh ?? item.high, item.currency)}`;
+    el('watchToggleBbBtn').textContent = `SMA20: ${formatMoney(item.sma20 || item.price, item.currency)}${state.watchShowBb ? ' · BB' : ''}`;
 
     if (item.shares > 0) {
       el('watchDetailPos').textContent = `${item.shares} @ ${formatMoney(item.avgCost, item.currency)}`;
@@ -941,9 +957,11 @@
     const bbU = item.bbUpperSeries && item.bbUpperSeries.length === series.length ? item.bbUpperSeries : [];
     const bbL = item.bbLowerSeries && item.bbLowerSeries.length === series.length ? item.bbLowerSeries : [];
 
-    const allVals = [...series];
+    const allVals = [...series, ...sma];
+    if (item.dayLow > 0) allVals.push(item.dayLow);
+    if (item.dayHigh > 0) allVals.push(item.dayHigh);
     if (state.watchShowBb) {
-      allVals.push(...sma, ...bbU, ...bbL);
+      allVals.push(...bbU, ...bbL);
     }
     if (item.targetPrice > 0) allVals.push(item.targetPrice);
 
@@ -969,21 +987,21 @@
       ctx.closePath();
       ctx.fillStyle = 'rgba(6, 182, 212, 0.11)';
       ctx.fill();
+    }
 
-      if (sma.length === series.length) {
-        ctx.beginPath();
-        ctx.setLineDash([3, 3]);
-        sma.forEach((v, i) => {
-          const x = toX(i);
-          const y = toY(v);
-          if (i === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
-        });
-        ctx.strokeStyle = 'rgba(6, 182, 212, 0.75)';
-        ctx.lineWidth = 1.2;
-        ctx.stroke();
-        ctx.setLineDash([]);
-      }
+    if (sma.length === series.length) {
+      ctx.beginPath();
+      ctx.setLineDash([3, 3]);
+      sma.forEach((v, i) => {
+        const x = toX(i);
+        const y = toY(v);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.strokeStyle = 'rgba(6, 182, 212, 0.85)';
+      ctx.lineWidth = 1.4;
+      ctx.stroke();
+      ctx.setLineDash([]);
     }
 
     const isUp = (item.change || 0) >= 0;
