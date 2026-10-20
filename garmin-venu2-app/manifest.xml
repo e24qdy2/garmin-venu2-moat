@@ -9,7 +9,33 @@
         minApiLevel="3.2.0">
 
         <iq:products>
+            <!-- Venu & vívoactive Lifestyle AMOLED Series -->
             <iq:product id="venu2"/>
+            <iq:product id="venu2s"/>
+            <iq:product id="venu2plus"/>
+            <iq:product id="venu3"/>
+            <iq:product id="venu3s"/>
+            <iq:product id="vivoactive5"/>
+
+            <!-- Forerunner Running AMOLED Series (2024-2026) -->
+            <iq:product id="fr165"/>
+            <iq:product id="fr165m"/>
+            <iq:product id="fr265"/>
+            <iq:product id="fr265s"/>
+            <iq:product id="fr965"/>
+
+            <!-- fēnix 8, Enduro 3 & epix Pro Gen 2 Flagship Series (2024-2026) -->
+            <iq:product id="fenix843mm"/>
+            <iq:product id="fenix847mm"/>
+            <iq:product id="fenix8solar47mm"/>
+            <iq:product id="enduro3"/>
+            <iq:product id="epix2pro42mm"/>
+            <iq:product id="epix2pro47mm"/>
+            <iq:product id="epix2pro51mm"/>
+
+            <!-- Approach S70 Golf Flagship AMOLED Series -->
+            <iq:product id="approachs7042mm"/>
+            <iq:product id="approachs7047mm"/>
         </iq:products>
 
         <iq:permissions>

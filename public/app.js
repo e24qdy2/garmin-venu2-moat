@@ -3,6 +3,8 @@
 (() => {
   const state = {
     syncKey: localStorage.getItem('venu2_sync_key') || 'VENU2-88',
+    selectedWatchModel: localStorage.getItem('venu2_watch_model') || 'venu2',
+    compatibleDevices: [],
     profile: null,
     activePortfolioIndex: 0,
     activeSymbolIndex: 0,
@@ -1655,6 +1657,88 @@
         showToast(err.message || 'ไม่สามารถอ่านไฟล์ JSON ได้');
       }
     });
+
+    // Garmin 2024–2026 Watch Model Selector
+    const watchModelSelect = el('watchModelSelect');
+    if (watchModelSelect) {
+      watchModelSelect.addEventListener('change', () => {
+        state.selectedWatchModel = watchModelSelect.value || 'venu2';
+        localStorage.setItem('venu2_watch_model', state.selectedWatchModel);
+        applyWatchModelPreview();
+        const found = state.compatibleDevices.find(d => d.id === state.selectedWatchModel);
+        if (found) {
+          showToast(`สลับจำลองหน้าจอเป็น ${found.name} (${formatDeviceRes(found.resolution)} ${found.displayType})`);
+        }
+      });
+    }
+  }
+
+  function formatDeviceRes(res) {
+    if (!res) return '416×416';
+    if (typeof res === 'object' && res.width && res.height) {
+      return `${res.width}×${res.height}`;
+    }
+    return String(res);
+  }
+
+  async function loadCompatibleGarminDevices() {
+    try {
+      const res = await fetch('/api/devices/compatible');
+      if (!res.ok) return;
+      const data = await res.json();
+      if (Array.isArray(data.devices) && data.devices.length > 0) {
+        state.compatibleDevices = data.devices;
+        const selectEl = el('watchModelSelect');
+        if (selectEl) {
+          selectEl.innerHTML = data.devices
+            .map(
+              d =>
+                `<option value="${escapeHtml(d.id)}" ${d.id === state.selectedWatchModel ? 'selected' : ''}>${escapeHtml(d.name)} (${escapeHtml(formatDeviceRes(d.resolution))} ${escapeHtml(d.displayType)})</option>`
+            )
+            .join('');
+        }
+        applyWatchModelPreview();
+      }
+    } catch (_) {
+      applyWatchModelPreview();
+    }
+  }
+
+  function applyWatchModelPreview() {
+    const found =
+      state.compatibleDevices.find(d => d.id === state.selectedWatchModel) || {
+        id: state.selectedWatchModel || 'venu2',
+        name: 'Garmin Venu 2',
+        resolution: '416×416',
+        displayType: 'AMOLED',
+        releaseYear: '2021–2026'
+      };
+
+    const resStr = formatDeviceRes(found.resolution);
+    const titleEl = el('watchHardwareTitle');
+    if (titleEl) {
+      titleEl.textContent = `${found.name} Hardware Preview`;
+    }
+    const specEl = el('watchHardwareSpecLabel');
+    if (specEl) {
+      specEl.textContent = `${resStr} Round ${found.displayType} · รองรับ 20 รุ่นยอดนิยม (2024–2026)`;
+    }
+    const cmdEl = el('sideloadCommandHint');
+    if (cmdEl) {
+      cmdEl.textContent = `.\\build-and-sideload.ps1 -Device ${found.id}`;
+    }
+    const screenEl = el('venuScreenViewport');
+    if (screenEl) {
+      screenEl.setAttribute(
+        'aria-label',
+        `หน้าจอจำลอง ${found.name} ขนาด ${resStr} พิกเซล (${found.displayType})`
+      );
+      if (String(found.displayType).includes('MIP')) {
+        screenEl.style.filter = 'contrast(0.95) saturate(0.82)';
+      } else {
+        screenEl.style.filter = '';
+      }
+    }
   }
 
   function initScrollReveal() {
@@ -1675,6 +1759,7 @@
   document.addEventListener('DOMContentLoaded', async () => {
     initScrollReveal();
     bindEvents();
+    await loadCompatibleGarminDevices();
     await loadPortfolio(state.syncKey);
   });
 })();

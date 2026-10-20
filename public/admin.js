@@ -1,14 +1,18 @@
 /* Venu2Moat Admin Portal — Admin Password Login, Change Password, Customer Requests Approval Queue, SMTP / System Mail (e24qdy2@gmail.com) & Per-Device Activation Key Manager */
 
 (() => {
+  try {
+    localStorage.removeItem("venu2_admin_token");
+  } catch (_) {}
+
   const state = {
-    token: localStorage.getItem("venu2_admin_token") || "",
+    token: sessionStorage.getItem("venu2_admin_token") || "",
     authenticated: false,
     adminEmail: "saharat.bun@icloud.com",
     notifyEmail: "e24qdy2@gmail.com",
     authMethod: "",
     passwordUpdatedAt: "",
-    isDefaultPassword: true,
+    isDefaultPassword: false,
     summary: null,
     devices: [],
     customerRequests: [],
@@ -72,7 +76,7 @@
     const res = await fetch("/api/admin/devices", { headers: authHeaders() });
     if (res.status === 401) {
       state.authenticated = false;
-      localStorage.removeItem("venu2_admin_token");
+      sessionStorage.removeItem("venu2_admin_token");
       renderAuthView();
       return;
     }
@@ -124,15 +128,6 @@
     const dash = el("adminDashboardContent");
     const pill = el("adminAuthStatusPill");
     const logoutBtn = el("adminLogoutBtn");
-    const hintBox = el("defaultPasswordHintBox");
-
-    if (hintBox) {
-      if (state.isDefaultPassword) {
-        hintBox.classList.remove("hidden");
-      } else {
-        hintBox.classList.add("hidden");
-      }
-    }
 
     if (state.authenticated) {
       gate.classList.add("hidden");
@@ -538,7 +533,7 @@
 
         el("adminPasswordInput").value = "";
         state.token = data.token;
-        localStorage.setItem("venu2_admin_token", data.token);
+        sessionStorage.setItem("venu2_admin_token", data.token);
         await checkSessionAndLoad();
         showToast(`ยินดีต้อนรับผู้ดูแลระบบ ${data.email}`);
       });
@@ -670,10 +665,16 @@
     });
 
     // 7. Sign Out
-    el("adminLogoutBtn").addEventListener("click", () => {
+    el("adminLogoutBtn").addEventListener("click", async () => {
+      try {
+        await fetch("/api/admin/auth/logout", {
+          method: "POST",
+          headers: authHeaders()
+        });
+      } catch (_) {}
       state.token = "";
       state.authenticated = false;
-      localStorage.removeItem("venu2_admin_token");
+      sessionStorage.removeItem("venu2_admin_token");
       renderAuthView();
       showToast("ออกจากระบบ Admin แล้ว");
     });

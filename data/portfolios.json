@@ -2,12 +2,13 @@
   "VENU2-88": {
     "syncKey": "VENU2-88",
     "baseCurrency": "THB",
-    "updatedAt": "2026-10-20T15:36:48.235Z",
+    "updatedAt": "2026-10-20T16:09:19.330Z",
     "watchSettings": {
       "autoSwipeEnabled": true,
       "autoSwipeSec": 5,
       "alwaysOnDisplay": false,
       "deviceId": "V2-88VENU20",
+      "watchModel": "venu2",
       "activationKey": ""
     },
     "portfolios": [

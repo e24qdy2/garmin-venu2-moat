@@ -107,9 +107,9 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_26_33
         ret %tmp.7;
 D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_26_33_30_4_stop:
     }
-    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc"; @line = 33; @symbol_functiondef = [onSwipe,33,13,20]; @symbol_param<0> = [evt,33,21,24]; @symbol_param<0>_type<0> = [SwipeEvent,33,28,38]; @symbol_return<0> = [Boolean,33,43,50]; ]
-    function onSwipe(evt as SwipeEvent) as Boolean {
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_33_51_63_4_start:
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc"; @line = 33; @symbol_functiondef = [onNextPage,33,13,23]; @symbol_return<0> = [Boolean,33,29,36]; ]
+    function onNextPage() as Boolean {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_33_37_50_4_start:
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 34 8 ]
         symbol [ _store %tmp.2 34 8 14 ];
         %tmp.2 = getv ? :_store;
@@ -137,515 +137,768 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_36_33
 D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_36_33_38_8_stop:
         goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_36_8_38_8_if_end;
 D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_36_8_38_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 39 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_33_37_50_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_33_37_50_4_stop" ]
+        %port.1 = local;
+        symbol [ port %port.1 39 12 16 ];
+        symbol [ _store %tmp.12 39 19 25 ];
+        %tmp.12 = getv ? :_store;
+        symbol [ getActivePortfolio %tmp.13 39 26 44 ];
+        %tmp.13 = getv function %tmp.12 :getActivePortfolio;
+        %tmp.14 = invoke %tmp.12 %tmp.13();
+        lputv %port.1 %tmp.14;
+        symbol [ port %port.1 39 12 16 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 40 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_33_51_63_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_33_51_63_4_stop" ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_40_8_47_8_if_stmt:
+        %tmp.15 = lgetv %port.1;
+        symbol [ port %tmp.15 40 12 16 ];
+        %tmp.16 = null;
+        %tmp.17 = ne %tmp.15 %tmp.16;
+        bf %tmp.17 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_40_8_47_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_40_8_47_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_40_26_47_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 41 12 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_40_26_47_8_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_40_26_47_8_stop" ]
+        %items.2 = local;
+        symbol [ items %items.2 41 16 21 ];
+        %tmp.18 = lgetv %port.1;
+        symbol [ port %tmp.18 41 24 28 ];
+        %tmp.19 = as %tmp.18 { (!Null) };
+        symbol [ get %tmp.20 41 29 32 ];
+        %tmp.20 = getv function %tmp.19 :get;
+        %tmp.21 = "s";
+        %tmp.22 = invoke %tmp.19 %tmp.20(%tmp.21);
+        %tmp.23 = as %tmp.22 Array;
+        symbol [ Array %tmp.23 41 41 46 ];
+        lputv %items.2 %tmp.23;
+        symbol [ items %items.2 41 16 21 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 42 12 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_42_12_46_12_if_stmt:
+        symbol [ _store %tmp.25 42 16 22 ];
+        %tmp.25 = getv ? :_store;
+        symbol [ scrollRowOffset %tmp.26 42 23 38 ];
+        %tmp.26 = getv %tmp.25 :scrollRowOffset;
+        symbol [ _store %tmp.28 42 41 47 ];
+        %tmp.28 = getv ? :_store;
+        symbol [ visibleRows %tmp.29 42 48 59 ];
+        %tmp.29 = getv %tmp.28 :visibleRows;
+        %tmp.30 = add %tmp.26 %tmp.29;
+        %tmp.31 = lgetv %items.2;
+        symbol [ items %tmp.31 42 62 67 ];
+        symbol [ size %tmp.32 42 68 72 ];
+        %tmp.32 = getv function %tmp.31 :size;
+        %tmp.33 = invoke %tmp.31 %tmp.32();
+        %tmp.34 = lt %tmp.30 %tmp.33;
+        bf %tmp.34 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_42_12_46_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_42_12_46_12_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_42_76_46_12_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 43 16 ]
+        symbol [ _store %tmp.35 43 16 22 ];
+        %tmp.35 = getv self :_store;
+        symbol [ _store %tmp.36 43 16 22 ];
+        %tmp.36 = getv self :_store;
+        symbol [ scrollRowOffset %tmp.37 43 23 38 ];
+        %tmp.37 = getv %tmp.36 :scrollRowOffset;
+        %tmp.38 = 1;
+        %tmp.39 = add %tmp.37 %tmp.38;
+        symbol [ scrollRowOffset ? 43 23 38 ];
+        putv %tmp.35 :scrollRowOffset dup %tmp.39;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 44 16 ]
+        symbol [ WatchUi %tmp.40 44 16 23 ];
+        %tmp.40 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.41 44 24 37 ];
+        %tmp.41 = getv function %tmp.40 :requestUpdate;
+        invoke %tmp.40 %tmp.41();
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 45 16 ]
+        %tmp.42 = true;
+        ret %tmp.42;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_42_76_46_12_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_42_12_46_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_42_12_46_12_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_40_26_47_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_40_8_47_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_40_8_47_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 48 8 ]
+        symbol [ _store %tmp.44 48 8 14 ];
+        %tmp.44 = getv ? :_store;
+        symbol [ nextPortfolio %tmp.45 48 15 28 ];
+        %tmp.45 = getv function %tmp.44 :nextPortfolio;
+        invoke %tmp.44 %tmp.45();
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 49 8 ]
+        %tmp.46 = true;
+        ret %tmp.46;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_33_37_50_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc"; @line = 53; @symbol_functiondef = [onPreviousPage,53,13,27]; @symbol_return<0> = [Boolean,53,33,40]; ]
+    function onPreviousPage() as Boolean {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_53_41_66_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 54 8 ]
+        symbol [ _store %tmp.2 54 8 14 ];
+        %tmp.2 = getv ? :_store;
+        symbol [ resetSwipeTimer %tmp.3 54 15 30 ];
+        %tmp.3 = getv function %tmp.2 :resetSwipeTimer;
+        invoke %tmp.2 %tmp.3();
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 55 8 ]
+        symbol [ _store %tmp.5 55 8 14 ];
+        %tmp.5 = getv ? :_store;
+        symbol [ applyBacklightIfEnabled %tmp.6 55 15 38 ];
+        %tmp.6 = getv function %tmp.5 :applyBacklightIfEnabled;
+        invoke %tmp.5 %tmp.6();
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 56 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_56_8_58_8_if_stmt:
+        symbol [ _store %tmp.8 56 12 18 ];
+        %tmp.8 = getv ? :_store;
+        symbol [ trialExpired %tmp.9 56 19 31 ];
+        %tmp.9 = getv %tmp.8 :trialExpired;
+        bf %tmp.9 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_56_8_58_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_56_8_58_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_56_33_58_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 57 12 ]
+        %tmp.10 = true;
+        ret %tmp.10;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_56_33_58_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_56_8_58_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_56_8_58_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 59 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_59_8_63_8_if_stmt:
+        symbol [ _store %tmp.12 59 12 18 ];
+        %tmp.12 = getv ? :_store;
+        symbol [ scrollRowOffset %tmp.13 59 19 34 ];
+        %tmp.13 = getv %tmp.12 :scrollRowOffset;
+        %tmp.14 = 0;
+        %tmp.15 = gt %tmp.13 %tmp.14;
+        bf %tmp.15 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_59_8_63_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_59_8_63_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_59_40_63_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 60 12 ]
+        symbol [ _store %tmp.16 60 12 18 ];
+        %tmp.16 = getv self :_store;
+        symbol [ _store %tmp.17 60 12 18 ];
+        %tmp.17 = getv self :_store;
+        symbol [ scrollRowOffset %tmp.18 60 19 34 ];
+        %tmp.18 = getv %tmp.17 :scrollRowOffset;
+        %tmp.19 = 1;
+        %tmp.20 = sub %tmp.18 %tmp.19;
+        symbol [ scrollRowOffset ? 60 19 34 ];
+        putv %tmp.16 :scrollRowOffset dup %tmp.20;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 61 12 ]
+        symbol [ WatchUi %tmp.21 61 12 19 ];
+        %tmp.21 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.22 61 20 33 ];
+        %tmp.22 = getv function %tmp.21 :requestUpdate;
+        invoke %tmp.21 %tmp.22();
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 62 12 ]
+        %tmp.23 = true;
+        ret %tmp.23;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_59_40_63_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_59_8_63_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_59_8_63_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 64 8 ]
+        symbol [ _store %tmp.25 64 8 14 ];
+        %tmp.25 = getv ? :_store;
+        symbol [ prevPortfolio %tmp.26 64 15 28 ];
+        %tmp.26 = getv function %tmp.25 :prevPortfolio;
+        invoke %tmp.25 %tmp.26();
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 65 8 ]
+        %tmp.27 = true;
+        ret %tmp.27;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_53_41_66_4_stop:
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc"; @line = 69; @symbol_functiondef = [onSwipe,69,13,20]; @symbol_param<0> = [evt,69,21,24]; @symbol_param<0>_type<0> = [SwipeEvent,69,28,38]; @symbol_return<0> = [Boolean,69,43,50]; ]
+    function onSwipe(evt as SwipeEvent) as Boolean {
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_69_51_99_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 70 8 ]
+        symbol [ _store %tmp.2 70 8 14 ];
+        %tmp.2 = getv ? :_store;
+        symbol [ resetSwipeTimer %tmp.3 70 15 30 ];
+        %tmp.3 = getv function %tmp.2 :resetSwipeTimer;
+        invoke %tmp.2 %tmp.3();
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 71 8 ]
+        symbol [ _store %tmp.5 71 8 14 ];
+        %tmp.5 = getv ? :_store;
+        symbol [ applyBacklightIfEnabled %tmp.6 71 15 38 ];
+        %tmp.6 = getv function %tmp.5 :applyBacklightIfEnabled;
+        invoke %tmp.5 %tmp.6();
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 72 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_72_8_74_8_if_stmt:
+        symbol [ _store %tmp.8 72 12 18 ];
+        %tmp.8 = getv ? :_store;
+        symbol [ trialExpired %tmp.9 72 19 31 ];
+        %tmp.9 = getv %tmp.8 :trialExpired;
+        bf %tmp.9 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_72_8_74_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_72_8_74_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_72_33_74_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 73 12 ]
+        %tmp.10 = true;
+        ret %tmp.10;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_72_33_74_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_72_8_74_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_72_8_74_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 76 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_69_51_99_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_69_51_99_4_stop" ]
         %dir.1 = local;
-        symbol [ dir %dir.1 40 12 15 ];
+        symbol [ dir %dir.1 76 12 15 ];
         %tmp.11 = lgetv %evt;
-        symbol [ evt %tmp.11 40 18 21 ];
-        symbol [ getDirection %tmp.12 40 22 34 ];
+        symbol [ evt %tmp.11 76 18 21 ];
+        symbol [ getDirection %tmp.12 76 22 34 ];
         %tmp.12 = getv function %tmp.11 :getDirection;
         %tmp.13 = invoke %tmp.11 %tmp.12();
         lputv %dir.1 %tmp.13;
-        symbol [ dir %dir.1 40 12 15 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 41 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_33_51_63_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_33_51_63_4_stop" ]
+        symbol [ dir %dir.1 76 12 15 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 77 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_69_51_99_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_69_51_99_4_stop" ]
         %port.2 = local;
-        symbol [ port %port.2 41 12 16 ];
-        symbol [ _store %tmp.15 41 19 25 ];
+        symbol [ port %port.2 77 12 16 ];
+        symbol [ _store %tmp.15 77 19 25 ];
         %tmp.15 = getv ? :_store;
-        symbol [ getActivePortfolio %tmp.16 41 26 44 ];
+        symbol [ getActivePortfolio %tmp.16 77 26 44 ];
         %tmp.16 = getv function %tmp.15 :getActivePortfolio;
         %tmp.17 = invoke %tmp.15 %tmp.16();
         lputv %port.2 %tmp.17;
-        symbol [ port %port.2 41 12 16 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 42 8 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_42_8_61_8_if_stmt:
+        symbol [ port %port.2 77 12 16 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 78 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_78_8_97_8_if_stmt:
         %tmp.18 = lgetv %dir.1;
-        symbol [ dir %tmp.18 42 12 15 ];
-        symbol [ WatchUi %tmp.19 42 19 26 ];
+        symbol [ dir %tmp.18 78 12 15 ];
+        symbol [ WatchUi %tmp.19 78 19 26 ];
         %tmp.19 = getm $.Toybox.WatchUi;
-        symbol [ SWIPE_LEFT %tmp.20 42 27 37 ];
+        symbol [ SWIPE_LEFT %tmp.20 78 27 37 ];
         %tmp.20 = getv %tmp.19 :SWIPE_LEFT;
         %tmp.21 = eq %tmp.18 %tmp.20;
-        bf %tmp.21 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_42_8_61_8_if_false;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_42_8_61_8_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_42_39_45_8_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 43 12 ]
-        symbol [ _store %tmp.23 43 12 18 ];
+        bf %tmp.21 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_78_8_97_8_if_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_78_8_97_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_78_39_81_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 79 12 ]
+        symbol [ _store %tmp.23 79 12 18 ];
         %tmp.23 = getv ? :_store;
-        symbol [ nextPortfolio %tmp.24 43 19 32 ];
+        symbol [ nextPortfolio %tmp.24 79 19 32 ];
         %tmp.24 = getv function %tmp.23 :nextPortfolio;
         invoke %tmp.23 %tmp.24();
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 44 12 ]
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 80 12 ]
         %tmp.25 = true;
         ret %tmp.25;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_42_39_45_8_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_42_8_61_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_42_8_61_8_if_false:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 45 15 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_45_15_61_8_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_78_39_81_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_78_8_97_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_78_8_97_8_if_false:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 81 15 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_81_15_97_8_if_stmt:
         %tmp.26 = lgetv %dir.1;
-        symbol [ dir %tmp.26 45 19 22 ];
-        symbol [ WatchUi %tmp.27 45 26 33 ];
+        symbol [ dir %tmp.26 81 19 22 ];
+        symbol [ WatchUi %tmp.27 81 26 33 ];
         %tmp.27 = getm $.Toybox.WatchUi;
-        symbol [ SWIPE_RIGHT %tmp.28 45 34 45 ];
+        symbol [ SWIPE_RIGHT %tmp.28 81 34 45 ];
         %tmp.28 = getv %tmp.27 :SWIPE_RIGHT;
         %tmp.29 = eq %tmp.26 %tmp.28;
-        bf %tmp.29 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_45_15_61_8_if_false;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_45_15_61_8_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_45_47_48_8_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 46 12 ]
-        symbol [ _store %tmp.31 46 12 18 ];
+        bf %tmp.29 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_81_15_97_8_if_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_81_15_97_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_81_47_84_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 82 12 ]
+        symbol [ _store %tmp.31 82 12 18 ];
         %tmp.31 = getv ? :_store;
-        symbol [ prevPortfolio %tmp.32 46 19 32 ];
+        symbol [ prevPortfolio %tmp.32 82 19 32 ];
         %tmp.32 = getv function %tmp.31 :prevPortfolio;
         invoke %tmp.31 %tmp.32();
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 47 12 ]
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 83 12 ]
         %tmp.33 = true;
         ret %tmp.33;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_45_47_48_8_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_45_15_61_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_45_15_61_8_if_false:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 48 15 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_48_15_61_8_if_stmt:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_48_19_48_54_begin:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_81_47_84_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_81_15_97_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_81_15_97_8_if_false:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 84 15 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_84_15_97_8_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_84_19_84_54_begin:
         %tmp.34 = lgetv %dir.1;
-        symbol [ dir %tmp.34 48 19 22 ];
-        symbol [ WatchUi %tmp.35 48 26 33 ];
+        symbol [ dir %tmp.34 84 19 22 ];
+        symbol [ WatchUi %tmp.35 84 26 33 ];
         %tmp.35 = getm $.Toybox.WatchUi;
-        symbol [ SWIPE_UP %tmp.36 48 34 42 ];
+        symbol [ SWIPE_UP %tmp.36 84 34 42 ];
         %tmp.36 = getv %tmp.35 :SWIPE_UP;
         %tmp.37 = eq %tmp.34 %tmp.36;
-        bf %tmp.37 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_48_15_61_8_if_false;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_48_46_48_54_true:
+        bf %tmp.37 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_84_15_97_8_if_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_84_46_84_54_true:
         %tmp.38 = lgetv %port.2;
-        symbol [ port %tmp.38 48 46 50 ];
+        symbol [ port %tmp.38 84 46 50 ];
         %tmp.39 = null;
         %tmp.40 = ne %tmp.38 %tmp.39;
         push %tmp.40;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_48_46_48_54_end:
-        %tmp.41 = phi [%tmp.37 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_48_19_48_54_begin] [%tmp.40 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_48_46_48_54_true] [%tmp.41 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_48_46_48_54_end];
-        bf %tmp.41 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_48_15_61_8_if_false;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_48_15_61_8_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_48_60_55_8_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 49 12 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_48_60_55_8_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_48_60_55_8_stop" ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_84_46_84_54_end:
+        %tmp.41 = phi [%tmp.37 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_84_19_84_54_begin] [%tmp.40 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_84_46_84_54_true] [%tmp.41 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_84_46_84_54_end];
+        bf %tmp.41 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_84_15_97_8_if_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_84_15_97_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_84_60_91_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 85 12 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_84_60_91_8_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_84_60_91_8_stop" ]
         %items.3 = local;
-        symbol [ items %items.3 49 16 21 ];
+        symbol [ items %items.3 85 16 21 ];
         %tmp.42 = lgetv %port.2;
-        symbol [ port %tmp.42 49 24 28 ];
+        symbol [ port %tmp.42 85 24 28 ];
         %tmp.43 = as %tmp.42 { (!Null) };
-        symbol [ get %tmp.44 49 29 32 ];
+        symbol [ get %tmp.44 85 29 32 ];
         %tmp.44 = getv function %tmp.43 :get;
         %tmp.45 = "s";
         %tmp.46 = invoke %tmp.43 %tmp.44(%tmp.45);
         %tmp.47 = as %tmp.46 Array;
-        symbol [ Array %tmp.47 49 41 46 ];
+        symbol [ Array %tmp.47 85 41 46 ];
         lputv %items.3 %tmp.47;
-        symbol [ items %items.3 49 16 21 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 50 12 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_50_12_53_12_if_stmt:
-        symbol [ _store %tmp.49 50 16 22 ];
+        symbol [ items %items.3 85 16 21 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 86 12 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_86_12_89_12_if_stmt:
+        symbol [ _store %tmp.49 86 16 22 ];
         %tmp.49 = getv ? :_store;
-        symbol [ scrollRowOffset %tmp.50 50 23 38 ];
+        symbol [ scrollRowOffset %tmp.50 86 23 38 ];
         %tmp.50 = getv %tmp.49 :scrollRowOffset;
-        %tmp.51 = 4;
-        %tmp.52 = add %tmp.50 %tmp.51;
-        %tmp.53 = lgetv %items.3;
-        symbol [ items %tmp.53 50 45 50 ];
-        symbol [ size %tmp.54 50 51 55 ];
-        %tmp.54 = getv function %tmp.53 :size;
-        %tmp.55 = invoke %tmp.53 %tmp.54();
-        %tmp.56 = lt %tmp.52 %tmp.55;
-        bf %tmp.56 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_50_12_53_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_50_12_53_12_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_50_59_53_12_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 51 16 ]
-        symbol [ _store %tmp.57 51 16 22 ];
-        %tmp.57 = getv self :_store;
-        symbol [ _store %tmp.58 51 16 22 ];
-        %tmp.58 = getv self :_store;
-        symbol [ scrollRowOffset %tmp.59 51 23 38 ];
-        %tmp.59 = getv %tmp.58 :scrollRowOffset;
-        %tmp.60 = 1;
-        %tmp.61 = add %tmp.59 %tmp.60;
-        symbol [ scrollRowOffset ? 51 23 38 ];
-        putv %tmp.57 :scrollRowOffset dup %tmp.61;
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 52 16 ]
-        symbol [ WatchUi %tmp.62 52 16 23 ];
-        %tmp.62 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.63 52 24 37 ];
-        %tmp.63 = getv function %tmp.62 :requestUpdate;
-        invoke %tmp.62 %tmp.63();
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_50_59_53_12_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_50_12_53_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_50_12_53_12_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 54 12 ]
-        %tmp.64 = true;
-        ret %tmp.64;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_48_60_55_8_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_48_15_61_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_48_15_61_8_if_false:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 55 15 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_55_15_61_8_if_stmt:
-        %tmp.65 = lgetv %dir.1;
-        symbol [ dir %tmp.65 55 19 22 ];
-        symbol [ WatchUi %tmp.66 55 26 33 ];
-        %tmp.66 = getm $.Toybox.WatchUi;
-        symbol [ SWIPE_DOWN %tmp.67 55 34 44 ];
-        %tmp.67 = getv %tmp.66 :SWIPE_DOWN;
-        %tmp.68 = eq %tmp.65 %tmp.67;
-        bf %tmp.68 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_55_15_61_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_55_15_61_8_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_55_46_61_8_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 56 12 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_56_12_59_12_if_stmt:
-        symbol [ _store %tmp.70 56 16 22 ];
-        %tmp.70 = getv ? :_store;
-        symbol [ scrollRowOffset %tmp.71 56 23 38 ];
-        %tmp.71 = getv %tmp.70 :scrollRowOffset;
-        %tmp.72 = 0;
-        %tmp.73 = gt %tmp.71 %tmp.72;
-        bf %tmp.73 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_56_12_59_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_56_12_59_12_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_56_44_59_12_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 57 16 ]
-        symbol [ _store %tmp.74 57 16 22 ];
-        %tmp.74 = getv self :_store;
-        symbol [ _store %tmp.75 57 16 22 ];
-        %tmp.75 = getv self :_store;
-        symbol [ scrollRowOffset %tmp.76 57 23 38 ];
-        %tmp.76 = getv %tmp.75 :scrollRowOffset;
-        %tmp.77 = 1;
-        %tmp.78 = sub %tmp.76 %tmp.77;
-        symbol [ scrollRowOffset ? 57 23 38 ];
-        putv %tmp.74 :scrollRowOffset dup %tmp.78;
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 58 16 ]
-        symbol [ WatchUi %tmp.79 58 16 23 ];
-        %tmp.79 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.80 58 24 37 ];
-        %tmp.80 = getv function %tmp.79 :requestUpdate;
-        invoke %tmp.79 %tmp.80();
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_56_44_59_12_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_56_12_59_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_56_12_59_12_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 60 12 ]
-        %tmp.81 = true;
-        ret %tmp.81;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_55_46_61_8_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_55_15_61_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_55_15_61_8_if_end:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_48_15_61_8_if_end:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_45_15_61_8_if_end:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_42_8_61_8_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 62 8 ]
-        %tmp.82 = false;
-        ret %tmp.82;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_33_51_63_4_stop:
+        symbol [ _store %tmp.52 86 41 47 ];
+        %tmp.52 = getv ? :_store;
+        symbol [ visibleRows %tmp.53 86 48 59 ];
+        %tmp.53 = getv %tmp.52 :visibleRows;
+        %tmp.54 = add %tmp.50 %tmp.53;
+        %tmp.55 = lgetv %items.3;
+        symbol [ items %tmp.55 86 62 67 ];
+        symbol [ size %tmp.56 86 68 72 ];
+        %tmp.56 = getv function %tmp.55 :size;
+        %tmp.57 = invoke %tmp.55 %tmp.56();
+        %tmp.58 = lt %tmp.54 %tmp.57;
+        bf %tmp.58 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_86_12_89_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_86_12_89_12_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_86_76_89_12_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 87 16 ]
+        symbol [ _store %tmp.59 87 16 22 ];
+        %tmp.59 = getv self :_store;
+        symbol [ _store %tmp.60 87 16 22 ];
+        %tmp.60 = getv self :_store;
+        symbol [ scrollRowOffset %tmp.61 87 23 38 ];
+        %tmp.61 = getv %tmp.60 :scrollRowOffset;
+        %tmp.62 = 1;
+        %tmp.63 = add %tmp.61 %tmp.62;
+        symbol [ scrollRowOffset ? 87 23 38 ];
+        putv %tmp.59 :scrollRowOffset dup %tmp.63;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 88 16 ]
+        symbol [ WatchUi %tmp.64 88 16 23 ];
+        %tmp.64 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.65 88 24 37 ];
+        %tmp.65 = getv function %tmp.64 :requestUpdate;
+        invoke %tmp.64 %tmp.65();
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_86_76_89_12_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_86_12_89_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_86_12_89_12_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 90 12 ]
+        %tmp.66 = true;
+        ret %tmp.66;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_84_60_91_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_84_15_97_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_84_15_97_8_if_false:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 91 15 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_91_15_97_8_if_stmt:
+        %tmp.67 = lgetv %dir.1;
+        symbol [ dir %tmp.67 91 19 22 ];
+        symbol [ WatchUi %tmp.68 91 26 33 ];
+        %tmp.68 = getm $.Toybox.WatchUi;
+        symbol [ SWIPE_DOWN %tmp.69 91 34 44 ];
+        %tmp.69 = getv %tmp.68 :SWIPE_DOWN;
+        %tmp.70 = eq %tmp.67 %tmp.69;
+        bf %tmp.70 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_91_15_97_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_91_15_97_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_91_46_97_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 92 12 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_92_12_95_12_if_stmt:
+        symbol [ _store %tmp.72 92 16 22 ];
+        %tmp.72 = getv ? :_store;
+        symbol [ scrollRowOffset %tmp.73 92 23 38 ];
+        %tmp.73 = getv %tmp.72 :scrollRowOffset;
+        %tmp.74 = 0;
+        %tmp.75 = gt %tmp.73 %tmp.74;
+        bf %tmp.75 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_92_12_95_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_92_12_95_12_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_92_44_95_12_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 93 16 ]
+        symbol [ _store %tmp.76 93 16 22 ];
+        %tmp.76 = getv self :_store;
+        symbol [ _store %tmp.77 93 16 22 ];
+        %tmp.77 = getv self :_store;
+        symbol [ scrollRowOffset %tmp.78 93 23 38 ];
+        %tmp.78 = getv %tmp.77 :scrollRowOffset;
+        %tmp.79 = 1;
+        %tmp.80 = sub %tmp.78 %tmp.79;
+        symbol [ scrollRowOffset ? 93 23 38 ];
+        putv %tmp.76 :scrollRowOffset dup %tmp.80;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 94 16 ]
+        symbol [ WatchUi %tmp.81 94 16 23 ];
+        %tmp.81 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.82 94 24 37 ];
+        %tmp.82 = getv function %tmp.81 :requestUpdate;
+        invoke %tmp.81 %tmp.82();
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_92_44_95_12_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_92_12_95_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_92_12_95_12_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 96 12 ]
+        %tmp.83 = true;
+        ret %tmp.83;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_91_46_97_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_91_15_97_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_91_15_97_8_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_84_15_97_8_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_81_15_97_8_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_78_8_97_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 98 8 ]
+        %tmp.84 = false;
+        ret %tmp.84;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_69_51_99_4_stop:
     }
-    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc"; @line = 66; @symbol_functiondef = [onTap,66,13,18]; @symbol_param<0> = [evt,66,19,22]; @symbol_param<0>_type<0> = [ClickEvent,66,26,36]; @symbol_return<0> = [Boolean,66,41,48]; ]
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc"; @line = 102; @symbol_functiondef = [onTap,102,13,18]; @symbol_param<0> = [evt,102,19,22]; @symbol_param<0>_type<0> = [ClickEvent,102,26,36]; @symbol_return<0> = [Boolean,102,41,48]; ]
     function onTap(evt as ClickEvent) as Boolean {
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_66_49_110_4_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 67 8 ]
-        symbol [ _store %tmp.2 67 8 14 ];
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_102_49_148_4_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 103 8 ]
+        symbol [ _store %tmp.2 103 8 14 ];
         %tmp.2 = getv ? :_store;
-        symbol [ resetSwipeTimer %tmp.3 67 15 30 ];
+        symbol [ resetSwipeTimer %tmp.3 103 15 30 ];
         %tmp.3 = getv function %tmp.2 :resetSwipeTimer;
         invoke %tmp.2 %tmp.3();
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 68 8 ]
-        symbol [ _store %tmp.5 68 8 14 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 104 8 ]
+        symbol [ _store %tmp.5 104 8 14 ];
         %tmp.5 = getv ? :_store;
-        symbol [ applyBacklightIfEnabled %tmp.6 68 15 38 ];
+        symbol [ applyBacklightIfEnabled %tmp.6 104 15 38 ];
         %tmp.6 = getv function %tmp.5 :applyBacklightIfEnabled;
         invoke %tmp.5 %tmp.6();
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 70 8 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_70_8_73_8_if_stmt:
-        symbol [ _store %tmp.8 70 12 18 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 106 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_106_8_109_8_if_stmt:
+        symbol [ _store %tmp.8 106 12 18 ];
         %tmp.8 = getv ? :_store;
-        symbol [ trialExpired %tmp.9 70 19 31 ];
+        symbol [ trialExpired %tmp.9 106 19 31 ];
         %tmp.9 = getv %tmp.8 :trialExpired;
-        bf %tmp.9 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_70_8_73_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_70_8_73_8_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_70_33_73_8_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 71 12 ]
-        symbol [ _store %tmp.11 71 12 18 ];
+        bf %tmp.9 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_106_8_109_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_106_8_109_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_106_33_109_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 107 12 ]
+        symbol [ _store %tmp.11 107 12 18 ];
         %tmp.11 = getv ? :_store;
-        symbol [ fetchRemote %tmp.12 71 19 30 ];
+        symbol [ fetchRemote %tmp.12 107 19 30 ];
         %tmp.12 = getv function %tmp.11 :fetchRemote;
         invoke %tmp.11 %tmp.12();
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 72 12 ]
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 108 12 ]
         %tmp.13 = true;
         ret %tmp.13;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_70_33_73_8_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_70_8_73_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_70_8_73_8_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 75 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_66_49_110_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_66_49_110_4_stop" ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_106_33_109_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_106_8_109_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_106_8_109_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 111 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_102_49_148_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_102_49_148_4_stop" ]
         %coords.1 = local;
-        symbol [ coords %coords.1 75 12 18 ];
+        symbol [ coords %coords.1 111 12 18 ];
         %tmp.14 = lgetv %evt;
-        symbol [ evt %tmp.14 75 21 24 ];
-        symbol [ getCoordinates %tmp.15 75 25 39 ];
+        symbol [ evt %tmp.14 111 21 24 ];
+        symbol [ getCoordinates %tmp.15 111 25 39 ];
         %tmp.15 = getv function %tmp.14 :getCoordinates;
         %tmp.16 = invoke %tmp.14 %tmp.15();
         lputv %coords.1 %tmp.16;
-        symbol [ coords %coords.1 75 12 18 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 76 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_66_49_110_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_66_49_110_4_stop" ]
+        symbol [ coords %coords.1 111 12 18 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 112 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_102_49_148_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_102_49_148_4_stop" ]
         %y.2 = local;
-        symbol [ y %y.2 76 12 13 ];
+        symbol [ y %y.2 112 12 13 ];
         %tmp.17 = lgetv %coords.1;
-        symbol [ coords %tmp.17 76 16 22 ];
+        symbol [ coords %tmp.17 112 16 22 ];
         %tmp.18 = 1;
         %tmp.19 = agetv %tmp.17 %tmp.18;
         lputv %y.2 %tmp.19;
-        symbol [ y %y.2 76 12 13 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 79 8 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_79_8_83_8_if_stmt:
-        %tmp.20 = lgetv %y.2;
-        symbol [ y %tmp.20 79 12 13 ];
-        %tmp.21 = 40;
-        %tmp.22 = lt %tmp.20 %tmp.21;
-        bf %tmp.22 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_79_8_83_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_79_8_83_8_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_79_20_83_8_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 80 12 ]
-        symbol [ _store %tmp.23 80 12 18 ];
-        %tmp.23 = getv self :_store;
-        symbol [ _store %tmp.25 80 39 45 ];
-        %tmp.25 = getv ? :_store;
-        symbol [ autoSwipeEnabled %tmp.26 80 46 62 ];
-        %tmp.26 = getv %tmp.25 :autoSwipeEnabled;
-        %tmp.27 = not %tmp.26;
-        symbol [ autoSwipeEnabled ? 80 19 35 ];
-        putv %tmp.23 :autoSwipeEnabled %tmp.27;
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 81 12 ]
-        symbol [ WatchUi %tmp.28 81 12 19 ];
-        %tmp.28 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.29 81 20 33 ];
-        %tmp.29 = getv function %tmp.28 :requestUpdate;
-        invoke %tmp.28 %tmp.29();
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 82 12 ]
-        %tmp.30 = true;
-        ret %tmp.30;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_79_20_83_8_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_79_8_83_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_79_8_83_8_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 86 8 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_86_8_90_8_if_stmt:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_86_12_86_27_begin:
-        %tmp.31 = lgetv %y.2;
-        symbol [ y %tmp.31 86 12 13 ];
-        %tmp.32 = 60;
-        %tmp.33 = gte %tmp.31 %tmp.32;
-        bf %tmp.33 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_86_8_90_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_86_23_86_27_true:
-        %tmp.34 = lgetv %y.2;
-        symbol [ y %tmp.34 86 23 24 ];
-        %tmp.35 = 126;
-        %tmp.36 = lt %tmp.34 %tmp.35;
-        push %tmp.36;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_86_23_86_27_end:
-        %tmp.37 = phi [%tmp.33 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_86_12_86_27_begin] [%tmp.36 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_86_23_86_27_true] [%tmp.37 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_86_23_86_27_end];
-        bf %tmp.37 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_86_8_90_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_86_8_90_8_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_86_32_90_8_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 87 12 ]
-        symbol [ _store %tmp.38 87 12 18 ];
-        %tmp.38 = getv self :_store;
-        symbol [ _store %tmp.40 87 38 44 ];
-        %tmp.40 = getv ? :_store;
-        symbol [ showTotalReturn %tmp.41 87 45 60 ];
-        %tmp.41 = getv %tmp.40 :showTotalReturn;
-        %tmp.42 = not %tmp.41;
-        symbol [ showTotalReturn ? 87 19 34 ];
-        putv %tmp.38 :showTotalReturn %tmp.42;
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 88 12 ]
-        symbol [ WatchUi %tmp.43 88 12 19 ];
-        %tmp.43 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.44 88 20 33 ];
-        %tmp.44 = getv function %tmp.43 :requestUpdate;
-        invoke %tmp.43 %tmp.44();
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 89 12 ]
-        %tmp.45 = true;
-        ret %tmp.45;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_86_32_90_8_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_86_8_90_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_86_8_90_8_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 93 8 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_93_8_108_8_if_stmt:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_93_12_93_29_begin:
-        %tmp.46 = lgetv %y.2;
-        symbol [ y %tmp.46 93 12 13 ];
-        %tmp.47 = 136;
-        %tmp.48 = gte %tmp.46 %tmp.47;
-        bf %tmp.48 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_93_8_108_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_93_24_93_29_true:
-        %tmp.49 = lgetv %y.2;
-        symbol [ y %tmp.49 93 24 25 ];
-        %tmp.50 = 352;
-        %tmp.51 = lte %tmp.49 %tmp.50;
-        push %tmp.51;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_93_24_93_29_end:
-        %tmp.52 = phi [%tmp.48 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_93_12_93_29_begin] [%tmp.51 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_93_24_93_29_true] [%tmp.52 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_93_24_93_29_end];
-        bf %tmp.52 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_93_8_108_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_93_8_108_8_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_93_34_108_8_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 94 12 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_93_34_108_8_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_93_34_108_8_stop" ]
-        %rowSlot.3 = local;
-        symbol [ rowSlot %rowSlot.3 94 16 23 ];
-        %tmp.53 = lgetv %y.2;
-        symbol [ y %tmp.53 94 27 28 ];
-        %tmp.54 = 136;
-        %tmp.55 = sub %tmp.53 %tmp.54;
-        %tmp.56 = 54;
-        %tmp.57 = div %tmp.55 %tmp.56;
-        lputv %rowSlot.3 %tmp.57;
-        symbol [ rowSlot %rowSlot.3 94 16 23 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 95 12 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_93_34_108_8_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_93_34_108_8_stop" ]
-        %itemIdx.4 = local;
-        symbol [ itemIdx %itemIdx.4 95 16 23 ];
-        symbol [ _store %tmp.59 95 26 32 ];
-        %tmp.59 = getv ? :_store;
-        symbol [ scrollRowOffset %tmp.60 95 33 48 ];
-        %tmp.60 = getv %tmp.59 :scrollRowOffset;
-        %tmp.61 = lgetv %rowSlot.3;
-        symbol [ rowSlot %tmp.61 95 51 58 ];
-        %tmp.62 = add %tmp.60 %tmp.61;
-        lputv %itemIdx.4 %tmp.62;
-        symbol [ itemIdx %itemIdx.4 95 16 23 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 96 12 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_93_34_108_8_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_93_34_108_8_stop" ]
-        %port.5 = local;
-        symbol [ port %port.5 96 16 20 ];
-        symbol [ _store %tmp.64 96 23 29 ];
-        %tmp.64 = getv ? :_store;
-        symbol [ getActivePortfolio %tmp.65 96 30 48 ];
-        %tmp.65 = getv function %tmp.64 :getActivePortfolio;
-        %tmp.66 = invoke %tmp.64 %tmp.65();
-        lputv %port.5 %tmp.66;
-        symbol [ port %port.5 96 16 20 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 97 12 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_97_12_107_12_if_stmt:
-        %tmp.67 = lgetv %port.5;
-        symbol [ port %tmp.67 97 16 20 ];
-        %tmp.68 = null;
-        %tmp.69 = ne %tmp.67 %tmp.68;
-        bf %tmp.69 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_97_12_107_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_97_12_107_12_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_97_30_107_12_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 98 16 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_97_30_107_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_97_30_107_12_stop" ]
-        %items.6 = local;
-        symbol [ items %items.6 98 20 25 ];
-        %tmp.70 = lgetv %port.5;
-        symbol [ port %tmp.70 98 28 32 ];
-        %tmp.71 = as %tmp.70 { (!Null) };
-        symbol [ get %tmp.72 98 33 36 ];
-        %tmp.72 = getv function %tmp.71 :get;
-        %tmp.73 = "s";
-        %tmp.74 = invoke %tmp.71 %tmp.72(%tmp.73);
-        %tmp.75 = as %tmp.74 Array;
-        symbol [ Array %tmp.75 98 45 50 ];
-        lputv %items.6 %tmp.75;
-        symbol [ items %items.6 98 20 25 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 99 16 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_99_16_106_16_if_stmt:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_99_20_99_57_begin:
-        %tmp.76 = lgetv %itemIdx.4;
-        symbol [ itemIdx %tmp.76 99 20 27 ];
-        %tmp.77 = 0;
-        %tmp.78 = gte %tmp.76 %tmp.77;
-        bf %tmp.78 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_99_16_106_16_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_99_36_99_57_true:
-        %tmp.79 = lgetv %itemIdx.4;
-        symbol [ itemIdx %tmp.79 99 36 43 ];
-        %tmp.80 = lgetv %items.6;
-        symbol [ items %tmp.80 99 46 51 ];
-        symbol [ size %tmp.81 99 52 56 ];
-        %tmp.81 = getv function %tmp.80 :size;
-        %tmp.82 = invoke %tmp.80 %tmp.81();
-        %tmp.83 = lt %tmp.79 %tmp.82;
-        push %tmp.83;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_99_36_99_57_end:
-        %tmp.84 = phi [%tmp.78 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_99_20_99_57_begin] [%tmp.83 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_99_36_99_57_true] [%tmp.84 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_99_36_99_57_end];
-        bf %tmp.84 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_99_16_106_16_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_99_16_106_16_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_99_60_106_16_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 100 20 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_99_60_106_16_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_99_60_106_16_stop" ]
-        %item.7 = local;
-        symbol [ item %item.7 100 24 28 ];
-        %tmp.85 = lgetv %items.6;
-        symbol [ items %tmp.85 100 31 36 ];
-        %tmp.86 = lgetv %itemIdx.4;
-        symbol [ itemIdx %tmp.86 100 37 44 ];
-        %tmp.87 = agetv %tmp.85 %tmp.86;
-        %tmp.88 = as %tmp.87 Dictionary;
-        symbol [ Dictionary %tmp.88 100 49 59 ];
-        lputv %item.7 %tmp.88;
-        symbol [ item %item.7 100 24 28 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 101 20 ]
-        symbol [ _store %tmp.89 101 20 26 ];
-        %tmp.89 = getv self :_store;
-        %tmp.90 = true;
-        symbol [ inDetailView ? 101 27 39 ];
-        putv %tmp.89 :inDetailView %tmp.90;
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 102 20 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_99_60_106_16_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_99_60_106_16_stop" ]
-        %detailView.8 = local;
-        symbol [ detailView %detailView.8 102 24 34 ];
-        symbol [ SymbolDetailView %tmp.94 102 41 57 ];
-        %tmp.94 = getv ? :SymbolDetailView;
-        %tmp.95 = lgetv %item.7;
-        symbol [ item %tmp.95 102 58 62 ];
-        %tmp.91 = newc %tmp.94 (%tmp.95);
-        lputv %detailView.8 %tmp.91;
-        symbol [ detailView %detailView.8 102 24 34 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 103 20 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_99_60_106_16_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_99_60_106_16_stop" ]
-        %detailDelegate.9 = local;
-        symbol [ detailDelegate %detailDelegate.9 103 24 38 ];
-        symbol [ SymbolDetailDelegate %tmp.99 103 45 65 ];
-        %tmp.99 = getv ? :SymbolDetailDelegate;
-        %tmp.100 = lgetv %detailView.8;
-        symbol [ detailView %tmp.100 103 66 76 ];
-        %tmp.96 = newc %tmp.99 (%tmp.100);
-        lputv %detailDelegate.9 %tmp.96;
-        symbol [ detailDelegate %detailDelegate.9 103 24 38 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 104 20 ]
-        symbol [ WatchUi %tmp.101 104 20 27 ];
-        %tmp.101 = getm $.Toybox.WatchUi;
-        symbol [ pushView %tmp.102 104 28 36 ];
-        %tmp.102 = getv function %tmp.101 :pushView;
-        %tmp.103 = lgetv %detailView.8;
-        symbol [ detailView %tmp.103 104 37 47 ];
-        %tmp.104 = lgetv %detailDelegate.9;
-        symbol [ detailDelegate %tmp.104 104 49 63 ];
-        symbol [ WatchUi %tmp.105 104 65 72 ];
-        %tmp.105 = getm $.Toybox.WatchUi;
-        symbol [ SLIDE_LEFT %tmp.106 104 73 83 ];
-        %tmp.106 = getv %tmp.105 :SLIDE_LEFT;
-        invoke %tmp.101 %tmp.102(%tmp.103, %tmp.104, %tmp.106);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 105 20 ]
-        %tmp.107 = true;
-        ret %tmp.107;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_99_60_106_16_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_99_16_106_16_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_99_16_106_16_if_end:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_97_30_107_12_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_97_12_107_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_97_12_107_12_if_end:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_93_34_108_8_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_93_8_108_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_93_8_108_8_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 109 8 ]
-        %tmp.108 = false;
-        ret %tmp.108;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_66_49_110_4_stop:
+        symbol [ y %y.2 112 12 13 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 113 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_102_49_148_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_102_49_148_4_stop" ]
+        %h.3 = local;
+        symbol [ h %h.3 113 12 13 ];
+        symbol [ _store %tmp.21 113 16 22 ];
+        %tmp.21 = getv ? :_store;
+        symbol [ screenH %tmp.22 113 23 30 ];
+        %tmp.22 = getv %tmp.21 :screenH;
+        lputv %h.3 %tmp.22;
+        symbol [ h %h.3 113 12 13 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 116 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_116_8_120_8_if_stmt:
+        %tmp.23 = lgetv %y.2;
+        symbol [ y %tmp.23 116 12 13 ];
+        %tmp.24 = lgetv %h.3;
+        symbol [ h %tmp.24 116 17 18 ];
+        %tmp.25 = 10;
+        %tmp.26 = mul %tmp.24 %tmp.25;
+        %tmp.27 = 100;
+        %tmp.28 = div %tmp.26 %tmp.27;
+        %tmp.29 = lt %tmp.23 %tmp.28;
+        bf %tmp.29 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_116_8_120_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_116_8_120_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_116_32_120_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 117 12 ]
+        symbol [ _store %tmp.30 117 12 18 ];
+        %tmp.30 = getv self :_store;
+        symbol [ _store %tmp.32 117 39 45 ];
+        %tmp.32 = getv ? :_store;
+        symbol [ autoSwipeEnabled %tmp.33 117 46 62 ];
+        %tmp.33 = getv %tmp.32 :autoSwipeEnabled;
+        %tmp.34 = not %tmp.33;
+        symbol [ autoSwipeEnabled ? 117 19 35 ];
+        putv %tmp.30 :autoSwipeEnabled %tmp.34;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 118 12 ]
+        symbol [ WatchUi %tmp.35 118 12 19 ];
+        %tmp.35 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.36 118 20 33 ];
+        %tmp.36 = getv function %tmp.35 :requestUpdate;
+        invoke %tmp.35 %tmp.36();
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 119 12 ]
+        %tmp.37 = true;
+        ret %tmp.37;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_116_32_120_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_116_8_120_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_116_8_120_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 123 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_123_8_127_8_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_123_12_123_46_begin:
+        %tmp.38 = lgetv %y.2;
+        symbol [ y %tmp.38 123 12 13 ];
+        %tmp.39 = lgetv %h.3;
+        symbol [ h %tmp.39 123 18 19 ];
+        %tmp.40 = 14;
+        %tmp.41 = mul %tmp.39 %tmp.40;
+        %tmp.42 = 100;
+        %tmp.43 = div %tmp.41 %tmp.42;
+        %tmp.44 = gte %tmp.38 %tmp.43;
+        bf %tmp.44 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_123_8_127_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_123_35_123_46_true:
+        %tmp.45 = lgetv %y.2;
+        symbol [ y %tmp.45 123 35 36 ];
+        symbol [ _store %tmp.47 123 39 45 ];
+        %tmp.47 = getv ? :_store;
+        symbol [ rowStartY %tmp.48 123 46 55 ];
+        %tmp.48 = getv %tmp.47 :rowStartY;
+        %tmp.49 = lt %tmp.45 %tmp.48;
+        push %tmp.49;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_123_35_123_46_end:
+        %tmp.50 = phi [%tmp.44 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_123_12_123_46_begin] [%tmp.49 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_123_35_123_46_true] [%tmp.50 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_123_35_123_46_end];
+        bf %tmp.50 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_123_8_127_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_123_8_127_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_123_57_127_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 124 12 ]
+        symbol [ _store %tmp.51 124 12 18 ];
+        %tmp.51 = getv self :_store;
+        symbol [ _store %tmp.53 124 38 44 ];
+        %tmp.53 = getv ? :_store;
+        symbol [ showTotalReturn %tmp.54 124 45 60 ];
+        %tmp.54 = getv %tmp.53 :showTotalReturn;
+        %tmp.55 = not %tmp.54;
+        symbol [ showTotalReturn ? 124 19 34 ];
+        putv %tmp.51 :showTotalReturn %tmp.55;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 125 12 ]
+        symbol [ WatchUi %tmp.56 125 12 19 ];
+        %tmp.56 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.57 125 20 33 ];
+        %tmp.57 = getv function %tmp.56 :requestUpdate;
+        invoke %tmp.56 %tmp.57();
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 126 12 ]
+        %tmp.58 = true;
+        ret %tmp.58;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_123_57_127_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_123_8_127_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_123_8_127_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 130 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_102_49_148_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_102_49_148_4_stop" ]
+        %rowsBottomY.4 = local;
+        symbol [ rowsBottomY %rowsBottomY.4 130 12 23 ];
+        symbol [ _store %tmp.60 130 26 32 ];
+        %tmp.60 = getv ? :_store;
+        symbol [ rowStartY %tmp.61 130 33 42 ];
+        %tmp.61 = getv %tmp.60 :rowStartY;
+        symbol [ _store %tmp.63 130 46 52 ];
+        %tmp.63 = getv ? :_store;
+        symbol [ visibleRows %tmp.64 130 53 64 ];
+        %tmp.64 = getv %tmp.63 :visibleRows;
+        symbol [ _store %tmp.66 130 67 73 ];
+        %tmp.66 = getv ? :_store;
+        symbol [ rowHeight %tmp.67 130 74 83 ];
+        %tmp.67 = getv %tmp.66 :rowHeight;
+        %tmp.68 = mul %tmp.64 %tmp.67;
+        %tmp.69 = add %tmp.61 %tmp.68;
+        lputv %rowsBottomY.4 %tmp.69;
+        symbol [ rowsBottomY %rowsBottomY.4 130 12 23 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 131 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_131_8_146_8_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_131_12_131_42_begin:
+        %tmp.70 = lgetv %y.2;
+        symbol [ y %tmp.70 131 12 13 ];
+        symbol [ _store %tmp.72 131 17 23 ];
+        %tmp.72 = getv ? :_store;
+        symbol [ rowStartY %tmp.73 131 24 33 ];
+        %tmp.73 = getv %tmp.72 :rowStartY;
+        %tmp.74 = gte %tmp.70 %tmp.73;
+        bf %tmp.74 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_131_8_146_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_131_37_131_42_true:
+        %tmp.75 = lgetv %y.2;
+        symbol [ y %tmp.75 131 37 38 ];
+        %tmp.76 = lgetv %rowsBottomY.4;
+        symbol [ rowsBottomY %tmp.76 131 42 53 ];
+        %tmp.77 = lte %tmp.75 %tmp.76;
+        push %tmp.77;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_131_37_131_42_end:
+        %tmp.78 = phi [%tmp.74 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_131_12_131_42_begin] [%tmp.77 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_131_37_131_42_true] [%tmp.78 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_131_37_131_42_end];
+        bf %tmp.78 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_131_8_146_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_131_8_146_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_131_55_146_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 132 12 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_131_55_146_8_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_131_55_146_8_stop" ]
+        %rowSlot.5 = local;
+        symbol [ rowSlot %rowSlot.5 132 16 23 ];
+        %tmp.79 = lgetv %y.2;
+        symbol [ y %tmp.79 132 27 28 ];
+        symbol [ _store %tmp.81 132 31 37 ];
+        %tmp.81 = getv ? :_store;
+        symbol [ rowStartY %tmp.82 132 38 47 ];
+        %tmp.82 = getv %tmp.81 :rowStartY;
+        %tmp.83 = sub %tmp.79 %tmp.82;
+        symbol [ _store %tmp.85 132 51 57 ];
+        %tmp.85 = getv ? :_store;
+        symbol [ rowHeight %tmp.86 132 58 67 ];
+        %tmp.86 = getv %tmp.85 :rowHeight;
+        %tmp.87 = div %tmp.83 %tmp.86;
+        lputv %rowSlot.5 %tmp.87;
+        symbol [ rowSlot %rowSlot.5 132 16 23 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 133 12 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_131_55_146_8_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_131_55_146_8_stop" ]
+        %itemIdx.6 = local;
+        symbol [ itemIdx %itemIdx.6 133 16 23 ];
+        symbol [ _store %tmp.89 133 26 32 ];
+        %tmp.89 = getv ? :_store;
+        symbol [ scrollRowOffset %tmp.90 133 33 48 ];
+        %tmp.90 = getv %tmp.89 :scrollRowOffset;
+        %tmp.91 = lgetv %rowSlot.5;
+        symbol [ rowSlot %tmp.91 133 51 58 ];
+        %tmp.92 = add %tmp.90 %tmp.91;
+        lputv %itemIdx.6 %tmp.92;
+        symbol [ itemIdx %itemIdx.6 133 16 23 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 134 12 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_131_55_146_8_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_131_55_146_8_stop" ]
+        %port.7 = local;
+        symbol [ port %port.7 134 16 20 ];
+        symbol [ _store %tmp.94 134 23 29 ];
+        %tmp.94 = getv ? :_store;
+        symbol [ getActivePortfolio %tmp.95 134 30 48 ];
+        %tmp.95 = getv function %tmp.94 :getActivePortfolio;
+        %tmp.96 = invoke %tmp.94 %tmp.95();
+        lputv %port.7 %tmp.96;
+        symbol [ port %port.7 134 16 20 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 135 12 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_135_12_145_12_if_stmt:
+        %tmp.97 = lgetv %port.7;
+        symbol [ port %tmp.97 135 16 20 ];
+        %tmp.98 = null;
+        %tmp.99 = ne %tmp.97 %tmp.98;
+        bf %tmp.99 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_135_12_145_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_135_12_145_12_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_135_30_145_12_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 136 16 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_135_30_145_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_135_30_145_12_stop" ]
+        %items.8 = local;
+        symbol [ items %items.8 136 20 25 ];
+        %tmp.100 = lgetv %port.7;
+        symbol [ port %tmp.100 136 28 32 ];
+        %tmp.101 = as %tmp.100 { (!Null) };
+        symbol [ get %tmp.102 136 33 36 ];
+        %tmp.102 = getv function %tmp.101 :get;
+        %tmp.103 = "s";
+        %tmp.104 = invoke %tmp.101 %tmp.102(%tmp.103);
+        %tmp.105 = as %tmp.104 Array;
+        symbol [ Array %tmp.105 136 45 50 ];
+        lputv %items.8 %tmp.105;
+        symbol [ items %items.8 136 20 25 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 137 16 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_137_16_144_16_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_137_20_137_57_begin:
+        %tmp.106 = lgetv %itemIdx.6;
+        symbol [ itemIdx %tmp.106 137 20 27 ];
+        %tmp.107 = 0;
+        %tmp.108 = gte %tmp.106 %tmp.107;
+        bf %tmp.108 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_137_16_144_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_137_36_137_57_true:
+        %tmp.109 = lgetv %itemIdx.6;
+        symbol [ itemIdx %tmp.109 137 36 43 ];
+        %tmp.110 = lgetv %items.8;
+        symbol [ items %tmp.110 137 46 51 ];
+        symbol [ size %tmp.111 137 52 56 ];
+        %tmp.111 = getv function %tmp.110 :size;
+        %tmp.112 = invoke %tmp.110 %tmp.111();
+        %tmp.113 = lt %tmp.109 %tmp.112;
+        push %tmp.113;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_137_36_137_57_end:
+        %tmp.114 = phi [%tmp.108 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_137_20_137_57_begin] [%tmp.113 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_137_36_137_57_true] [%tmp.114 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_137_36_137_57_end];
+        bf %tmp.114 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_137_16_144_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_137_16_144_16_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_137_60_144_16_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 138 20 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_137_60_144_16_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_137_60_144_16_stop" ]
+        %item.9 = local;
+        symbol [ item %item.9 138 24 28 ];
+        %tmp.115 = lgetv %items.8;
+        symbol [ items %tmp.115 138 31 36 ];
+        %tmp.116 = lgetv %itemIdx.6;
+        symbol [ itemIdx %tmp.116 138 37 44 ];
+        %tmp.117 = agetv %tmp.115 %tmp.116;
+        %tmp.118 = as %tmp.117 Dictionary;
+        symbol [ Dictionary %tmp.118 138 49 59 ];
+        lputv %item.9 %tmp.118;
+        symbol [ item %item.9 138 24 28 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 139 20 ]
+        symbol [ _store %tmp.119 139 20 26 ];
+        %tmp.119 = getv self :_store;
+        %tmp.120 = true;
+        symbol [ inDetailView ? 139 27 39 ];
+        putv %tmp.119 :inDetailView %tmp.120;
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 140 20 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_137_60_144_16_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_137_60_144_16_stop" ]
+        %detailView.10 = local;
+        symbol [ detailView %detailView.10 140 24 34 ];
+        symbol [ SymbolDetailView %tmp.124 140 41 57 ];
+        %tmp.124 = getv ? :SymbolDetailView;
+        %tmp.125 = lgetv %item.9;
+        symbol [ item %tmp.125 140 58 62 ];
+        %tmp.121 = newc %tmp.124 (%tmp.125);
+        lputv %detailView.10 %tmp.121;
+        symbol [ detailView %detailView.10 140 24 34 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 141 20 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_137_60_144_16_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_137_60_144_16_stop" ]
+        %detailDelegate.11 = local;
+        symbol [ detailDelegate %detailDelegate.11 141 24 38 ];
+        symbol [ SymbolDetailDelegate %tmp.129 141 45 65 ];
+        %tmp.129 = getv ? :SymbolDetailDelegate;
+        %tmp.130 = lgetv %detailView.10;
+        symbol [ detailView %tmp.130 141 66 76 ];
+        %tmp.126 = newc %tmp.129 (%tmp.130);
+        lputv %detailDelegate.11 %tmp.126;
+        symbol [ detailDelegate %detailDelegate.11 141 24 38 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 142 20 ]
+        symbol [ WatchUi %tmp.131 142 20 27 ];
+        %tmp.131 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.132 142 28 36 ];
+        %tmp.132 = getv function %tmp.131 :pushView;
+        %tmp.133 = lgetv %detailView.10;
+        symbol [ detailView %tmp.133 142 37 47 ];
+        %tmp.134 = lgetv %detailDelegate.11;
+        symbol [ detailDelegate %tmp.134 142 49 63 ];
+        symbol [ WatchUi %tmp.135 142 65 72 ];
+        %tmp.135 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.136 142 73 83 ];
+        %tmp.136 = getv %tmp.135 :SLIDE_LEFT;
+        invoke %tmp.131 %tmp.132(%tmp.133, %tmp.134, %tmp.136);
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 143 20 ]
+        %tmp.137 = true;
+        ret %tmp.137;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_137_60_144_16_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_137_16_144_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_137_16_144_16_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_135_30_145_12_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_135_12_145_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_135_12_145_12_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_131_55_146_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_131_8_146_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_131_8_146_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc" 147 8 ]
+        %tmp.138 = false;
+        ret %tmp.138;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_102_49_148_4_stop:
     }
 }
 [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatDelegate.mc"; @line = 1; ]

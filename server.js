@@ -3,8 +3,25 @@ const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const url = require("url");
+const { loadEnvFile } = require("./lib/envLoader");
+
+// Load environment variables from .env before initializing security/license modules
+loadEnvFile();
+
 const { LicenseManager, OWNER_EMAIL, NOTIFY_EMAIL, TRIAL_DAYS } = require("./lib/licenseManager");
 const { EmailService } = require("./lib/emailService");
+const {
+  COMPATIBLE_GARMIN_DEVICES,
+  getGarminDeviceById,
+  provisionConnectIqDevices
+} = require("./lib/garminDevices");
+
+// Ensure Connect IQ device definitions exist for all 2024-2026 supported watches
+try {
+  provisionConnectIqDevices();
+} catch (_) {
+  // Ignore if Connect IQ SDK directory is not installed on host
+}
 
 const PORT = process.env.PORT || 3880;
 const DATA_DIR = path.join(__dirname, "data");
@@ -27,6 +44,7 @@ const DEFAULT_WATCH_SETTINGS = {
   autoSwipeSec: 5,
   alwaysOnDisplay: false,
   deviceId: "V2-88VENU20",
+  watchModel: "venu2",
   activationKey: ""
 };
 
@@ -87,12 +105,15 @@ function sanitizeWatchSettings(raw = {}, fallback = DEFAULT_WATCH_SETTINGS) {
   const alwaysOnDisplay =
     raw.alwaysOnDisplay !== undefined ? Boolean(raw.alwaysOnDisplay) : Boolean(fallback.alwaysOnDisplay ?? false);
   const deviceId = licenseManager.normalizeDeviceId(raw.deviceId || fallback.deviceId || "V2-88VENU20");
+  const watchModelObj = getGarminDeviceById(raw.watchModel || fallback.watchModel || "venu2");
+  const watchModel = watchModelObj ? watchModelObj.id : "venu2";
   const activationKey = licenseManager.normalizeKey(raw.activationKey !== undefined ? raw.activationKey : fallback.activationKey || "");
   return {
     autoSwipeEnabled,
     autoSwipeSec,
     alwaysOnDisplay,
     deviceId,
+    watchModel,
     activationKey
   };
 }
@@ -134,6 +155,33 @@ function getOrCreateProfile(syncKey) {
     writeStore(store);
   }
   return store[key];
+}
+
+// In-memory rate limiter for public endpoints
+const rateLimitBuckets = new Map();
+function getClientIp(req) {
+  const cfIp = req?.headers?.["cf-connecting-ip"];
+  if (cfIp) return String(cfIp).trim();
+  const xff = req?.headers?.["x-forwarded-for"];
+  if (xff) return String(xff).split(",")[0].trim();
+  return String(req?.socket?.remoteAddress || "127.0.0.1");
+}
+
+function checkRateLimit(req, bucketName, maxRequests = 20, windowMs = 5 * 60 * 1000) {
+  const ip = getClientIp(req);
+  const key = `${bucketName}:${ip}`;
+  const now = Date.now();
+  const entry = rateLimitBuckets.get(key);
+  if (!entry || now >= entry.resetAt) {
+    rateLimitBuckets.set(key, { count: 1, resetAt: now + windowMs });
+    return { allowed: true, remaining: maxRequests - 1 };
+  }
+  entry.count += 1;
+  if (entry.count > maxRequests) {
+    const retryAfterSec = Math.max(1, Math.ceil((entry.resetAt - now) / 1000));
+    return { allowed: false, retryAfterSec };
+  }
+  return { allowed: true, remaining: maxRequests - entry.count };
 }
 
 // In-memory cache for Yahoo Finance chart/quote data (60s TTL)
@@ -286,6 +334,7 @@ async function buildEnrichedPayload(profile, queryOpts = {}) {
   const effectiveDeviceId = licenseManager.normalizeDeviceId(queryOpts.deviceId || profileDeviceId);
   const fallbackKey = effectiveDeviceId === profileDeviceId ? watchSettings.activationKey : "";
   const effectiveActivationKey = licenseManager.normalizeKey(queryOpts.activationKey || fallbackKey || "");
+  const effectiveWatchModel = getGarminDeviceById(queryOpts.watchModel || watchSettings.watchModel || "venu2");
 
   // Evaluate 14-day trial & per-device activation status
   const licenseStatus = licenseManager.evaluateDeviceLicense(effectiveDeviceId, {
@@ -444,7 +493,10 @@ async function buildEnrichedPayload(profile, queryOpts = {}) {
       usdThbRate: Number(usdThbRate.toFixed(2)),
       updatedAt: new Date().toISOString(),
       watchSettings: profile.watchSettings,
-      license: licenseStatus.full,
+      watchDeviceProfile: effectiveWatchModel,
+      compatibleDevicesCount: COMPATIBLE_GARMIN_DEVICES.length,
+      // Use public-safe license representation (never leak unactivated issuedKey to public web responses)
+      license: licenseStatus.public,
       totals: {
         marketValueBase: Number(grandMarketValueBase.toFixed(2)),
         costBasisBase: Number(grandCostBasisBase.toFixed(2)),
@@ -455,7 +507,7 @@ async function buildEnrichedPayload(profile, queryOpts = {}) {
       },
       portfolios: enrichedPortfolios
     },
-    // Ultra-compact payload tailored for Garmin Venu 2 Connect IQ memory budget (<12KB)
+    // Ultra-compact payload tailored for Garmin Connect IQ memory budget (<12KB across 260x260 to 454x454 watches)
     watch: {
       k: profile.syncKey,
       bc: baseCurrency,
@@ -464,7 +516,8 @@ async function buildEnrichedPayload(profile, queryOpts = {}) {
       cfg: {
         asw: profile.watchSettings.autoSwipeEnabled ? 1 : 0,
         asec: profile.watchSettings.autoSwipeSec,
-        aon: profile.watchSettings.alwaysOnDisplay ? 1 : 0
+        aon: profile.watchSettings.alwaysOnDisplay ? 1 : 0,
+        mdl: effectiveWatchModel.id
       },
       lic: licenseStatus.watch,
       tot: {
@@ -528,20 +581,66 @@ async function buildEnrichedPayload(profile, queryOpts = {}) {
   };
 }
 
-function sendJson(res, status, obj) {
+const SECURITY_HEADERS = {
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+  "Permissions-Policy": "geolocation=(), microphone=(), camera=()",
+  "Content-Security-Policy":
+    "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com https://unpkg.com data:; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'"
+};
+
+function sendJson(res, status, obj, extraHeaders = {}) {
   res.writeHead(status, {
+    ...SECURITY_HEADERS,
     "Content-Type": "application/json; charset=utf-8",
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Admin-Token"
+    "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Admin-Token",
+    ...extraHeaders
   });
   res.end(JSON.stringify(obj));
 }
 
+function sendAdminJson(req, res, status, obj, extraHeaders = {}) {
+  const origin = String(req?.headers?.origin || "");
+  const allowedOrigin =
+    origin &&
+    (origin.includes("readybyte.top") ||
+      origin.startsWith("http://localhost") ||
+      origin.startsWith("http://127.0.0.1"))
+      ? origin
+      : "https://admin-moat.readybyte.top";
+
+  res.writeHead(status, {
+    ...SECURITY_HEADERS,
+    "Content-Type": "application/json; charset=utf-8",
+    "Cache-Control": "no-store, no-cache, must-revalidate, private",
+    "Pragma": "no-cache",
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Credentials": "true",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Admin-Token",
+    ...extraHeaders
+  });
+  res.end(JSON.stringify(obj));
+}
+
+const MAX_BODY_BYTES = 256 * 1024;
+
 function parseBody(req) {
   return new Promise((resolve, reject) => {
     let raw = "";
-    req.on("data", (chunk) => (raw += chunk));
+    let bytes = 0;
+    req.on("data", (chunk) => {
+      bytes += chunk.length;
+      if (bytes > MAX_BODY_BYTES) {
+        req.destroy();
+        return reject(new Error("Payload too large"));
+      }
+      raw += chunk;
+    });
     req.on("end", () => {
       if (!raw) return resolve({});
       try {
@@ -565,14 +664,26 @@ const MIME_TYPES = {
 };
 
 async function handleRequest(req, res) {
-  if (req.method === "OPTIONS") {
-    return sendJson(res, 200, { ok: true });
-  }
-
   const parsedUrl = url.parse(req.url, true);
   const pathname = parsedUrl.pathname || "/";
   const hostHeader = String(req.headers.host || "").toLowerCase();
   const isAdminSubdomain = hostHeader.startsWith("admin-moat.");
+
+  if (req.method === "OPTIONS") {
+    if (pathname.startsWith("/api/admin/")) {
+      return sendAdminJson(req, res, 200, { ok: true });
+    }
+    return sendJson(res, 200, { ok: true });
+  }
+
+  // 0. GET /api/devices/compatible (2024-2026 Compatible Garmin Watches Catalog)
+  if (pathname === "/api/devices/compatible" && req.method === "GET") {
+    return sendJson(res, 200, {
+      ok: true,
+      count: COMPATIBLE_GARMIN_DEVICES.length,
+      devices: COMPATIBLE_GARMIN_DEVICES
+    });
+  }
 
   // 1. GET /api/portfolio?key=VENU2-88 (Full Web Companion + Watch Preview Payload)
   if (pathname === "/api/portfolio" && req.method === "GET") {
@@ -580,7 +691,8 @@ async function handleRequest(req, res) {
     const profile = getOrCreateProfile(syncKey);
     const payload = await buildEnrichedPayload(profile, {
       deviceId: parsedUrl.query.did,
-      activationKey: parsedUrl.query.akey
+      activationKey: parsedUrl.query.akey,
+      watchModel: parsedUrl.query.model
     });
     return sendJson(res, 200, payload);
   }
@@ -627,7 +739,8 @@ async function handleRequest(req, res) {
 
       const payload = await buildEnrichedPayload(store[syncKey], {
         deviceId: mergedWatchSettings.deviceId,
-        activationKey: mergedWatchSettings.activationKey
+        activationKey: mergedWatchSettings.activationKey,
+        watchModel: mergedWatchSettings.watchModel
       });
       return sendJson(res, 200, payload);
     } catch (err) {
@@ -681,14 +794,15 @@ async function handleRequest(req, res) {
     return sendJson(res, 200, { results });
   }
 
-  // 3. GET /api/watch?key=VENU2-88&did=V2-XXXX&akey=... (Compact JSON endpoint for Garmin Venu 2 Watch App)
+  // 3. GET /api/watch?key=VENU2-88&did=V2-XXXX&akey=... (Compact JSON endpoint for Garmin Watch App)
   if ((pathname === "/api/watch" || pathname.startsWith("/api/watch/")) && req.method === "GET") {
     const pathKey = pathname.startsWith("/api/watch/") ? pathname.replace("/api/watch/", "") : "";
     const syncKey = pathKey || parsedUrl.query.key || "VENU2-88";
     const profile = getOrCreateProfile(syncKey);
     const payload = await buildEnrichedPayload(profile, {
       deviceId: parsedUrl.query.did,
-      activationKey: parsedUrl.query.akey
+      activationKey: parsedUrl.query.akey,
+      watchModel: parsedUrl.query.model
     });
     return sendJson(res, 200, payload.watch);
   }
@@ -700,8 +814,18 @@ async function handleRequest(req, res) {
     return sendJson(res, 200, quote);
   }
 
-  // 5. POST /api/device/activate (Activate a Garmin Venu 2 Device ID using an Admin-generated Activation Key)
+  // 5. POST /api/device/activate (Activate a Garmin Device ID using an Admin-generated Activation Key)
   if (pathname === "/api/device/activate" && req.method === "POST") {
+    const rl = checkRateLimit(req, "device_activate", 15, 5 * 60 * 1000);
+    if (!rl.allowed) {
+      return sendJson(
+        res,
+        429,
+        { ok: false, error: `Too many activation attempts. Please wait ${rl.retryAfterSec}s.` },
+        { "Retry-After": String(rl.retryAfterSec) }
+      );
+    }
+
     try {
       const body = await parseBody(req);
       const syncKey = String(body.syncKey || "VENU2-88").trim().toUpperCase();
@@ -738,7 +862,7 @@ async function handleRequest(req, res) {
       return sendJson(res, 200, {
         ok: true,
         message: result.message,
-        license: result.license,
+        license: licenseManager.toPublicLicenseState(result.license),
         payload
       });
     } catch (err) {
@@ -746,7 +870,7 @@ async function handleRequest(req, res) {
     }
   }
 
-  // 6. GET /api/device/status
+  // 6. GET /api/device/status (Public device status check - strips unactivated issuedKey)
   if (pathname === "/api/device/status" && req.method === "GET") {
     const syncKey = String(parsedUrl.query.key || "VENU2-88").trim().toUpperCase();
     const profile = getOrCreateProfile(syncKey);
@@ -755,11 +879,25 @@ async function handleRequest(req, res) {
       syncKey,
       providedKey: profile.watchSettings.activationKey
     });
-    return sendJson(res, 200, evaluated);
+    return sendJson(res, 200, {
+      watch: evaluated.watch,
+      full: evaluated.public,
+      public: evaluated.public
+    });
   }
 
   // 6b. POST /api/license/request (Request Trial Key Extend or Submit Purchase Request Form -> Emails e24qdy2@gmail.com)
   if (pathname === "/api/license/request" && req.method === "POST") {
+    const rl = checkRateLimit(req, "license_request", 10, 10 * 60 * 1000);
+    if (!rl.allowed) {
+      return sendJson(
+        res,
+        429,
+        { ok: false, error: `Too many requests. Please wait ${rl.retryAfterSec}s before submitting again.` },
+        { "Retry-After": String(rl.retryAfterSec) }
+      );
+    }
+
     try {
       const body = await parseBody(req);
       const syncKey = String(body.syncKey || "VENU2-88").trim().toUpperCase();
@@ -784,7 +922,7 @@ async function handleRequest(req, res) {
           ? `ส่งคำขอต่ออายุทดลองใช้ (+${created.request.requestedExtendDays} วัน) เรียบร้อยแล้ว! ระบบได้แจ้งเตือนไปยัง ${emailNotification.to} แล้ว`
           : `ส่งคำขอซื้อ License ถาวร (PRO) เรียบร้อยแล้ว! ระบบได้ส่งข้อมูลติดต่อกลับไปยัง ${emailNotification.to} แล้ว`,
         request: created.request,
-        device: created.device,
+        device: licenseManager.toPublicLicenseState(created.device),
         emailNotification,
         emailDelivery: emailNotification
       });
@@ -798,8 +936,8 @@ async function handleRequest(req, res) {
   // =========================================================================
   if (pathname === "/api/admin/session" && req.method === "GET") {
     const auth = licenseManager.verifyAdminRequest(req);
-    const meta = licenseManager.getAdminAuthMeta();
-    return sendJson(res, 200, {
+    const meta = licenseManager.getAdminAuthMeta({ includeSensitive: auth.authenticated });
+    return sendAdminJson(req, res, 200, {
       ...auth,
       ...meta,
       ownerEmail: OWNER_EMAIL,
@@ -812,20 +950,55 @@ async function handleRequest(req, res) {
   if (pathname === "/api/admin/auth/login" && req.method === "POST") {
     try {
       const body = await parseBody(req);
-      const result = licenseManager.loginAdminWithPassword(body.email || OWNER_EMAIL, body.password);
-      return sendJson(res, result.ok ? 200 : 401, result);
+      const clientIp = getClientIp(req);
+      const result = licenseManager.loginAdminWithPassword(
+        body.email || OWNER_EMAIL,
+        body.password,
+        { ip: clientIp }
+      );
+      if (result.ok && result.token) {
+        const cookieFlags = [
+          `__moat_admin_session=${encodeURIComponent(result.token)}`,
+          "HttpOnly",
+          "Path=/",
+          "Max-Age=43200",
+          "SameSite=Strict"
+        ];
+        if (req.headers["x-forwarded-proto"] === "https" || hostHeader.endsWith(".readybyte.top")) {
+          cookieFlags.push("Secure");
+        }
+        return sendAdminJson(req, res, 200, result, {
+          "Set-Cookie": cookieFlags.join("; ")
+        });
+      }
+      const status = result.lockedOut ? 429 : 401;
+      const extra = result.lockedOut && result.retryAfterSec ? { "Retry-After": String(result.retryAfterSec) } : {};
+      return sendAdminJson(req, res, status, result, extra);
     } catch (err) {
-      return sendJson(res, 400, { ok: false, error: err.message });
+      return sendAdminJson(req, res, 400, { ok: false, error: err.message });
     }
+  }
+
+  if (pathname === "/api/admin/auth/logout" && req.method === "POST") {
+    licenseManager.logoutAdminSession(req);
+    return sendAdminJson(
+      req,
+      res,
+      200,
+      { ok: true, message: "Logged out of Admin session" },
+      {
+        "Set-Cookie": "__moat_admin_session=; HttpOnly; Path=/; Max-Age=0; SameSite=Strict"
+      }
+    );
   }
 
   if (pathname === "/api/admin/auth/request-otp" && req.method === "POST") {
     try {
       const body = await parseBody(req);
       const result = licenseManager.requestAdminOtp(body.email || OWNER_EMAIL);
-      return sendJson(res, result.ok ? 200 : 403, result);
+      return sendAdminJson(req, res, result.ok ? 200 : 403, result);
     } catch (err) {
-      return sendJson(res, 400, { ok: false, error: err.message });
+      return sendAdminJson(req, res, 400, { ok: false, error: err.message });
     }
   }
 
@@ -833,16 +1006,16 @@ async function handleRequest(req, res) {
     try {
       const body = await parseBody(req);
       const result = licenseManager.verifyAdminOtp(body.email || OWNER_EMAIL, body.code);
-      return sendJson(res, result.ok ? 200 : 401, result);
+      return sendAdminJson(req, res, result.ok ? 200 : 401, result);
     } catch (err) {
-      return sendJson(res, 400, { ok: false, error: err.message });
+      return sendAdminJson(req, res, 400, { ok: false, error: err.message });
     }
   }
 
   if (pathname.startsWith("/api/admin/")) {
     const auth = licenseManager.verifyAdminRequest(req);
     if (!auth.authenticated) {
-      return sendJson(res, 401, {
+      return sendAdminJson(req, res, 401, {
         ok: false,
         error: `Admin authentication required (${OWNER_EMAIL})`,
         ownerEmail: OWNER_EMAIL
@@ -859,24 +1032,25 @@ async function handleRequest(req, res) {
           body.confirmPassword
         );
         if (!result.ok) {
-          return sendJson(res, 400, result);
+          return sendAdminJson(req, res, 400, result);
         }
-        return sendJson(res, 200, {
+        return sendAdminJson(req, res, 200, {
           ...result,
           ...licenseManager.listDevices(),
           smtpConfig: emailService.getSmtpConfig(false)
         });
       } catch (err) {
-        return sendJson(res, 400, { ok: false, error: err.message });
+        return sendAdminJson(req, res, 400, { ok: false, error: err.message });
       }
     }
 
     if (pathname === "/api/admin/devices" && req.method === "GET") {
-      const meta = licenseManager.getAdminAuthMeta();
-      return sendJson(res, 200, {
+      const meta = licenseManager.getAdminAuthMeta({ includeSensitive: true });
+      return sendAdminJson(req, res, 200, {
         ok: true,
         admin: { ...auth, ...meta },
         ...licenseManager.listDevices(),
+        compatibleDevices: COMPATIBLE_GARMIN_DEVICES,
         smtpConfig: emailService.getSmtpConfig(false)
       });
     }
@@ -885,14 +1059,14 @@ async function handleRequest(req, res) {
       try {
         const body = await parseBody(req);
         if (!body.requestId || !body.action) {
-          return sendJson(res, 400, { ok: false, error: "requestId and action are required" });
+          return sendAdminJson(req, res, 400, { ok: false, error: "requestId and action are required" });
         }
         const resolved = licenseManager.resolveCustomerRequest(body.requestId, body.action, {
           note: body.note,
           actor: auth.email || OWNER_EMAIL
         });
         if (!resolved.ok) {
-          return sendJson(res, 400, resolved);
+          return sendAdminJson(req, res, 400, resolved);
         }
 
         // If approved purchase & activated PRO, sync key to portfolio profile watchSettings
@@ -916,18 +1090,18 @@ async function handleRequest(req, res) {
           }
         }
 
-        return sendJson(res, 200, {
+        return sendAdminJson(req, res, 200, {
           ...resolved,
           ...licenseManager.listDevices(),
           smtpConfig: emailService.getSmtpConfig(false)
         });
       } catch (err) {
-        return sendJson(res, 400, { ok: false, error: err.message });
+        return sendAdminJson(req, res, 400, { ok: false, error: err.message });
       }
     }
 
     if (pathname === "/api/admin/email/config" && req.method === "GET") {
-      return sendJson(res, 200, {
+      return sendAdminJson(req, res, 200, {
         ok: true,
         smtpConfig: emailService.getSmtpConfig(false),
         emailLogs: emailService.listEmailLogs(30)
@@ -938,14 +1112,14 @@ async function handleRequest(req, res) {
       try {
         const body = await parseBody(req);
         const smtpConfig = emailService.updateSmtpConfig(body);
-        return sendJson(res, 200, {
+        return sendAdminJson(req, res, 200, {
           ok: true,
           message: "บันทึกการตั้งค่า SMTP / System Mail เรียบร้อยแล้ว",
           smtpConfig,
           emailLogs: emailService.listEmailLogs(30)
         });
       } catch (err) {
-        return sendJson(res, 400, { ok: false, error: err.message });
+        return sendAdminJson(req, res, 400, { ok: false, error: err.message });
       }
     }
 
@@ -956,7 +1130,7 @@ async function handleRequest(req, res) {
           emailService.updateSmtpConfig(body.smtpConfig);
         }
         const mailResult = await emailService.sendTestEmail(body.note);
-        return sendJson(res, 200, {
+        return sendAdminJson(req, res, 200, {
           ok: true,
           message: `ส่งอีเมลทดสอบไปยัง ${mailResult.to} เรียบร้อยแล้ว (${mailResult.status})`,
           mailResult,
@@ -965,7 +1139,7 @@ async function handleRequest(req, res) {
           emailLogs: emailService.listEmailLogs(30)
         });
       } catch (err) {
-        return sendJson(res, 400, { ok: false, error: err.message });
+        return sendAdminJson(req, res, 400, { ok: false, error: err.message });
       }
     }
 
@@ -973,7 +1147,7 @@ async function handleRequest(req, res) {
       try {
         const body = await parseBody(req);
         if (!body.deviceId) {
-          return sendJson(res, 400, { ok: false, error: "deviceId is required" });
+          return sendAdminJson(req, res, 400, { ok: false, error: "deviceId is required" });
         }
         const issued = licenseManager.issueDeviceKey(body.deviceId, {
           syncKey: body.syncKey || "VENU2-88",
@@ -1000,12 +1174,12 @@ async function handleRequest(req, res) {
           }
         }
 
-        return sendJson(res, 200, {
+        return sendAdminJson(req, res, 200, {
           ...issued,
           ...licenseManager.listDevices()
         });
       } catch (err) {
-        return sendJson(res, 400, { ok: false, error: err.message });
+        return sendAdminJson(req, res, 400, { ok: false, error: err.message });
       }
     }
 
@@ -1020,7 +1194,7 @@ async function handleRequest(req, res) {
           actor: auth.email
         });
         if (!updated.ok) {
-          return sendJson(res, 400, updated);
+          return sendAdminJson(req, res, 400, updated);
         }
 
         // Sync activationKey removal if expired/revoked/reset so profile reflects state immediately
@@ -1047,12 +1221,12 @@ async function handleRequest(req, res) {
           writeStore(store);
         }
 
-        return sendJson(res, 200, {
+        return sendAdminJson(req, res, 200, {
           ...updated,
           ...licenseManager.listDevices()
         });
       } catch (err) {
-        return sendJson(res, 400, { ok: false, error: err.message });
+        return sendAdminJson(req, res, 400, { ok: false, error: err.message });
       }
     }
   }
@@ -1069,17 +1243,22 @@ async function handleRequest(req, res) {
 
   const filePath = path.join(PUBLIC_DIR, path.normalize(safePath));
   if (!filePath.startsWith(PUBLIC_DIR)) {
-    res.writeHead(403);
+    res.writeHead(403, SECURITY_HEADERS);
     return res.end("Forbidden");
   }
 
   fs.readFile(filePath, (err, content) => {
     if (err) {
-      res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+      res.writeHead(404, { ...SECURITY_HEADERS, "Content-Type": "text/plain; charset=utf-8" });
       return res.end("Not Found");
     }
     const ext = path.extname(filePath).toLowerCase();
-    res.writeHead(200, { "Content-Type": MIME_TYPES[ext] || "application/octet-stream" });
+    const isNoCache = safePath === "/admin.html" || safePath === "/admin.js";
+    res.writeHead(200, {
+      ...SECURITY_HEADERS,
+      "Content-Type": MIME_TYPES[ext] || "application/octet-stream",
+      ...(isNoCache ? { "Cache-Control": "no-store, no-cache, must-revalidate, private" } : {})
+    });
     res.end(content);
   });
 }
@@ -1096,7 +1275,8 @@ if (require.main === module) {
   const server = createAppServer();
   server.listen(PORT, () => {
     console.log(`[Venu2Moat] Server running at http://localhost:${PORT}`);
-    console.log(`[Venu2Moat] Garmin Venu 2 Watch API: http://localhost:${PORT}/api/watch?key=VENU2-88`);
+    console.log(`[Venu2Moat] Garmin Connect IQ Watch API: http://localhost:${PORT}/api/watch?key=VENU2-88`);
+    console.log(`[Venu2Moat] Compatible Garmin Watches: ${COMPATIBLE_GARMIN_DEVICES.length} models (2024-2026)`);
     console.log(`[Venu2Moat] Admin Portal (Subdomain): http://localhost:${PORT}/admin (https://admin-moat.readybyte.top)`);
   });
 }
@@ -1105,5 +1285,6 @@ module.exports = {
   createAppServer,
   handleRequest,
   licenseManager,
-  emailService
+  emailService,
+  COMPATIBLE_GARMIN_DEVICES
 };

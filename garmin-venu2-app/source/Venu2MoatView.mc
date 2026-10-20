@@ -3,7 +3,7 @@ import Toybox.Lang;
 import Toybox.System;
 import Toybox.WatchUi;
 
-// Main 416x416 Round AMOLED View for Garmin Venu 2
+// Responsive Round AMOLED & MIP View for Garmin 2024-2026 Watches (260x260 through 454x454)
 class Venu2MoatView extends WatchUi.View {
     private var _store as PortfolioStore;
 
@@ -21,50 +21,57 @@ class Venu2MoatView extends WatchUi.View {
         // Outer Rose Alert Ring
         dc.setColor(0xF43F5E, Graphics.COLOR_TRANSPARENT);
         dc.setPenWidth(3);
-        dc.drawCircle(cx, h / 2, (w / 2) - 8);
+        dc.drawCircle(cx, h / 2, (w / 2) - 6);
         dc.setPenWidth(1);
 
-        // Lock Header Pill
+        var pillW = (w * 54) / 100;
+        var pillH = (h * 7) / 100;
+        var pillY = (h * 13) / 100;
         dc.setColor(0x3B0A18, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(cx - 108, 56, 216, 30, 14);
+        dc.fillRoundedRectangle(cx - (pillW / 2), pillY, pillW, pillH, 12);
         dc.setColor(0xF43F5E, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, 60, Graphics.FONT_XTINY, "TRIAL 14D EXPIRED", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, pillY + 2, Graphics.FONT_XTINY, "TRIAL 14D EXPIRED", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Device ID Box
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, 102, Graphics.FONT_SMALL, "Activation Required", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, (h * 24) / 100, Graphics.FONT_SMALL, "Activation Required", Graphics.TEXT_JUSTIFY_CENTER);
 
+        var boxW = (w * 62) / 100;
+        var boxH = (h * 10) / 100;
+        var boxY = (h * 34) / 100;
         dc.setColor(0x0D131C, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(cx - 125, 142, 250, 42, 10);
+        dc.fillRoundedRectangle(cx - (boxW / 2), boxY, boxW, boxH, 10);
         dc.setColor(0xF59E0B, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, 150, Graphics.FONT_XTINY, "ID: " + _store.deviceId, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, boxY + 6, Graphics.FONT_XTINY, "ID: " + _store.deviceId, Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Contact Owner Paid Version Message
         dc.setColor(0x94A3B8, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, 198, Graphics.FONT_XTINY, "Contact App Owner (Paid):", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, (h * 47) / 100, Graphics.FONT_XTINY, "Contact App Owner (Paid):", Graphics.TEXT_JUSTIFY_CENTER);
 
+        var mailW = (w * 68) / 100;
+        var mailH = (h * 10) / 100;
+        var mailY = (h * 55) / 100;
         dc.setColor(0x082F49, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(cx - 136, 230, 272, 44, 12);
+        dc.fillRoundedRectangle(cx - (mailW / 2), mailY, mailW, mailH, 10);
         dc.setColor(0x06B6D4, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, 239, Graphics.FONT_XTINY, _store.ownerEmail, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, mailY + 6, Graphics.FONT_XTINY, _store.ownerEmail, Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Instructions Footer
         dc.setColor(0x64748B, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, 292, Graphics.FONT_XTINY, "Activate via Web Settings", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, (h * 70) / 100, Graphics.FONT_XTINY, "Activate via Web Settings", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x10B981, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, 322, Graphics.FONT_XTINY, "Press SELECT to Verify", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, (h * 77) / 100, Graphics.FONT_XTINY, "Press SELECT to Verify", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     function onUpdate(dc as Dc) as Void {
-        var w = dc.getWidth();   // 416px on Venu 2
-        var h = dc.getHeight();  // 416px on Venu 2
+        var w = dc.getWidth();
+        var h = dc.getHeight();
         var cx = w / 2;
+
+        _store.updateResponsiveMetrics(w, h);
 
         if (dc has :setAntiAlias) {
             dc.setAntiAlias(true);
         }
 
-        // True AMOLED Void Black
+        // True Void Black Background
         dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
         dc.clear();
 
@@ -85,7 +92,7 @@ class Venu2MoatView extends WatchUi.View {
         }
 
         dc.setColor(0x94A3B8, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, 16, Graphics.FONT_XTINY, timeStr + modeFlags, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, (h * 4) / 100, Graphics.FONT_XTINY, timeStr + modeFlags, Graphics.TEXT_JUSTIFY_CENTER);
 
         // Enforce 14-Day Trial Expiration Lock Screen
         if (_store.trialExpired) {
@@ -96,11 +103,11 @@ class Venu2MoatView extends WatchUi.View {
         var port = _store.getActivePortfolio();
         if (port == null) {
             dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, h / 2 - 28, Graphics.FONT_SMALL, "Venu2Moat", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, h / 2 - 24, Graphics.FONT_SMALL, "Venu2Moat", Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(0x06B6D4, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, h / 2 + 6, Graphics.FONT_XTINY, "Key: " + _store.getSyncKey(), Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, h / 2 + 4, Graphics.FONT_XTINY, "Key: " + _store.getSyncKey(), Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(0x64748B, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, h / 2 + 34, Graphics.FONT_XTINY, "ID: " + _store.deviceId, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, h / 2 + 28, Graphics.FONT_XTINY, "ID: " + _store.deviceId, Graphics.TEXT_JUSTIFY_CENTER);
             return;
         }
 
@@ -109,19 +116,21 @@ class Venu2MoatView extends WatchUi.View {
 
         // Holdings array & pagination indicator
         var items = port.get("s") as Array;
-        var totalPages = (items.size() > 0) ? ((items.size() + 3) / 4) : 1;
-        var curPage = (_store.scrollRowOffset / 4) + 1;
+        var visRows = _store.visibleRows;
+        var totalPages = (items.size() > 0) ? ((items.size() + visRows - 1) / visRows) : 1;
+        var curPage = (_store.scrollRowOffset / visRows) + 1;
         var pageSuffix = (totalPages > 1) ? (" " + curPage.toString() + "/" + totalPages.toString()) : "";
 
         // Portfolio Short Title
         var portName = port.get("n") as String;
         dc.setColor(0x06B6D4, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, 42, Graphics.FONT_XTINY, "< " + portName + pageSuffix + " >", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, (h * 10) / 100, Graphics.FONT_XTINY, "< " + portName + pageSuffix + " >", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Portfolio Net Value
         var portVal = port.get("val") as Number;
+        var valFont = (h < 300) ? Graphics.FONT_SMALL : Graphics.FONT_MEDIUM;
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, 64, Graphics.FONT_MEDIUM, curSym + portVal.toString(), Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, (h * 15) / 100, valFont, curSym + portVal.toString(), Graphics.TEXT_JUSTIFY_CENTER);
 
         // Day P&L vs Total Return Toggle Line
         var pnlVal = _store.showTotalReturn ? (port.get("tp") as Number) : (port.get("dp") as Number);
@@ -133,23 +142,25 @@ class Venu2MoatView extends WatchUi.View {
         dc.setColor(pnlColor, Graphics.COLOR_TRANSPARENT);
         dc.drawText(
             cx,
-            102,
+            (h * 24) / 100,
             Graphics.FONT_XTINY,
             modePrefix + sign + curSym + pnlVal.toString() + " (" + sign + pnlPct.format("%.2f") + "%)",
             Graphics.TEXT_JUSTIFY_CENTER
         );
 
         // Subtle Divider Line
+        var divY = (h * 31) / 100;
+        var sidePad = (w * 11) / 100;
         dc.setColor(0x1E293B, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(52, 128, w - 52, 128);
+        dc.drawLine(sidePad, divY, w - sidePad, divY);
 
-        // Holdings Rows (up to 4 visible rows at a time on 416x416 screen)
+        // Responsive Holdings Rows (3 rows on 260/280 MIP, 4 rows on 360..454 AMOLED)
         var startIdx = _store.scrollRowOffset;
-        var maxRows = 4;
-        var rowY = 136;
-        var rowHeight = 54;
+        var rowY = _store.rowStartY;
+        var rowHeight = _store.rowHeight;
+        var symFont = (h < 340) ? Graphics.FONT_XTINY : Graphics.FONT_SMALL;
 
-        for (var i = 0; i < maxRows; i++) {
+        for (var i = 0; i < visRows; i++) {
             var itemIdx = startIdx + i;
             if (itemIdx >= items.size()) {
                 break;
@@ -165,32 +176,37 @@ class Venu2MoatView extends WatchUi.View {
 
             // Rounded Row Tray
             dc.setColor(0x0D131C, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(44, rowY, w - 88, rowHeight - 6, 12);
+            dc.fillRoundedRectangle(sidePad, rowY, w - (sidePad * 2), rowHeight - 5, 10);
+
+            var dotX = sidePad + 12;
+            var dotY = rowY + ((rowHeight - 5) / 2);
 
             // Target / Stop Alert Dot
             if (alrt.equals("TARGET_HIT")) {
                 dc.setColor(0x10B981, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(58, rowY + 23, 4);
+                dc.fillCircle(dotX, dotY, 4);
             } else if (alrt.equals("STOP_BREACH")) {
                 dc.setColor(0xF43F5E, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(58, rowY + 23, 4);
+                dc.fillCircle(dotX, dotY, 4);
             } else if (alrt.equals("NEAR_TARGET")) {
                 dc.setColor(0xF59E0B, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(58, rowY + 23, 4);
+                dc.fillCircle(dotX, dotY, 4);
             }
 
             // Symbol Name
+            var textOffsetY = (rowHeight - 24) / 2;
+            if (textOffsetY < 4) { textOffsetY = 4; }
             dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(70, rowY + 10, Graphics.FONT_SMALL, sym, Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(sidePad + 22, rowY + textOffsetY, symFont, sym, Graphics.TEXT_JUSTIFY_LEFT);
 
             // Price & Delta %
             var rowSign = (pct >= 0) ? "+" : "";
             var rowColor = (pct >= 0) ? 0x10B981 : 0xF43F5E;
             dc.setColor(0xCBD5E1, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w - 135, rowY + 12, Graphics.FONT_XTINY, itemCur + px.format("%.2f"), Graphics.TEXT_JUSTIFY_RIGHT);
+            dc.drawText(w - sidePad - ((w * 20) / 100), rowY + textOffsetY + 2, Graphics.FONT_XTINY, itemCur + px.format("%.2f"), Graphics.TEXT_JUSTIFY_RIGHT);
 
             dc.setColor(rowColor, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w - 56, rowY + 12, Graphics.FONT_XTINY, rowSign + pct.format("%.2f") + "%", Graphics.TEXT_JUSTIFY_RIGHT);
+            dc.drawText(w - sidePad - 10, rowY + textOffsetY + 2, Graphics.FONT_XTINY, rowSign + pct.format("%.2f") + "%", Graphics.TEXT_JUSTIFY_RIGHT);
 
             rowY += rowHeight;
         }
@@ -199,13 +215,14 @@ class Venu2MoatView extends WatchUi.View {
         var allPorts = _store.getPortfolios();
         var dotSpan = allPorts.size() * 14;
         var dotStartX = cx - (dotSpan / 2) + 7;
+        var dotBarY = h - ((h * 6) / 100);
         for (var pIdx = 0; pIdx < allPorts.size(); pIdx++) {
             if (pIdx == _store.activePortfolioIdx) {
                 dc.setColor(0x06B6D4, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(dotStartX + pIdx * 14, h - 26, 4);
+                dc.fillCircle(dotStartX + pIdx * 14, dotBarY, 4);
             } else {
                 dc.setColor(0x334155, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(dotStartX + pIdx * 14, h - 26, 3);
+                dc.fillCircle(dotStartX + pIdx * 14, dotBarY, 3);
             }
         }
     }

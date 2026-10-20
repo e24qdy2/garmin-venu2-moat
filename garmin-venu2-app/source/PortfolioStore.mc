@@ -14,6 +14,13 @@ class PortfolioStore {
     public var isSyncing as Boolean = false;
     public var lastStatus as String = "READY";
 
+    // Responsive Layout State (supports 260x260 MIP through 454x454 AMOLED)
+    public var screenW as Number = 416;
+    public var screenH as Number = 416;
+    public var visibleRows as Number = 4;
+    public var rowStartY as Number = 136;
+    public var rowHeight as Number = 54;
+
     // Auto-Swipe & Optional Always-On Display Settings (synced from Web + Watch Properties)
     public var autoSwipeEnabled as Boolean = true;
     public var autoSwipeSec as Number = 5;
@@ -35,6 +42,18 @@ class PortfolioStore {
     function initialize() {
         initHardwareDeviceId();
         loadLocalProperties();
+    }
+
+    function updateResponsiveMetrics(w as Number, h as Number) as Void {
+        screenW = w;
+        screenH = h;
+        visibleRows = (h < 320) ? 3 : 4;
+        rowStartY = (h * 33) / 100;
+        var availableH = h - rowStartY - ((h * 11) / 100);
+        rowHeight = availableH / visibleRows;
+        if (rowHeight < 34) {
+            rowHeight = 34;
+        }
     }
 
     function initHardwareDeviceId() as Void {
@@ -99,7 +118,7 @@ class PortfolioStore {
     }
 
     function onRuntimeTick() as Void {
-        // 1. Optional Always-On Display (keep AMOLED backlight awake every 4 seconds if enabled)
+        // 1. Optional Always-On Display (keep AMOLED/MIP backlight awake every 4 seconds if enabled)
         if (alwaysOnDisplay) {
             _backlightTick += 1;
             if (_backlightTick >= 4) {
@@ -118,7 +137,7 @@ class PortfolioStore {
         }
     }
 
-    // Advances 4 rows (next screen of holdings) or wraps to next portfolio
+    // Advances visibleRows (next screen of holdings) or wraps to next portfolio
     function stepAutoSwipe() as Void {
         var list = getPortfolios();
         if (list.size() == 0) {
@@ -131,8 +150,8 @@ class PortfolioStore {
         var items = port.get("s") as Array?;
         var itemCount = (items != null) ? items.size() : 0;
 
-        if (scrollRowOffset + 4 < itemCount) {
-            scrollRowOffset += 4;
+        if (scrollRowOffset + visibleRows < itemCount) {
+            scrollRowOffset += visibleRows;
         } else {
             scrollRowOffset = 0;
             activePortfolioIdx = (activePortfolioIdx + 1) % list.size();

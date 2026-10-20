@@ -1,18 +1,26 @@
 param(
     [string]$SyncKey = "VENU2-88",
     [string]$ApiUrl = "https://moat.readybyte.top",
-    [string]$Device = "venu2",
-    [string]$KeyPath = "$PSScriptRoot\keys\developer_key.der"
+    [Alias("DeviceId")][string]$Device = "venu2",
+    [string]$KeyPath = "$PSScriptRoot\keys\developer_key.der",
+    [switch]$SkipGitSync
 )
 
 $ErrorActionPreference = "Stop"
-Write-Host "`n============================================================" -ForegroundColor Cyan
-Write-Host "  Venu2Moat - Garmin Venu 2 Build & MTP/USB Sideload Utility" -ForegroundColor Cyan
-Write-Host "============================================================`n" -ForegroundColor Cyan
+Write-Host "`n==================================================================" -ForegroundColor Cyan
+Write-Host "  Venu2Moat - Garmin 2024-2026 Multi-Device Build & USB Sideloader" -ForegroundColor Cyan
+Write-Host "==================================================================`n" -ForegroundColor Cyan
 
 $AppDir = Join-Path $PSScriptRoot "garmin-venu2-app"
 $DistDir = Join-Path $PSScriptRoot "dist"
 New-Item -ItemType Directory -Force -Path $DistDir | Out-Null
+
+# 0. Auto-provision all 20 Garmin 2024-2026 Connect IQ Device Profiles
+try {
+    & node -e "const g = require('./lib/garminDevices'); const r = g.provisionConnectIqDevices(); console.log('[OK] Connect IQ Device Profiles Ready (' + g.COMPATIBLE_GARMIN_DEVICES.length + ' models, ' + r.provisioned + ' newly provisioned)');"
+} catch {
+    Write-Warning "Connect IQ device profile provision check warning: $_"
+}
 
 # 1. Update default properties if SyncKey or ApiUrl provided
 $PropsFile = Join-Path $AppDir "resources\settings\properties.xml"
@@ -64,11 +72,13 @@ if (Test-Path $OutputPrg) {
     Write-Host "[OK] Built binary: $OutputPrg ($SizeKb KB)" -ForegroundColor Green
 }
 
-# 4. Auto-detect MTP-connected Garmin Venu 2 via Windows Shell.Application
+# 4. Auto-detect MTP-connected Garmin Watch via Windows Shell.Application
 $Sideloaded = $false
 try {
     $shell = New-Object -ComObject Shell.Application
-    $venu = $shell.NameSpace(17).Items() | Where-Object { $_.Name -like "*Venu*" } | Select-Object -First 1
+    $venu = $shell.NameSpace(17).Items() | Where-Object {
+        $_.Name -match "Venu|Forerunner|fenix|epix|vivoactive|Enduro|Approach|Garmin"
+    } | Select-Object -First 1
     if ($venu) {
         $internal = $venu.GetFolder.Items() | Where-Object { $_.Name -eq "Internal Storage" } | Select-Object -First 1
         $garmin = $internal.GetFolder.Items() | Where-Object { $_.Name -eq "GARMIN" } | Select-Object -First 1
@@ -105,14 +115,14 @@ if (-not $Sideloaded) {
 }
 
 if (-not $Sideloaded) {
-    Write-Host "[i] No USB/MTP Garmin Venu 2 detected right now. Binary is ready at $OutputPrg" -ForegroundColor Yellow
+    Write-Host "[i] No USB/MTP Garmin watch detected right now. Binary is ready at $OutputPrg" -ForegroundColor Yellow
 }
 
 # 6. Auto-sync any source/binary changes to GitHub repository
 $SyncScript = Join-Path $PSScriptRoot "sync-github.ps1"
-if (Test-Path $SyncScript) {
+if (-not $SkipGitSync -and (Test-Path $SyncScript)) {
     try {
-        & $SyncScript -Message "chore(build): rebuild Venu2Moat.prg and sync source changes"
+        & $SyncScript -Message "chore(build): rebuild Venu2Moat.prg ($Device) and sync source changes"
     } catch {
         Write-Warning "GitHub auto-sync warning: $_"
     }

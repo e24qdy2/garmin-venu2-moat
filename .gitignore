@@ -1,14 +1,13 @@
-# Portable toolchains & binaries (JRE, cloudflared, SDKs)
-bin/
 node_modules/
-
-# Private Garmin developer signing keys
-keys/*.pem
-keys/*.der
-
-# OS & Editor temporary files
-.DS_Store
-Thumbs.db
-*.log
+.vercel/
+bin/
+dist/gen/
 .env
 .env.*
+!.env.example
+keys/
+data/licenses.json
+data/mail-outbox/
+data/*.bak
+*.log
+.DS_Store

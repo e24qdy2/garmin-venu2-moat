@@ -96,14 +96,14 @@
             </p>
           </div>
 
-          <!-- Default Password Notice (Shown only if admin password hasn't been changed from initial default) -->
-          <div id="defaultPasswordHintBox" class="rounded-2xl bg-amber/10 ring-1 ring-amber/30 p-3.5 text-xs space-y-1">
-            <div class="flex items-center justify-between text-amber font-mono">
-              <span>INITIAL ADMIN PASSWORD</span>
-              <span class="text-[10px]">Changeable after login</span>
+          <!-- Security Hardening Notice (Zero plaintext hints in DOM) -->
+          <div class="rounded-2xl bg-emerald/10 ring-1 ring-emerald/25 p-3.5 text-xs space-y-1">
+            <div class="flex items-center justify-between text-emerald font-mono">
+              <span>VA HARDENED · SCRYPT + LOCKOUT</span>
+              <span class="text-[10px]">5 Attempts / 15m Lock</span>
             </div>
             <p class="text-slate-300 text-[11px] leading-relaxed">
-              รหัสผ่านผู้ดูแลระบบเริ่มต้นคือ <strong class="font-mono text-amber">MOAT-888888</strong> (สามารถเปลี่ยนรหัสผ่านใหม่พร้อมยืนยันรหัสเดิมได้ทันทีหลังเข้าสู่ระบบ)
+              ระบบป้องกันการเดารหัสผ่านอัตโนมัติ (Brute-Force Lockout) และจัดเก็บรหัสผ่านแบบเข้ารหัสทางเดียว (<code class="font-mono text-emerald">scrypt + salt</code>) ไม่มีการแสดงรหัสผ่านเริ่มต้นในซอร์สโค้ดหน้าเว็บ
             </p>
           </div>
 
