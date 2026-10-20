@@ -21,10 +21,12 @@ class PortfolioStore {
     public var rowStartY as Number = 136;
     public var rowHeight as Number = 54;
 
-    // Auto-Swipe & Optional Always-On Display Settings (synced from Web + Watch Properties)
+    // Auto-Swipe, Auto-Sort % Change & Optional Always-On Display Settings (synced from Web + Watch Properties)
     public var autoSwipeEnabled as Boolean = true;
     public var autoSwipeSec as Number = 5;
     public var alwaysOnDisplay as Boolean = false;
+    public var sortByPctOrder as String = "ASC"; // "ASC" (-% -> +%), "DESC" (+% -> -%), "NONE"
+    public var sortByPctMetric as String = "DAY"; // "DAY" or "TOTAL"
     public var inDetailView as Boolean = false;
 
     // 14-Day Trial & Per-Device Activation Key State (Owner: saharat.bun@icloud.com)
@@ -178,6 +180,18 @@ class PortfolioStore {
                     alwaysOnDisplay = (aonVal != null && aonVal == 1);
                     if (alwaysOnDisplay) {
                         applyBacklightIfEnabled();
+                    }
+                }
+                if (cfg.hasKey("srt")) {
+                    var srtVal = cfg.get("srt") as String?;
+                    if (srtVal != null && srtVal.length() > 0) {
+                        sortByPctOrder = srtVal;
+                    }
+                }
+                if (cfg.hasKey("smet")) {
+                    var smetVal = cfg.get("smet") as String?;
+                    if (smetVal != null && smetVal.length() > 0) {
+                        sortByPctMetric = smetVal;
                     }
                 }
             }

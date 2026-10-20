@@ -85,6 +85,11 @@ class Venu2MoatView extends WatchUi.View {
         if (_store.alwaysOnDisplay) {
             modeFlags = modeFlags + " · AON";
         }
+        if (_store.sortByPctOrder.equals("ASC")) {
+            modeFlags = modeFlags + " · ▲%";
+        } else if (_store.sortByPctOrder.equals("DESC")) {
+            modeFlags = modeFlags + " · ▼%";
+        }
         if (_store.licenseStatus.equals("ACTIVE")) {
             modeFlags = modeFlags + " · PRO";
         } else if (!_store.trialExpired) {

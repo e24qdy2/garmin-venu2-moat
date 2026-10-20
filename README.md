@@ -46,7 +46,7 @@
 
 | บริการ | URL เข้าใช้งาน | รายละเอียด |
 | :--- | :--- | :--- |
-| **Web Companion & 416×416 Simulator** | **[`https://moat.readybyte.top`](https://moat.readybyte.top)** | จัดการพอร์ตหุ้น, จดบันทึก WebMemo, ตั้งค่า Auto-Swipe (`5s`/Custom) & Always-On Display, ใส่ Activation Key, กด **Request Trial Key Extend** และกรอก **Purchase Request Form** |
+| **Web Companion & 416×416 Simulator** | **[`https://moat.readybyte.top`](https://moat.readybyte.top)** | จัดการพอร์ตหุ้น, จดบันทึก WebMemo, ตั้งค่า **Auto-Sort `% Change` (ติดลบ → กำไร หรือ กำไร → ติดลบ บนลงล่าง)**, ตั้งค่า Auto-Swipe (`5s`/Custom) & Always-On Display, ใส่ Activation Key, กด **Request Trial Key Extend** และกรอก **Purchase Request Form** |
 | **Admin Licensing Portal (Subdomain)** | **[`https://admin-moat.readybyte.top`](https://admin-moat.readybyte.top)** | หน้าบริหารจัดการสำหรับเจ้าของระบบ (**`saharat.bun@icloud.com`**) เข้าสู่ระบบด้วย **Admin Password** (และเปลี่ยนรหัสผ่านใหม่พร้อมยืนยันรหัสเดิมได้หลังล็อกอิน) เพื่ออนุมัติคำขอจากลูกค้า, ตั้งค่า SMTP ส่งเมลไปที่ **`e24qdy2@gmail.com`**, และสร้าง Activation Key ราย `Device ID` |
 | **Garmin Venu 2 Watch JSON API** | **[`https://moat.readybyte.top/api/watch?key=VENU2-88`](https://moat.readybyte.top/api/watch?key=VENU2-88)** | Compact JSON Endpoint (`<4KB`) สำหรับแอปนาฬิกา Garmin Venu 2 |
 

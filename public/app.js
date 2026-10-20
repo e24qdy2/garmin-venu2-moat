@@ -16,6 +16,8 @@
       autoSwipeEnabled: true,
       autoSwipeSec: 5,
       alwaysOnDisplay: false,
+      sortByPctOrder: 'ASC', // 'ASC' (ติดลบ -> กำไร) | 'DESC' (กำไร -> ติดลบ) | 'NONE' (ปกติ)
+      sortByPctMetric: 'DAY', // 'DAY' (% Change วันนี้) | 'TOTAL' (% กำไรรวม)
       deviceId: 'V2-88VENU20',
       activationKey: ''
     },
@@ -84,7 +86,7 @@
       const rawHoldings = p.holdings || p.items || [];
       const pVal = Number(pSum.marketValueBase ?? p.totalValueBase ?? 0);
 
-      const items = rawHoldings.map(h => {
+      const items = rawHoldings.map((h, hIdx) => {
         const spark = Array.isArray(h.sparkline) && h.sparkline.length > 0 ? h.sparkline : [h.prevClose || 100, h.price || 100];
         const minSpark = Math.min(...spark);
         const maxSpark = Math.max(...spark);
@@ -110,6 +112,7 @@
         const bbLowerSeries = spark.map(() => Number(h.lowerBB || (h.price || 100) * 0.97));
 
         return {
+          origIdx: h.origIdx !== undefined ? Number(h.origIdx) : hIdx,
           symbol: h.symbol,
           name: h.name || h.symbol,
           currency: h.currency || p.currency || 'USD',
@@ -161,10 +164,14 @@
       };
     });
 
+    const rawSortOrder = String(web.watchSettings?.sortByPctOrder || 'ASC').toUpperCase();
+    const rawSortMetric = String(web.watchSettings?.sortByPctMetric || 'DAY').toUpperCase();
     const watchSettings = {
       autoSwipeEnabled: Boolean(web.watchSettings?.autoSwipeEnabled ?? true),
       autoSwipeSec: Math.max(2, Math.min(120, Number(web.watchSettings?.autoSwipeSec || 5))),
       alwaysOnDisplay: Boolean(web.watchSettings?.alwaysOnDisplay ?? false),
+      sortByPctOrder: ['ASC', 'DESC', 'NONE'].includes(rawSortOrder) ? rawSortOrder : 'ASC',
+      sortByPctMetric: ['DAY', 'TOTAL'].includes(rawSortMetric) ? rawSortMetric : 'DAY',
       deviceId: web.watchSettings?.deviceId || 'V2-88VENU20',
       activationKey: web.watchSettings?.activationKey || ''
     };
@@ -221,16 +228,18 @@
         id: p.id,
         name: p.name,
         currency: p.currency || 'USD',
-        holdings: p.items.map(it => ({
-          symbol: it.symbol,
-          name: it.name,
-          currency: it.currency,
-          shares: Number(it.shares || 0),
-          avgCost: Number(it.avgCost || 0),
-          targetPrice: Number(it.targetPrice || it.stopPrice || 0),
-          alertDir: it.stopPrice > 0 && !it.targetPrice ? 'BELOW' : 'ABOVE',
-          memo: it.note || it.memo || ''
-        }))
+        holdings: [...p.items]
+          .sort((a, b) => (a.origIdx ?? 9999) - (b.origIdx ?? 9999))
+          .map(it => ({
+            symbol: it.symbol,
+            name: it.name,
+            currency: it.currency,
+            shares: Number(it.shares || 0),
+            avgCost: Number(it.avgCost || 0),
+            targetPrice: Number(it.targetPrice || it.stopPrice || 0),
+            alertDir: it.stopPrice > 0 && !it.targetPrice ? 'BELOW' : 'ABOVE',
+            memo: it.note || it.memo || ''
+          }))
       }))
     };
 
@@ -338,6 +347,21 @@
     if (watchAonBadge) {
       watchAonBadge.classList.toggle('hidden', !aon);
     }
+
+    const watchSortBadge = el('watchBadgeSortOrder');
+    if (watchSortBadge) {
+      const srt = String(state.watchSettings.sortByPctOrder || 'ASC').toUpperCase();
+      if (srt === 'ASC') {
+        watchSortBadge.textContent = '▲ -%→+%';
+        watchSortBadge.className = 'text-[9px] font-mono px-1.5 py-0.5 rounded bg-crimson/20 text-crimson ring-1 ring-crimson/35 cursor-pointer hover:bg-crimson/30 transition';
+      } else if (srt === 'DESC') {
+        watchSortBadge.textContent = '▼ +%→-%';
+        watchSortBadge.className = 'text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald/20 text-emerald ring-1 ring-emerald/35 cursor-pointer hover:bg-emerald/30 transition';
+      } else {
+        watchSortBadge.textContent = '• MANUAL';
+        watchSortBadge.className = 'text-[9px] font-mono px-1.5 py-0.5 rounded bg-white/10 text-slate-300 ring-1 ring-white/15 cursor-pointer hover:bg-white/20 transition';
+      }
+    }
   }
 
   function restartAutoSwipeTimer() {
@@ -404,6 +428,38 @@
 
     const aonToggle = el('alwaysOnToggle');
     if (aonToggle) aonToggle.checked = Boolean(ws.alwaysOnDisplay);
+
+    const activeSortOrder = String(ws.sortByPctOrder || 'ASC').toUpperCase();
+    document.querySelectorAll('.sort-order-btn').forEach(btn => {
+      const order = String(btn.getAttribute('data-sort-order') || 'ASC').toUpperCase();
+      const isQuickPill = btn.classList.contains('rounded-full');
+      const isActive = order === activeSortOrder;
+      let activeColorCls = 'bg-cyan/20 text-cyan ring-1 ring-cyan/40 font-semibold';
+      if (order === 'ASC') {
+        activeColorCls = 'bg-crimson/20 text-crimson ring-1 ring-crimson/40 font-semibold';
+      } else if (order === 'DESC') {
+        activeColorCls = 'bg-emerald/20 text-emerald ring-1 ring-emerald/40 font-semibold';
+      }
+
+      if (isQuickPill) {
+        btn.className = isActive
+          ? `sort-order-btn px-2.5 py-1 rounded-full spring-transition ${activeColorCls}`
+          : 'sort-order-btn px-2.5 py-1 rounded-full text-slate-400 hover:text-alabaster spring-transition';
+      } else {
+        btn.className = isActive
+          ? `sort-order-btn rounded-xl px-3 py-2 text-xs font-mono flex items-center justify-center gap-1.5 spring-transition ${activeColorCls}`
+          : 'sort-order-btn rounded-xl px-3 py-2 text-xs font-mono font-semibold flex items-center justify-center gap-1.5 spring-transition bg-white/[0.04] hover:bg-white/[0.1] text-slate-300 ring-1 ring-white/10';
+      }
+    });
+
+    const activeSortMetric = String(ws.sortByPctMetric || 'DAY').toUpperCase();
+    document.querySelectorAll('.sort-metric-btn').forEach(btn => {
+      const metric = String(btn.getAttribute('data-sort-metric') || 'DAY').toUpperCase();
+      const isActive = metric === activeSortMetric;
+      btn.className = isActive
+        ? 'sort-metric-btn px-2.5 py-1 rounded-lg bg-cyan/20 text-cyan ring-1 ring-cyan/35 font-semibold spring-transition'
+        : 'sort-metric-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-alabaster spring-transition';
+    });
 
     const devIdInput = el('watchDeviceIdInput');
     if (devIdInput && document.activeElement !== devIdInput) {
@@ -1150,6 +1206,48 @@
         );
       });
     }
+
+    function getSortOrderLabel(order, metric) {
+      const mLabel = metric === 'TOTAL' ? '% กำไรรวม' : '% Change วันนี้';
+      if (order === 'ASC') return `เรียง ${mLabel}: ติดลบ → กำไร (บนลงล่าง)`;
+      if (order === 'DESC') return `เรียง ${mLabel}: กำไร → ติดลบ (บนลงล่าง)`;
+      return 'เรียงตามลำดับปกติที่เพิ่มเข้าพอร์ต (Manual)';
+    }
+
+    document.querySelectorAll('.sort-order-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const order = String(btn.getAttribute('data-sort-order') || 'ASC').toUpperCase();
+        state.watchSettings.sortByPctOrder = ['ASC', 'DESC', 'NONE'].includes(order) ? order : 'ASC';
+        state.activeSymbolIndex = 0;
+        state.watchScrollOffset = 0;
+        await savePortfolioState(getSortOrderLabel(state.watchSettings.sortByPctOrder, state.watchSettings.sortByPctMetric));
+      });
+    });
+
+    document.querySelectorAll('.sort-metric-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const metric = String(btn.getAttribute('data-sort-metric') || 'DAY').toUpperCase();
+        state.watchSettings.sortByPctMetric = metric === 'TOTAL' ? 'TOTAL' : 'DAY';
+        if (state.watchSettings.sortByPctOrder === 'NONE') {
+          state.watchSettings.sortByPctOrder = 'ASC';
+        }
+        state.watchPnlMode = state.watchSettings.sortByPctMetric === 'TOTAL' ? 'total' : 'day';
+        state.activeSymbolIndex = 0;
+        state.watchScrollOffset = 0;
+        await savePortfolioState(getSortOrderLabel(state.watchSettings.sortByPctOrder, state.watchSettings.sortByPctMetric));
+      });
+    });
+
+    const toggleSortDirection = async () => {
+      const cur = String(state.watchSettings.sortByPctOrder || 'ASC').toUpperCase();
+      state.watchSettings.sortByPctOrder = cur === 'ASC' ? 'DESC' : 'ASC';
+      state.activeSymbolIndex = 0;
+      state.watchScrollOffset = 0;
+      await savePortfolioState(getSortOrderLabel(state.watchSettings.sortByPctOrder, state.watchSettings.sortByPctMetric));
+    };
+
+    el('flipSortDirectionBtn')?.addEventListener('click', toggleSortDirection);
+    el('watchBadgeSortOrder')?.addEventListener('click', toggleSortDirection);
 
     const watchDeviceIdInput = el('watchDeviceIdInput');
     if (watchDeviceIdInput) {

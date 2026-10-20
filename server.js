@@ -43,6 +43,8 @@ const DEFAULT_WATCH_SETTINGS = {
   autoSwipeEnabled: true,
   autoSwipeSec: 5,
   alwaysOnDisplay: false,
+  sortByPctOrder: "ASC", // "ASC" (ติดลบ -> กำไร) | "DESC" (กำไร -> ติดลบ) | "NONE" (ลำดับเดิม)
+  sortByPctMetric: "DAY", // "DAY" (% Change วันนี้) | "TOTAL" (% กำไร/ขาดทุนรวม)
   deviceId: "V2-88VENU20",
   watchModel: "venu2",
   activationKey: ""
@@ -104,6 +106,18 @@ function sanitizeWatchSettings(raw = {}, fallback = DEFAULT_WATCH_SETTINGS) {
   const autoSwipeSec = Number.isFinite(parsedSec) ? Math.max(2, Math.min(120, Math.round(parsedSec))) : 5;
   const alwaysOnDisplay =
     raw.alwaysOnDisplay !== undefined ? Boolean(raw.alwaysOnDisplay) : Boolean(fallback.alwaysOnDisplay ?? false);
+  const rawSortOrder = String(
+    raw.sortByPctOrder !== undefined ? raw.sortByPctOrder : fallback.sortByPctOrder || "ASC"
+  )
+    .trim()
+    .toUpperCase();
+  const sortByPctOrder = ["ASC", "DESC", "NONE"].includes(rawSortOrder) ? rawSortOrder : "ASC";
+  const rawSortMetric = String(
+    raw.sortByPctMetric !== undefined ? raw.sortByPctMetric : fallback.sortByPctMetric || "DAY"
+  )
+    .trim()
+    .toUpperCase();
+  const sortByPctMetric = ["DAY", "TOTAL"].includes(rawSortMetric) ? rawSortMetric : "DAY";
   const deviceId = licenseManager.normalizeDeviceId(raw.deviceId || fallback.deviceId || "V2-88VENU20");
   const watchModelObj = getGarminDeviceById(raw.watchModel || fallback.watchModel || "venu2");
   const watchModel = watchModelObj ? watchModelObj.id : "venu2";
@@ -112,6 +126,8 @@ function sanitizeWatchSettings(raw = {}, fallback = DEFAULT_WATCH_SETTINGS) {
     autoSwipeEnabled,
     autoSwipeSec,
     alwaysOnDisplay,
+    sortByPctOrder,
+    sortByPctMetric,
     deviceId,
     watchModel,
     activationKey
@@ -391,7 +407,7 @@ async function buildEnrichedPayload(profile, queryOpts = {}) {
     let portCostBasis = 0;
     let portDayPnl = 0;
 
-    const enrichedHoldings = (p.holdings || p.items || []).map((h) => {
+    const enrichedHoldings = (p.holdings || p.items || []).map((h, origIdx) => {
       const sym = h.symbol.trim().toUpperCase();
       const q = quotes[sym] || {
         symbol: sym,
@@ -427,6 +443,7 @@ async function buildEnrichedPayload(profile, queryOpts = {}) {
       portDayPnl += toBase(dayPnl, q.currency);
 
       return {
+        origIdx,
         symbol: sym,
         name: h.name || q.shortName || sym,
         currency: q.currency,
@@ -454,6 +471,18 @@ async function buildEnrichedPayload(profile, queryOpts = {}) {
       };
     });
 
+    const sortOrder = watchSettings.sortByPctOrder || "ASC";
+    const sortMetric = watchSettings.sortByPctMetric || "DAY";
+    const sortedHoldings = [...enrichedHoldings];
+    if (sortOrder === "ASC" || sortOrder === "DESC") {
+      sortedHoldings.sort((a, b) => {
+        const valA = sortMetric === "TOTAL" ? Number(a.totalPnlPct || 0) : Number(a.changePct || 0);
+        const valB = sortMetric === "TOTAL" ? Number(b.totalPnlPct || 0) : Number(b.changePct || 0);
+        if (valA === valB) return (a.origIdx ?? 0) - (b.origIdx ?? 0);
+        return sortOrder === "ASC" ? valA - valB : valB - valA;
+      });
+    }
+
     const portTotalPnl = portMarketValue - portCostBasis;
     const portTotalPnlPct = portCostBasis > 0 ? (portTotalPnl / portCostBasis) * 100 : 0;
     const portPrevValue = portMarketValue - portDayPnl;
@@ -474,10 +503,10 @@ async function buildEnrichedPayload(profile, queryOpts = {}) {
         totalPnlPct: Number(portTotalPnlPct.toFixed(2)),
         dayPnlBase: Number(portDayPnl.toFixed(2)),
         dayPnlPct: Number(portDayPnlPct.toFixed(2)),
-        holdingsCount: enrichedHoldings.length,
-        alertsCount: enrichedHoldings.filter((item) => item.alertTriggered).length
+        holdingsCount: sortedHoldings.length,
+        alertsCount: sortedHoldings.filter((item) => item.alertTriggered).length
       },
-      holdings: enrichedHoldings
+      holdings: sortedHoldings
     };
   });
 
@@ -517,6 +546,8 @@ async function buildEnrichedPayload(profile, queryOpts = {}) {
         asw: profile.watchSettings.autoSwipeEnabled ? 1 : 0,
         asec: profile.watchSettings.autoSwipeSec,
         aon: profile.watchSettings.alwaysOnDisplay ? 1 : 0,
+        srt: watchSettings.sortByPctOrder || "ASC",
+        smet: watchSettings.sortByPctMetric || "DAY",
         mdl: effectiveWatchModel.id
       },
       lic: licenseStatus.watch,

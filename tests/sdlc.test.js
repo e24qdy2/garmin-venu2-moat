@@ -392,26 +392,67 @@ async function runSdlcSuite() {
   assert.strictEqual(lockedOutStatus, 429, "VA H-01: Brute-force login attempts must trigger HTTP 429 lockout");
   console.log("[PASS] 9. VA H-01: Brute-Force Login Lockout (5 attempts -> HTTP 429) verified");
 
-  // Reset primary demo device V2-88VENU20 to fresh 14-day trial so user's default simulator & watch start unlocked
-  await httpRequest(
-    "POST",
-    "/api/admin/devices/update",
-    { action: "RESET_TRIAL", deviceId: "V2-88VENU20" },
-    { "X-Admin-Token": adminToken }
-  );
+  // 10. Auto-Sort % Change Setting (ASC: Negative -> Positive / DESC: Positive -> Negative / NONE: Manual)
+  const sortAscRes = await httpRequest("PUT", "/api/portfolio", {
+    syncKey: "VENU2-88",
+    watchSettings: {
+      autoSwipeEnabled: true,
+      autoSwipeSec: 5,
+      alwaysOnDisplay: true,
+      sortByPctOrder: "ASC",
+      sortByPctMetric: "DAY",
+      deviceId: "V2-88VENU20"
+    }
+  });
+  assert.strictEqual(sortAscRes.status, 200);
+  assert.strictEqual(sortAscRes.json.web.watchSettings.sortByPctOrder, "ASC");
+  assert.strictEqual(sortAscRes.json.watch.cfg.srt, "ASC");
+  const ascHoldings = sortAscRes.json.web.portfolios[0].holdings;
+  if (ascHoldings.length >= 2) {
+    assert.ok(
+      ascHoldings[0].changePct <= ascHoldings[ascHoldings.length - 1].changePct,
+      "ASC must sort holdings from lowest (most negative) % change to highest (most positive) % change"
+    );
+  }
+
+  const sortDescRes = await httpRequest("PUT", "/api/portfolio", {
+    syncKey: "VENU2-88",
+    watchSettings: {
+      autoSwipeEnabled: true,
+      autoSwipeSec: 5,
+      alwaysOnDisplay: true,
+      sortByPctOrder: "DESC",
+      sortByPctMetric: "DAY",
+      deviceId: "V2-88VENU20"
+    }
+  });
+  assert.strictEqual(sortDescRes.status, 200);
+  assert.strictEqual(sortDescRes.json.web.watchSettings.sortByPctOrder, "DESC");
+  assert.strictEqual(sortDescRes.json.watch.cfg.srt, "DESC");
+  const descHoldings = sortDescRes.json.web.portfolios[0].holdings;
+  if (descHoldings.length >= 2) {
+    assert.ok(
+      descHoldings[0].changePct >= descHoldings[descHoldings.length - 1].changePct,
+      "DESC must sort holdings from highest (most positive) % change to lowest (most negative) % change"
+    );
+  }
+  console.log("[PASS] 10. Auto-Sort % Change Setting (ASC: Negative->Positive / DESC: Positive->Negative) verified");
+
+  // Restore default ASC sort order & keep V2-88VENU20 active
   await httpRequest("PUT", "/api/portfolio", {
     syncKey: "VENU2-88",
     watchSettings: {
       autoSwipeEnabled: true,
       autoSwipeSec: 5,
-      alwaysOnDisplay: false,
-      deviceId: "V2-88VENU20",
-      activationKey: ""
+      alwaysOnDisplay: true,
+      sortByPctOrder: "ASC",
+      sortByPctMetric: "DAY",
+      deviceId: "V2-88VENU20"
     }
   });
 
   console.log("\n==================================================================");
-  console.log("  ALL 9 SDLC + SECURITY VA + MULTI-DEVICE SUITES PASSED (100%)");
+  console.log("  ALL 10 SDLC + SECURITY VA + AUTO-SORT SUITES PASSED (100%)");
   console.log("==================================================================");
 }
 
