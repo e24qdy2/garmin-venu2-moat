@@ -169,7 +169,8 @@
 
         let statusBadge = `<span class="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-amber/15 text-amber ring-1 ring-amber/35 font-bold">PENDING</span>`;
         if (req.status === "APPROVED") {
-          statusBadge = `<span class="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-emerald/20 text-emerald ring-1 ring-emerald/40 font-bold">APPROVED (${escapeHtml(req.resolutionAction || "")})</span>`;
+          const resLabel = req.resolutionNote || req.resolutionAction || "Resolved";
+          statusBadge = `<span class="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-emerald/20 text-emerald ring-1 ring-emerald/40 font-bold">APPROVED (${escapeHtml(resLabel)})</span>`;
         } else if (req.status === "REJECTED") {
           statusBadge = `<span class="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-crimson/20 text-crimson ring-1 ring-crimson/40 font-bold">REJECTED</span>`;
         }

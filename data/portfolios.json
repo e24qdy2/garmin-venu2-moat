@@ -2,40 +2,54 @@
   "VENU2-88": {
     "syncKey": "VENU2-88",
     "baseCurrency": "THB",
-    "updatedAt": "2026-10-20T16:09:19.330Z",
+    "updatedAt": "2026-10-20T16:15:00.000Z",
     "watchSettings": {
       "autoSwipeEnabled": true,
       "autoSwipeSec": 5,
       "alwaysOnDisplay": false,
       "deviceId": "V2-88VENU20",
       "watchModel": "venu2",
-      "activationKey": ""
+      "activationKey": "MOAT-K8Y6-X9GU-R6WK"
     },
     "portfolios": [
       {
         "id": "us-moat",
         "name": "US Core & AI Moat",
         "shortName": "US MOAT",
-        "items": [
+        "currency": "USD",
+        "holdings": [
           {
             "symbol": "NVDA",
             "name": "NVIDIA Corp.",
             "currency": "USD",
-            "shares": 0,
-            "avgCost": 0,
-            "targetPrice": 0,
-            "stopPrice": 0,
-            "note": "Blackwell rack ramp Q4. Trim 10 sh > $155, hold core."
+            "shares": 40,
+            "avgCost": 92.5,
+            "targetPrice": 155,
+            "stopPrice": 115,
+            "alertDir": "ABOVE",
+            "memo": "Blackwell rack ramp Q4. Trim 10 sh > $155, hold core."
+          },
+          {
+            "symbol": "MSFT",
+            "name": "Microsoft Corp.",
+            "currency": "USD",
+            "shares": 25,
+            "avgCost": 380,
+            "targetPrice": 465,
+            "stopPrice": 395,
+            "alertDir": "ABOVE",
+            "memo": "Azure AI moat | Accumulate < $410."
           },
           {
             "symbol": "AAPL",
             "name": "Apple Inc.",
             "currency": "USD",
-            "shares": 0,
-            "avgCost": 0,
-            "targetPrice": 0,
-            "stopPrice": 0,
-            "note": "Services margin expansion + cycle upgrade. Core compounder."
+            "shares": 55,
+            "avgCost": 188,
+            "targetPrice": 245,
+            "stopPrice": 195,
+            "alertDir": "ABOVE",
+            "memo": "Services margin expansion + cycle upgrade. Core compounder."
           },
           {
             "symbol": "TSM",
@@ -45,7 +59,49 @@
             "avgCost": 148,
             "targetPrice": 215,
             "stopPrice": 165,
-            "note": "CoWoS packaging monopoly + N2 node pricing power."
+            "alertDir": "ABOVE",
+            "memo": "CoWoS packaging monopoly + N2 node pricing power."
+          }
+        ]
+      },
+      {
+        "id": "thai-set",
+        "name": "Thai SET Dividend",
+        "shortName": "THAI SET",
+        "currency": "THB",
+        "holdings": [
+          {
+            "symbol": "ADVANC.BK",
+            "name": "AIS Telecom",
+            "currency": "THB",
+            "shares": 1500,
+            "avgCost": 214,
+            "targetPrice": 295,
+            "stopPrice": 240,
+            "alertDir": "ABOVE",
+            "memo": "Yield 4.2% | Defensive cashcow"
+          },
+          {
+            "symbol": "DELTA.BK",
+            "name": "Delta Electronics",
+            "currency": "THB",
+            "shares": 1000,
+            "avgCost": 84.5,
+            "targetPrice": 140,
+            "stopPrice": 105,
+            "alertDir": "ABOVE",
+            "memo": "AI server power supply leader"
+          },
+          {
+            "symbol": "PTTEP.BK",
+            "name": "PTT Exploration",
+            "currency": "THB",
+            "shares": 2000,
+            "avgCost": 148,
+            "targetPrice": 130,
+            "stopPrice": 130,
+            "alertDir": "BELOW",
+            "memo": "Div > 6% | Hedge oil shock"
           }
         ]
       },
@@ -53,36 +109,29 @@
         "id": "macro-crypto",
         "name": "Crypto & Hard Assets",
         "shortName": "MACRO",
-        "items": [
+        "currency": "USD",
+        "holdings": [
           {
             "symbol": "BTC-USD",
             "name": "Bitcoin USD",
             "currency": "USD",
-            "shares": 0,
-            "avgCost": 0,
-            "targetPrice": 0,
-            "stopPrice": 0,
-            "note": "Cold storage allocation. Halving cycle + ETF institutional inflow."
+            "shares": 0.35,
+            "avgCost": 58000,
+            "targetPrice": 100000,
+            "stopPrice": 62000,
+            "alertDir": "ABOVE",
+            "memo": "Cold storage allocation. Halving cycle + ETF institutional inflow."
           },
           {
             "symbol": "GC=F",
             "name": "Gold Futures (XAU/USD)",
             "currency": "USD",
-            "shares": 0,
-            "avgCost": 0,
-            "targetPrice": 0,
-            "stopPrice": 0,
-            "note": "Central bank reserve hedge against sovereign debt expansion."
-          },
-          {
-            "symbol": "THB=X",
-            "name": "USD / THB Exchange Rate",
-            "currency": "THB",
-            "shares": 0,
-            "avgCost": 0,
-            "targetPrice": 36,
-            "stopPrice": 32.8,
-            "note": "[FX Watch] Convert THB to USD when rate dips below 33.50."
+            "shares": 5,
+            "avgCost": 2350,
+            "targetPrice": 2900,
+            "stopPrice": 2450,
+            "alertDir": "ABOVE",
+            "memo": "Central bank reserve hedge against sovereign debt expansion."
           }
         ]
       }

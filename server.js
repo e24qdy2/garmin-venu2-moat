@@ -362,7 +362,7 @@ async function buildEnrichedPayload(profile, queryOpts = {}) {
   // Collect all unique symbols + USD/THB exchange rate
   const allSymbols = new Set(["THB=X"]);
   for (const p of profile.portfolios || []) {
-    for (const h of p.holdings || []) {
+    for (const h of p.holdings || p.items || []) {
       if (h.symbol) allSymbols.add(h.symbol.trim().toUpperCase());
     }
   }
@@ -391,7 +391,7 @@ async function buildEnrichedPayload(profile, queryOpts = {}) {
     let portCostBasis = 0;
     let portDayPnl = 0;
 
-    const enrichedHoldings = (p.holdings || []).map((h) => {
+    const enrichedHoldings = (p.holdings || p.items || []).map((h) => {
       const sym = h.symbol.trim().toUpperCase();
       const q = quotes[sym] || {
         symbol: sym,
@@ -588,7 +588,7 @@ const SECURITY_HEADERS = {
   "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
   "Permissions-Policy": "geolocation=(), microphone=(), camera=()",
   "Content-Security-Policy":
-    "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com https://unpkg.com data:; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'"
+    "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://unpkg.com https://cdn.jsdelivr.net data:; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'"
 };
 
 function sendJson(res, status, obj, extraHeaders = {}) {
