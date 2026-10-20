@@ -282,8 +282,10 @@ async function fetchSymbolMarketData(symbol) {
 
 async function buildEnrichedPayload(profile, queryOpts = {}) {
   const watchSettings = sanitizeWatchSettings(profile.watchSettings);
-  const effectiveDeviceId = licenseManager.normalizeDeviceId(queryOpts.deviceId || watchSettings.deviceId || "V2-88VENU20");
-  const effectiveActivationKey = licenseManager.normalizeKey(queryOpts.activationKey || watchSettings.activationKey || "");
+  const profileDeviceId = licenseManager.normalizeDeviceId(watchSettings.deviceId || "V2-88VENU20");
+  const effectiveDeviceId = licenseManager.normalizeDeviceId(queryOpts.deviceId || profileDeviceId);
+  const fallbackKey = effectiveDeviceId === profileDeviceId ? watchSettings.activationKey : "";
+  const effectiveActivationKey = licenseManager.normalizeKey(queryOpts.activationKey || fallbackKey || "");
 
   // Evaluate 14-day trial & per-device activation status
   const licenseStatus = licenseManager.evaluateDeviceLicense(effectiveDeviceId, {
@@ -783,7 +785,8 @@ async function handleRequest(req, res) {
           : `ส่งคำขอซื้อ License ถาวร (PRO) เรียบร้อยแล้ว! ระบบได้ส่งข้อมูลติดต่อกลับไปยัง ${emailNotification.to} แล้ว`,
         request: created.request,
         device: created.device,
-        emailNotification
+        emailNotification,
+        emailDelivery: emailNotification
       });
     } catch (err) {
       return sendJson(res, 400, { ok: false, error: err.message });
@@ -957,6 +960,7 @@ async function handleRequest(req, res) {
           ok: true,
           message: `ส่งอีเมลทดสอบไปยัง ${mailResult.to} เรียบร้อยแล้ว (${mailResult.status})`,
           mailResult,
+          delivery: mailResult,
           smtpConfig: emailService.getSmtpConfig(false),
           emailLogs: emailService.listEmailLogs(30)
         });
@@ -1024,7 +1028,11 @@ async function handleRequest(req, res) {
         if (act === "EXPIRE_TRIAL" || act === "REVOKE" || act === "RESET_TRIAL") {
           const store = readStore();
           for (const prof of Object.values(store)) {
-            if (prof.watchSettings && prof.watchSettings.deviceId === updated.deviceId) {
+            if (
+              prof.watchSettings &&
+              (prof.watchSettings.deviceId === updated.deviceId ||
+                licenseManager.verifyActivationKey(updated.deviceId, prof.watchSettings.activationKey))
+            ) {
               prof.watchSettings.activationKey = "";
             }
           }
