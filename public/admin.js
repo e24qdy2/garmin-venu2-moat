@@ -1,15 +1,19 @@
-/* Venu2Moat Admin Portal — Admin Password Login, Change Password (with Current Password Verification) & Per-Device Activation Key Manager */
+/* Venu2Moat Admin Portal — Admin Password Login, Change Password, Customer Requests Approval Queue, SMTP / System Mail (e24qdy2@gmail.com) & Per-Device Activation Key Manager */
 
 (() => {
   const state = {
     token: localStorage.getItem("venu2_admin_token") || "",
     authenticated: false,
-    adminEmail: "saharabu@scg.com",
+    adminEmail: "saharat.bun@icloud.com",
+    notifyEmail: "e24qdy2@gmail.com",
     authMethod: "",
     passwordUpdatedAt: "",
     isDefaultPassword: true,
     summary: null,
     devices: [],
+    customerRequests: [],
+    emailLogs: [],
+    smtpConfig: null,
     auditLogs: [],
     lastGeneratedKey: ""
   };
@@ -51,12 +55,13 @@
     const data = await res.json();
     state.isDefaultPassword = Boolean(data.isDefaultPassword);
     state.passwordUpdatedAt = data.passwordUpdatedAt || "";
+    if (data.notifyEmail) state.notifyEmail = data.notifyEmail;
 
     if (data.authenticated) {
       state.authenticated = true;
-      state.adminEmail = data.email || "saharabu@scg.com";
+      state.adminEmail = data.email || "saharat.bun@icloud.com";
       state.authMethod = data.authMethod || "ADMIN_PASSWORD";
-      await fetchDevicesData();
+      await Promise.all([fetchDevicesData(), fetchEmailConfig()]);
     } else {
       state.authenticated = false;
     }
@@ -74,12 +79,44 @@
     const data = await res.json();
     state.summary = data.summary || {};
     state.devices = data.devices || [];
+    state.customerRequests = data.customerRequests || [];
+    state.emailLogs = data.emailLogs || [];
     state.auditLogs = data.auditLogs || [];
     if (data.admin) {
       state.isDefaultPassword = Boolean(data.admin.isDefaultPassword);
       state.passwordUpdatedAt = data.admin.passwordUpdatedAt || state.passwordUpdatedAt;
     }
     renderDashboard();
+  }
+
+  async function fetchEmailConfig() {
+    const res = await fetch("/api/admin/email/config", { headers: authHeaders() });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.smtpConfig) {
+      state.smtpConfig = data.smtpConfig;
+      populateSmtpForm(data.smtpConfig);
+    }
+    if (data.emailLogs) {
+      state.emailLogs = data.emailLogs;
+      renderEmailLogs();
+    }
+  }
+
+  function populateSmtpForm(cfg) {
+    if (!cfg) return;
+    if (el("smtpRecipientEmailInput")) el("smtpRecipientEmailInput").value = cfg.recipientEmail || "e24qdy2@gmail.com";
+    if (el("smtpFromEmailInput")) el("smtpFromEmailInput").value = cfg.fromEmail || "saharat.bun@icloud.com";
+    if (el("smtpHostInput")) el("smtpHostInput").value = cfg.smtpHost || "smtp.gmail.com";
+    if (el("smtpPortInput")) el("smtpPortInput").value = String(cfg.smtpPort || 465);
+    if (el("smtpSecureCheck")) el("smtpSecureCheck").checked = cfg.smtpSecure !== false;
+    if (el("smtpUserInput")) el("smtpUserInput").value = cfg.smtpUser || "";
+    if (el("smtpPassInput")) {
+      el("smtpPassInput").value = "";
+      el("smtpPassInput").placeholder = cfg.hasPassword
+        ? `ตั้งรหัสผ่านไว้แล้ว (${cfg.smtpPassMasked}) — เว้นว่างหากไม่ต้องการเปลี่ยน`
+        : "กรอก App Password 16 หลัก (ถ้าใช้ SMTP Auth)";
+    }
   }
 
   function renderAuthView() {
@@ -112,12 +149,175 @@
     }
   }
 
+  function renderCustomerRequests() {
+    const reqListEl = el("adminCustomerRequestsList");
+    const badgeEl = el("customerRequestsCountBadge");
+    if (!reqListEl) return;
+
+    const requests = state.customerRequests || [];
+    const pendingCount = requests.filter((r) => r.status === "PENDING").length;
+    if (badgeEl) {
+      badgeEl.textContent = `${pendingCount} Pending / ${requests.length} Total`;
+    }
+
+    if (!requests.length) {
+      reqListEl.innerHTML = `<div class="rounded-2xl bg-void/60 p-6 text-center text-xs text-slate-400">ยังไม่มีคำขอต่ออายุทดลองใช้ (Trial Extend) หรือคำขอซื้อ License จากลูกค้า</div>`;
+      return;
+    }
+
+    reqListEl.innerHTML = requests
+      .map((req) => {
+        const isPurchase = req.requestType === "PURCHASE_LICENSE";
+        const typeBadge = isPurchase
+          ? `<span class="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-cyan/20 text-cyan ring-1 ring-cyan/40 font-semibold">PURCHASE LICENSE</span>`
+          : `<span class="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-amber/20 text-amber ring-1 ring-amber/40 font-semibold">TRIAL EXTEND (+${escapeHtml(req.requestedExtendDays || 14)}D)</span>`;
+
+        let statusBadge = `<span class="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-amber/15 text-amber ring-1 ring-amber/35 font-bold">PENDING</span>`;
+        if (req.status === "APPROVED") {
+          statusBadge = `<span class="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-emerald/20 text-emerald ring-1 ring-emerald/40 font-bold">APPROVED (${escapeHtml(req.resolutionAction || "")})</span>`;
+        } else if (req.status === "REJECTED") {
+          statusBadge = `<span class="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-crimson/20 text-crimson ring-1 ring-crimson/40 font-bold">REJECTED</span>`;
+        }
+
+        const emailInfo = req.emailDelivery
+          ? `${escapeHtml(req.emailDelivery.recipientEmail || "e24qdy2@gmail.com")} (${escapeHtml(req.emailDelivery.deliveryMethod || "SENT")})`
+          : "e24qdy2@gmail.com";
+
+        return `
+          <div class="rounded-2xl bg-void/80 ring-1 ${req.status === "PENDING" ? "ring-amber/35" : "ring-white/[0.08]"} p-4 sm:p-5 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="font-mono text-xs font-bold text-slate-300">${escapeHtml(req.id)}</span>
+                ${typeBadge}
+                ${statusBadge}
+                <span class="font-mono text-xs font-extrabold text-alabaster bg-white/[0.06] px-2.5 py-0.5 rounded-lg">Device: ${escapeHtml(req.deviceId)}</span>
+                <span class="font-mono text-[11px] text-slate-400">Sync: ${escapeHtml(req.syncKey)}</span>
+              </div>
+              <div class="text-[11px] font-mono text-slate-400">
+                ${new Date(req.createdAt).toLocaleString("th-TH")}
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs bg-core/70 rounded-xl p-3 ring-1 ring-white/[0.05]">
+              <div>
+                <span class="text-slate-400">ผู้ติดต่อ:</span>
+                <strong class="text-alabaster ml-1">${escapeHtml(req.contactName)}</strong>
+              </div>
+              <div>
+                <span class="text-slate-400">Email:</span>
+                <a href="mailto:${escapeHtml(req.contactEmail)}" class="font-mono text-cyan underline ml-1">${escapeHtml(req.contactEmail)}</a>
+              </div>
+              <div>
+                <span class="text-slate-400">โทร / LINE:</span>
+                <strong class="font-mono text-emerald ml-1">${escapeHtml(req.contactPhone)}</strong>
+              </div>
+              <div class="md:col-span-3 pt-1 border-t border-white/[0.05] text-slate-300">
+                <span class="text-slate-400">ความประสงค์:</span>
+                <span class="ml-1">${escapeHtml(req.message || "-")}</span>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+              <div class="text-[11px] font-mono text-slate-400">
+                Email Notification: <span class="text-emerald">${emailInfo}</span>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  data-req-id="${escapeHtml(req.id)}"
+                  data-req-action="APPROVE_PURCHASE_ACTIVATE"
+                  class="req-resolve-btn rounded-full bg-cyan/20 hover:bg-cyan/30 ring-1 ring-cyan/45 px-3 py-1 text-[11px] font-mono font-bold text-cyan"
+                >
+                  ✓ Approve &amp; Activate PRO
+                </button>
+                <button
+                  type="button"
+                  data-req-id="${escapeHtml(req.id)}"
+                  data-req-action="APPROVE_EXTEND_14"
+                  class="req-resolve-btn rounded-full bg-emerald/15 hover:bg-emerald/25 ring-1 ring-emerald/35 px-3 py-1 text-[11px] font-mono font-semibold text-emerald"
+                >
+                  + Approve Extend +14d
+                </button>
+                <button
+                  type="button"
+                  data-req-id="${escapeHtml(req.id)}"
+                  data-req-action="APPROVE_EXTEND_7"
+                  class="req-resolve-btn rounded-full bg-amber/15 hover:bg-amber/25 ring-1 ring-amber/35 px-3 py-1 text-[11px] font-mono text-amber"
+                >
+                  + Approve Extend +7d
+                </button>
+                <button
+                  type="button"
+                  data-req-id="${escapeHtml(req.id)}"
+                  data-req-action="REJECT"
+                  class="req-resolve-btn rounded-full bg-crimson/15 hover:bg-crimson/25 ring-1 ring-crimson/35 px-3 py-1 text-[11px] font-mono text-crimson"
+                >
+                  ✕ Reject
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+
+    reqListEl.querySelectorAll(".req-resolve-btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const requestId = btn.getAttribute("data-req-id");
+        const action = btn.getAttribute("data-req-action");
+        const res = await fetch("/api/admin/requests/resolve", {
+          method: "POST",
+          headers: authHeaders(),
+          body: JSON.stringify({ requestId, action })
+        });
+        const data = await res.json();
+        if (res.ok && data.ok) {
+          state.summary = data.summary;
+          state.devices = data.devices;
+          state.customerRequests = data.customerRequests || [];
+          state.emailLogs = data.emailLogs || state.emailLogs;
+          state.auditLogs = data.auditLogs;
+          renderDashboard();
+          showToast(`ดำเนินการคำขอ ${requestId} (${action}) สำเร็จ`);
+        } else {
+          showToast(data.error || "ไม่สามารถดำเนินการคำขอได้");
+        }
+      });
+    });
+  }
+
+  function renderEmailLogs() {
+    const bodyEl = el("adminEmailLogsTableBody");
+    if (!bodyEl) return;
+    const logs = state.emailLogs || [];
+    if (!logs.length) {
+      bodyEl.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-400">ยังไม่มีประวัติการส่งอีเมลแจ้งเตือน</td></tr>`;
+      return;
+    }
+    bodyEl.innerHTML = logs
+      .map(
+        (m) => `
+        <tr>
+          <td class="py-2 pr-4 text-slate-400 whitespace-nowrap">${new Date(m.timestamp).toLocaleString("th-TH")}</td>
+          <td class="py-2 pr-4 text-emerald font-semibold">${escapeHtml(m.to)}</td>
+          <td class="py-2 pr-4 text-alabaster font-sans text-xs">${escapeHtml(m.subject)}</td>
+          <td class="py-2 pr-4 text-cyan">${escapeHtml(m.deliveryMethod)}</td>
+          <td class="py-2 text-slate-300 text-[11px]">${escapeHtml(m.spoolFile || "")} · ${escapeHtml(m.detail || "")}</td>
+        </tr>
+      `
+      )
+      .join("");
+  }
+
   function renderDashboard() {
     const s = state.summary || {};
     el("kpiTotalDevices").textContent = String(s.totalDevices ?? 0);
     el("kpiActivePaid").textContent = String(s.activePaid ?? 0);
     el("kpiActiveTrial").textContent = String(s.activeTrial ?? 0);
     el("kpiExpiredTrial").textContent = String(s.expiredTrial ?? 0);
+    if (el("kpiPendingRequests")) {
+      el("kpiPendingRequests").textContent = String(s.pendingRequests ?? 0);
+    }
 
     const pwdStatusEl = el("pwdLastUpdatedText");
     if (pwdStatusEl) {
@@ -128,6 +328,9 @@
         ? `สถานะรหัสผ่าน: <span class="text-amber">ใช้รหัสผ่านเริ่มต้น (Default)</span> · อัปเดตล่าสุด ${escapeHtml(updatedStr)}`
         : `สถานะรหัสผ่าน: <span class="text-emerald">ตั้งค่ารหัสผ่านส่วนตัวแล้ว (Custom Password)</span> · อัปเดตล่าสุด ${escapeHtml(updatedStr)}`;
     }
+
+    renderCustomerRequests();
+    renderEmailLogs();
 
     const listEl = el("adminDevicesList");
     if (!state.devices.length) {
@@ -204,7 +407,7 @@
                   data-dev-action="EXPIRE_TRIAL"
                   data-dev-id="${escapeHtml(d.deviceId)}"
                   class="dev-action-btn rounded-full bg-crimson/15 hover:bg-crimson/25 ring-1 ring-crimson/30 px-3 py-1 text-[11px] font-mono text-crimson ml-auto"
-                  title="จำลองสถานะหมดเวลาทดลอง 14 วัน เพื่อทดสอบหน้าจอล็อกให้ติดต่อ saharabu@scg.com"
+                  title="จำลองสถานะหมดเวลาทดลอง 14 วัน เพื่อทดสอบหน้าจอล็อกให้ติดต่อ saharat.bun@icloud.com"
                 >
                   Simulate 14d Expired (Lock)
                 </button>
@@ -235,6 +438,7 @@
           if (res.ok && data.ok) {
             state.summary = data.summary;
             state.devices = data.devices;
+            state.customerRequests = data.customerRequests || state.customerRequests;
             state.auditLogs = data.auditLogs;
             renderDashboard();
             showToast(`อัปเดตสถานะเครื่อง ${deviceId} (${action}) สำเร็จ`);
@@ -273,6 +477,15 @@
 
   function showChangePwdFeedback(message, isSuccess) {
     const box = el("changePwdFeedbackBox");
+    if (!box) return;
+    box.textContent = message;
+    box.className = isSuccess
+      ? "rounded-xl bg-emerald/15 ring-1 ring-emerald/35 px-3.5 py-2.5 text-xs text-emerald font-medium"
+      : "rounded-xl bg-crimson/15 ring-1 ring-crimson/35 px-3.5 py-2.5 text-xs text-crimson font-medium";
+  }
+
+  function showEmailServiceFeedback(message, isSuccess) {
+    const box = el("emailServiceFeedbackBox");
     if (!box) return;
     box.textContent = message;
     box.className = isSuccess
@@ -331,20 +544,21 @@
       });
     }
 
-    // 4. Scroll to Change Admin Password Panel
-    const scrollPwdBtn = el("scrollToChangePwdBtn");
-    if (scrollPwdBtn) {
-      scrollPwdBtn.addEventListener("click", () => {
-        const card = el("changePasswordCard");
-        if (card) {
-          card.scrollIntoView({ behavior: "smooth", block: "center" });
-          setTimeout(() => {
-            const currentInput = el("currentAdminPwdInput");
-            if (currentInput) currentInput.focus();
-          }, 350);
-        }
-      });
-    }
+    // 4. Scroll to Change Admin Password Panel & Email Settings Panel
+    el("scrollToChangePwdBtn")?.addEventListener("click", () => {
+      const card = el("changePasswordCard");
+      if (card) {
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => el("currentAdminPwdInput")?.focus(), 350);
+      }
+    });
+
+    el("scrollToEmailSettingsBtn")?.addEventListener("click", () => {
+      const card = el("emailServiceCard");
+      if (card) {
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    });
 
     // 5. Change Admin Password Form Submit (Requires Current Password Verification)
     const changePwdForm = el("changeAdminPasswordForm");
@@ -402,7 +616,60 @@
       });
     }
 
-    // 6. Sign Out
+    // 6. SMTP Configuration Save & Test Email Dispatch
+    const smtpForm = el("smtpConfigForm");
+    if (smtpForm) {
+      smtpForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const payload = {
+          recipientEmail: el("smtpRecipientEmailInput")?.value.trim() || "e24qdy2@gmail.com",
+          fromEmail: el("smtpFromEmailInput")?.value.trim() || "saharat.bun@icloud.com",
+          smtpHost: el("smtpHostInput")?.value.trim() || "smtp.gmail.com",
+          smtpPort: Number(el("smtpPortInput")?.value || 465),
+          smtpSecure: Boolean(el("smtpSecureCheck")?.checked),
+          smtpUser: el("smtpUserInput")?.value.trim() || "",
+          smtpPass: el("smtpPassInput")?.value || ""
+        };
+        const res = await fetch("/api/admin/email/config", {
+          method: "POST",
+          headers: authHeaders(),
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+          showEmailServiceFeedback(data.error || "ไม่สามารถบันทึกตั้งค่า SMTP ได้", false);
+          return;
+        }
+        state.smtpConfig = data.smtpConfig;
+        populateSmtpForm(data.smtpConfig);
+        showEmailServiceFeedback(data.message || "บันทึกการตั้งค่า SMTP สำเร็จ", true);
+        showToast("บันทึกการตั้งค่า SMTP เรียบร้อยแล้ว");
+      });
+    }
+
+    el("testSendEmailBtn")?.addEventListener("click", async () => {
+      const recipientEmail = el("smtpRecipientEmailInput")?.value.trim() || "e24qdy2@gmail.com";
+      showEmailServiceFeedback(`กำลังทดสอบส่งอีเมลแจ้งเตือนไปที่ ${recipientEmail}...`, true);
+      const res = await fetch("/api/admin/email/test", {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify({ recipientEmail })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        showEmailServiceFeedback(data.error || "การทดสอบส่งอีเมลล้มเหลว", false);
+        showToast("ทดสอบส่งอีเมลไม่สำเร็จ");
+        return;
+      }
+      state.emailLogs = data.emailLogs || state.emailLogs;
+      renderEmailLogs();
+      const method = data.delivery?.deliveryMethod || "SENT";
+      const detail = data.delivery?.detail || "";
+      showEmailServiceFeedback(`✓ ทดสอบส่งอีเมลไปที่ ${recipientEmail} สำเร็จ (${method}: ${detail})`, true);
+      showToast(`ส่งอีเมลทดสอบไปที่ ${recipientEmail} สำเร็จ`);
+    });
+
+    // 7. Sign Out
     el("adminLogoutBtn").addEventListener("click", () => {
       state.token = "";
       state.authenticated = false;
@@ -411,13 +678,13 @@
       showToast("ออกจากระบบ Admin แล้ว");
     });
 
-    // 7. Refresh Dashboard
+    // 8. Refresh Dashboard
     el("refreshAdminBtn").addEventListener("click", async () => {
-      await fetchDevicesData();
-      showToast("อัปเดตข้อมูลอุปกรณ์ล่าสุดแล้ว");
+      await Promise.all([fetchDevicesData(), fetchEmailConfig()]);
+      showToast("อัปเดตข้อมูลอุปกรณ์และคิวคำขอล่าสุดแล้ว");
     });
 
-    // 8. Generate Per-Device Activation Key
+    // 9. Generate Per-Device Activation Key
     el("generateKeyForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const deviceId = el("genDeviceIdInput").value.trim().toUpperCase();

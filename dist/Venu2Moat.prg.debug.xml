@@ -804,14 +804,14 @@
         <dataEntry label="globals" offset="49" parentId="" symbolId="globals" type="module"/>
         <dataEntry label="globals/Venu2MoatGlanceView" offset="152" parentId="globals" symbolId="Venu2MoatGlanceView" type="class"/>
         <dataEntry label="globals/Venu2MoatApp" offset="205" parentId="globals" symbolId="Venu2MoatApp" type="class"/>
-        <dataEntry label="globals/PortfolioStore" offset="521" parentId="globals" symbolId="PortfolioStore" type="class"/>
-        <dataEntry label="globals/Venu2MoatDelegate" offset="898" parentId="globals" symbolId="Venu2MoatDelegate" type="class"/>
-        <dataEntry label="globals/Rez" offset="987" parentId="globals" symbolId="Rez" type="module"/>
-        <dataEntry label="globals/SymbolDetailView" offset="1031" parentId="globals" symbolId="SymbolDetailView" type="class"/>
-        <dataEntry label="globals/SymbolDetailDelegate" offset="1102" parentId="globals" symbolId="SymbolDetailDelegate" type="class"/>
-        <dataEntry label="globals/Venu2MoatView" offset="1173" parentId="globals" symbolId="Venu2MoatView" type="class"/>
-        <dataEntry label="globals/Rez/Drawables" offset="1253" parentId="Rez" symbolId="Drawables" type="module"/>
-        <dataEntry label="globals/Rez/Strings" offset="1288" parentId="Rez" symbolId="Strings" type="module"/>
+        <dataEntry label="globals/PortfolioStore" offset="527" parentId="globals" symbolId="PortfolioStore" type="class"/>
+        <dataEntry label="globals/Venu2MoatDelegate" offset="904" parentId="globals" symbolId="Venu2MoatDelegate" type="class"/>
+        <dataEntry label="globals/Rez" offset="993" parentId="globals" symbolId="Rez" type="module"/>
+        <dataEntry label="globals/SymbolDetailView" offset="1037" parentId="globals" symbolId="SymbolDetailView" type="class"/>
+        <dataEntry label="globals/SymbolDetailDelegate" offset="1108" parentId="globals" symbolId="SymbolDetailDelegate" type="class"/>
+        <dataEntry label="globals/Venu2MoatView" offset="1179" parentId="globals" symbolId="Venu2MoatView" type="class"/>
+        <dataEntry label="globals/Rez/Drawables" offset="1259" parentId="Rez" symbolId="Drawables" type="module"/>
+        <dataEntry label="globals/Rez/Strings" offset="1294" parentId="Rez" symbolId="Strings" type="module"/>
     </dataEntryOffsetMappings>
     <functions>
         <functionEntry accessMode="public" endPc="268435471" name="&lt;init&gt;" parent="Venu2MoatGlanceView" startPc="268435460">

@@ -1,6 +1,6 @@
 # Venu2Moat — App Flow & Core Logic Flow Specification
 
-เอกสารฉบับนี้อธิบายลำดับการทำงานของระบบ (**App Flow**) และตรรกะการตัดสินใจเชิงลึก (**Logic Flow**) ทุกโมดูล ตั้งแต่การซิงค์ข้อมูลระหว่างเว็บกับนาฬิกา, ระบบ Auto-Swipe & Always-On Timer, อัลกอริทึมตรวจสอบสิทธิ์ Trial 14 วัน / Activation Key (`HMAC-SHA256`), ไปจนถึงการคำนวณอินดิเคเตอร์ทางเทคนิค (`SMA-20` & `Bollinger Bands`)
+เอกสารฉบับนี้อธิบายลำดับการทำงานของระบบ (**App Flow**) และตรรกะการตัดสินใจเชิงลึก (**Logic Flow**) ทุกโมดูล ตั้งแต่การซิงค์ข้อมูลระหว่างเว็บกับนาฬิกา, ระบบ Auto-Swipe & Always-On Timer, อัลกอริทึมตรวจสอบสิทธิ์ Trial 14 วัน / Activation Key (`HMAC-SHA256`), ระบบขอต่ออายุ Trial & ฟอร์มสั่งซื้อ License พร้อมบริการส่งอีเมลแจ้งเตือนไปยัง **`e24qdy2@gmail.com`**, ไปจนถึงการคำนวณอินดิเคเตอร์ทางเทคนิค (`SMA-20` & `Bollinger Bands`)
 
 ---
 
@@ -9,8 +9,8 @@
 ```mermaid
 flowchart TD
     subgraph CloudflareEdge["Cloudflare Global Edge (readybyte.top)"]
-        CF_Web["https://moat.readybyte.top<br/>(Web Companion & Watch API)"]
-        CF_Admin["https://admin-moat.readybyte.top<br/>(Zero Trust Access + OTP Gate)"]
+        CF_Web["https://moat.readybyte.top<br/>(Web Companion, Request Form & Watch API)"]
+        CF_Admin["https://admin-moat.readybyte.top<br/>(Admin Portal - saharat.bun@icloud.com)"]
         CF_Tunnel["cloudflared Tunnel Daemon<br/>(venu2moat)"]
     end
 
@@ -18,8 +18,9 @@ flowchart TD
         Router["Hostname & API Router"]
         MarketEngine["Yahoo Finance Live Quote +<br/>Deterministic Fallback Engine"]
         TechEngine["Technical Indicator Engine<br/>(14d Sparkline, SMA-20, Bollinger, FX)"]
-        LicEngine["License & Trial Engine<br/>(lib/licenseManager.js)"]
-        Store[("JSON Persistence<br/>data/portfolios.json<br/>data/licenses.json")]
+        LicEngine["License, Trial & Request Queue Engine<br/>(lib/licenseManager.js)"]
+        MailEngine["Email Notification Service<br/>(lib/emailService.js)"]
+        Store[("JSON & Mail Persistence<br/>data/portfolios.json<br/>data/licenses.json<br/>data/mail-outbox/*.eml")]
     end
 
     subgraph WatchDevice["Garmin Venu 2 (416x416 AMOLED)"]
@@ -33,8 +34,11 @@ flowchart TD
     Router --> MarketEngine
     MarketEngine --> TechEngine
     Router --> LicEngine
+    LicEngine --> MailEngine
+    MailEngine -->|"SMTP TLS / Direct MX"| GmailInbox["e24qdy2@gmail.com"]
     TechEngine --> Store
     LicEngine --> Store
+    MailEngine --> Store
     WatchApp <-->|"GET /api/watch?key=VENU2-88&did=V2-XXXX"| CF_Web
     WatchApp <--> WatchStorage
 ```
@@ -64,7 +68,7 @@ sequenceDiagram
     App->>Store: fetchRemote()
     Store->>API: GET /api/watch?key=VENU2-88&did=V2-XXXX&akey=...
     API->>Lic: evaluateDeviceLicense(did, akey)
-    Lic-->>API: คืนค่าสถานะ TRIAL (เหลือ X วัน) / ACTIVE / EXPIRED
+    Lic-->>API: คืนค่าสถานะ TRIAL (เหลือ X วัน) / ACTIVE / EXPIRED (own: saharat.bun@icloud.com)
     API-->>Store: HTTP 200 JSON { cfg, lic, tot, p } (<4KB)
     Store->>Store: applyRemoteConfigAndLicense(payload)
     Store->>Storage: setValue("venu2moat_payload", payload)
@@ -112,41 +116,74 @@ flowchart TD
 
 ---
 
-## 4. Logic Flow: ระบบ 14-Day Free Trial & Per-Device Activation Key (`lib/licenseManager.js`)
+## 4. Logic Flow: ระบบ 14-Day Free Trial, Customer Request Queue & Per-Device Activation Key (`lib/licenseManager.js`)
 
 ### 4.1 State Machine ของสถานะเครื่อง (`Device License Lifecycle`)
 
 ```mermaid
 stateDiagram-v2
     [*] --> TRIAL : เครื่องซิงค์ครั้งแรก (Auto-Register 14 วัน)
-    TRIAL --> TRIAL : ซิงค์ปกติ (วันที่เหลือ > 0)
+    TRIAL --> TRIAL : ซิงค์ปกติ (วันที่เหลือ > 0) หรือแอดมินอนุมัติ Trial Extend (+7d/+14d)
     TRIAL --> EXPIRED : ครบกำหนด 14 วัน (nowMs > trialExpiresMs)\nหรือแอดมินกด Expire 14d
-    TRIAL --> ACTIVE : ลูกค้ากรอก Activation Key ที่ถูกต้อง\nหรือแอดมินกด Activate
-    EXPIRED --> ACTIVE : ลูกค้าติดต่อ saharabu@scg.com\nและกรอกรหัส MOAT-XXXX-XXXX-XXXX ที่ถูกต้อง
-    EXPIRED --> TRIAL : แอดมินกด Extend (+14d) หรือ Reset (14d)
+    TRIAL --> ACTIVE : ลูกค้ากรอก Activation Key ที่ถูกต้อง\nหรือแอดมินกด Approve & Activate PRO
+    EXPIRED --> ACTIVE : ลูกค้าส่ง Purchase Request Form / ติดต่อ saharat.bun@icloud.com\nแล้วแอดมินกด Approve PRO หรือลูกค้ากรอก MOAT-XXXX-XXXX-XXXX
+    EXPIRED --> TRIAL : ลูกค้ากด Request Trial Key Extend แล้วแอดมินกด Approve (+7d/+14d)
     ACTIVE --> EXPIRED : แอดมินสั่ง Revoke สิทธิ์ในหน้า Admin
 ```
 
 ### 4.2 อัลกอริทึมการสร้างและตรวจสอบ Activation Key ราย `Device ID`
 ระบบป้องกันการใช้คีย์ข้ามเครื่องด้วยการผูก `Device ID` เข้ากับรหัสคีย์ผ่านอัลกอริทึม **HMAC-SHA256**:
 1. **Normalization:** แปลง `deviceId` เป็นตัวพิมพ์ใหญ่และตัดอักขระพิเศษ (เช่น `V2-88VENU20`)
-2. **HMAC Digest:** คำนวณ `HMAC_SHA256(secretKey, "VENU2MOAT_V2::" + normalizedDeviceId + "::saharabu@scg.com")`
+2. **HMAC Digest:** คำนวณ `HMAC_SHA256(secretKey, "VENU2MOAT_V2::" + normalizedDeviceId + "::saharat.bun@icloud.com")`
 3. **Base32 Readability Encoding:** แปลงค่าแฮชเป็นชุดตัวอักษรที่อ่านง่าย (ตัด `0/O/1/I` เพื่อไม่ให้สับสนเวลาพิมพ์) จำนวน 12 ตัวอักษร แล้วจัดรูปแบบเป็น:
    ```text
    MOAT-XXXX-XXXX-XXXX
    ```
-   *(ตัวอย่าง: เครื่อง `V2-SDLC9901` จะได้คีย์เฉพาะเครื่องคือ `MOAT-RZA6-TADM-HLFV` เสมอ)*
 
 ---
 
-## 5. Logic Flow: ระบบยืนยันตัวตนด้วย Admin Password และการเปลี่ยนรหัสผ่าน (`https://admin-moat.readybyte.top`)
+## 5. Logic Flow: ฟอร์มขอต่ออายุ Trial / สั่งซื้อ License & ระบบส่งอีเมลแจ้งเตือนไปที่ `e24qdy2@gmail.com` (`lib/emailService.js`)
 
-หน้า Admin Portal ใช้การยืนยันตัวตนด้วย **Admin Password (เข้ารหัสด้วย `scrypt` + Random Salt)** สำหรับเจ้าของระบบ **`saharabu@scg.com`** และอนุญาตให้เปลี่ยนรหัสผ่านใหม่หลังล็อกอินโดยบังคับตรวจสอบรหัสผ่านเดิม (`Current Password`) ก่อนทุกครั้ง:
+เมื่อผู้ใช้งานกดปุ่ม **Request Trial Key Extend** หรือกรอก **Purchase Request Form** บนหน้าเว็บ `https://moat.readybyte.top` ระบบจะบันทึกคำขอลงคิวอนุมัติของแอดมิน พร้อมส่งอีเมลแจ้งเตือนไปยัง **`e24qdy2@gmail.com`** ทันที:
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Admin as แอดมิน (saharabu@scg.com)
+    actor Customer as ผู้ใช้งาน (Web Companion)
+    participant Web as moat.readybyte.top (app.js)
+    participant Server as server.js (/api/license/request)
+    participant Lic as LicenseManager (data/licenses.json)
+    participant Mail as EmailService (lib/emailService.js)
+    participant Gmail as e24qdy2@gmail.com
+    actor Admin as แอดมิน (saharat.bun@icloud.com)
+
+    Customer->>Web: กด Request Trial Extend หรือ Purchase Request Form
+    Web->>Server: POST /api/license/request { requestType, deviceId, contactName, contactEmail, contactPhone, message }
+    Server->>Lic: createCustomerRequest(payload)
+    Lic->>Lic: สร้างรายการ REQ-XXXXXX (status: PENDING) + คำนวณ issuedKey ประจำเครื่อง
+    Server->>Mail: sendCustomerRequestNotification(requestRecord, smtpConfig)
+    Mail->>Mail: 1. บันทึกไฟล์ .eml ลง data/mail-outbox/ (100% Audit Reliability)
+    alt ตั้งค่า SMTP App Password ไว้แล้ว
+        Mail->>Gmail: 2A. ส่งผ่าน Authenticated SMTP (TLS 465 / STARTTLS 587) ไปยัง e24qdy2@gmail.com
+    else โหมด System Mail (ไม่ต้องตั้งรหัสผ่าน)
+        Mail->>Gmail: 2B. ส่งผ่าน Direct MX (gmail-smtp-in.l.google.com:25) ไปยัง e24qdy2@gmail.com
+    end
+    Server-->>Web: HTTP 200 { ok: true, request, emailResult }
+    Admin->>Server: กดปุ่ม Approve (+7d / +14d / Activate PRO) ในหน้า Admin Portal
+    Server->>Lic: resolveCustomerRequest(requestId, action)
+    Lic->>Lic: อัปเดตสถานะเครื่องเป็น TRIAL (+7d/+14d) หรือ ACTIVE (PRO) ทันที
+```
+
+---
+
+## 6. Logic Flow: ระบบยืนยันตัวตนด้วย Admin Password และการเปลี่ยนรหัสผ่าน (`https://admin-moat.readybyte.top`)
+
+หน้า Admin Portal ใช้การยืนยันตัวตนด้วย **Admin Password (เข้ารหัสด้วย `scrypt` + Random Salt)** สำหรับเจ้าของระบบ **`saharat.bun@icloud.com`** และอนุญาตให้เปลี่ยนรหัสผ่านใหม่หลังล็อกอินโดยบังคับตรวจสอบรหัสผ่านเดิม (`Current Password`) ก่อนทุกครั้ง:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Admin as แอดมิน (saharat.bun@icloud.com)
     participant UI as admin.html / admin.js
     participant Server as server.js (/api/admin/*)
     participant Lic as LicenseManager (Scrypt Hash)
@@ -163,7 +200,7 @@ sequenceDiagram
     else รหัสผ่านถูกต้อง
         Lic-->>UI: HTTP 200 { ok: true, token: "...", authMethod: "ADMIN_PASSWORD" }
         UI->>Server: GET /api/admin/devices (แนบ Bearer Token)
-        Server-->>UI: คืนค่ารายการเครื่องทั้งหมด + Audit Logs
+        Server-->>UI: คืนค่ารายการเครื่องทั้งหมด + Customer Requests Queue + Email Logs + Audit Logs
     end
 
     Note over Admin,Lic: ขั้นตอนการเปลี่ยนรหัสผ่าน (Change Admin Password พร้อมยืนยันรหัสเดิม)
@@ -182,7 +219,7 @@ sequenceDiagram
 
 ---
 
-## 6. Logic Flow: การคำนวณมูลค่าพอร์ต, อัตราแลกเปลี่ยน และอินดิเคเตอร์เทคนิค (`server.js`)
+## 7. Logic Flow: การคำนวณมูลค่าพอร์ต, อัตราแลกเปลี่ยน และอินดิเคเตอร์เทคนิค (`server.js`)
 
 ```mermaid
 flowchart LR

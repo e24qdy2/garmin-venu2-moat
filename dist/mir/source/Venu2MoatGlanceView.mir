@@ -215,7 +215,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_32_
         lputv %netWorthStr.3 %tmp.62;
         symbol [ netWorthStr %netWorthStr.3 33 16 27 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 34 16 ]
-        %tmp.63 = "saharabu@scg.com";
+        %tmp.63 = "saharat.bun@icloud.com";
         lputv %dayPnlStr.4 %tmp.63;
         symbol [ dayPnlStr %dayPnlStr.4 34 16 25 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 35 16 ]

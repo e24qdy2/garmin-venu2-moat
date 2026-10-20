@@ -3,7 +3,8 @@ const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const url = require("url");
-const { LicenseManager, OWNER_EMAIL, TRIAL_DAYS } = require("./lib/licenseManager");
+const { LicenseManager, OWNER_EMAIL, NOTIFY_EMAIL, TRIAL_DAYS } = require("./lib/licenseManager");
+const { EmailService } = require("./lib/emailService");
 
 const PORT = process.env.PORT || 3880;
 const DATA_DIR = path.join(__dirname, "data");
@@ -12,6 +13,13 @@ const PUBLIC_DIR = path.join(__dirname, "public");
 
 const licenseManager = new LicenseManager({
   dataFile: path.join(DATA_DIR, "licenses.json")
+});
+
+const emailService = new EmailService({
+  dataFile: path.join(DATA_DIR, "licenses.json"),
+  outboxDir: path.join(DATA_DIR, "mail-outbox"),
+  ownerEmail: OWNER_EMAIL,
+  notifyEmail: NOTIFY_EMAIL
 });
 
 const DEFAULT_WATCH_SETTINGS = {
@@ -748,8 +756,42 @@ async function handleRequest(req, res) {
     return sendJson(res, 200, evaluated);
   }
 
+  // 6b. POST /api/license/request (Request Trial Key Extend or Submit Purchase Request Form -> Emails e24qdy2@gmail.com)
+  if (pathname === "/api/license/request" && req.method === "POST") {
+    try {
+      const body = await parseBody(req);
+      const syncKey = String(body.syncKey || "VENU2-88").trim().toUpperCase();
+      const profile = getOrCreateProfile(syncKey);
+      const deviceId = licenseManager.normalizeDeviceId(body.deviceId || profile.watchSettings.deviceId);
+
+      const created = licenseManager.createCustomerRequest({
+        ...body,
+        deviceId,
+        syncKey
+      });
+      if (!created.ok) {
+        return sendJson(res, 400, created);
+      }
+
+      const emailNotification = await emailService.sendCustomerRequestEmail(created.request);
+      const isTrialExtend = created.request.requestType === "TRIAL_EXTEND";
+
+      return sendJson(res, 200, {
+        ok: true,
+        message: isTrialExtend
+          ? `ส่งคำขอต่ออายุทดลองใช้ (+${created.request.requestedExtendDays} วัน) เรียบร้อยแล้ว! ระบบได้แจ้งเตือนไปยัง ${emailNotification.to} แล้ว`
+          : `ส่งคำขอซื้อ License ถาวร (PRO) เรียบร้อยแล้ว! ระบบได้ส่งข้อมูลติดต่อกลับไปยัง ${emailNotification.to} แล้ว`,
+        request: created.request,
+        device: created.device,
+        emailNotification
+      });
+    } catch (err) {
+      return sendJson(res, 400, { ok: false, error: err.message });
+    }
+  }
+
   // =========================================================================
-  // 7. ADMIN PORTAL API (https://admin-moat.readybyte.top / saharabu@scg.com)
+  // 7. ADMIN PORTAL API (https://admin-moat.readybyte.top / saharat.bun@icloud.com)
   // =========================================================================
   if (pathname === "/api/admin/session" && req.method === "GET") {
     const auth = licenseManager.verifyAdminRequest(req);
@@ -758,6 +800,7 @@ async function handleRequest(req, res) {
       ...auth,
       ...meta,
       ownerEmail: OWNER_EMAIL,
+      notifyEmail: NOTIFY_EMAIL,
       trialDays: TRIAL_DAYS,
       host: hostHeader
     });
@@ -817,7 +860,8 @@ async function handleRequest(req, res) {
         }
         return sendJson(res, 200, {
           ...result,
-          ...licenseManager.listDevices()
+          ...licenseManager.listDevices(),
+          smtpConfig: emailService.getSmtpConfig(false)
         });
       } catch (err) {
         return sendJson(res, 400, { ok: false, error: err.message });
@@ -829,8 +873,96 @@ async function handleRequest(req, res) {
       return sendJson(res, 200, {
         ok: true,
         admin: { ...auth, ...meta },
-        ...licenseManager.listDevices()
+        ...licenseManager.listDevices(),
+        smtpConfig: emailService.getSmtpConfig(false)
       });
+    }
+
+    if (pathname === "/api/admin/requests/resolve" && req.method === "POST") {
+      try {
+        const body = await parseBody(req);
+        if (!body.requestId || !body.action) {
+          return sendJson(res, 400, { ok: false, error: "requestId and action are required" });
+        }
+        const resolved = licenseManager.resolveCustomerRequest(body.requestId, body.action, {
+          note: body.note,
+          actor: auth.email || OWNER_EMAIL
+        });
+        if (!resolved.ok) {
+          return sendJson(res, 400, resolved);
+        }
+
+        // If approved purchase & activated PRO, sync key to portfolio profile watchSettings
+        if (
+          String(body.action).toUpperCase() === "APPROVE_PURCHASE_ACTIVATE" &&
+          resolved.deviceUpdate &&
+          resolved.deviceUpdate.activationKey
+        ) {
+          const syncKey = String(resolved.request?.syncKey || "VENU2-88").trim().toUpperCase();
+          const store = readStore();
+          if (store[syncKey]) {
+            store[syncKey].watchSettings = sanitizeWatchSettings(
+              {
+                ...store[syncKey].watchSettings,
+                deviceId: resolved.deviceUpdate.deviceId,
+                activationKey: resolved.deviceUpdate.activationKey
+              },
+              store[syncKey].watchSettings
+            );
+            writeStore(store);
+          }
+        }
+
+        return sendJson(res, 200, {
+          ...resolved,
+          ...licenseManager.listDevices(),
+          smtpConfig: emailService.getSmtpConfig(false)
+        });
+      } catch (err) {
+        return sendJson(res, 400, { ok: false, error: err.message });
+      }
+    }
+
+    if (pathname === "/api/admin/email/config" && req.method === "GET") {
+      return sendJson(res, 200, {
+        ok: true,
+        smtpConfig: emailService.getSmtpConfig(false),
+        emailLogs: emailService.listEmailLogs(30)
+      });
+    }
+
+    if (pathname === "/api/admin/email/config" && req.method === "POST") {
+      try {
+        const body = await parseBody(req);
+        const smtpConfig = emailService.updateSmtpConfig(body);
+        return sendJson(res, 200, {
+          ok: true,
+          message: "บันทึกการตั้งค่า SMTP / System Mail เรียบร้อยแล้ว",
+          smtpConfig,
+          emailLogs: emailService.listEmailLogs(30)
+        });
+      } catch (err) {
+        return sendJson(res, 400, { ok: false, error: err.message });
+      }
+    }
+
+    if (pathname === "/api/admin/email/test" && req.method === "POST") {
+      try {
+        const body = await parseBody(req);
+        if (body.smtpConfig && typeof body.smtpConfig === "object") {
+          emailService.updateSmtpConfig(body.smtpConfig);
+        }
+        const mailResult = await emailService.sendTestEmail(body.note);
+        return sendJson(res, 200, {
+          ok: true,
+          message: `ส่งอีเมลทดสอบไปยัง ${mailResult.to} เรียบร้อยแล้ว (${mailResult.status})`,
+          mailResult,
+          smtpConfig: emailService.getSmtpConfig(false),
+          emailLogs: emailService.listEmailLogs(30)
+        });
+      } catch (err) {
+        return sendJson(res, 400, { ok: false, error: err.message });
+      }
     }
 
     if (pathname === "/api/admin/devices/generate-key" && req.method === "POST") {
@@ -964,5 +1096,6 @@ if (require.main === module) {
 module.exports = {
   createAppServer,
   handleRequest,
-  licenseManager
+  licenseManager,
+  emailService
 };

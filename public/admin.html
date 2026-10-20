@@ -74,7 +74,7 @@
   <main class="relative z-10 max-w-6xl mx-auto px-4 sm:px-8 pt-10 pb-24">
 
     <!-- =====================================================================
-         SECTION A: ADMIN PASSWORD LOGIN GATE (saharabu@scg.com)
+         SECTION A: ADMIN PASSWORD LOGIN GATE (saharat.bun@icloud.com)
          ===================================================================== -->
     <section id="adminLoginGate" class="max-w-md mx-auto mt-10">
       <div class="double-bezel-shell">
@@ -92,7 +92,7 @@
               เข้าสู่ระบบผู้ดูแล (Admin Login)
             </h1>
             <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">
-              ระบบจัดการรหัส Activate รายเครื่อง (<code class="font-mono text-cyan">deviceId</code>) และการควบคุมสิทธิ์ทดลองใช้ 14 วัน สงวนสิทธิ์เฉพาะเจ้าของแอป <strong class="font-mono text-alabaster">saharabu@scg.com</strong> เท่านั้น
+              ระบบจัดการรหัส Activate รายเครื่อง (<code class="font-mono text-cyan">deviceId</code>), คิวคำขอซื้อ/ต่ออายุ Trial และการแจ้งเตือนอีเมลไปที่ <code class="font-mono text-emerald">e24qdy2@gmail.com</code> สงวนสิทธิ์เฉพาะเจ้าของแอป <strong class="font-mono text-alabaster">saharat.bun@icloud.com</strong> เท่านั้น
             </p>
           </div>
 
@@ -103,7 +103,7 @@
               <span class="text-[10px]">Changeable after login</span>
             </div>
             <p class="text-slate-300 text-[11px] leading-relaxed">
-              รหัสผ่านผู้ดูแลระบบเริ่มต้นคือ <strong class="font-mono text-amber">SCG-888888</strong> (สามารถเปลี่ยนรหัสผ่านใหม่พร้อมยืนยันรหัสเดิมได้ทันทีหลังเข้าสู่ระบบ)
+              รหัสผ่านผู้ดูแลระบบเริ่มต้นคือ <strong class="font-mono text-amber">MOAT-888888</strong> (สามารถเปลี่ยนรหัสผ่านใหม่พร้อมยืนยันรหัสเดิมได้ทันทีหลังเข้าสู่ระบบ)
             </p>
           </div>
 
@@ -113,7 +113,7 @@
               <input
                 id="adminEmailInput"
                 type="email"
-                value="saharabu@scg.com"
+                value="saharat.bun@icloud.com"
                 readonly
                 class="w-full rounded-xl bg-void ring-1 ring-white/15 px-4 py-2.5 font-mono text-sm text-emerald focus:outline-none"
               />
@@ -165,13 +165,17 @@
         <div>
           <div class="inline-flex items-center gap-2 rounded-full bg-amber/10 ring-1 ring-amber/30 px-3 py-1 mb-3 text-xs font-mono text-amber">
             <i class="ph-light ph-crown"></i>
-            <span>Owner: saharabu@scg.com · 14-Day Trial Engine</span>
+            <span>Owner: saharat.bun@icloud.com · Mail Notify: e24qdy2@gmail.com</span>
           </div>
           <h1 class="text-2xl sm:text-4xl font-extrabold text-alabaster tracking-tight">
-            ระบบบริหารจัดการรหัส Activate รายเครื่อง (Device Licensing)
+            ระบบบริหารจัดการรหัส Activate รายเครื่อง &amp; คิวคำขอลูกค้า
           </h1>
         </div>
         <div class="flex flex-wrap items-center gap-2.5 self-start md:self-auto">
+          <button id="scrollToEmailSettingsBtn" type="button" class="rounded-full bg-cyan/15 hover:bg-cyan/25 ring-1 ring-cyan/35 px-4 py-2 text-xs font-mono text-cyan flex items-center gap-2">
+            <i class="ph-light ph-envelope-simple-open"></i>
+            <span>ตั้งค่า SMTP / ทดสอบส่งเมล</span>
+          </button>
           <button id="scrollToChangePwdBtn" type="button" class="rounded-full bg-amber/15 hover:bg-amber/25 ring-1 ring-amber/35 px-4 py-2 text-xs font-mono text-amber flex items-center gap-2">
             <i class="ph-light ph-keyhole"></i>
             <span>เปลี่ยนรหัสผ่าน Admin</span>
@@ -183,8 +187,8 @@
         </div>
       </div>
 
-      <!-- KPI Grid -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- KPI Grid (5 Cards) -->
+      <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
         <div class="double-bezel-shell">
           <div class="double-bezel-core p-5">
             <div class="text-xs text-slate-400">จำนวนเครื่องทั้งหมด (Devices)</div>
@@ -210,7 +214,42 @@
           <div class="double-bezel-core p-5">
             <div class="text-xs text-slate-400">หมดเวลาทดลอง (Trial Expired)</div>
             <div id="kpiExpiredTrial" class="font-mono text-3xl font-bold text-crimson mt-1 tabular-nums">0</div>
-            <div class="text-[11px] font-mono text-crimson/80 mt-1">Locked → saharabu@scg.com</div>
+            <div class="text-[11px] font-mono text-crimson/80 mt-1">Locked → saharat.bun@icloud.com</div>
+          </div>
+        </div>
+        <div class="double-bezel-shell col-span-2 lg:col-span-1">
+          <div class="double-bezel-core p-5">
+            <div class="text-xs text-amber font-semibold">คำขอรออนุมัติ (Pending Requests)</div>
+            <div id="kpiPendingRequests" class="font-mono text-3xl font-bold text-amber mt-1 tabular-nums">0</div>
+            <div class="text-[11px] font-mono text-amber/80 mt-1">Sent to e24qdy2@gmail.com</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           CUSTOMER REQUESTS APPROVAL QUEUE (Trial Extend & Purchase Requests)
+           =================================================================== -->
+      <div class="double-bezel-shell">
+        <div class="double-bezel-core p-6">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <div>
+              <div class="flex items-center gap-2">
+                <i class="ph-light ph-tray-arrow-down text-amber text-lg"></i>
+                <h2 class="text-lg font-bold text-alabaster">
+                  คิวคำขอลูกค้า: ขอต่ออายุทดลองใช้ (Trial Extend) &amp; ขอซื้อ License ถาวร (Purchase Request)
+                </h2>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">
+                รายการที่ลูกค้ากดส่งมาจากหน้าเว็บหลัก พร้อมแจ้งเตือนเข้าอีเมล <code class="font-mono text-emerald">e24qdy2@gmail.com</code> — สามารถกดอนุมัติต่อเวลา +7 วัน, +14 วัน หรือ Activate PRO ได้ในคลิกเดียว
+              </p>
+            </div>
+            <span id="customerRequestsCountBadge" class="font-mono text-xs px-3 py-1 rounded-full bg-amber/15 ring-1 ring-amber/35 text-amber font-semibold">
+              0 Pending
+            </span>
+          </div>
+
+          <div id="adminCustomerRequestsList" class="space-y-3">
+            <!-- Populated by admin.js -->
           </div>
         </div>
       </div>
@@ -418,15 +457,144 @@
         </div>
       </div>
 
+      <!-- ===================================================================
+           SMTP / SYSTEM MAIL CONFIGURATION & EMAIL OUTBOX (e24qdy2@gmail.com)
+           =================================================================== -->
+      <div id="emailServiceCard" class="double-bezel-shell">
+        <div class="double-bezel-core p-6 space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <i class="ph-light ph-paper-plane-tilt text-cyan text-lg"></i>
+                <h2 class="text-lg font-bold text-alabaster">
+                  ตั้งค่าระบบส่งอีเมลแจ้งเตือน (SMTP / System Mail → e24qdy2@gmail.com)
+                </h2>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">
+                รองรับทั้งการผูก SMTP (เช่น Gmail App Password / iCloud / Custom SMTP) และระบบส่งตรงผ่าน MX System Mail + บันทึกไฟล์ <code class="font-mono text-cyan">.eml</code> ลง Outbox อัตโนมัติทุกครั้งที่มีคำขอจากลูกค้า
+              </p>
+            </div>
+            <button
+              id="testSendEmailBtn"
+              type="button"
+              class="rounded-full bg-emerald text-void font-bold text-xs px-4 py-2.5 flex items-center gap-2 spring-transition active:scale-[0.98]"
+            >
+              <i class="ph-light ph-envelope-simple-open text-sm font-bold"></i>
+              <span>ทดสอบส่งอีเมลไปที่ e24qdy2@gmail.com ทันที</span>
+            </button>
+          </div>
+
+          <form id="smtpConfigForm" class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t border-white/[0.06]">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1" for="smtpRecipientEmailInput">อีเมลปลายทางรับแจ้งเตือน (Recipient)</label>
+              <input
+                id="smtpRecipientEmailInput"
+                type="email"
+                required
+                value="e24qdy2@gmail.com"
+                class="w-full rounded-xl bg-void ring-1 ring-emerald/30 focus:ring-emerald px-3.5 py-2 font-mono text-xs text-emerald font-bold focus:outline-none"
+              />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1" for="smtpFromEmailInput">อีเมลผู้ส่ง (From Email)</label>
+              <input
+                id="smtpFromEmailInput"
+                type="email"
+                value="saharat.bun@icloud.com"
+                class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2 font-mono text-xs text-alabaster focus:outline-none"
+              />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1" for="smtpHostInput">SMTP Host (เช่น smtp.gmail.com)</label>
+              <input
+                id="smtpHostInput"
+                type="text"
+                value="smtp.gmail.com"
+                placeholder="smtp.gmail.com หรือ smtp.mail.me.com"
+                class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2 font-mono text-xs text-alabaster focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label class="block text-xs text-slate-400 mb-1" for="smtpPortInput">SMTP Port &amp; TLS Mode</label>
+              <div class="flex items-center gap-2">
+                <input
+                  id="smtpPortInput"
+                  type="number"
+                  value="465"
+                  class="w-24 rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3 py-2 font-mono text-xs text-alabaster focus:outline-none"
+                />
+                <label class="flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer">
+                  <input id="smtpSecureCheck" type="checkbox" checked class="rounded bg-void text-cyan focus:ring-0" />
+                  <span>SSL/TLS (465)</span>
+                </label>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1" for="smtpUserInput">SMTP Username (Optional)</label>
+              <input
+                id="smtpUserInput"
+                type="text"
+                placeholder="เช่น e24qdy2@gmail.com"
+                class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2 font-mono text-xs text-alabaster focus:outline-none"
+              />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1" for="smtpPassInput">SMTP App Password (Optional)</label>
+              <div class="flex items-center gap-2">
+                <input
+                  id="smtpPassInput"
+                  type="password"
+                  placeholder="กรอก App Password 16 หลัก (ถ้าใช้ SMTP Auth)"
+                  class="flex-1 rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2 font-mono text-xs text-alabaster focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  class="rounded-xl bg-cyan text-void font-bold text-xs px-4 py-2 whitespace-nowrap spring-transition active:scale-[0.98]"
+                >
+                  บันทึก SMTP
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <div id="emailServiceFeedbackBox" class="hidden rounded-xl px-3.5 py-2.5 text-xs font-medium"></div>
+
+          <!-- Email Outbox & Delivery History Table -->
+          <div class="pt-2 border-t border-white/[0.06]">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-sm font-bold text-alabaster">ประวัติการส่งอีเมลแจ้งเตือน (Email Outbox &amp; Delivery Log)</h3>
+              <span class="font-mono text-[11px] text-slate-400">Spool Dir: <code class="text-cyan">data/mail-outbox/*.eml</code></span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left font-mono text-xs">
+                <thead>
+                  <tr class="border-b border-white/10 text-slate-400">
+                    <th class="py-2 pr-4">Timestamp</th>
+                    <th class="py-2 pr-4">To</th>
+                    <th class="py-2 pr-4">Subject</th>
+                    <th class="py-2 pr-4">Delivery Method</th>
+                    <th class="py-2">Spool (.eml) / Detail</th>
+                  </tr>
+                </thead>
+                <tbody id="adminEmailLogsTableBody" class="divide-y divide-white/[0.06] text-slate-300">
+                  <!-- Populated by admin.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Security & Licensing Audit Log -->
       <div class="double-bezel-shell">
         <div class="double-bezel-core p-6">
           <div class="flex items-center justify-between mb-4">
             <div>
               <h3 class="text-base font-bold text-alabaster">บันทึกประวัติความปลอดภัยและการออกรหัส (SDLC Audit Trail)</h3>
-              <p class="text-xs text-slate-400">ตรวจสอบการเข้าสู่ระบบด้วยรหัสผ่าน, การเปลี่ยนรหัสผ่านผู้ดูแล, การสร้าง Activation Key และการเปลี่ยนแปลงสถานะเครื่องย้อนหลัง</p>
+              <p class="text-xs text-slate-400">ตรวจสอบการเข้าสู่ระบบด้วยรหัสผ่าน, การเปลี่ยนรหัสผ่านผู้ดูแล, การสร้าง Activation Key, การอนุมัติคำขอลูกค้า และการเปลี่ยนแปลงสถานะเครื่องย้อนหลัง</p>
             </div>
-            <span class="font-mono text-xs text-slate-400">Owner: saharabu@scg.com</span>
+            <span class="font-mono text-xs text-slate-400">Owner: saharat.bun@icloud.com</span>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-left font-mono text-xs">

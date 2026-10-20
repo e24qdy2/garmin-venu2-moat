@@ -31,7 +31,7 @@ class Venu2MoatGlanceView extends WatchUi.GlanceView {
             }
             if (isExpired) {
                 netWorthStr = "TRIAL 14D EXPIRED";
-                dayPnlStr = "saharabu@scg.com";
+                dayPnlStr = "saharat.bun@icloud.com";
                 isPositive = false;
             } else if (cached.hasKey("tot")) {
                 var bc = cached.get("bc") as String?;

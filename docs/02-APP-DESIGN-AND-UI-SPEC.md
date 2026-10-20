@@ -76,7 +76,7 @@
           ║      └─────────────────────────────────────┘      ║
           ║            Contact App Owner (Paid):              ║ [y = 198px] Subtitle (Slate 0x94A3B8)
           ╰║     ┌─────────────────────────────────────┐     ║╯
-           ╰║    │          saharabu@scg.com           │    ║╯ [y = 230px] Owner Contact Pill (Cyan 0x06B6D4)
+           ╰║    │       saharat.bun@icloud.com        │    ║╯ [y = 230px] Owner Contact Pill (Cyan 0x06B6D4)
             ╰═╮  └─────────────────────────────────────┘  ╭═╯
               ╰══╮      Activate via Web Settings      ╭══╯   [y = 292px] Action Hint
                  ╭══╮    Press SELECT to Verify     ╭══╯      [y = 322px] Re-sync Trigger Hint (Emerald)
@@ -94,7 +94,7 @@
 | **Void Black** | `#000000` / `#050608` | `Graphics.COLOR_BLACK` | พื้นหลังหลักของหน้าปัดนาฬิกา (ปิดเม็ดพิกเซล AMOLED เพื่อประหยัดพลังงาน) |
 | **Row Surface Tray** | `#0D131C` | `0x0D131C` | พื้นหลังแถวรายการหุ้นทรงแคปซูลโค้งมน (`radius = 12px`) |
 | **Alabaster White** | `#FFFFFF` | `Graphics.COLOR_WHITE` | มูลค่าพอร์ตสุทธิ, ชื่อย่อหุ้น (`sym`), และข้อความหลักที่ต้องการความคมชัดสูงสุด |
-| **Moat Cyan** | `#06B6D4` | `0x06B6D4` | ชื่อพอร์ตโฟลิโอ, จุดบอกหน้าพอร์ตปัจจุบัน, เส้นค่าเฉลี่ย `SMA-20`, และอีเมล `saharabu@scg.com` |
+| **Moat Cyan** | `#06B6D4` | `0x06B6D4` | ชื่อพอร์ตโฟลิโอ, จุดบอกหน้าพอร์ตปัจจุบัน, เส้นค่าเฉลี่ย `SMA-20`, และอีเมลเจ้าของระบบ `saharat.bun@icloud.com` |
 | **Profit Emerald** | `#10B981` | `0x10B981` | กำไรเป็นบวก (`+P&L`), กราฟขาขึ้น, จุดแจ้งเตือน `TARGET_HIT`, และสถานะ `ACTIVE` |
 | **Loss Crimson Rose** | `#F43F5E` | `0xF43F5E` | ขาดทุนติดลบ (`-P&L`), จุดแจ้งเตือน `STOP_BREACH`, และกรอบล็อกหน้าจอ `TRIAL 14D EXPIRED` |
 | **Warning Amber** | `#F59E0B` | `0xF59E0B` | แจ้งเตือนเข้าใกล้เป้าหมาย (`NEAR_TARGET`) และป้ายแสดงรหัส `Device ID` |

@@ -20,13 +20,13 @@ class PortfolioStore {
     public var alwaysOnDisplay as Boolean = false;
     public var inDetailView as Boolean = false;
 
-    // 14-Day Trial & Per-Device Activation Key State (Owner: saharabu@scg.com)
+    // 14-Day Trial & Per-Device Activation Key State (Owner: saharat.bun@icloud.com)
     public var deviceId as String = "V2-88VENU20";
     public var activationKey as String = "";
     public var licenseStatus as String = "TRIAL";
     public var trialDaysLeft as Number = 14;
     public var trialExpired as Boolean = false;
-    public var ownerEmail as String = "saharabu@scg.com";
+    public var ownerEmail as String = "saharat.bun@icloud.com";
 
     private var _runtimeTimer as Timer.Timer?;
     private var _swipeElapsedSec as Number = 0;

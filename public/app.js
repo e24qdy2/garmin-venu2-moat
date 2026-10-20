@@ -440,7 +440,7 @@
           navBadge.className = 'hidden md:flex items-center gap-1.5 rounded-full bg-crimson/20 ring-1 ring-crimson/40 px-3 py-1 text-[11px] font-mono text-crimson spring-transition';
         }
         if (expiryText) {
-          expiryText.innerHTML = `<span class="text-crimson font-semibold">หมดเวลาทดลองใช้ 14 วันแล้ว</span> · กรุณาติดต่อเจ้าของแอปสำหรับ Paid Version ที่ <a href="mailto:${escapeHtml(lic.ownerEmail || 'saharabu@scg.com')}" class="font-mono font-bold text-amber underline">${escapeHtml(lic.ownerEmail || 'saharabu@scg.com')}</a>`;
+          expiryText.innerHTML = `<span class="text-crimson font-semibold">หมดเวลาทดลองใช้ 14 วันแล้ว</span> · กรุณาติดต่อเจ้าของแอปสำหรับ Paid Version ที่ <a href="mailto:${escapeHtml(lic.ownerEmail || 'saharat.bun@icloud.com')}" class="font-mono font-bold text-amber underline">${escapeHtml(lic.ownerEmail || 'saharat.bun@icloud.com')}</a>`;
         }
       } else {
         if (pill) {
@@ -452,7 +452,7 @@
           navBadge.className = 'hidden md:flex items-center gap-1.5 rounded-full bg-emerald/15 ring-1 ring-emerald/30 px-3 py-1 text-[11px] font-mono text-emerald spring-transition';
         }
         if (expiryText) {
-          expiryText.innerHTML = `สิทธิ์ทดลองใช้ฟรี 14 วัน (คงเหลือ <strong class="font-mono text-emerald">${lic.remainingDays} วัน</strong>) · เมื่อครบกำหนดติดต่อ Paid Version ที่ <strong class="font-mono text-amber">${escapeHtml(lic.ownerEmail || 'saharabu@scg.com')}</strong>`;
+          expiryText.innerHTML = `สิทธิ์ทดลองใช้ฟรี 14 วัน (คงเหลือ <strong class="font-mono text-emerald">${lic.remainingDays} วัน</strong>) · เมื่อครบกำหนดติดต่อ Paid Version ที่ <strong class="font-mono text-amber">${escapeHtml(lic.ownerEmail || 'saharat.bun@icloud.com')}</strong>`;
         }
       }
     }
@@ -721,7 +721,7 @@
       const expDid = el('watchExpiredDeviceId');
       if (expDid) expDid.textContent = state.license.deviceId || state.watchSettings.deviceId;
       const expEmail = el('watchExpiredOwnerEmail');
-      if (expEmail) expEmail.textContent = state.license.ownerEmail || 'saharabu@scg.com';
+      if (expEmail) expEmail.textContent = state.license.ownerEmail || 'saharat.bun@icloud.com';
       return;
     }
 
@@ -1179,7 +1179,7 @@
         });
         const data = await res.json();
         if (!res.ok || !data.ok) {
-          showToast(data.error || 'รหัส Activate ไม่ถูกต้อง กรุณาติดต่อ saharabu@scg.com');
+          showToast(data.error || 'รหัส Activate ไม่ถูกต้อง กรุณาติดต่อ saharat.bun@icloud.com');
           return;
         }
         if (data.payload) {
@@ -1191,6 +1191,133 @@
         showToast(data.message || `Activate เครื่อง ${devId} สำเร็จ!`);
       });
     }
+
+    // Customer Self-Service: Request Trial Key Extend & Purchase License Form Modal
+    function setLicenseRequestTypeUI(reqType) {
+      const normalized = reqType === 'TRIAL_EXTEND' ? 'TRIAL_EXTEND' : 'PURCHASE_LICENSE';
+      const typeInput = el('requestTypeInput');
+      if (typeInput) typeInput.value = normalized;
+
+      const purchaseBtn = el('reqTypePurchaseBtn');
+      const trialBtn = el('reqTypeTrialExtendBtn');
+      const extendDaysWrap = el('requestExtendDaysWrapper');
+      const titleEl = el('licenseRequestModalTitle');
+      const msgInput = el('requestMessageInput');
+
+      if (normalized === 'TRIAL_EXTEND') {
+        if (trialBtn) {
+          trialBtn.className = 'req-type-btn rounded-xl bg-amber/20 ring-1 ring-amber/50 px-3 py-2.5 text-xs font-bold text-amber flex items-center justify-center gap-1.5 spring-transition';
+        }
+        if (purchaseBtn) {
+          purchaseBtn.className = 'req-type-btn rounded-xl bg-white/[0.04] ring-1 ring-white/10 px-3 py-2.5 text-xs font-semibold text-slate-300 flex items-center justify-center gap-1.5 spring-transition';
+        }
+        if (extendDaysWrap) extendDaysWrap.classList.remove('opacity-40');
+        if (titleEl) titleEl.textContent = 'ขอต่ออายุสิทธิ์ทดลองใช้ฟรี (Request Trial Key Extend)';
+        if (msgInput && !msgInput.value.trim()) {
+          msgInput.placeholder = 'ระบุเหตุผลหรือความประสงค์ในการขอต่ออายุทดลองใช้ (Trial Key Extend) เพื่อให้ผู้ดูแลระบบพิจารณาอนุมัติ...';
+        }
+      } else {
+        if (purchaseBtn) {
+          purchaseBtn.className = 'req-type-btn rounded-xl bg-cyan/20 ring-1 ring-cyan/50 px-3 py-2.5 text-xs font-bold text-cyan flex items-center justify-center gap-1.5 spring-transition';
+        }
+        if (trialBtn) {
+          trialBtn.className = 'req-type-btn rounded-xl bg-white/[0.04] ring-1 ring-white/10 px-3 py-2.5 text-xs font-semibold text-slate-300 flex items-center justify-center gap-1.5 spring-transition';
+        }
+        if (extendDaysWrap) extendDaysWrap.classList.add('opacity-40');
+        if (titleEl) titleEl.textContent = 'แบบฟอร์มขอซื้อ License ถาวร (Purchase Request Form)';
+        if (msgInput && !msgInput.value.trim()) {
+          msgInput.placeholder = 'ระบุความประสงค์ต้องการซื้อรหัส Activate ถาวร (PRO Lifetime) และช่วงเวลาที่สะดวกให้ติดต่อกลับ...';
+        }
+      }
+    }
+
+    function openLicenseRequestModal(reqType = 'PURCHASE_LICENSE') {
+      const modal = el('licenseRequestModal');
+      if (!modal) return;
+      const devId = (el('watchDeviceIdInput')?.value || state.watchSettings.deviceId || 'V2-88VENU20').trim().toUpperCase();
+      if (el('requestDeviceIdInput')) el('requestDeviceIdInput').value = devId;
+      if (el('requestSyncKeyInput')) el('requestSyncKeyInput').value = state.syncKey || 'VENU2-88';
+      const fb = el('licenseRequestFeedbackBox');
+      if (fb) fb.classList.add('hidden');
+      setLicenseRequestTypeUI(reqType);
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeLicenseRequestModal() {
+      const modal = el('licenseRequestModal');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    el('openTrialExtendModalBtn')?.addEventListener('click', () => openLicenseRequestModal('TRIAL_EXTEND'));
+    el('openPurchaseFormModalBtn')?.addEventListener('click', () => openLicenseRequestModal('PURCHASE_LICENSE'));
+    el('watchExpiredOpenRequestBtn')?.addEventListener('click', () => openLicenseRequestModal('PURCHASE_LICENSE'));
+    el('closeLicenseRequestModalBtn')?.addEventListener('click', closeLicenseRequestModal);
+    el('cancelLicenseRequestModalBtn')?.addEventListener('click', closeLicenseRequestModal);
+
+    el('reqTypePurchaseBtn')?.addEventListener('click', () => setLicenseRequestTypeUI('PURCHASE_LICENSE'));
+    el('reqTypeTrialExtendBtn')?.addEventListener('click', () => setLicenseRequestTypeUI('TRIAL_EXTEND'));
+
+    el('licenseRequestForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const requestType = el('requestTypeInput')?.value || 'PURCHASE_LICENSE';
+      const deviceId = (el('requestDeviceIdInput')?.value || state.watchSettings.deviceId || 'V2-88VENU20').trim().toUpperCase();
+      const syncKey = (el('requestSyncKeyInput')?.value || state.syncKey || 'VENU2-88').trim().toUpperCase();
+      const requestedExtendDays = Number(el('requestExtendDaysSelect')?.value || 14);
+      const contactName = (el('requestContactNameInput')?.value || '').trim();
+      const contactEmail = (el('requestContactEmailInput')?.value || '').trim();
+      const contactPhone = (el('requestContactPhoneInput')?.value || '').trim();
+      const message = (el('requestMessageInput')?.value || '').trim();
+      const fb = el('licenseRequestFeedbackBox');
+      const submitBtn = el('submitLicenseRequestBtn');
+
+      if (!contactName || !contactEmail || !contactPhone) {
+        if (fb) {
+          fb.textContent = 'กรุณากรอกชื่อผู้ติดต่อ, อีเมล และเบอร์โทร/LINE ID ให้ครบถ้วน';
+          fb.className = 'rounded-xl bg-crimson/15 ring-1 ring-crimson/35 px-3.5 py-2.5 text-xs text-crimson font-medium';
+        }
+        return;
+      }
+
+      if (submitBtn) submitBtn.disabled = true;
+      try {
+        const res = await fetch('/api/license/request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            requestType,
+            deviceId,
+            syncKey,
+            requestedExtendDays,
+            contactName,
+            contactEmail,
+            contactPhone,
+            message
+          })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+          const errMsg = data.error || 'ไม่สามารถส่งคำขอได้ กรุณาลองอีกครั้ง';
+          if (fb) {
+            fb.textContent = errMsg;
+            fb.className = 'rounded-xl bg-crimson/15 ring-1 ring-crimson/35 px-3.5 py-2.5 text-xs text-crimson font-medium';
+          }
+          showToast(errMsg);
+          return;
+        }
+
+        const successMsg = data.message || `ส่งคำขอ (${data.request?.id || 'REQ'}) สำเร็จ และแจ้งเตือนไปที่ e24qdy2@gmail.com แล้ว`;
+        if (fb) {
+          fb.innerHTML = `✓ <strong>${escapeHtml(successMsg)}</strong><br/><span class="text-[11px] font-mono">Request ID: ${escapeHtml(data.request?.id || '')} · Email Delivery: ${escapeHtml(data.emailDelivery?.deliveryMethod || 'QUEUED')}</span>`;
+          fb.className = 'rounded-xl bg-emerald/15 ring-1 ring-emerald/35 px-3.5 py-2.5 text-xs text-emerald font-medium';
+        }
+        showToast(successMsg);
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    });
 
     // Portfolio Management (Create / Rename / Delete)
     el('addPortfolioBtn').addEventListener('click', async () => {

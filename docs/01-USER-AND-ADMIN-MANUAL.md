@@ -1,6 +1,6 @@
 # คู่มือการใช้งานระบบ Venu2Moat อย่างละเอียด (User, Watch & Admin Manual)
 
-เอกสารฉบับนี้เป็นคู่มือการใช้งานฉบับสมบูรณ์สำหรับระบบ **Venu2Moat v2.0** ครอบคลุมทั้งฝั่งผู้ใช้งานบนนาฬิกา **Garmin Venu 2**, หน้าเว็บ **Web Companion (`https://moat.readybyte.top`)**, และหน้าผู้ดูแลระบบ **Admin Licensing Portal (`https://admin-moat.readybyte.top`)**
+เอกสารฉบับนี้เป็นคู่มือการใช้งานฉบับสมบูรณ์สำหรับระบบ **Venu2Moat v2.1** ครอบคลุมทั้งฝั่งผู้ใช้งานบนนาฬิกา **Garmin Venu 2**, หน้าเว็บ **Web Companion (`https://moat.readybyte.top`)**, ฟอร์มขอต่ออายุและสั่งซื้อคีย์ (**Request Trial Key Extend & Purchase Request Form**), ระบบแจ้งเตือนทางอีเมลไปยัง **`e24qdy2@gmail.com`**, และหน้าผู้ดูแลระบบ **Admin Licensing Portal (`https://admin-moat.readybyte.top`)** ของเจ้าของระบบ (**`saharat.bun@icloud.com`**)
 
 ---
 
@@ -10,8 +10,8 @@
 3. [คู่มือการใช้งานแอปบนนาฬิกา Garmin Venu 2](#3-คู่มือการใช้งานแอปบนนาฬิกา-garmin-venu-2)
 4. [คู่มือการตั้งค่า Auto-Swipe & Always-On Screen ผ่านเว็บ](#4-คู่มือการตั้งค่า-auto-swipe--always-on-screen-ผ่านเว็บ)
 5. [คู่มือการจัดการพอร์ตหุ้น, ราคาเป้าหมาย (Alert) และ WebMemo](#5-คู่มือการจัดการพอร์ตหุ้น-ราคาเป้าหมาย-alert-และ-webmemo)
-6. [คู่มือระบบ Trial 14 วัน และการปลดล็อก Paid Version (`saharabu@scg.com`)](#6-คู่มือระบบ-trial-14-วัน-และการปลดล็อก-paid-version-saharabuscgcom)
-7. [คู่มือผู้ดูแลระบบ Admin Licensing Portal (`https://admin-moat.readybyte.top`)](#7-คู่มือผู้ดูแลระบบ-admin-licensing-portal-httpsadmin-moatreadybytetop)
+6. [คู่มือระบบ Trial 14 วัน, การกดขอต่ออายุ Trial, ฟอร์มสั่งซื้อ License และการปลดล็อก Paid Version (`saharat.bun@icloud.com`)](#6-คู่มือระบบ-trial-14-วัน-การกดขอต่ออายุ-trial-ฟอร์มสั่งซื้อ-license-และการปลดล็อก-paid-version-saharatbunicloudcom)
+7. [คู่มือผู้ดูแลระบบ Admin Licensing Portal & ระบบอีเมลแจ้งเตือน (`https://admin-moat.readybyte.top`)](#7-คู่มือผู้ดูแลระบบ-admin-licensing-portal--ระบบอีเมลแจ้งเตือน-httpsadmin-moatreadybytetop)
 
 ---
 
@@ -19,8 +19,8 @@
 
 | ระบบ | URL / ช่องทางเข้าถึง | รายละเอียดหน้าที่ |
 | :--- | :--- | :--- |
-| **Web Companion App** | [`https://moat.readybyte.top`](https://moat.readybyte.top) | จัดการพอร์ตหุ้น, จดบันทึก WebMemo, ตั้งค่า Auto-Swipe / Always-On, จำลองหน้าจอนาฬิกา 416×416 และกรอกคีย์ปลดล็อกเครื่อง |
-| **Admin Licensing Portal** | [`https://admin-moat.readybyte.top`](https://admin-moat.readybyte.top) | ระบบหลังบ้านเฉพาะเจ้าของแอป (`saharabu@scg.com`) สำหรับสร้าง Activation Key ราย `Device ID` และจัดการสถานะ Trial 14 วัน |
+| **Web Companion App** | [`https://moat.readybyte.top`](https://moat.readybyte.top) | จัดการพอร์ตหุ้น, จดบันทึก WebMemo, ตั้งค่า Auto-Swipe / Always-On, จำลองหน้าจอนาฬิกา 416×416, กรอกคีย์ปลดล็อกเครื่อง, กด **Request Trial Key Extend** และกรอก **Purchase Request Form** |
+| **Admin Licensing Portal** | [`https://admin-moat.readybyte.top`](https://admin-moat.readybyte.top) | ระบบหลังบ้านเฉพาะเจ้าของระบบ (`saharat.bun@icloud.com`) สำหรับอนุมัติคำขอต่ออายุ/ซื้อคีย์ใน 1 คลิก, สร้าง Activation Key ราย `Device ID`, และตั้งค่า SMTP ส่งเมลแจ้งเตือนไปที่ `e24qdy2@gmail.com` |
 | **Garmin Watch API** | `https://moat.readybyte.top/api/watch?key=VENU2-88` | Endpoint JSON ขนาดกะทัดรัด (`<12KB`) ที่นาฬิกา Garmin Venu 2 ดึงผ่าน Bluetooth / Wi-Fi |
 | **Garmin Binary (`.prg`)** | `dist/Venu2Moat.prg` | ไฟล์แอปพลิเคชัน Connect IQ สำหรับติดตั้งลงใน `Internal Storage\GARMIN\APPS\` ของนาฬิกา |
 
@@ -109,7 +109,7 @@ flowchart LR
 
 ---
 
-## 6. คู่มือระบบ Trial 14 วัน และการปลดล็อก Paid Version (`saharabu@scg.com`)
+## 6. คู่มือระบบ Trial 14 วัน, การกดขอต่ออายุ Trial, ฟอร์มสั่งซื้อ License และการปลดล็อก Paid Version (`saharat.bun@icloud.com`)
 
 ```mermaid
 flowchart TD
@@ -118,53 +118,80 @@ flowchart TD
     StartTrial --> CheckExp{"ครบกำหนด 14 วันหรือยัง?"}
     CheckExp -- "ยังไม่ครบ (เหลือ 1..14 วัน)" --> Unlocked["ใช้งานดูพอร์ตหุ้นและ Auto-Swipe ได้เต็มรูปแบบ"]
     CheckExp -- "ครบ 14 วันแล้ว และยังไม่ได้ใส่คีย์" --> Locked["ล็อกหน้าจอนาฬิกา: TRIAL 14D EXPIRED"]
-    Locked --> Contact["หน้าจอแสดง Device ID และอีเมลติดต่อเจ้าของแอป: saharabu@scg.com"]
-    Contact --> ReceiveKey["ผู้ใช้งานได้รับรหัส MOAT-XXXX-XXXX-XXXX เฉพาะเครื่อง"]
-    ReceiveKey --> Activate["กรอกรหัสผ่านหน้าเว็บ moat.readybyte.top แล้วกด Activate"]
-    Activate --> Pro["ปลดล็อกถาวร (สถานะ PRO / ACTIVE)"]
+    Locked --> Contact["หน้าจอแสดง Device ID และอีเมลติดต่อเจ้าของแอป: saharat.bun@icloud.com"]
+    Contact --> RequestForm["ลูกค้ากด Request Trial Key Extend หรือกรอก Purchase Request Form บนเว็บ"]
+    RequestForm --> MailNotify["ระบบบันทึกเข้า Admin Approval Queue + ส่งเมลแจ้งเตือนไปที่ e24qdy2@gmail.com"]
+    MailNotify --> AdminApprove["แอดมินกด Approve (+7d / +14d / PRO) หรือส่งรหัส MOAT-XXXX-XXXX-XXXX ให้ลูกค้า"]
+    AdminApprove --> Pro["ปลดล็อกใช้งานต่อได้ทันทีบนนาฬิกาและหน้าเว็บ"]
 ```
 
-### เมื่อครบกำหนดทดลองใช้ 14 วัน (`TRIAL 14D EXPIRED`)
+### 6.1 เมื่อครบกำหนดทดลองใช้ 14 วัน (`TRIAL 14D EXPIRED`)
 - หน้าจอนาฬิกาและตัวจำลองบนเว็บจะเปลี่ยนเป็นหน้าจอล็อกสีแดงเข้ม แสดงข้อความ:
   - **`TRIAL 14D EXPIRED — Activation Required`**
   - **`ID: V2-XXXXXXXX`** (รหัสประจำเครื่องนาฬิกาของคุณ)
-  - **`Contact App Owner (Paid): saharabu@scg.com`**
-- **วิธีปลดล็อกใช้งานถาวร:**
-  1. แจ้งรหัส **`Device ID`** ที่แสดงบนหน้าจอนาฬิกาไปยังเจ้าของแอปที่อีเมล **`saharabu@scg.com`**
-  2. เมื่อได้รับรหัส **Activation Key** (รูปแบบ `MOAT-XXXX-XXXX-XXXX` ซึ่งผูกเฉพาะกับ `Device ID` ของคุณเท่านั้น)
-  3. เปิดเว็บ [`https://moat.readybyte.top`](https://moat.readybyte.top) -> ไปที่ช่อง **Activation Key** ด้านซ้าย -> วางรหัสคีย์แล้วกดปุ่ม **Activate**
-  4. บนนาฬิกา กดปุ่มขวาบน (**SELECT**) เพื่อซิงค์สถานะ หน้าจอล็อกจะปลดล็อกทันทีและแสดงสถานะ **`PRO`**
+  - **`Contact App Owner (Paid): saharat.bun@icloud.com`**
+
+### 6.2 วิธีกดขอต่ออายุทดลองใช้ (`Request Trial Key Extend`) หรือกรอกฟอร์มสั่งซื้อ (`Purchase Request Form`)
+บนหน้าเว็บ [`https://moat.readybyte.top`](https://moat.readybyte.top) ในส่วน **Per-Device License Activation** ด้านซ้ายมือ (หรือปุ่มบนหน้าจอจำลองเมื่อหมดอายุ):
+1. กดปุ่ม **"+ Request Trial Key Extend"** (ขอต่ออายุทดลองใช้) หรือปุ่ม **"Purchase Request Form"** (แจ้งความประสงค์ซื้อคีย์ถาวร)
+2. หน้าต่างแบบฟอร์มจะดึง **`Device ID`** และ **`Sync Key`** ของคุณมาใส่อัตโนมัติ
+3. เลือกประเภทคำขอ:
+   - **Request Trial Key Extend** (ระบุจำนวนวันที่ต้องการขอต่ออายุเพิ่ม เช่น `+7 วัน` หรือ `+14 วัน`)
+   - **Purchase License (PRO)** (แจ้งความประสงค์ต้องการซื้อคีย์ถาวรเพื่อให้เจ้าของระบบติดต่อกลับ)
+4. กรอกชื่อผู้ติดต่อ (`Contact Name`), อีเมล (`Email`), เบอร์โทรศัพท์ / LINE ID (`Phone / LINE ID`), และข้อความเพิ่มเติม แล้วกดปุ่ม **Submit Request**
+5. ระบบจะส่งคำขอเข้าสู่คิวอนุมัติของผู้ดูแลระบบ (`saharat.bun@icloud.com`) และส่งอีเมลแจ้งเตือนไปยัง **`e24qdy2@gmail.com`** ทันที
+
+### 6.3 วิธีกรอกรหัส Activation Key ด้วยตนเอง
+หากได้รับรหัส **Activation Key** (รูปแบบ `MOAT-XXXX-XXXX-XXXX` ซึ่งผูกเฉพาะกับ `Device ID` ของคุณเท่านั้น):
+1. เปิดเว็บ [`https://moat.readybyte.top`](https://moat.readybyte.top) -> ไปที่ช่อง **Activation Key** ด้านซ้าย -> วางรหัสคีย์แล้วกดปุ่ม **Activate**
+2. บนนาฬิกา กดปุ่มขวาบน (**SELECT**) เพื่อซิงค์สถานะ หน้าจอล็อกจะปลดล็อกทันทีและแสดงสถานะ **`PRO`**
 
 ---
 
-## 7. คู่มือผู้ดูแลระบบ Admin Licensing Portal (`https://admin-moat.readybyte.top`)
+## 7. คู่มือผู้ดูแลระบบ Admin Licensing Portal & ระบบอีเมลแจ้งเตือน (`https://admin-moat.readybyte.top`)
 
-หน้า Admin Portal แยกเป็น Subdomain เฉพาะที่ [`https://admin-moat.readybyte.top`](https://admin-moat.readybyte.top) สำหรับเจ้าของระบบ (**`saharabu@scg.com`**) เท่านั้น
+หน้า Admin Portal แยกเป็น Subdomain เฉพาะที่ [`https://admin-moat.readybyte.top`](https://admin-moat.readybyte.top) สำหรับเจ้าของระบบ (**`saharat.bun@icloud.com`**) เท่านั้น
 
 ### 7.1 การเข้าสู่ระบบด้วยรหัสผ่านผู้ดูแลระบบ (Admin Password Login) และการเปลี่ยนรหัสผ่านใหม่ (Change Admin Password)
 1. เปิด [`https://admin-moat.readybyte.top`](https://admin-moat.readybyte.top)
 2. ในหน้า **เข้าสู่ระบบผู้ดูแล (Admin Login)**:
-   - อีเมลผู้ดูแลระบบ: **`saharabu@scg.com`**
-   - กรอก **รหัสผ่านผู้ดูแลระบบ (Admin Password)** (รหัสผ่านเริ่มต้นคือ **`SCG-888888`** หากยังไม่เคยเปลี่ยน) แล้วกดปุ่ม **เข้าสู่ระบบจัดการ (Sign In with Password)**
+   - อีเมลผู้ดูแลระบบ: **`saharat.bun@icloud.com`**
+   - กรอก **รหัสผ่านผู้ดูแลระบบ (Admin Password)** (รหัสผ่านเริ่มต้นคือ **`MOAT-888888`** หากยังไม่เคยเปลี่ยน) แล้วกดปุ่ม **เข้าสู่ระบบจัดการ (Sign In with Password)**
 3. **การเปลี่ยนรหัสผ่านผู้ดูแลระบบ (Change Admin Password พร้อมยืนยันรหัสเดิม):**
-   - หลังจากเข้าสู่ระบบแล้ว กดปุ่ม **"เปลี่ยนรหัสผ่าน Admin"** ที่มุมขวาบน หรือเลื่อนไปที่การ์ด **"เปลี่ยนรหัสผ่านผู้ดูแลระบบ (Change Password)"** ทางด้านซ้ายล่าง
+   - หลังจากเข้าสู่ระบบแล้ว กดปุ่ม **"เปลี่ยนรหัสผ่าน Admin"** ที่มุมขวาบน หรือเลื่อนไปที่การ์ด **"เปลี่ยนรหัสผ่านผู้ดูแลระบบ (Change Password)"** ทางด้านซ้าย
    - กรอกข้อมูลให้ครบทั้ง 3 ช่อง:
      1. **รหัสผ่านเดิม (Current Password):** กรอกรหัสผ่านปัจจุบันเพื่อยืนยันตัวตน (หากกรอกรหัสผ่านเดิมไม่ถูกต้อง ระบบจะปฏิเสธการเปลี่ยนรหัสผ่านทันที)
      2. **รหัสผ่านใหม่ (New Password):** ตั้งรหัสผ่านใหม่อย่างน้อย 6 ตัวอักษร (ต้องไม่ซ้ำกับรหัสผ่านเดิม)
      3. **ยืนยันรหัสผ่านใหม่ (Confirm New Password):** กรอกรหัสผ่านใหม่อีกครั้งให้ตรงกัน
    - กดปุ่ม **"ยืนยันรหัสเดิมและเปลี่ยนรหัสผ่านใหม่"** ระบบจะเข้ารหัสรหัสผ่านใหม่ด้วย `crypto.scryptSync` พร้อม Salt ใหม่และบันทึกลง Audit Trail ทันที
 
-### 7.2 การออกรหัส Activation Key รายเครื่อง (`Per-Device Key Generator`)
-1. ในส่วน **Generate Activation Key by Device ID**:
-   - กรอก **`Device ID`** ของลูกค้า (เช่น `V2-88VENU20`)
-   - กรอกชื่อกำกับเครื่อง / ชื่อลูกค้าในช่อง **Customer Label / Note**
-   - เลือกได้ว่าจะสร้างเฉพาะรหัสคีย์เพื่อส่งให้ลูกค้ากรอกเอง (**Generate Key**) หรือสั่งปลดล็อกเครื่องให้ลูกค้าทันทีจากฝั่งแอดมิน (**Generate & Auto-Activate**)
-2. ระบบใช้ฟังก์ชันการเข้ารหัส `HMAC-SHA256(deviceId, secret)` สร้างรหัสรูปแบบ `MOAT-XXXX-XXXX-XXXX` ที่ผูกกับ `Device ID` นั้นโดยเฉพาะ (ไม่สามารถนำคีย์ของเครื่องหนึ่งไปใช้กับอีกเครื่องได้)
+### 7.2 การอนุมัติคำขอต่ออายุ Trial & คำขอสั่งซื้อ License (`Customer Requests Queue`)
+ในส่วน **คิวคำขอต่ออายุ Trial & สั่งซื้อ License (Customer Requests Queue)** ด้านขวาบน:
+- เมื่อลูกค้าส่งคำขอ **Trial Extend** หรือ **Purchase License** จากหน้าเว็บ รายการจะปรากฏพร้อมข้อมูลติดต่อ (`ชื่อ`, `อีเมล`, `เบอร์โทร / LINE`, `Device ID`, `ข้อความความประสงค์`) และมีรหัส `Activation Key` เฉพาะเครื่องแสดงให้พร้อมคัดลอก
+- แอดมินสามารถกดปุ่มจัดการได้ในคลิกเดียว:
+  - **`✓ Approve & Activate PRO`**: อนุมัติและปลดล็อกเครื่องเป็นสถานะ `ACTIVE (Paid PRO)` ให้ลูกค้าทันที
+  - **`+ Approve Extend +14d`**: อนุมัติต่อเวลาทดลองใช้เพิ่มให้อีก 14 วันทันที
+  - **`+ Approve Extend +7d`**: อนุมัติต่อเวลาทดลองใช้เพิ่มให้อีก 7 วันทันที
+  - **`✕ Reject`**: ปฏิเสธคำขอ
 
-### 7.3 เครื่องมือบริหารจัดการสถานะเครื่องและทดสอบ SDLC
-ในตาราง **Registered Garmin Venu 2 Devices** แอดมินสามารถกดปุ่มควบคุมรายเครื่องได้ทันที:
-- **`Copy Key`**: คัดลอก Activation Key ของเครื่องนั้นส่งให้ลูกค้า
-- **`Activate`**: ปลดล็อกเครื่องเป็นสถานะ `ACTIVE (Paid)` ทันที
-- **`Expire 14d`**: บังคับให้สิทธิ์ทดลองใช้หมดอายุทันที (ใช้ทดสอบหน้าจอล็อก `TRIAL 14D EXPIRED` บนนาฬิกา)
-- **`+14d`**: ต่ออายุเวลาทดลองใช้เพิ่มให้อีก 14 วัน
-- **`Reset 14d`**: รีเซ็ตเวลานับถอยหลัง Trial 14 วันใหม่ตั้งแต่ต้น
+### 7.3 การตั้งค่าบริการอีเมล SMTP / System Mail (ส่งแจ้งเตือนไปยัง `e24qdy2@gmail.com`)
+ในการ์ด **ตั้งค่า SMTP / System Mail (ส่งแจ้งเตือนไปที่ `e24qdy2@gmail.com`)** ทางด้านซ้ายล่าง:
+1. ระบบตั้งค่าปลายทางรับอีเมลแจ้งเตือนทุกคำขอไว้ที่ **`e24qdy2@gmail.com`**
+2. สามารถตั้งค่าเซิร์ฟเวอร์ SMTP ได้โดยตรงผ่านหน้าเว็บ Admin:
+   - **SMTP Host**: เช่น `smtp.gmail.com` หรือ `smtp.mail.me.com`
+   - **SMTP Port**: `465` (Implicit TLS) หรือ `587` (STARTTLS)
+   - **SMTP Username**: อีเมลผู้ส่ง (เช่น `e24qdy2@gmail.com` หรือ `saharat.bun@icloud.com`)
+   - **SMTP App Password**: รหัสผ่านแอป 16 หลักของ Gmail / iCloud
+3. กดปุ่ม **"บันทึกตั้งค่า SMTP"** เพื่อบันทึก หรือกดปุ่ม **"ทดสอบส่งเมลไป `e24qdy2@gmail.com`"** เพื่อทดสอบส่งอีเมลทันที
+4. หากยังไม่ได้ใส่รหัส SMTP App Password ระบบจะใช้โหมด **Direct MX System Mail (`gmail-smtp-in.l.google.com:25`) + บันทึกไฟล์อีเมล `.eml` ลงใน `data/mail-outbox/`** พร้อมแสดงประวัติการส่งเมลทุกฉบับในตาราง **Email Notification Outbox Log** ด้านล่างของหน้า Admin
+
+### 7.4 การออกรหัส Activation Key รายเครื่อง (`Per-Device Key Generator`) และควบคุมสถานะเครื่อง
+1. ในส่วน **Generate Activation Key by Device ID**:
+   - กรอก **`Device ID`** ของลูกค้า (เช่น `V2-88VENU20`) และชื่อลูกค้า
+   - เลือก **Generate Key** หรือ **Generate & Auto-Activate**
+2. ในตาราง **Registered Garmin Venu 2 Devices** แอดมินสามารถกดปุ่มควบคุมรายเครื่องได้ทันที:
+   - **`Copy Key`**: คัดลอก Activation Key (`MOAT-XXXX-XXXX-XXXX`) ของเครื่องนั้นส่งให้ลูกค้า
+   - **`Activate`**: ปลดล็อกเครื่องเป็นสถานะ `ACTIVE (Paid)` ทันที
+   - **`Expire 14d`**: บังคับให้สิทธิ์ทดลองใช้หมดอายุทันที (ใช้ทดสอบหน้าจอล็อก `TRIAL 14D EXPIRED` บนนาฬิกา)
+   - **`+14d`**: ต่ออายุเวลาทดลองใช้เพิ่มให้อีก 14 วัน
+   - **`Reset 14d`**: รีเซ็ตเวลานับถอยหลัง Trial 14 วันใหม่ตั้งแต่ต้น

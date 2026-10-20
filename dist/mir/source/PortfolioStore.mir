@@ -68,7 +68,7 @@ class PortfolioStore {
     var trialExpired as Boolean = false;
     [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 29; @position = 15; @symbol_vardef = [ownerEmail,29,15,25]; @symbol_type<0> = [String,29,29,35]; ]
     public
-    var ownerEmail as String = "saharabu@scg.com";
+    var ownerEmail as String = "saharat.bun@icloud.com";
     [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\PortfolioStore.mc"; @line = 31; @position = 16; @symbol_vardef = [_runtimeTimer,31,16,29]; @symbol_type<0> = [Timer,31,33,38]; @symbol_type<1> = [Timer,31,39,44]; ]
     private
     var _runtimeTimer as Timer.Timer or Null;
