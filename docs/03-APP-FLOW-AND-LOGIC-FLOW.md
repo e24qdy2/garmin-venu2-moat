@@ -139,39 +139,44 @@ stateDiagram-v2
 
 ---
 
-## 5. Logic Flow: ระบบยืนยันตัวตนหน้า Admin Portal (`https://admin-moat.readybyte.top`)
+## 5. Logic Flow: ระบบยืนยันตัวตนด้วย Admin Password และการเปลี่ยนรหัสผ่าน (`https://admin-moat.readybyte.top`)
 
-หน้า Admin Portal รองรับการยืนยันตัวตน 2 ชั้น (Dual-Mode Authentication) สำหรับเจ้าของระบบ **`saharabu@scg.com`**:
+หน้า Admin Portal ใช้การยืนยันตัวตนด้วย **Admin Password (เข้ารหัสด้วย `scrypt` + Random Salt)** สำหรับเจ้าของระบบ **`saharabu@scg.com`** และอนุญาตให้เปลี่ยนรหัสผ่านใหม่หลังล็อกอินโดยบังคับตรวจสอบรหัสผ่านเดิม (`Current Password`) ก่อนทุกครั้ง:
 
 ```mermaid
 sequenceDiagram
     autonumber
     actor Admin as แอดมิน (saharabu@scg.com)
-    participant CF as Cloudflare Zero Trust Edge
     participant UI as admin.html / admin.js
     participant Server as server.js (/api/admin/*)
-    participant Lic as LicenseManager
+    participant Lic as LicenseManager (Scrypt Hash)
 
-    Admin->>CF: เข้า https://admin-moat.readybyte.top
-    CF->>Server: ส่งคำขอพร้อม Header (ถ้าผ่าน Cloudflare Access Policy)
+    Admin->>UI: เปิด https://admin-moat.readybyte.top
     UI->>Server: GET /api/admin/session
-    alt มี Header Cf-Access-Authenticated-User-Email: saharabu@scg.com
-        Server->>Lic: verifyAdminRequest(req)
-        Lic-->>UI: { authenticated: true, authMethod: "CLOUDFLARE_ACCESS_OTP" }
-        UI->>Admin: เปิดหน้า Dashboard บริหารจัดการคีย์ทันที
-    else เข้าผ่านเบราว์เซอร์ทั่วไป (Admin OTP Gate)
-        Lic-->>UI: { authenticated: false }
-        UI->>Admin: แสดงหน้าล็อกอิน Cloudflare OTP / Admin Passkey Gate
-        Admin->>UI: กรอก saharabu@scg.com แล้วกด Request 6-Digit OTP
-        UI->>Server: POST /api/admin/auth/request-otp
-        Server->>Lic: สร้างรหัส OTP 6 หลัก (อายุ 10 นาที) + บันทึก Audit Log
-        Lic-->>UI: ส่งรหัส OTP 6 หลัก
-        Admin->>UI: กรอกรหัส OTP 6 หลัก -> กด Verify & Sign In
-        UI->>Server: POST /api/admin/auth/verify-otp
-        Server->>Lic: ตรวจสอบ OTP และสร้าง Session Token (อายุ 12 ชม.)
-        Lic-->>UI: { ok: true, token: "..." }
-        UI->>Server: GET /api/admin/devices (แนบ X-Admin-Token)
+    Server-->>UI: { authenticated: false, isDefaultPassword: true }
+    Admin->>UI: กรอก Admin Password แล้วกด Sign In with Password
+    UI->>Server: POST /api/admin/auth/login { email, password }
+    Server->>Lic: loginAdminWithPassword(email, password)
+    Lic->>Lic: ตรวจสอบ timingSafeEqual(scrypt(password, salt), storedHash)
+    alt รหัสผ่านไม่ถูกต้อง
+        Lic-->>UI: HTTP 401 { ok: false, error: "รหัสผ่านผู้ดูแลระบบไม่ถูกต้อง" }
+    else รหัสผ่านถูกต้อง
+        Lic-->>UI: HTTP 200 { ok: true, token: "...", authMethod: "ADMIN_PASSWORD" }
+        UI->>Server: GET /api/admin/devices (แนบ Bearer Token)
         Server-->>UI: คืนค่ารายการเครื่องทั้งหมด + Audit Logs
+    end
+
+    Note over Admin,Lic: ขั้นตอนการเปลี่ยนรหัสผ่าน (Change Admin Password พร้อมยืนยันรหัสเดิม)
+    Admin->>UI: กรอก 1) รหัสผ่านเดิม 2) รหัสผ่านใหม่ 3) ยืนยันรหัสผ่านใหม่
+    UI->>Server: POST /api/admin/auth/change-password (แนบ Bearer Token)
+    Server->>Lic: changeAdminPassword(email, currentPassword, newPassword, confirmPassword)
+    Lic->>Lic: 1. ตรวจสอบ currentPassword กับ Stored Hash ปัจจุบัน
+    alt รหัสผ่านเดิมไม่ถูกต้อง หรือ รหัสใหม่ไม่ตรงกัน
+        Lic-->>UI: HTTP 400 { ok: false, error: "รหัสผ่านเดิมไม่ถูกต้อง..." }
+    else ยืนยันรหัสเดิมถูกต้อง
+        Lic->>Lic: 2. สร้าง Salt ใหม่ + คำนวณ scrypt(newPassword, newSalt)
+        Lic->>Lic: 3. บันทึกลง data/licenses.json และเพิ่ม ADMIN_PASSWORD_CHANGED ใน Audit Log
+        Lic-->>UI: HTTP 200 { ok: true, message: "เปลี่ยนรหัสผ่านผู้ดูแลระบบเรียบร้อยแล้ว" }
     end
 ```
 

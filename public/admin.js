@@ -1,4 +1,4 @@
-/* Venu2Moat Admin Portal — Cloudflare Access OTP & Per-Device Activation Key Manager */
+/* Venu2Moat Admin Portal — Admin Password Login, Change Password (with Current Password Verification) & Per-Device Activation Key Manager */
 
 (() => {
   const state = {
@@ -6,6 +6,8 @@
     authenticated: false,
     adminEmail: "saharabu@scg.com",
     authMethod: "",
+    passwordUpdatedAt: "",
+    isDefaultPassword: true,
     summary: null,
     devices: [],
     auditLogs: [],
@@ -47,10 +49,13 @@
   async function checkSessionAndLoad() {
     const res = await fetch("/api/admin/session", { headers: authHeaders() });
     const data = await res.json();
+    state.isDefaultPassword = Boolean(data.isDefaultPassword);
+    state.passwordUpdatedAt = data.passwordUpdatedAt || "";
+
     if (data.authenticated) {
       state.authenticated = true;
       state.adminEmail = data.email || "saharabu@scg.com";
-      state.authMethod = data.authMethod || "OTP";
+      state.authMethod = data.authMethod || "ADMIN_PASSWORD";
       await fetchDevicesData();
     } else {
       state.authenticated = false;
@@ -70,6 +75,10 @@
     state.summary = data.summary || {};
     state.devices = data.devices || [];
     state.auditLogs = data.auditLogs || [];
+    if (data.admin) {
+      state.isDefaultPassword = Boolean(data.admin.isDefaultPassword);
+      state.passwordUpdatedAt = data.admin.passwordUpdatedAt || state.passwordUpdatedAt;
+    }
     renderDashboard();
   }
 
@@ -78,6 +87,15 @@
     const dash = el("adminDashboardContent");
     const pill = el("adminAuthStatusPill");
     const logoutBtn = el("adminLogoutBtn");
+    const hintBox = el("defaultPasswordHintBox");
+
+    if (hintBox) {
+      if (state.isDefaultPassword) {
+        hintBox.classList.remove("hidden");
+      } else {
+        hintBox.classList.add("hidden");
+      }
+    }
 
     if (state.authenticated) {
       gate.classList.add("hidden");
@@ -88,7 +106,7 @@
     } else {
       gate.classList.remove("hidden");
       dash.classList.add("hidden");
-      pill.textContent = "OTP Auth Required";
+      pill.textContent = "Password Auth Required";
       pill.className = "font-mono text-xs px-3 py-1 rounded-full bg-amber/15 ring-1 ring-amber/30 text-amber";
       logoutBtn.classList.add("hidden");
     }
@@ -100,6 +118,16 @@
     el("kpiActivePaid").textContent = String(s.activePaid ?? 0);
     el("kpiActiveTrial").textContent = String(s.activeTrial ?? 0);
     el("kpiExpiredTrial").textContent = String(s.expiredTrial ?? 0);
+
+    const pwdStatusEl = el("pwdLastUpdatedText");
+    if (pwdStatusEl) {
+      const updatedStr = state.passwordUpdatedAt
+        ? new Date(state.passwordUpdatedAt).toLocaleString("th-TH")
+        : "-";
+      pwdStatusEl.innerHTML = state.isDefaultPassword
+        ? `สถานะรหัสผ่าน: <span class="text-amber">ใช้รหัสผ่านเริ่มต้น (Default)</span> · อัปเดตล่าสุด ${escapeHtml(updatedStr)}`
+        : `สถานะรหัสผ่าน: <span class="text-emerald">ตั้งค่ารหัสผ่านส่วนตัวแล้ว (Custom Password)</span> · อัปเดตล่าสุด ${escapeHtml(updatedStr)}`;
+    }
 
     const listEl = el("adminDevicesList");
     if (!state.devices.length) {
@@ -233,45 +261,148 @@
       .join("");
   }
 
+  function togglePasswordVisibility(inputEl, buttonEl) {
+    if (!inputEl) return;
+    const isPwd = inputEl.type === "password";
+    inputEl.type = isPwd ? "text" : "password";
+    const icon = buttonEl ? buttonEl.querySelector("i") : null;
+    if (icon) {
+      icon.className = isPwd ? "ph-light ph-eye-slash text-base" : "ph-light ph-eye text-base";
+    }
+  }
+
+  function showChangePwdFeedback(message, isSuccess) {
+    const box = el("changePwdFeedbackBox");
+    if (!box) return;
+    box.textContent = message;
+    box.className = isSuccess
+      ? "rounded-xl bg-emerald/15 ring-1 ring-emerald/35 px-3.5 py-2.5 text-xs text-emerald font-medium"
+      : "rounded-xl bg-crimson/15 ring-1 ring-crimson/35 px-3.5 py-2.5 text-xs text-crimson font-medium";
+  }
+
   function bindEvents() {
-    el("requestOtpBtn").addEventListener("click", async () => {
-      const email = el("adminEmailInput").value.trim();
-      const res = await fetch("/api/admin/auth/request-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email })
+    // 1. Toggle eye button on Login Password field
+    const toggleLoginBtn = el("toggleLoginPwdBtn");
+    if (toggleLoginBtn) {
+      toggleLoginBtn.addEventListener("click", () => {
+        togglePasswordVisibility(el("adminPasswordInput"), toggleLoginBtn);
       });
-      const data = await res.json();
-      if (!res.ok || !data.ok) {
-        showToast(data.error || "ไม่สามารถขอรหัส OTP ได้");
-        return;
-      }
-      el("otpDispatchBox").classList.remove("hidden");
-      el("generatedOtpDisplay").textContent = data.otpCode;
-      el("adminOtpInput").value = data.otpCode;
-      showToast(`สร้างรหัส OTP สำหรับ ${data.email} แล้ว`);
+    }
+
+    // 2. Toggle eye buttons on Change Password fields
+    document.querySelectorAll(".pwd-eye-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const targetId = btn.getAttribute("data-toggle-target");
+        togglePasswordVisibility(el(targetId), btn);
+      });
     });
 
-    el("verifyOtpForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = el("adminEmailInput").value.trim();
-      const code = el("adminOtpInput").value.trim();
-      const res = await fetch("/api/admin/auth/verify-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, code })
-      });
-      const data = await res.json();
-      if (!res.ok || !data.ok) {
-        showToast(data.error || "รหัส OTP ไม่ถูกต้อง");
-        return;
-      }
-      state.token = data.token;
-      localStorage.setItem("venu2_admin_token", data.token);
-      await checkSessionAndLoad();
-      showToast(`ยินดีต้อนรับผู้ดูแลระบบ ${data.email}`);
-    });
+    // 3. Admin Password Login Submit
+    const loginForm = el("adminPasswordLoginForm");
+    if (loginForm) {
+      loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = el("adminEmailInput").value.trim();
+        const password = el("adminPasswordInput").value.trim();
+        const errBox = el("loginErrorBox");
+        if (errBox) errBox.classList.add("hidden");
 
+        const res = await fetch("/api/admin/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+          const msg = data.error || "รหัสผ่านผู้ดูแลระบบไม่ถูกต้อง";
+          if (errBox) {
+            errBox.textContent = msg;
+            errBox.classList.remove("hidden");
+          }
+          showToast(msg);
+          return;
+        }
+
+        el("adminPasswordInput").value = "";
+        state.token = data.token;
+        localStorage.setItem("venu2_admin_token", data.token);
+        await checkSessionAndLoad();
+        showToast(`ยินดีต้อนรับผู้ดูแลระบบ ${data.email}`);
+      });
+    }
+
+    // 4. Scroll to Change Admin Password Panel
+    const scrollPwdBtn = el("scrollToChangePwdBtn");
+    if (scrollPwdBtn) {
+      scrollPwdBtn.addEventListener("click", () => {
+        const card = el("changePasswordCard");
+        if (card) {
+          card.scrollIntoView({ behavior: "smooth", block: "center" });
+          setTimeout(() => {
+            const currentInput = el("currentAdminPwdInput");
+            if (currentInput) currentInput.focus();
+          }, 350);
+        }
+      });
+    }
+
+    // 5. Change Admin Password Form Submit (Requires Current Password Verification)
+    const changePwdForm = el("changeAdminPasswordForm");
+    if (changePwdForm) {
+      changePwdForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const currentPassword = el("currentAdminPwdInput").value.trim();
+        const newPassword = el("newAdminPwdInput").value.trim();
+        const confirmPassword = el("confirmAdminPwdInput").value.trim();
+
+        if (!currentPassword) {
+          showChangePwdFeedback("กรุณากรอกรหัสผ่านเดิมเพื่อยืนยันตัวตน", false);
+          return;
+        }
+        if (newPassword.length < 6) {
+          showChangePwdFeedback("รหัสผ่านใหม่ต้องมีความยาวอย่างน้อย 6 ตัวอักษร", false);
+          return;
+        }
+        if (newPassword !== confirmPassword) {
+          showChangePwdFeedback("รหัสผ่านใหม่และการยืนยันรหัสผ่านใหม่ไม่ตรงกัน", false);
+          return;
+        }
+
+        const res = await fetch("/api/admin/auth/change-password", {
+          method: "POST",
+          headers: authHeaders(),
+          body: JSON.stringify({
+            currentPassword,
+            newPassword,
+            confirmPassword
+          })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+          const errMsg = data.error || "ไม่สามารถเปลี่ยนรหัสผ่านได้";
+          showChangePwdFeedback(errMsg, false);
+          showToast(errMsg);
+          return;
+        }
+
+        el("currentAdminPwdInput").value = "";
+        el("newAdminPwdInput").value = "";
+        el("confirmAdminPwdInput").value = "";
+
+        state.passwordUpdatedAt = data.passwordUpdatedAt || new Date().toISOString();
+        state.isDefaultPassword = Boolean(data.isDefaultPassword);
+        if (data.auditLogs) state.auditLogs = data.auditLogs;
+        if (data.summary) state.summary = data.summary;
+        if (data.devices) state.devices = data.devices;
+
+        renderAuthView();
+        renderDashboard();
+        showChangePwdFeedback("✓ ยืนยันรหัสเดิมและเปลี่ยนรหัสผ่านผู้ดูแลระบบใหม่เรียบร้อยแล้ว", true);
+        showToast("เปลี่ยนรหัสผ่านผู้ดูแลระบบสำเร็จ");
+      });
+    }
+
+    // 6. Sign Out
     el("adminLogoutBtn").addEventListener("click", () => {
       state.token = "";
       state.authenticated = false;
@@ -280,11 +411,13 @@
       showToast("ออกจากระบบ Admin แล้ว");
     });
 
+    // 7. Refresh Dashboard
     el("refreshAdminBtn").addEventListener("click", async () => {
       await fetchDevicesData();
       showToast("อัปเดตข้อมูลอุปกรณ์ล่าสุดแล้ว");
     });
 
+    // 8. Generate Per-Device Activation Key
     el("generateKeyForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const deviceId = el("genDeviceIdInput").value.trim().toUpperCase();

@@ -141,12 +141,18 @@ flowchart TD
 
 หน้า Admin Portal แยกเป็น Subdomain เฉพาะที่ [`https://admin-moat.readybyte.top`](https://admin-moat.readybyte.top) สำหรับเจ้าของระบบ (**`saharabu@scg.com`**) เท่านั้น
 
-### 7.1 การเข้าสู่ระบบ (Cloudflare Zero Trust + 6-Digit OTP Gate)
+### 7.1 การเข้าสู่ระบบด้วยรหัสผ่านผู้ดูแลระบบ (Admin Password Login) และการเปลี่ยนรหัสผ่านใหม่ (Change Admin Password)
 1. เปิด [`https://admin-moat.readybyte.top`](https://admin-moat.readybyte.top)
-2. หากเชื่อมต่อผ่าน **Cloudflare Access Zero Trust Policy** ที่ล็อกอินด้วยอีเมล `saharabu@scg.com` ระบบจะตรวจสอบ Header `Cf-Access-Authenticated-User-Email` และอนุมัติเข้าสู่ระบบให้อัตโนมัติ
-3. หรือเข้าสู่ระบบผ่าน **Admin OTP Gate**:
-   - ระบุอีเมลผู้ดูแลระบบ: `saharabu@scg.com`
-   - กดปุ่ม **Request 6-Digit OTP** (หรือใช้รหัส Admin Passkey `SCG-888888`) แล้วกด **Verify & Sign In**
+2. ในหน้า **เข้าสู่ระบบผู้ดูแล (Admin Login)**:
+   - อีเมลผู้ดูแลระบบ: **`saharabu@scg.com`**
+   - กรอก **รหัสผ่านผู้ดูแลระบบ (Admin Password)** (รหัสผ่านเริ่มต้นคือ **`SCG-888888`** หากยังไม่เคยเปลี่ยน) แล้วกดปุ่ม **เข้าสู่ระบบจัดการ (Sign In with Password)**
+3. **การเปลี่ยนรหัสผ่านผู้ดูแลระบบ (Change Admin Password พร้อมยืนยันรหัสเดิม):**
+   - หลังจากเข้าสู่ระบบแล้ว กดปุ่ม **"เปลี่ยนรหัสผ่าน Admin"** ที่มุมขวาบน หรือเลื่อนไปที่การ์ด **"เปลี่ยนรหัสผ่านผู้ดูแลระบบ (Change Password)"** ทางด้านซ้ายล่าง
+   - กรอกข้อมูลให้ครบทั้ง 3 ช่อง:
+     1. **รหัสผ่านเดิม (Current Password):** กรอกรหัสผ่านปัจจุบันเพื่อยืนยันตัวตน (หากกรอกรหัสผ่านเดิมไม่ถูกต้อง ระบบจะปฏิเสธการเปลี่ยนรหัสผ่านทันที)
+     2. **รหัสผ่านใหม่ (New Password):** ตั้งรหัสผ่านใหม่อย่างน้อย 6 ตัวอักษร (ต้องไม่ซ้ำกับรหัสผ่านเดิม)
+     3. **ยืนยันรหัสผ่านใหม่ (Confirm New Password):** กรอกรหัสผ่านใหม่อีกครั้งให้ตรงกัน
+   - กดปุ่ม **"ยืนยันรหัสเดิมและเปลี่ยนรหัสผ่านใหม่"** ระบบจะเข้ารหัสรหัสผ่านใหม่ด้วย `crypto.scryptSync` พร้อม Salt ใหม่และบันทึกลง Audit Trail ทันที
 
 ### 7.2 การออกรหัส Activation Key รายเครื่อง (`Per-Device Key Generator`)
 1. ในส่วน **Generate Activation Key by Device ID**:

@@ -52,7 +52,7 @@
         </span>
         <span class="font-bold tracking-tight text-sm sm:text-base text-alabaster">Venu2Moat Admin</span>
         <span class="hidden sm:inline-block text-[11px] font-mono text-amber bg-amber/10 ring-1 ring-amber/30 px-2.5 py-0.5 rounded-full">
-          admin-moat.readybyte.top · Cloudflare OTP
+          admin-moat.readybyte.top · Password Auth
         </span>
       </div>
 
@@ -74,29 +74,40 @@
   <main class="relative z-10 max-w-6xl mx-auto px-4 sm:px-8 pt-10 pb-24">
 
     <!-- =====================================================================
-         SECTION A: CLOUDFLARE ACCESS OTP / ADMIN OTP AUTHENTICATION GATE
+         SECTION A: ADMIN PASSWORD LOGIN GATE (saharabu@scg.com)
          ===================================================================== -->
     <section id="adminLoginGate" class="max-w-md mx-auto mt-10">
       <div class="double-bezel-shell">
         <div class="double-bezel-core p-7 sm:p-8 space-y-6">
           <div class="flex items-center justify-between">
             <span class="text-xs font-mono text-amber flex items-center gap-1.5">
-              <i class="ph-light ph-shield-checkered text-base"></i>
-              <span>CLOUDFLARE ZERO TRUST &amp; ADMIN OTP</span>
+              <i class="ph-light ph-lock-key text-base"></i>
+              <span>ADMIN PASSWORD AUTHENTICATION</span>
             </span>
-            <span class="text-[11px] font-mono text-slate-400">SDLC Protected</span>
+            <span class="text-[11px] font-mono text-slate-400">Scrypt Protected</span>
           </div>
 
           <div>
             <h1 class="text-2xl font-extrabold text-alabaster tracking-tight">
-              ยืนยันตัวตนผู้ดูแลระบบ (Admin OTP)
+              เข้าสู่ระบบผู้ดูแล (Admin Login)
             </h1>
             <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">
               ระบบจัดการรหัส Activate รายเครื่อง (<code class="font-mono text-cyan">deviceId</code>) และการควบคุมสิทธิ์ทดลองใช้ 14 วัน สงวนสิทธิ์เฉพาะเจ้าของแอป <strong class="font-mono text-alabaster">saharabu@scg.com</strong> เท่านั้น
             </p>
           </div>
 
-          <div class="space-y-4">
+          <!-- Default Password Notice (Shown only if admin password hasn't been changed from initial default) -->
+          <div id="defaultPasswordHintBox" class="rounded-2xl bg-amber/10 ring-1 ring-amber/30 p-3.5 text-xs space-y-1">
+            <div class="flex items-center justify-between text-amber font-mono">
+              <span>INITIAL ADMIN PASSWORD</span>
+              <span class="text-[10px]">Changeable after login</span>
+            </div>
+            <p class="text-slate-300 text-[11px] leading-relaxed">
+              รหัสผ่านผู้ดูแลระบบเริ่มต้นคือ <strong class="font-mono text-amber">SCG-888888</strong> (สามารถเปลี่ยนรหัสผ่านใหม่พร้อมยืนยันรหัสเดิมได้ทันทีหลังเข้าสู่ระบบ)
+            </p>
+          </div>
+
+          <form id="adminPasswordLoginForm" class="space-y-4">
             <div>
               <label class="block text-xs text-slate-400 mb-1.5 font-mono" for="adminEmailInput">Admin Owner Email</label>
               <input
@@ -108,49 +119,38 @@
               />
             </div>
 
-            <div class="flex items-center gap-2">
-              <button
-                id="requestOtpBtn"
-                type="button"
-                class="w-full rounded-xl bg-cyan/20 hover:bg-cyan/30 ring-1 ring-cyan/40 text-cyan font-semibold text-xs py-2.5 px-4 font-mono flex items-center justify-center gap-2 spring-transition"
-              >
-                <i class="ph-light ph-paper-plane-tilt text-sm"></i>
-                <span>ขอรหัส One-Time PIN (6-Digit OTP)</span>
-              </button>
-            </div>
-
-            <!-- OTP Dispatch Readout Box -->
-            <div id="otpDispatchBox" class="hidden rounded-2xl bg-emerald/10 ring-1 ring-emerald/30 p-3.5 text-xs">
-              <div class="flex items-center justify-between text-emerald font-mono mb-1">
-                <span>CLOUDFLARE / ADMIN OTP GENERATED</span>
-                <span class="text-[10px]">Valid 10m</span>
-              </div>
-              <p class="text-slate-300 text-[11px]">
-                รหัส OTP สำหรับ <strong class="font-mono text-alabaster">saharabu@scg.com</strong>:
-                <strong id="generatedOtpDisplay" class="font-mono text-base text-emerald ml-1 tracking-widest">------</strong>
-              </p>
-            </div>
-
-            <form id="verifyOtpForm" class="space-y-3 pt-2 border-t border-white/[0.07]">
-              <div>
-                <label class="block text-xs text-slate-400 mb-1.5" for="adminOtpInput">รหัส OTP 6 หลัก (หรือ Admin Passkey)</label>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1.5" for="adminPasswordInput">รหัสผ่านผู้ดูแลระบบ (Admin Password)</label>
+              <div class="relative">
                 <input
-                  id="adminOtpInput"
-                  type="text"
+                  id="adminPasswordInput"
+                  type="password"
                   required
-                  placeholder="กรอกรหัส OTP 6 หลัก หรือ SCG-888888"
-                  class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-amber px-4 py-2.5 font-mono text-sm text-alabaster tracking-wider text-center focus:outline-none"
+                  autocomplete="current-password"
+                  placeholder="กรอกรหัสผ่านผู้ดูแลระบบ (Admin Password)"
+                  class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-amber pl-4 pr-11 py-2.5 font-mono text-sm text-alabaster tracking-wider focus:outline-none"
                 />
+                <button
+                  id="toggleLoginPwdBtn"
+                  type="button"
+                  title="แสดง/ซ่อนรหัสผ่าน"
+                  class="absolute inset-y-0 right-0 px-3.5 flex items-center text-slate-400 hover:text-alabaster"
+                >
+                  <i class="ph-light ph-eye text-base"></i>
+                </button>
               </div>
-              <button
-                type="submit"
-                class="w-full rounded-full bg-emerald text-void font-bold text-xs py-3 px-5 flex items-center justify-center gap-2 shadow-lg shadow-emerald/15 spring-transition active:scale-[0.98]"
-              >
-                <i class="ph-light ph-lock-key-open text-sm font-bold"></i>
-                <span>เข้าสู่หน้าจัดการระบบ (Verify &amp; Sign In)</span>
-              </button>
-            </form>
-          </div>
+            </div>
+
+            <div id="loginErrorBox" class="hidden rounded-xl bg-crimson/15 ring-1 ring-crimson/35 px-3.5 py-2.5 text-xs text-crimson font-medium"></div>
+
+            <button
+              type="submit"
+              class="w-full rounded-full bg-emerald text-void font-bold text-xs py-3 px-5 flex items-center justify-center gap-2 shadow-lg shadow-emerald/15 spring-transition active:scale-[0.98]"
+            >
+              <i class="ph-light ph-lock-key-open text-sm font-bold"></i>
+              <span>เข้าสู่ระบบจัดการ (Sign In with Password)</span>
+            </button>
+          </form>
         </div>
       </div>
     </section>
@@ -160,7 +160,7 @@
          ===================================================================== -->
     <section id="adminDashboardContent" class="hidden space-y-8">
 
-      <!-- Top Header & KPI Summary Cards -->
+      <!-- Top Header & Quick Actions -->
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <div class="inline-flex items-center gap-2 rounded-full bg-amber/10 ring-1 ring-amber/30 px-3 py-1 mb-3 text-xs font-mono text-amber">
@@ -171,10 +171,16 @@
             ระบบบริหารจัดการรหัส Activate รายเครื่อง (Device Licensing)
           </h1>
         </div>
-        <button id="refreshAdminBtn" type="button" class="self-start md:self-auto rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 px-4 py-2 text-xs font-mono text-alabaster flex items-center gap-2">
-          <i class="ph-light ph-arrows-clockwise text-emerald"></i>
-          <span>รีเฟรชข้อมูลล่าสุด</span>
-        </button>
+        <div class="flex flex-wrap items-center gap-2.5 self-start md:self-auto">
+          <button id="scrollToChangePwdBtn" type="button" class="rounded-full bg-amber/15 hover:bg-amber/25 ring-1 ring-amber/35 px-4 py-2 text-xs font-mono text-amber flex items-center gap-2">
+            <i class="ph-light ph-keyhole"></i>
+            <span>เปลี่ยนรหัสผ่าน Admin</span>
+          </button>
+          <button id="refreshAdminBtn" type="button" class="rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 px-4 py-2 text-xs font-mono text-alabaster flex items-center gap-2">
+            <i class="ph-light ph-arrows-clockwise text-emerald"></i>
+            <span>รีเฟรชข้อมูลล่าสุด</span>
+          </button>
+        </div>
       </div>
 
       <!-- KPI Grid -->
@@ -212,80 +218,185 @@
       <!-- Generator & Device Table Split -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-        <!-- Left 4 Cols: Per-Device Activation Key Generator -->
-        <div class="lg:col-span-4 double-bezel-shell">
-          <div class="double-bezel-core p-6 space-y-4">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-mono text-cyan">KEY GENERATOR (HMAC-SHA256)</span>
-              <i class="ph-light ph-key text-lg text-cyan"></i>
+        <!-- Left 4 Cols: Per-Device Activation Key Generator + Change Admin Password -->
+        <div class="lg:col-span-4 space-y-6">
+          <!-- Card 1: Per-Device Activation Key Generator -->
+          <div class="double-bezel-shell">
+            <div class="double-bezel-core p-6 space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-mono text-cyan">KEY GENERATOR (HMAC-SHA256)</span>
+                <i class="ph-light ph-key text-lg text-cyan"></i>
+              </div>
+              <h2 class="text-lg font-bold text-alabaster">ออกรหัส Activate ราย Device ID</h2>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                ระบุรหัส <code class="font-mono text-alabaster">Device ID</code> ที่ปรากฏบนหน้าจอนาฬิกา Garmin Venu 2 ของผู้ใช้ เพื่อสร้างรหัส Activate เฉพาะเครื่องนั้น
+              </p>
+
+              <form id="generateKeyForm" class="space-y-3.5">
+                <div>
+                  <label class="block text-xs text-slate-400 mb-1" for="genDeviceIdInput">Garmin Venu 2 Device ID</label>
+                  <input
+                    id="genDeviceIdInput"
+                    type="text"
+                    required
+                    value="V2-88VENU20"
+                    placeholder="เช่น V2-88VENU20"
+                    class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2.5 font-mono text-sm text-alabaster uppercase focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-xs text-slate-400 mb-1" for="genSyncKeyInput">Sync Key ที่ผูกกับพอร์ต</label>
+                  <input
+                    id="genSyncKeyInput"
+                    type="text"
+                    value="VENU2-88"
+                    placeholder="เช่น VENU2-88"
+                    class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2 font-mono text-xs text-alabaster uppercase focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-xs text-slate-400 mb-1" for="genLabelInput">ชื่อเรียกเครื่อง / หมายเหตุลูกค้า</label>
+                  <input
+                    id="genLabelInput"
+                    type="text"
+                    placeholder="เช่น นาฬิกา Venu 2 ของคุณลูกค้า A"
+                    class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2 text-xs text-alabaster focus:outline-none"
+                  />
+                </div>
+
+                <label class="flex items-center gap-2.5 text-xs text-slate-300 cursor-pointer pt-1">
+                  <input id="genAutoActivateCheck" type="checkbox" class="rounded bg-void text-emerald focus:ring-0" />
+                  <span>สั่ง Activate เครื่องนี้ทันทีโดยไม่ต้องรอกรอกรหัส</span>
+                </label>
+
+                <button
+                  type="submit"
+                  class="w-full rounded-full bg-cyan text-void font-bold text-xs py-3 px-4 flex items-center justify-center gap-2 spring-transition active:scale-[0.98]"
+                >
+                  <i class="ph-light ph-magic-wand text-sm font-bold"></i>
+                  <span>Generate Activation Code</span>
+                </button>
+              </form>
+
+              <!-- Generated Key Result Box -->
+              <div id="generatedKeyResultBox" class="hidden rounded-2xl bg-emerald/10 ring-1 ring-emerald/30 p-4 space-y-2">
+                <div class="text-[11px] font-mono text-emerald">GENERATED ACTIVATION CODE</div>
+                <div id="generatedKeyText" class="font-mono text-sm font-bold text-alabaster tracking-wider break-all">
+                  MOAT-XXXX-XXXX-XXXX
+                </div>
+                <button
+                  id="copyGeneratedKeyBtn"
+                  type="button"
+                  class="w-full rounded-xl bg-white/10 hover:bg-white/20 py-1.5 text-xs font-mono text-alabaster flex items-center justify-center gap-1.5"
+                >
+                  <i class="ph-light ph-copy"></i>
+                  <span>คัดลอกรหัสส่งให้ลูกค้า</span>
+                </button>
+              </div>
             </div>
-            <h2 class="text-lg font-bold text-alabaster">ออกรหัส Activate ราย Device ID</h2>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              ระบุรหัส <code class="font-mono text-alabaster">Device ID</code> ที่ปรากฏบนหน้าจอนาฬิกา Garmin Venu 2 ของผู้ใช้ เพื่อสร้างรหัส Activate เฉพาะเครื่องนั้น
-            </p>
+          </div>
 
-            <form id="generateKeyForm" class="space-y-3.5">
+          <!-- Card 2: Change Admin Password (with Current Password Verification) -->
+          <div id="changePasswordCard" class="double-bezel-shell">
+            <div class="double-bezel-core p-6 space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-mono text-amber">ADMIN SECURITY · CHANGE PASSWORD</span>
+                <i class="ph-light ph-shield-check text-lg text-amber"></i>
+              </div>
               <div>
-                <label class="block text-xs text-slate-400 mb-1" for="genDeviceIdInput">Garmin Venu 2 Device ID</label>
-                <input
-                  id="genDeviceIdInput"
-                  type="text"
-                  required
-                  value="V2-88VENU20"
-                  placeholder="เช่น V2-88VENU20"
-                  class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2.5 font-mono text-sm text-alabaster uppercase focus:outline-none"
-                />
+                <h2 class="text-lg font-bold text-alabaster">เปลี่ยนรหัสผ่านผู้ดูแลระบบ (Change Password)</h2>
+                <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                  เปลี่ยนรหัสผ่านสำหรับเข้าหน้า Admin Portal โดยต้องยืนยันรหัสผ่านเดิม (<code class="font-mono text-amber">Current Password</code>) ก่อนทุกครั้ง
+                </p>
+                <div id="pwdLastUpdatedText" class="text-[11px] font-mono text-slate-400 mt-1.5">
+                  สถานะรหัสผ่าน: ตรวจสอบแล้ว
+                </div>
               </div>
 
-              <div>
-                <label class="block text-xs text-slate-400 mb-1" for="genSyncKeyInput">Sync Key ที่ผูกกับพอร์ต</label>
-                <input
-                  id="genSyncKeyInput"
-                  type="text"
-                  value="VENU2-88"
-                  placeholder="เช่น VENU2-88"
-                  class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2 font-mono text-xs text-alabaster uppercase focus:outline-none"
-                />
-              </div>
+              <form id="changeAdminPasswordForm" class="space-y-3.5">
+                <div>
+                  <label class="block text-xs text-slate-400 mb-1" for="currentAdminPwdInput">
+                    1. รหัสผ่านเดิม (Current Password) <span class="text-amber">*ยืนยันรหัสเดิม</span>
+                  </label>
+                  <div class="relative">
+                    <input
+                      id="currentAdminPwdInput"
+                      type="password"
+                      required
+                      autocomplete="current-password"
+                      placeholder="กรอกรหัสผ่านปัจจุบันเพื่อยืนยัน"
+                      class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-amber pl-3.5 pr-10 py-2 font-mono text-xs text-alabaster focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      data-toggle-target="currentAdminPwdInput"
+                      class="pwd-eye-btn absolute inset-y-0 right-0 px-3 flex items-center text-slate-400 hover:text-alabaster"
+                    >
+                      <i class="ph-light ph-eye"></i>
+                    </button>
+                  </div>
+                </div>
 
-              <div>
-                <label class="block text-xs text-slate-400 mb-1" for="genLabelInput">ชื่อเรียกเครื่อง / หมายเหตุลูกค้า</label>
-                <input
-                  id="genLabelInput"
-                  type="text"
-                  placeholder="เช่น นาฬิกา Venu 2 ของคุณลูกค้า A"
-                  class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2 text-xs text-alabaster focus:outline-none"
-                />
-              </div>
+                <div>
+                  <label class="block text-xs text-slate-400 mb-1" for="newAdminPwdInput">
+                    2. รหัสผ่านใหม่ (New Password — อย่างน้อย 6 ตัวอักษร)
+                  </label>
+                  <div class="relative">
+                    <input
+                      id="newAdminPwdInput"
+                      type="password"
+                      required
+                      minlength="6"
+                      autocomplete="new-password"
+                      placeholder="ตั้งรหัสผ่านใหม่ (อย่างน้อย 6 ตัวอักษร)"
+                      class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald pl-3.5 pr-10 py-2 font-mono text-xs text-alabaster focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      data-toggle-target="newAdminPwdInput"
+                      class="pwd-eye-btn absolute inset-y-0 right-0 px-3 flex items-center text-slate-400 hover:text-alabaster"
+                    >
+                      <i class="ph-light ph-eye"></i>
+                    </button>
+                  </div>
+                </div>
 
-              <label class="flex items-center gap-2.5 text-xs text-slate-300 cursor-pointer pt-1">
-                <input id="genAutoActivateCheck" type="checkbox" class="rounded bg-void text-emerald focus:ring-0" />
-                <span>สั่ง Activate เครื่องนี้ทันทีโดยไม่ต้องรอกรอกรหัส</span>
-              </label>
+                <div>
+                  <label class="block text-xs text-slate-400 mb-1" for="confirmAdminPwdInput">
+                    3. ยืนยันรหัสผ่านใหม่ (Confirm New Password)
+                  </label>
+                  <div class="relative">
+                    <input
+                      id="confirmAdminPwdInput"
+                      type="password"
+                      required
+                      minlength="6"
+                      autocomplete="new-password"
+                      placeholder="กรอกรหัสผ่านใหม่อีกครั้งให้ตรงกัน"
+                      class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald pl-3.5 pr-10 py-2 font-mono text-xs text-alabaster focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      data-toggle-target="confirmAdminPwdInput"
+                      class="pwd-eye-btn absolute inset-y-0 right-0 px-3 flex items-center text-slate-400 hover:text-alabaster"
+                    >
+                      <i class="ph-light ph-eye"></i>
+                    </button>
+                  </div>
+                </div>
 
-              <button
-                type="submit"
-                class="w-full rounded-full bg-cyan text-void font-bold text-xs py-3 px-4 flex items-center justify-center gap-2 spring-transition active:scale-[0.98]"
-              >
-                <i class="ph-light ph-magic-wand text-sm font-bold"></i>
-                <span>Generate Activation Code</span>
-              </button>
-            </form>
+                <div id="changePwdFeedbackBox" class="hidden rounded-xl px-3.5 py-2.5 text-xs font-medium"></div>
 
-            <!-- Generated Key Result Box -->
-            <div id="generatedKeyResultBox" class="hidden rounded-2xl bg-emerald/10 ring-1 ring-emerald/30 p-4 space-y-2">
-              <div class="text-[11px] font-mono text-emerald">GENERATED ACTIVATION CODE</div>
-              <div id="generatedKeyText" class="font-mono text-sm font-bold text-alabaster tracking-wider break-all">
-                MOAT-XXXX-XXXX-XXXX
-              </div>
-              <button
-                id="copyGeneratedKeyBtn"
-                type="button"
-                class="w-full rounded-xl bg-white/10 hover:bg-white/20 py-1.5 text-xs font-mono text-alabaster flex items-center justify-center gap-1.5"
-              >
-                <i class="ph-light ph-copy"></i>
-                <span>คัดลอกรหัสส่งให้ลูกค้า</span>
-              </button>
+                <button
+                  type="submit"
+                  class="w-full rounded-full bg-amber text-void font-bold text-xs py-3 px-4 flex items-center justify-center gap-2 spring-transition active:scale-[0.98]"
+                >
+                  <i class="ph-light ph-lock-key text-sm font-bold"></i>
+                  <span>ยืนยันรหัสเดิมและเปลี่ยนรหัสผ่านใหม่</span>
+                </button>
+              </form>
             </div>
           </div>
         </div>
@@ -313,7 +424,7 @@
           <div class="flex items-center justify-between mb-4">
             <div>
               <h3 class="text-base font-bold text-alabaster">บันทึกประวัติความปลอดภัยและการออกรหัส (SDLC Audit Trail)</h3>
-              <p class="text-xs text-slate-400">ตรวจสอบการขอรหัส OTP, การสร้าง Activation Key และการเปลี่ยนแปลงสถานะเครื่องย้อนหลัง</p>
+              <p class="text-xs text-slate-400">ตรวจสอบการเข้าสู่ระบบด้วยรหัสผ่าน, การเปลี่ยนรหัสผ่านผู้ดูแล, การสร้าง Activation Key และการเปลี่ยนแปลงสถานะเครื่องย้อนหลัง</p>
             </div>
             <span class="font-mono text-xs text-slate-400">Owner: saharabu@scg.com</span>
           </div>

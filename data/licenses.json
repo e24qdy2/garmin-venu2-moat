@@ -8,9 +8,9 @@
       "syncKey": "VENU2-88",
       "status": "TRIAL",
       "firstSeenAt": "2026-10-20T14:14:52.889Z",
-      "lastSeenAt": "2026-10-20T14:33:10.838Z",
-      "trialStartMs": 1792505882342,
-      "trialExpiresMs": 1793715482342,
+      "lastSeenAt": "2026-10-20T14:46:26.468Z",
+      "trialStartMs": 1792507563935,
+      "trialExpiresMs": 1793717163935,
       "activatedKey": "",
       "activatedAt": null,
       "issuedKey": "MOAT-F7L8-86HR-TZKH",
@@ -22,16 +22,112 @@
       "syncKey": "VENU2-88",
       "status": "ACTIVE",
       "firstSeenAt": "2026-10-20T14:17:34.811Z",
-      "lastSeenAt": "2026-10-20T14:18:02.340Z",
-      "trialStartMs": 1792505882307,
-      "trialExpiresMs": 1792505881314,
+      "lastSeenAt": "2026-10-20T14:46:03.933Z",
+      "trialStartMs": 1792507563889,
+      "trialExpiresMs": 1792507562906,
       "activatedKey": "MOAT-RZA6-TADM-HLFV",
-      "activatedAt": "2026-10-20T14:18:02.333Z",
+      "activatedAt": "2026-10-20T14:46:03.923Z",
       "issuedKey": "MOAT-RZA6-TADM-HLFV",
       "notes": "14-day trial started via syncKey VENU2-88"
     }
   },
   "auditLogs": [
+    {
+      "id": "AUD-F23ACF",
+      "timestamp": "2026-10-20T14:46:03.937Z",
+      "actor": "saharabu@scg.com",
+      "action": "ADMIN_RESET_TRIAL",
+      "deviceId": "V2-88VENU20",
+      "detail": "Admin reset 14-day trial for device V2-88VENU20"
+    },
+    {
+      "id": "AUD-92CF2A",
+      "timestamp": "2026-10-20T14:46:03.925Z",
+      "actor": "web-companion",
+      "action": "DEVICE_ACTIVATED",
+      "deviceId": "V2-SDLC9901",
+      "detail": "Activated device V2-SDLC9901 with key MOAT-RZA6-TADM-HLFV"
+    },
+    {
+      "id": "AUD-EEA3DF",
+      "timestamp": "2026-10-20T14:46:03.916Z",
+      "actor": "saharabu@scg.com",
+      "action": "KEY_GENERATED",
+      "deviceId": "V2-SDLC9901",
+      "detail": "Generated key MOAT-RZA6-TADM-HLFV for device V2-SDLC9901"
+    },
+    {
+      "id": "AUD-FC6195",
+      "timestamp": "2026-10-20T14:46:03.908Z",
+      "actor": "saharabu@scg.com",
+      "action": "ADMIN_EXPIRE_TRIAL",
+      "deviceId": "V2-SDLC9901",
+      "detail": "Admin expired/revoked device V2-SDLC9901 (triggers 14d expired lock screen)"
+    },
+    {
+      "id": "AUD-1DE199",
+      "timestamp": "2026-10-20T14:46:03.893Z",
+      "actor": "saharabu@scg.com",
+      "action": "ADMIN_RESET_TRIAL",
+      "deviceId": "V2-SDLC9901",
+      "detail": "Admin reset 14-day trial for device V2-SDLC9901"
+    },
+    {
+      "id": "AUD-5AF651",
+      "timestamp": "2026-10-20T14:46:03.885Z",
+      "actor": "saharabu@scg.com",
+      "action": "ADMIN_PASSWORD_CHANGED",
+      "deviceId": "-",
+      "detail": "เปลี่ยนรหัสผ่านผู้ดูแลระบบสำเร็จ พร้อมยืนยันรหัสผ่านเดิมเรียบร้อยแล้ว (Admin password updated)"
+    },
+    {
+      "id": "AUD-B5004E",
+      "timestamp": "2026-10-20T14:46:03.766Z",
+      "actor": "saharabu@scg.com",
+      "action": "ADMIN_LOGIN_SUCCESS",
+      "deviceId": "-",
+      "detail": "Admin authenticated via ADMIN_PASSWORD"
+    },
+    {
+      "id": "AUD-1DF6D4",
+      "timestamp": "2026-10-20T14:46:03.693Z",
+      "actor": "saharabu@scg.com",
+      "action": "ADMIN_LOGIN_FAILED",
+      "deviceId": "-",
+      "detail": "พยายามเข้าสู่ระบบผู้ดูแลด้วยรหัสผ่านไม่ถูกต้อง (Invalid Admin Password)"
+    },
+    {
+      "id": "AUD-88C714",
+      "timestamp": "2026-10-20T14:46:03.607Z",
+      "actor": "saharabu@scg.com",
+      "action": "ADMIN_PASSWORD_CHANGED",
+      "deviceId": "-",
+      "detail": "เปลี่ยนรหัสผ่านผู้ดูแลระบบสำเร็จ พร้อมยืนยันรหัสผ่านเดิมเรียบร้อยแล้ว (Admin password updated)"
+    },
+    {
+      "id": "AUD-3A4C17",
+      "timestamp": "2026-10-20T14:46:03.412Z",
+      "actor": "saharabu@scg.com",
+      "action": "ADMIN_PASSWORD_CHANGE_FAILED",
+      "deviceId": "-",
+      "detail": "เปลี่ยนรหัสผ่านไม่สำเร็จ: ยืนยันรหัสผ่านเดิมไม่ถูกต้อง (Invalid current password)"
+    },
+    {
+      "id": "AUD-2B9FD3",
+      "timestamp": "2026-10-20T14:46:03.337Z",
+      "actor": "saharabu@scg.com",
+      "action": "ADMIN_LOGIN_SUCCESS",
+      "deviceId": "-",
+      "detail": "Admin authenticated via ADMIN_PASSWORD"
+    },
+    {
+      "id": "AUD-61DC1F",
+      "timestamp": "2026-10-20T14:46:03.255Z",
+      "actor": "saharabu@scg.com",
+      "action": "ADMIN_LOGIN_FAILED",
+      "deviceId": "-",
+      "detail": "พยายามเข้าสู่ระบบผู้ดูแลด้วยรหัสผ่านไม่ถูกต้อง (Invalid Admin Password)"
+    },
     {
       "id": "AUD-C777B1",
       "timestamp": "2026-10-20T14:34:44.872Z",
@@ -152,5 +248,11 @@
       "deviceId": "V2-88VENU20",
       "detail": "Initialized 14-day trial licensing engine (Owner: saharabu@scg.com)"
     }
-  ]
+  ],
+  "adminAuth": {
+    "salt": "ac21781e4ccfbe85e832d82d258e8feb",
+    "passwordHash": "23bf431eac1ba20b6264ba4144f77f2ef956dc38795a8fab338426d702b0cdeaffe04e9667cce4f6999d903df7778ba527233aef0fe3f05d994f25403d9f38d1",
+    "updatedAt": "2026-10-20T14:46:03.836Z",
+    "isDefaultPassword": true
+  }
 }

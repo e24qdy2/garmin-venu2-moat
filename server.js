@@ -753,12 +753,24 @@ async function handleRequest(req, res) {
   // =========================================================================
   if (pathname === "/api/admin/session" && req.method === "GET") {
     const auth = licenseManager.verifyAdminRequest(req);
+    const meta = licenseManager.getAdminAuthMeta();
     return sendJson(res, 200, {
       ...auth,
+      ...meta,
       ownerEmail: OWNER_EMAIL,
       trialDays: TRIAL_DAYS,
       host: hostHeader
     });
+  }
+
+  if (pathname === "/api/admin/auth/login" && req.method === "POST") {
+    try {
+      const body = await parseBody(req);
+      const result = licenseManager.loginAdminWithPassword(body.email || OWNER_EMAIL, body.password);
+      return sendJson(res, result.ok ? 200 : 401, result);
+    } catch (err) {
+      return sendJson(res, 400, { ok: false, error: err.message });
+    }
   }
 
   if (pathname === "/api/admin/auth/request-otp" && req.method === "POST") {
@@ -791,10 +803,32 @@ async function handleRequest(req, res) {
       });
     }
 
+    if (pathname === "/api/admin/auth/change-password" && req.method === "POST") {
+      try {
+        const body = await parseBody(req);
+        const result = licenseManager.changeAdminPassword(
+          auth.email || OWNER_EMAIL,
+          body.currentPassword,
+          body.newPassword,
+          body.confirmPassword
+        );
+        if (!result.ok) {
+          return sendJson(res, 400, result);
+        }
+        return sendJson(res, 200, {
+          ...result,
+          ...licenseManager.listDevices()
+        });
+      } catch (err) {
+        return sendJson(res, 400, { ok: false, error: err.message });
+      }
+    }
+
     if (pathname === "/api/admin/devices" && req.method === "GET") {
+      const meta = licenseManager.getAdminAuthMeta();
       return sendJson(res, 200, {
         ok: true,
-        admin: auth,
+        admin: { ...auth, ...meta },
         ...licenseManager.listDevices()
       });
     }

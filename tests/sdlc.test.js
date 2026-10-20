@@ -46,17 +46,19 @@ async function runSdlcSuite() {
 
   const testDeviceId = "V2-SDLC9901";
 
-  // 1. Subdomain Routing Check (admin-moat.readybyte.top -> Admin Portal HTML)
+  // 1. Subdomain Routing Check (admin-moat.readybyte.top -> Admin Portal HTML with Password Login & Change Password)
   const adminHtmlRes = await httpRequest("GET", "/", null, {
     Host: "admin-moat.readybyte.top"
   });
   assert.strictEqual(adminHtmlRes.status, 200, "Admin subdomain should return HTTP 200");
   assert.ok(
     adminHtmlRes.raw.includes("Venu2Moat Admin") &&
-      adminHtmlRes.raw.includes("saharabu@scg.com"),
-    "Admin subdomain HTML should render Admin Portal with owner email saharabu@scg.com"
+      adminHtmlRes.raw.includes("saharabu@scg.com") &&
+      adminHtmlRes.raw.includes("adminPasswordLoginForm") &&
+      adminHtmlRes.raw.includes("changeAdminPasswordForm"),
+    "Admin subdomain HTML should render Admin Password Login & Change Password forms for saharabu@scg.com"
   );
-  console.log("[PASS] 1. Subdomain routing (Host: admin-moat.readybyte.top -> Admin Portal UI)");
+  console.log("[PASS] 1. Subdomain routing (Host: admin-moat.readybyte.top -> Admin Password Portal UI)");
 
   // 2. Watch Display Settings (Auto-Swipe 5s default + custom seconds + Optional Always-On Display)
   const updateSettingsRes = await httpRequest("PUT", "/api/portfolio", {
@@ -88,34 +90,100 @@ async function runSdlcSuite() {
   assert.strictEqual(restoreSettingsRes.json.watch.cfg.aon, 0);
   console.log("[PASS] 2. Web -> Watch Auto-Swipe (default 5s & custom 9s) + Optional Always-On Display sync");
 
-  // 3. Admin Auth Gate (401 without token, Cloudflare Zero Trust & 6-digit OTP for saharabu@scg.com)
+  // 3. Admin Password Login & Change Password (with Current Password Verification)
   const unauthRes = await httpRequest("GET", "/api/admin/devices");
   assert.strictEqual(unauthRes.status, 401, "Unauthenticated admin API call must return 401");
 
-  // Verify Cloudflare Access header authentication
-  const cfAuthSession = await httpRequest("GET", "/api/admin/session", null, {
-    "Cf-Access-Authenticated-User-Email": "saharabu@scg.com"
-  });
-  assert.strictEqual(cfAuthSession.json.authenticated, true);
-  assert.strictEqual(cfAuthSession.json.authMethod, "CLOUDFLARE_ACCESS_OTP");
-
-  // Verify 6-digit OTP request & verification flow for saharabu@scg.com
-  const otpReq = await httpRequest("POST", "/api/admin/auth/request-otp", {
-    email: "saharabu@scg.com"
-  });
-  assert.strictEqual(otpReq.status, 200);
-  assert.strictEqual(otpReq.json.ok, true);
-  assert.strictEqual(otpReq.json.otpCode.length, 6);
-
-  const otpVerify = await httpRequest("POST", "/api/admin/auth/verify-otp", {
+  // Reject wrong admin password
+  const badLoginRes = await httpRequest("POST", "/api/admin/auth/login", {
     email: "saharabu@scg.com",
-    code: otpReq.json.otpCode
+    password: "WRONG-PASSWORD-999"
   });
-  assert.strictEqual(otpVerify.status, 200);
-  assert.strictEqual(otpVerify.json.ok, true);
-  const adminToken = otpVerify.json.token;
+  assert.strictEqual(badLoginRes.status, 401, "Wrong admin password must return 401");
+  assert.strictEqual(badLoginRes.json.ok, false);
+
+  // Login with valid admin password
+  const goodLoginRes = await httpRequest("POST", "/api/admin/auth/login", {
+    email: "saharabu@scg.com",
+    password: "SCG-888888"
+  });
+  assert.strictEqual(goodLoginRes.status, 200, "Valid admin password must return 200");
+  assert.strictEqual(goodLoginRes.json.ok, true);
+  assert.strictEqual(goodLoginRes.json.authMethod, "ADMIN_PASSWORD");
+  const adminToken = goodLoginRes.json.token;
   assert.ok(adminToken && adminToken.length > 20);
-  console.log("[PASS] 3. Cloudflare Zero Trust & 6-Digit Admin OTP Authentication (saharabu@scg.com)");
+
+  // Attempt change password with WRONG currentPassword -> must fail (400)
+  const badCurrentPwdRes = await httpRequest(
+    "POST",
+    "/api/admin/auth/change-password",
+    {
+      currentPassword: "WRONG-OLD-PASSWORD",
+      newPassword: "NewAdmin@2026",
+      confirmPassword: "NewAdmin@2026"
+    },
+    { "X-Admin-Token": adminToken }
+  );
+  assert.strictEqual(badCurrentPwdRes.status, 400, "Wrong current password must be rejected");
+  assert.strictEqual(badCurrentPwdRes.json.ok, false);
+
+  // Attempt change password with mismatched confirmPassword -> must fail (400)
+  const mismatchPwdRes = await httpRequest(
+    "POST",
+    "/api/admin/auth/change-password",
+    {
+      currentPassword: "SCG-888888",
+      newPassword: "NewAdmin@2026",
+      confirmPassword: "DifferentConfirm@2026"
+    },
+    { "X-Admin-Token": adminToken }
+  );
+  assert.strictEqual(mismatchPwdRes.status, 400, "Mismatched confirm password must be rejected");
+
+  // Change password with VALID currentPassword ("SCG-888888") -> "NewAdmin@2026"
+  const changePwdSuccessRes = await httpRequest(
+    "POST",
+    "/api/admin/auth/change-password",
+    {
+      currentPassword: "SCG-888888",
+      newPassword: "NewAdmin@2026",
+      confirmPassword: "NewAdmin@2026"
+    },
+    { "X-Admin-Token": adminToken }
+  );
+  assert.strictEqual(changePwdSuccessRes.status, 200, "Valid password change should return 200");
+  assert.strictEqual(changePwdSuccessRes.json.ok, true);
+  assert.strictEqual(changePwdSuccessRes.json.isDefaultPassword, false);
+
+  // Verify old password no longer works, and new password works
+  const oldPwdLoginAfterChange = await httpRequest("POST", "/api/admin/auth/login", {
+    email: "saharabu@scg.com",
+    password: "SCG-888888"
+  });
+  assert.strictEqual(oldPwdLoginAfterChange.status, 401, "Old password must no longer work after change");
+
+  const newPwdLoginAfterChange = await httpRequest("POST", "/api/admin/auth/login", {
+    email: "saharabu@scg.com",
+    password: "NewAdmin@2026"
+  });
+  assert.strictEqual(newPwdLoginAfterChange.status, 200, "New password must authenticate successfully");
+  assert.strictEqual(newPwdLoginAfterChange.json.ok, true);
+
+  // Restore initial password "SCG-888888" by verifying currentPassword "NewAdmin@2026"
+  const restorePwdRes = await httpRequest(
+    "POST",
+    "/api/admin/auth/change-password",
+    {
+      currentPassword: "NewAdmin@2026",
+      newPassword: "SCG-888888",
+      confirmPassword: "SCG-888888"
+    },
+    { "X-Admin-Token": adminToken }
+  );
+  assert.strictEqual(restorePwdRes.status, 200);
+  assert.strictEqual(restorePwdRes.json.ok, true);
+  assert.strictEqual(restorePwdRes.json.isDefaultPassword, true);
+  console.log("[PASS] 3. Admin Password Login & Change Password with Current Password Verification (saharabu@scg.com)");
 
   // 4. 14-Day Free Trial Initialization for New Device
   await httpRequest(

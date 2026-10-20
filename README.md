@@ -9,7 +9,7 @@
 | บริการ | URL เข้าใช้งาน | รายละเอียด |
 | :--- | :--- | :--- |
 | **Web Companion & 416×416 Simulator** | **[`https://moat.readybyte.top`](https://moat.readybyte.top)** | จัดการพอร์ตหุ้น, จดบันทึก WebMemo, ตั้งค่า Auto-Swipe (`5s`/Custom) & Always-On Display, และใส่ Activation Key |
-| **Admin Licensing Portal (Subdomain)** | **[`https://admin-moat.readybyte.top`](https://admin-moat.readybyte.top)** | หน้าบริหารจัดการสำหรับเจ้าของแอป (**`saharabu@scg.com`**) รองรับ Cloudflare Zero Trust Access & 6-Digit OTP เพื่อสร้าง Activation Key ราย `Device ID` |
+| **Admin Licensing Portal (Subdomain)** | **[`https://admin-moat.readybyte.top`](https://admin-moat.readybyte.top)** | หน้าบริหารจัดการสำหรับเจ้าของแอป (**`saharabu@scg.com`**) เข้าสู่ระบบด้วย **Admin Password** (และเปลี่ยนรหัสผ่านใหม่พร้อมยืนยันรหัสเดิมได้หลังล็อกอิน) เพื่อสร้าง Activation Key ราย `Device ID` |
 | **Garmin Venu 2 Watch JSON API** | **[`https://moat.readybyte.top/api/watch?key=VENU2-88`](https://moat.readybyte.top/api/watch?key=VENU2-88)** | Compact JSON Endpoint (`<4KB`) สำหรับแอปนาฬิกา Garmin Venu 2 |
 
 ---
@@ -50,7 +50,7 @@ flowchart LR
     end
 
     subgraph AdminWeb["Admin Portal (admin-moat.readybyte.top)"]
-        A1["Cloudflare Zero Trust +<br/>6-Digit OTP (saharabu@scg.com)"]
+        A1["Admin Password Login (saharabu@scg.com)<br/>& Change Password (ยืนยันรหัสเดิม)"]
         A2["Gen Activation Key ราย Device ID<br/>& จัดการวันใช้งาน Trial 14d"]
     end
 
@@ -83,12 +83,12 @@ garmin-venu2-moat/
 │   └── 04-API-AND-SDLC-REFERENCE.md   # ER Diagram, REST API Docs & SDLC Test Guide
 ├── server.js                          # เซิร์ฟเวอร์หลัก (Web API + Watch API + Admin Subdomain Router)
 ├── lib/
-│   └── licenseManager.js              # เอ็นจิ้นจัดการ Trial 14 วัน, HMAC Activation Key & Admin OTP
+│   └── licenseManager.js              # เอ็นจิ้นจัดการ Trial 14 วัน, HMAC Activation Key & Admin Password (Scrypt)
 ├── public/
 │   ├── index.html                     # หน้าเว็บหลัก Web Companion + 416x416 Interactive Simulator
 │   ├── app.js                         # ลอจิกหน้าเว็บหลัก, Auto-Swipe Simulator & Settings Sync
 │   ├── admin.html                     # หน้าเว็บ Admin Portal (https://admin-moat.readybyte.top)
-│   ├── admin.js                       # ลอจิกหน้า Admin, OTP Login & Per-Device Key Generator
+│   ├── admin.js                       # ลอจิกหน้า Admin, Password Login, Change Password & Key Generator
 │   └── styles.css                     # สไตล์เสริมสำหรับหน้าเว็บ
 ├── garmin-venu2-app/                  # ซอร์สโค้ดแอปนาฬิกา Garmin Connect IQ (Monkey C)
 │   ├── manifest.xml                   # กำหนดค่าแอปสำหรับ Garmin Venu 2 (venu2)

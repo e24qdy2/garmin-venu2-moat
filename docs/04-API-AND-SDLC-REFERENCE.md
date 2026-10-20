@@ -147,13 +147,13 @@ erDiagram
 
 ### 2.2 Admin Licensing Portal Endpoints (`https://admin-moat.readybyte.top`)
 
-ทุก Endpoint ภายใต้ `/api/admin/*` บังคับตรวจสอบสิทธิ์ผู้ดูแลระบบ (`saharabu@scg.com`) ผ่าน Header `Cf-Access-Authenticated-User-Email` หรือ `X-Admin-Token`:
+ทุก Endpoint ภายใต้ `/api/admin/*` บังคับตรวจสอบสิทธิ์ผู้ดูแลระบบ (`saharabu@scg.com`) ผ่าน Header `Authorization: Bearer <token>` หรือ `X-Admin-Token`:
 
 | Method | Endpoint | คำอธิบาย |
 | :--- | :--- | :--- |
-| `GET` | `/api/admin/session` | ตรวจสอบสถานะการล็อกอินของแอดมิน (Cloudflare Access / Session Token) |
-| `POST` | `/api/admin/auth/request-otp` | ขอรหัส OTP 6 หลักสำหรับอีเมล `saharabu@scg.com` |
-| `POST` | `/api/admin/auth/verify-otp` | ยืนยันรหัส OTP 6 หลัก (หรือ Passkey) เพื่อรับ `X-Admin-Token` |
+| `GET` | `/api/admin/session` | ตรวจสอบสถานะการล็อกอินของแอดมิน และสถานะรหัสผ่าน (`isDefaultPassword`, `passwordUpdatedAt`) |
+| `POST` | `/api/admin/auth/login` | ล็อกอินเข้าสู่ระบบผู้ดูแลด้วยรหัสผ่าน (`{ email: "saharabu@scg.com", password }`) เพื่อรับ Session Token |
+| `POST` | `/api/admin/auth/change-password` | เปลี่ยนรหัสผ่านผู้ดูแลระบบหลังล็อกอิน โดยต้องส่ง `{ currentPassword, newPassword, confirmPassword }` เพื่อยืนยันรหัสผ่านเดิมก่อนเสมอ |
 | `GET` | `/api/admin/devices` | ดึงรายชื่อเครื่อง Garmin Venu 2 ทั้งหมด, สถิติสรุป และ Audit Logs |
 | `POST` | `/api/admin/devices/generate-key` | สร้างรหัส Activation Key (`MOAT-XXXX-XXXX-XXXX`) ผูกกับ `deviceId` |
 | `POST` | `/api/admin/devices/update` | เปลี่ยนสถานะเครื่อง (`ACTIVATE`, `EXPIRE_TRIAL`, `EXTEND_TRIAL`, `RESET_TRIAL`, `DELETE`) |
@@ -163,9 +163,9 @@ erDiagram
 ## 3. กระบวนการพัฒนาและทดสอบตามมาตรฐาน SDLC (`tests/sdlc.test.js`)
 
 โปรเจกต์นี้มีชุดทดสอบอัตโนมัติแบบ End-to-End ในไฟล์ [`tests/sdlc.test.js`](../tests/sdlc.test.js) ซึ่งตรวจสอบครบ 6 แกนหลัก:
-1. **Subdomain Routing Test:** ทดสอบการเรียก `Host: admin-moat.readybyte.top` ว่าเสิร์ฟหน้า Admin Portal พร้อมระบุ `saharabu@scg.com` ถูกต้อง
+1. **Subdomain Routing Test:** ทดสอบการเรียก `Host: admin-moat.readybyte.top` ว่าเสิร์ฟหน้า Admin Portal พร้อมฟอร์มล็อกอินด้วยรหัสผ่าน (`adminPasswordLoginForm`) และฟอร์มเปลี่ยนรหัสผ่าน (`changeAdminPasswordForm`) สำหรับ `saharabu@scg.com` ถูกต้อง
 2. **Watch Display Settings Sync Test:** ทดสอบการบันทึกค่า `autoSwipeEnabled`, `autoSwipeSec` (ทั้งค่าเริ่มต้น `5s` และกำหนดเอง `9s`) และ `alwaysOnDisplay` (`true`/`false`) ว่าส่งต่อไปยัง `/api/watch` (`cfg.asw`, `cfg.asec`, `cfg.aon`) ถูกต้อง
-3. **Cloudflare Zero Trust & 6-Digit OTP Auth Test:** ทดสอบว่า `/api/admin/devices` ปฏิเสธคำขอที่ไม่ได้ยืนยันตัวตนด้วย `HTTP 401` และอนุญาตทั้งผ่าน Header `Cf-Access-Authenticated-User-Email: saharabu@scg.com` และรหัส OTP 6 หลัก
+3. **Admin Password Login & Change Password Verification Test:** ทดสอบการล็อกอินด้วยรหัสผ่านแอดมิน (`POST /api/admin/auth/login`), ทดสอบการปฏิเสธรหัสผ่านผิด (`401`), ทดสอบการเปลี่ยนรหัสผ่าน (`POST /api/admin/auth/change-password`) โดยหากใส่รหัสผ่านเดิม (`currentPassword`) ผิดต้องถูกปฏิเสธ (`400`) และเมื่อใส่รหัสผ่านเดิมถูกต้องจึงเปลี่ยนเป็นรหัสผ่านใหม่และใช้ล็อกอินได้จริง
 4. **14-Day Trial Auto-Registration Test:** ทดสอบว่า `Device ID` ใหม่ได้รับสิทธิ์ `TRIAL` 14 วัน (`lic.exp = 0`, `lic.days = 14`) โดยอัตโนมัติ
 5. **14-Day Trial Expiration Lock Test:** ทดสอบการจำลองให้ครบ 14 วัน (`EXPIRE_TRIAL`) แล้วตรวจสอบว่า `/api/watch` ส่งสถานะล็อกหน้าจอ (`lic.st = "EXPIRED"`, `lic.exp = 1`, `lic.own = "saharabu@scg.com"`)
 6. **Per-Device Activation Key Verification Test:** ทดสอบการสร้างคีย์ `MOAT-XXXX-XXXX-XXXX` ราย `Device ID`, ทดสอบการปฏิเสธคีย์ปลอม (`HTTP 400`), และทดสอบการปลดล็อกเครื่องด้วยคีย์จริง (`lic.st = "ACTIVE"`, `lic.exp = 0`)
