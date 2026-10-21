@@ -17,8 +17,8 @@ if ($ApiToken) {
 Write-Host "`n[1/5] Checking Cloudflare Wrangler authentication..." -ForegroundColor Yellow
 $whoamiOut = npx wrangler whoami 2>&1 | Out-String
 if ($LASTEXITCODE -ne 0 -or $whoamiOut -match "not authenticated|login") {
-  Write-Host "Not logged in to Wrangler yet. Launching OAuth login in browser..." -ForegroundColor Yellow
-  npx wrangler login
+  Write-Host "Not logged in to Wrangler yet. Launching OAuth Device Flow login..." -ForegroundColor Yellow
+  npx wrangler login --device
   if ($LASTEXITCODE -ne 0) {
     throw "Wrangler login failed or timed out."
   }
