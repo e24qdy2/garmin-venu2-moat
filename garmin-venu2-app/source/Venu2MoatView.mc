@@ -18,6 +18,9 @@ class Venu2MoatView extends WatchUi.View {
     }
 
     function drawTrialExpiredScreen(dc as Dc, w as Number, h as Number, cx as Number) as Void {
+        var fMicro = _store.fontMicro;
+        var fRow = _store.fontRow;
+
         // Outer Rose Alert Ring
         dc.setColor(0xF43F5E, Graphics.COLOR_TRANSPARENT);
         dc.setPenWidth(3);
@@ -30,10 +33,10 @@ class Venu2MoatView extends WatchUi.View {
         dc.setColor(0x3B0A18, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(cx - (pillW / 2), pillY, pillW, pillH, 12);
         dc.setColor(0xF43F5E, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, pillY + 2, Graphics.FONT_XTINY, "TRIAL 14D EXPIRED", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, pillY + 4, fMicro, "TRIAL 14D EXPIRED", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, (h * 24) / 100, Graphics.FONT_SMALL, "Activation Required", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, (h * 24) / 100, fRow, "Activation Required", Graphics.TEXT_JUSTIFY_CENTER);
 
         var boxW = (w * 62) / 100;
         var boxH = (h * 10) / 100;
@@ -41,10 +44,10 @@ class Venu2MoatView extends WatchUi.View {
         dc.setColor(0x0D131C, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(cx - (boxW / 2), boxY, boxW, boxH, 10);
         dc.setColor(0xF59E0B, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, boxY + 6, Graphics.FONT_XTINY, "ID: " + _store.deviceId, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, boxY + 8, fRow, "ID: " + _store.deviceId, Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0x94A3B8, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, (h * 47) / 100, Graphics.FONT_XTINY, "Contact App Owner (Paid):", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, (h * 47) / 100, fMicro, "Contact App Owner (Paid):", Graphics.TEXT_JUSTIFY_CENTER);
 
         var mailW = (w * 68) / 100;
         var mailH = (h * 10) / 100;
@@ -52,12 +55,12 @@ class Venu2MoatView extends WatchUi.View {
         dc.setColor(0x082F49, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(cx - (mailW / 2), mailY, mailW, mailH, 10);
         dc.setColor(0x06B6D4, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, mailY + 6, Graphics.FONT_XTINY, _store.ownerEmail, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, mailY + 8, fMicro, _store.ownerEmail, Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0x64748B, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, (h * 70) / 100, Graphics.FONT_XTINY, "Activate via Web Settings", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, (h * 70) / 100, fMicro, "Activate via Web Settings", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x10B981, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, (h * 77) / 100, Graphics.FONT_XTINY, "Press SELECT to Verify", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, (h * 77) / 100, fMicro, "Press SELECT to Verify", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     function onUpdate(dc as Dc) as Void {
@@ -70,6 +73,10 @@ class Venu2MoatView extends WatchUi.View {
         if (dc has :setAntiAlias) {
             dc.setAntiAlias(true);
         }
+
+        var fMicro = _store.fontMicro;
+        var fRow = (w >= 340) ? _store.fontRow : _store.fontMicro;
+        var fVal = (w >= 340) ? _store.fontVal : _store.fontRow;
 
         // True Void Black Background
         dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
@@ -97,7 +104,7 @@ class Venu2MoatView extends WatchUi.View {
         }
 
         dc.setColor(0x94A3B8, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, (h * 3) / 100, Graphics.FONT_XTINY, timeStr + modeFlags, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, (h * 5) / 100, fMicro, timeStr + modeFlags, Graphics.TEXT_JUSTIFY_CENTER);
 
         // Enforce 14-Day Trial Expiration Lock Screen
         if (_store.trialExpired) {
@@ -108,11 +115,11 @@ class Venu2MoatView extends WatchUi.View {
         var port = _store.getActivePortfolio();
         if (port == null) {
             dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, h / 2 - 24, Graphics.FONT_SMALL, "Venu2Moat", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, h / 2 - 24, fVal, "Venu2Moat", Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(0x06B6D4, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, h / 2 + 4, Graphics.FONT_XTINY, "Key: " + _store.getSyncKey(), Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, h / 2 + 6, fRow, "Key: " + _store.getSyncKey(), Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(0x64748B, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, h / 2 + 28, Graphics.FONT_XTINY, "ID: " + _store.deviceId, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, h / 2 + 30, fMicro, "ID: " + _store.deviceId, Graphics.TEXT_JUSTIFY_CENTER);
             return;
         }
 
@@ -129,12 +136,12 @@ class Venu2MoatView extends WatchUi.View {
         // Portfolio Short Title
         var portName = port.get("n") as String;
         dc.setColor(0x06B6D4, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, (h * 8) / 100, Graphics.FONT_XTINY, "< " + portName + pageSuffix + " >", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, (h * 10) / 100, fRow, "< " + portName + pageSuffix + " >", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Portfolio Net Value (compact FONT_SMALL so 4 two-line cards fit comfortably)
+        // Portfolio Net Value
         var portVal = _store.toNum(port.get("val"), 0);
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, (h * 13) / 100, Graphics.FONT_SMALL, curSym + portVal.toString(), Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, (h * 15) / 100, fVal, curSym + portVal.toString(), Graphics.TEXT_JUSTIFY_CENTER);
 
         // Day P&L vs Total Return Toggle Line
         var pnlVal = _store.showTotalReturn ? _store.toNum(port.get("tp"), 0) : _store.toNum(port.get("dp"), 0);
@@ -146,24 +153,27 @@ class Venu2MoatView extends WatchUi.View {
         dc.setColor(pnlColor, Graphics.COLOR_TRANSPARENT);
         dc.drawText(
             cx,
-            (h * 20) / 100,
-            Graphics.FONT_XTINY,
+            (h * 22) / 100,
+            fMicro,
             modePrefix + sign + curSym + pnlVal.toString() + " (" + sign + pnlPct.format("%.2f") + "%)",
             Graphics.TEXT_JUSTIFY_CENTER
         );
 
         // Subtle Divider Line
-        var divY = (h * 25) / 100;
-        var sidePad = (w * 9) / 100;
+        var divY = (h * 27) / 100;
+        var minSidePad = (w * 6) / 100;
+        var divPad = _store.getCirclePadX(divY, divY + 1, (w * 9) / 100);
         dc.setColor(0x1E293B, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(sidePad, divY, w - sidePad, divY);
+        dc.drawLine(divPad, divY, w - divPad, divY);
 
         // Responsive Holdings Rows (3 rows on 260/280 MIP, 4 rows on 360..454 AMOLED)
         var startIdx = _store.scrollRowOffset;
         var rowY = _store.rowStartY;
         var rowHeight = _store.rowHeight;
-        var xtinyH = dc.getFontHeight(Graphics.FONT_XTINY);
-        var showSubMetrics = ((rowHeight - 4) >= ((xtinyH * 2) - 6));
+        var cardH = rowHeight - 4;
+        var rowFontH = dc.getFontHeight(fRow);
+        var microFontH = dc.getFontHeight(fMicro);
+        var showSubMetrics = (cardH >= (rowFontH + microFontH));
 
         for (var i = 0; i < visRows; i++) {
             var itemIdx = startIdx + i;
@@ -185,12 +195,17 @@ class Venu2MoatView extends WatchUi.View {
             var itemCurStr = item.hasKey("cur") ? (item.get("cur") as String) : "USD";
             var itemCur = itemCurStr.equals("USD") ? "$" : "฿";
 
+            // Circle-safe horizontal inset per row so cards curve naturally along the round bezel
+            var rowPad = _store.getCirclePadX(rowY, rowY + cardH, minSidePad);
+
             // Rounded Row Tray
             dc.setColor(0x0D131C, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(sidePad, rowY, w - (sidePad * 2), rowHeight - 4, 10);
+            dc.fillRoundedRectangle(rowPad, rowY, w - (rowPad * 2), cardH, 10);
 
-            var dotX = sidePad + 8;
-            var dotY = showSubMetrics ? (rowY + (xtinyH / 2) + 2) : (rowY + ((rowHeight - 4) / 2));
+            var topLineY = (cardH >= 50) ? (rowY + 5) : (rowY + 2);
+            var subLineY = rowY + cardH - microFontH - ((cardH >= 50) ? 5 : 2);
+            var dotX = rowPad + 7;
+            var dotY = showSubMetrics ? (topLineY + (rowFontH / 2)) : (rowY + (cardH / 2));
 
             // Target / Stop Alert Dot
             if (alrt.equals("TARGET_HIT")) {
@@ -208,39 +223,64 @@ class Venu2MoatView extends WatchUi.View {
             var rowColor = (lastPct >= 0.0) ? 0x10B981 : 0xF43F5E;
             var pctStr = rowSign + lastPct.format("%.2f") + "%";
             var pxStr = (px >= 10000.0) ? (itemCur + px.format("%.0f")) : (itemCur + px.format("%.2f"));
-            var pctWidth = dc.getTextWidthInPixels(pctStr, Graphics.FONT_XTINY);
-            var rightEdgeX = w - sidePad - 6;
+            var pctWidth = dc.getTextWidthInPixels(pctStr, fRow);
+            var pxWidth = dc.getTextWidthInPixels(pxStr, fRow);
+            var rightEdgeX = w - rowPad - 8;
 
             if (showSubMetrics) {
-                var topLineY = rowY + 1;
-                var subLineY = rowY + ((rowHeight - 4) / 2) - 1;
+                var symX = rowPad + 14;
 
                 // Line 1 Left: Symbol + Next Earnings Date (e-dd/mm/yy)
-                var symX = sidePad + 15;
                 dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(symX, topLineY, Graphics.FONT_XTINY, sym, Graphics.TEXT_JUSTIFY_LEFT);
+                dc.drawText(symX, topLineY, fRow, sym, Graphics.TEXT_JUSTIFY_LEFT);
 
                 if (ed != null && ed.length() > 0) {
-                    var symW = dc.getTextWidthInPixels(sym, Graphics.FONT_XTINY);
-                    dc.setColor(0xFBBF24, Graphics.COLOR_TRANSPARENT);
-                    dc.drawText(symX + symW + 4, topLineY, Graphics.FONT_XTINY, ed, Graphics.TEXT_JUSTIFY_LEFT);
+                    var symW = dc.getTextWidthInPixels(sym, fRow);
+                    var edW = dc.getTextWidthInPixels(ed, fMicro);
+                    var maxLeftX = rightEdgeX - pctWidth - 6 - pxWidth - 6;
+                    if (symX + symW + 5 + edW <= maxLeftX) {
+                        var edOffsetY = (rowFontH > microFontH) ? ((rowFontH - microFontH) / 2) : 0;
+                        dc.setColor(0xFBBF24, Graphics.COLOR_TRANSPARENT);
+                        dc.drawText(symX + symW + 5, topLineY + edOffsetY, fMicro, ed, Graphics.TEXT_JUSTIFY_LEFT);
+                    }
                 }
 
                 // Line 1 Right: Current Price + Last % Change
                 dc.setColor(0xE2E8F0, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(rightEdgeX - pctWidth - 5, topLineY, Graphics.FONT_XTINY, pxStr, Graphics.TEXT_JUSTIFY_RIGHT);
+                dc.drawText(rightEdgeX - pctWidth - 6, topLineY, fRow, pxStr, Graphics.TEXT_JUSTIFY_RIGHT);
 
                 dc.setColor(rowColor, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(rightEdgeX, topLineY, Graphics.FONT_XTINY, pctStr, Graphics.TEXT_JUSTIFY_RIGHT);
+                dc.drawText(rightEdgeX, topLineY, fRow, pctStr, Graphics.TEXT_JUSTIFY_RIGHT);
+
+                // Line 2 Right: Compact Day Low (L) / Day High (H)
+                var loStr = (dayLo >= 100.0) ? dayLo.format("%.0f") : dayLo.format("%.1f");
+                var hiStr = (dayHi >= 100.0) ? dayHi.format("%.0f") : dayHi.format("%.1f");
+                var loHiStr = "L" + loStr + " H" + hiStr;
+                var loHiW = dc.getTextWidthInPixels(loHiStr, fMicro);
+                dc.setColor(0x94A3B8, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(
+                    rightEdgeX,
+                    subLineY,
+                    fMicro,
+                    loHiStr,
+                    Graphics.TEXT_JUSTIFY_RIGHT
+                );
 
                 // Line 2 Left: SMA20 Value + SMA20 % Distance + RSI14 (R:xx)
                 var smaSign = (smaPct >= 0.0) ? "+" : "";
-                var smaValStr = (sma >= 1000.0) ? sma.format("%.0f") : sma.format("%.1f");
+                var smaValStr = (sma >= 100.0) ? sma.format("%.0f") : sma.format("%.1f");
                 var smaText = "SMA:" + smaValStr + "(" + smaSign + smaPct.format("%.1f") + "%)";
-                dc.setColor(0x38BDF8, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(symX, subLineY, Graphics.FONT_XTINY, smaText, Graphics.TEXT_JUSTIFY_LEFT);
+                var rsiText = "R:" + rsi.format("%.0f");
+                var smaW = dc.getTextWidthInPixels(smaText, fMicro);
+                var rsiW = dc.getTextWidthInPixels(rsiText, fMicro);
+                if (symX + smaW + 5 + rsiW > rightEdgeX - loHiW - 6) {
+                    smaText = "S:" + smaValStr + "(" + smaSign + smaPct.format("%.1f") + "%)";
+                    smaW = dc.getTextWidthInPixels(smaText, fMicro);
+                }
 
-                var smaW = dc.getTextWidthInPixels(smaText, Graphics.FONT_XTINY);
+                dc.setColor(0x38BDF8, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(symX, subLineY, fMicro, smaText, Graphics.TEXT_JUSTIFY_LEFT);
+
                 var rsiColor = 0xC084FC; // Neutral Violet (31-69)
                 if (rsi <= 30.0) {
                     rsiColor = 0x34D399; // Oversold Emerald/Teal (<=30)
@@ -248,30 +288,18 @@ class Venu2MoatView extends WatchUi.View {
                     rsiColor = 0xFB7185; // Overbought Rose/Coral (>=70)
                 }
                 dc.setColor(rsiColor, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(symX + smaW + 4, subLineY, Graphics.FONT_XTINY, "R:" + rsi.format("%.0f"), Graphics.TEXT_JUSTIFY_LEFT);
-
-                // Line 2 Right: Compact Day Low (L) / Day High (H)
-                var loStr = (dayLo >= 100.0) ? dayLo.format("%.0f") : dayLo.format("%.1f");
-                var hiStr = (dayHi >= 100.0) ? dayHi.format("%.0f") : dayHi.format("%.1f");
-                dc.setColor(0x94A3B8, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(
-                    rightEdgeX,
-                    subLineY,
-                    Graphics.FONT_XTINY,
-                    "L" + loStr + " H" + hiStr,
-                    Graphics.TEXT_JUSTIFY_RIGHT
-                );
+                dc.drawText(symX + smaW + 5, subLineY, fMicro, rsiText, Graphics.TEXT_JUSTIFY_LEFT);
             } else {
-                var textOffsetY = (rowHeight - xtinyH) / 2;
+                var textOffsetY = (cardH - rowFontH) / 2;
                 if (textOffsetY < 2) { textOffsetY = 2; }
                 dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(sidePad + 15, rowY + textOffsetY, Graphics.FONT_XTINY, sym, Graphics.TEXT_JUSTIFY_LEFT);
+                dc.drawText(rowPad + 14, rowY + textOffsetY, fRow, sym, Graphics.TEXT_JUSTIFY_LEFT);
 
                 dc.setColor(0xCBD5E1, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(rightEdgeX - pctWidth - 5, rowY + textOffsetY, Graphics.FONT_XTINY, pxStr, Graphics.TEXT_JUSTIFY_RIGHT);
+                dc.drawText(rightEdgeX - pctWidth - 6, rowY + textOffsetY, fRow, pxStr, Graphics.TEXT_JUSTIFY_RIGHT);
 
                 dc.setColor(rowColor, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(rightEdgeX, rowY + textOffsetY, Graphics.FONT_XTINY, pctStr, Graphics.TEXT_JUSTIFY_RIGHT);
+                dc.drawText(rightEdgeX, rowY + textOffsetY, fRow, pctStr, Graphics.TEXT_JUSTIFY_RIGHT);
             }
 
             rowY += rowHeight;

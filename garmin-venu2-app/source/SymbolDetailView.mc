@@ -78,13 +78,17 @@ class SymbolDetailView extends WatchUi.View {
             dc.setAntiAlias(true);
         }
 
+        var fMicro = _store.fontMicro;
+        var fRow = (w >= 340) ? _store.fontRow : _store.fontMicro;
+        var fVal = (w >= 340) ? _store.fontVal : _store.fontRow;
+
         dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
         dc.clear();
 
         var item = getCurrentItem();
         if (item == null) {
             dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, h / 2, Graphics.FONT_SMALL, "No Symbol Data", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, h / 2, fVal, "No Symbol Data", Graphics.TEXT_JUSTIFY_CENTER);
             return;
         }
 
@@ -114,9 +118,8 @@ class SymbolDetailView extends WatchUi.View {
         if (!alrt.equals("NORMAL")) {
             titleStr = titleStr + " · " + alrt;
         }
-        var symFont = (h < 320) ? Graphics.FONT_XTINY : Graphics.FONT_SMALL;
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, (h * 4) / 100, symFont, titleStr, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, (h * 6) / 100, fVal, titleStr, Graphics.TEXT_JUSTIFY_CENTER);
 
         // 2. Current Price (ราคาปัจจุบัน) & % Change
         var isUp = (pct >= 0.0);
@@ -126,8 +129,8 @@ class SymbolDetailView extends WatchUi.View {
         dc.setColor(priceColor, Graphics.COLOR_TRANSPARENT);
         dc.drawText(
             cx,
-            (h * 12) / 100,
-            Graphics.FONT_XTINY,
+            (h * 14) / 100,
+            fRow,
             "Now: " + cur + px.format("%.2f") + "  " + chgSign + chg.format("%.2f") + " (" + sign + pct.format("%.2f") + "%)",
             Graphics.TEXT_JUSTIFY_CENTER
         );
@@ -136,8 +139,8 @@ class SymbolDetailView extends WatchUi.View {
         dc.setColor(0xE2E8F0, Graphics.COLOR_TRANSPARENT);
         dc.drawText(
             cx,
-            (h * 19) / 100,
-            Graphics.FONT_XTINY,
+            (h * 20) / 100,
+            fMicro,
             "Day L: " + cur + dayLo.format("%.2f") + "  H: " + cur + dayHi.format("%.2f"),
             Graphics.TEXT_JUSTIFY_CENTER
         );
@@ -148,13 +151,13 @@ class SymbolDetailView extends WatchUi.View {
             smaLineStr = smaLineStr + " · BB";
         }
         dc.setColor(0x06B6D4, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, (h * 25) / 100, Graphics.FONT_XTINY, smaLineStr, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, (h * 26) / 100, fMicro, smaLineStr, Graphics.TEXT_JUSTIFY_CENTER);
 
         // 4. Responsive Sparkline + SMA-20 + Bollinger Chart Box
         var chartX = (w * 14) / 100;
         var chartY = (h * 33) / 100;
         var chartW = w - (chartX * 2);
-        var chartH = (h * 20) / 100;
+        var chartH = (h * 21) / 100;
 
         dc.setColor(0x0B0F17, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(chartX - 6, chartY - 4, chartW + 12, chartH + 8, 10);
@@ -228,13 +231,13 @@ class SymbolDetailView extends WatchUi.View {
         var sh = _store.toFloat(item.get("sh"), 0.0);
         var avg = _store.getDictFloat(item, "avg", "ac", 0.0);
         var pPct = _store.getDictFloat(item, "pPct", "tPct", 0.0);
-        var tgt = _store.getDictFloat(item, "tgt", "tg", 0.0);
+        var tgt = _store.getDictFloat(item.get("tgt") != null ? item : item, "tgt", "tg", 0.0);
 
         dc.setColor(0xCBD5E1, Graphics.COLOR_TRANSPARENT);
         var posLine = (sh > 0.0)
             ? ("Hold: " + sh.format("%.1f") + " @ " + cur + avg.format("%.1f") + " (" + pPct.format("%.1f") + "%)")
             : ("Watchlist · Target: " + cur + tgt.format("%.1f"));
-        dc.drawText(cx, (h * 56) / 100, Graphics.FONT_XTINY, posLine, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, (h * 58) / 100, fMicro, posLine, Graphics.TEXT_JUSTIFY_CENTER);
 
         // 6. WebMemo Note Box at Bottom of Screen
         var note = (item.hasKey("note") ? item.get("note") : item.get("m")) as String?;
@@ -242,17 +245,17 @@ class SymbolDetailView extends WatchUi.View {
             note = "No WebMemo attached";
         }
         dc.setColor(0x06B6D4, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, (h * 63) / 100, Graphics.FONT_XTINY, "WEBMEMO", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, (h * 65) / 100, fMicro, "WEBMEMO", Graphics.TEXT_JUSTIFY_CENTER);
 
-        var fittedNote = Graphics.fitTextToArea(note, Graphics.FONT_XTINY, w - ((w * 26) / 100), (h * 18) / 100, true);
+        var fittedNote = Graphics.fitTextToArea(note, fMicro, w - ((w * 28) / 100), (h * 16) / 100, true);
         if (fittedNote == null) {
-            fittedNote = (note.length() > 26) ? (note.substring(0, 26) + "...") : note;
+            fittedNote = (note.length() > 28) ? (note.substring(0, 28) + "...") : note;
         }
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
         dc.drawText(
             cx,
-            (h * 70) / 100,
-            Graphics.FONT_XTINY,
+            (h * 71) / 100,
+            fMicro,
             fittedNote,
             Graphics.TEXT_JUSTIFY_CENTER
         );

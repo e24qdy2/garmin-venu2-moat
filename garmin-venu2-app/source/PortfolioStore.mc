@@ -1,7 +1,9 @@
 import Toybox.Application;
 import Toybox.Attention;
 import Toybox.Communications;
+import Toybox.Graphics;
 import Toybox.Lang;
+import Toybox.Math;
 import Toybox.System;
 import Toybox.Timer;
 import Toybox.WatchUi;
@@ -14,12 +16,17 @@ class PortfolioStore {
     public var isSyncing as Boolean = false;
     public var lastStatus as String = "READY";
 
+    // Anti-Aliased Custom Bitmap Fonts matching Web Virtual Watch (14.5px Micro, 17px Row, 22px Val)
+    public var fontMicro = Graphics.FONT_XTINY;
+    public var fontRow = Graphics.FONT_XTINY;
+    public var fontVal = Graphics.FONT_SMALL;
+
     // Responsive Layout State (supports 260x260 MIP through 454x454 AMOLED)
     public var screenW as Number = 416;
     public var screenH as Number = 416;
     public var visibleRows as Number = 4;
-    public var rowStartY as Number = 136;
-    public var rowHeight as Number = 54;
+    public var rowStartY as Number = 116;
+    public var rowHeight as Number = 58;
 
     // Auto-Swipe, Auto-Sort % Change & Optional Always-On Display Settings (synced from Web + Watch Properties)
     public var autoSwipeEnabled as Boolean = true;
@@ -43,20 +50,53 @@ class PortfolioStore {
     private var _backlightTick as Number = 0;
 
     function initialize() {
+        loadCustomFonts();
         initHardwareDeviceId();
         loadLocalProperties();
+    }
+
+    function loadCustomFonts() as Void {
+        try {
+            if (Rez has :Fonts) {
+                fontMicro = WatchUi.loadResource(Rez.Fonts.FontMicro);
+                fontRow = WatchUi.loadResource(Rez.Fonts.FontRow);
+                fontVal = WatchUi.loadResource(Rez.Fonts.FontVal);
+            }
+        } catch (ex) {
+            fontMicro = Graphics.FONT_XTINY;
+            fontRow = Graphics.FONT_XTINY;
+            fontVal = Graphics.FONT_SMALL;
+        }
     }
 
     function updateResponsiveMetrics(w as Number, h as Number) as Void {
         screenW = w;
         screenH = h;
         visibleRows = (h < 320) ? 3 : 4;
-        rowStartY = (h * 27) / 100;
-        var availableH = h - rowStartY - ((h * 9) / 100);
+        rowStartY = (h * 28) / 100;
+        var availableH = (h * 56) / 100;
         rowHeight = availableH / visibleRows;
-        if (rowHeight < 34) {
-            rowHeight = 34;
+        if (rowHeight < 36) {
+            rowHeight = 36;
         }
+    }
+
+    function getCirclePadX(yTop as Number, yBottom as Number, minPad as Number) as Number {
+        var cy = screenH / 2;
+        var r = screenW / 2;
+        var dyTop = (yTop < cy) ? (cy - yTop) : (yTop - cy);
+        var dyBot = (yBottom < cy) ? (cy - yBottom) : (yBottom - cy);
+        var dy = (dyTop > dyBot) ? dyTop : dyBot;
+        if (dy >= (r - 8)) {
+            return minPad;
+        }
+        var sq = (r * r) - (dy * dy);
+        if (sq <= 0) {
+            return minPad;
+        }
+        var halfChord = Math.sqrt(sq.toFloat()).toNumber();
+        var circlePad = (screenW / 2) - halfChord + 10;
+        return (circlePad > minPad) ? circlePad : minPad;
     }
 
     function initHardwareDeviceId() as Void {
@@ -243,11 +283,20 @@ class PortfolioStore {
     }
 
     function loadCached() as Void {
-        var saved = Application.Storage.getValue("venu2moat_payload") as Dictionary?;
-        if (saved != null) {
-            payload = saved;
-            applyRemoteConfigAndLicense(saved);
-            lastStatus = "CACHED";
+        try {
+            Application.Storage.deleteValue("venu2moat_payload");
+        } catch (ex) {
+            // Ignore cleanup errors on legacy storage key
+        }
+        try {
+            var saved = Application.Storage.getValue("venu2moat_v3") as Dictionary?;
+            if (saved != null) {
+                payload = saved;
+                applyRemoteConfigAndLicense(saved);
+                lastStatus = "CACHED";
+            }
+        } catch (ex2) {
+            // Ignore storage read errors
         }
     }
 
@@ -287,7 +336,11 @@ class PortfolioStore {
         if (responseCode == 200 && data instanceof Dictionary) {
             payload = data as Dictionary;
             applyRemoteConfigAndLicense(payload);
-            Application.Storage.setValue("venu2moat_payload", payload);
+            try {
+                Application.Storage.setValue("venu2moat_v3", payload);
+            } catch (ex) {
+                // Storage quota exceeded on large portfolios; keep live payload in RAM
+            }
             lastStatus = "LIVE";
         } else {
             lastStatus = "OFFLINE (" + responseCode.toString() + ")";

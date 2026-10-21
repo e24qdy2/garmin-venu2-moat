@@ -867,44 +867,33 @@ async function buildEnrichedPayload(profile, queryOpts = {}) {
               ? "STOP_BREACH"
               : "TARGET_HIT"
             : "NORMAL";
-          const spk14 = h.sparkline.slice(-14);
-          const memoShort = h.memo.slice(0, 48);
-          return {
-            s: cleanSym,
+          const spk8 = h.sparkline.slice(-8).map((v) => (v >= 100 ? Math.round(v) : Math.round(v * 10) / 10));
+          const memoShort = h.memo.slice(0, 36);
+          const item = {
             sym: cleanSym,
-            n: h.name.slice(0, 14),
-            cur: h.currency,
-            p: h.price,
             px: h.price,
             hi: h.dayHigh,
             lo: h.dayLow,
             chg: h.change,
-            c: h.changePct,
             pct: h.changePct,
-            sh: h.shares,
-            ac: h.avgCost,
-            avg: h.avgCost,
-            mv: Math.round(h.marketValueBase),
-            dp: Math.round(h.dayPnlBase),
-            tp: Math.round(h.totalPnl),
-            tPct: h.totalPnlPct,
-            pPct: h.totalPnlPct,
-            tg: h.targetPrice,
-            tgt: h.targetPrice,
-            ad: h.alertDir === "BELOW" ? "B" : "A",
-            at: h.alertTriggered ? 1 : 0,
-            alrt: alrtState,
-            m: memoShort,
-            note: memoShort,
-            sp: spk14,
-            spk: spk14,
             sma: h.sma20,
             sPct: h.smaPct,
             rsi: Math.round(h.rsi14 ?? 50),
             ed: h.earningsBadge || "",
             ub: h.upperBB,
-            lb: h.lowerBB
+            lb: h.lowerBB,
+            sp: spk8
           };
+          if (h.currency && h.currency !== "USD") item.cur = h.currency;
+          if (h.shares > 0) {
+            item.sh = h.shares;
+            item.avg = h.avgCost;
+            item.pPct = h.totalPnlPct;
+          }
+          if (h.targetPrice > 0) item.tgt = h.targetPrice;
+          if (alrtState !== "NORMAL") item.alrt = alrtState;
+          if (memoShort) item.m = memoShort;
+          return item;
         })
       }))
     }

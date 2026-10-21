@@ -1,0 +1,5 @@
+<fonts>
+    <font id="FontMicro" filename="moat_micro.fnt" antialias="true" />
+    <font id="FontRow" filename="moat_row.fnt" antialias="true" />
+    <font id="FontVal" filename="moat_val.fnt" antialias="true" />
+</fonts>
