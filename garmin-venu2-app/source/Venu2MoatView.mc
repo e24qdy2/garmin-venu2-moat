@@ -207,7 +207,7 @@ class Venu2MoatView extends WatchUi.View {
             var rowSign = (lastPct >= 0.0) ? "+" : "";
             var rowColor = (lastPct >= 0.0) ? 0x10B981 : 0xF43F5E;
             var pctStr = rowSign + lastPct.format("%.2f") + "%";
-            var pxStr = (px >= 1000.0) ? (itemCur + px.format("%.0f")) : (itemCur + px.format("%.2f"));
+            var pxStr = (px >= 10000.0) ? (itemCur + px.format("%.0f")) : (itemCur + px.format("%.2f"));
             var pctWidth = dc.getTextWidthInPixels(pctStr, Graphics.FONT_XTINY);
             var rightEdgeX = w - sidePad - 6;
 

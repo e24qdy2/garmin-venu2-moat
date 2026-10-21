@@ -200,9 +200,9 @@ function checkRateLimit(req, bucketName, maxRequests = 20, windowMs = 5 * 60 * 1
   return { allowed: true, remaining: maxRequests - entry.count };
 }
 
-// In-memory cache for Yahoo Finance chart/quote data (60s TTL)
+// In-memory cache for Yahoo Finance chart/quote data (30s TTL)
 const marketCache = new Map();
-const CACHE_TTL_MS = 60 * 1000;
+const CACHE_TTL_MS = 30 * 1000;
 
 function fetchJsonHttps(targetUrl) {
   return new Promise((resolve, reject) => {
@@ -455,16 +455,61 @@ async function fetchSymbolMarketData(symbol) {
     const rawHighs = (quote0.high || []).filter((n) => typeof n === "number" && Number.isFinite(n));
     const rawLows = (quote0.low || []).filter((n) => typeof n === "number" && Number.isFinite(n));
     const closes = rawCloses.filter((n) => typeof n === "number" && Number.isFinite(n));
-    const price = Number((meta.regularMarketPrice ?? closes[closes.length - 1] ?? 100).toFixed(2));
-    const prevClose = Number((meta.chartPreviousClose ?? meta.previousClose ?? closes[closes.length - 2] ?? price).toFixed(2));
+    const rawPrice = Number(meta.regularMarketPrice ?? meta.fulldayPrice ?? closes[closes.length - 1] ?? 100);
+    const price = Number(rawPrice.toFixed(2));
+
+    // Note: when range=3mo, meta.chartPreviousClose is the close 3 months ago, NOT yesterday's close.
+    // Derive yesterday's close from meta.previousClose, fulldayChange, or the prior daily bar (closes[closes.length - 2]).
+    let rawPrevClose = rawPrice;
+    if (typeof meta.previousClose === "number" && Number.isFinite(meta.previousClose) && meta.previousClose > 0) {
+      rawPrevClose = meta.previousClose;
+    } else if (
+      typeof meta.fulldayChange === "number" &&
+      Number.isFinite(meta.fulldayChange) &&
+      rawPrice - meta.fulldayChange > 0
+    ) {
+      rawPrevClose = rawPrice - meta.fulldayChange;
+    } else if (closes.length >= 2 && closes[closes.length - 2] > 0) {
+      rawPrevClose = closes[closes.length - 2];
+    } else if (
+      typeof meta.regularMarketChangePercent === "number" &&
+      Number.isFinite(meta.regularMarketChangePercent) &&
+      meta.regularMarketChangePercent > -100
+    ) {
+      rawPrevClose = rawPrice / (1 + meta.regularMarketChangePercent / 100);
+    } else if (
+      typeof meta.chartPreviousClose === "number" &&
+      Number.isFinite(meta.chartPreviousClose) &&
+      meta.chartPreviousClose > 0
+    ) {
+      rawPrevClose = meta.chartPreviousClose;
+    }
+    const prevClose = Number(rawPrevClose.toFixed(2));
+
     const rawDayHigh = meta.regularMarketDayHigh ?? rawHighs[rawHighs.length - 1] ?? Math.max(price, prevClose);
     const rawDayLow = meta.regularMarketDayLow ?? rawLows[rawLows.length - 1] ?? Math.min(price, prevClose);
     const dayHigh = Number(Math.max(rawDayHigh, price).toFixed(2));
     const dayLow = Number(Math.min(rawDayLow, price).toFixed(2));
-    const change = Number((price - prevClose).toFixed(2));
-    const changePct = prevClose > 0 ? Number(((change / prevClose) * 100).toFixed(2)) : 0;
+
+    const rawChange =
+      typeof meta.fulldayChange === "number" && Number.isFinite(meta.fulldayChange)
+        ? meta.fulldayChange
+        : rawPrice - rawPrevClose;
+    const change = Number(rawChange.toFixed(2));
+
+    const rawChangePct =
+      typeof meta.regularMarketChangePercent === "number" && Number.isFinite(meta.regularMarketChangePercent)
+        ? meta.regularMarketChangePercent
+        : typeof meta.fulldayChangePercent === "number" && Number.isFinite(meta.fulldayChangePercent)
+        ? meta.fulldayChangePercent
+        : rawPrevClose > 0
+        ? ((rawPrice - rawPrevClose) / rawPrevClose) * 100
+        : 0;
+    const changePct = Number(rawChangePct.toFixed(2));
+
     const currency = meta.currency || (sym.endsWith(".BK") ? "THB" : "USD");
-    const tech = computeTechnicals(closes.length >= 5 ? closes : [prevClose, price]);
+    const closesForTech = closes.length >= 5 ? [...closes.slice(0, -1), rawPrice] : [prevClose, price];
+    const tech = computeTechnicals(closesForTech);
     const smaPct = tech.sma20 > 0 ? Number((((price - tech.sma20) / tech.sma20) * 100).toFixed(2)) : 0;
     const earningsDate = resolveEarningsDateForSymbol(sym, meta);
     const earningsBadge = earningsDate ? `e-${earningsDate}` : "";
@@ -805,6 +850,7 @@ async function buildEnrichedPayload(profile, queryOpts = {}) {
             px: h.price,
             hi: h.dayHigh,
             lo: h.dayLow,
+            chg: h.change,
             c: h.changePct,
             pct: h.changePct,
             sh: h.shares,

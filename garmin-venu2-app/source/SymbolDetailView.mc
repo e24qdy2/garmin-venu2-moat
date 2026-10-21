@@ -93,6 +93,8 @@ class SymbolDetailView extends WatchUi.View {
         var cur = curStr.equals("USD") ? "$" : "฿";
         var px = _store.getDictFloat(item, "px", "p", 0.0);
         var pct = _store.getDictFloat(item, "pct", "c", 0.0);
+        var defaultChg = (pct != -100.0) ? (px - (px / (1.0 + (pct / 100.0)))) : 0.0;
+        var chg = _store.getDictFloat(item, "chg", null, defaultChg);
         var sma = _store.getDictFloat(item, "sma", null, px);
         var defaultSmaPct = (sma > 0.0) ? (((px - sma) * 100.0) / sma) : 0.0;
         var sPct = _store.getDictFloat(item, "sPct", null, defaultSmaPct);
@@ -120,12 +122,13 @@ class SymbolDetailView extends WatchUi.View {
         var isUp = (pct >= 0.0);
         var priceColor = isUp ? 0x10B981 : 0xF43F5E;
         var sign = isUp ? "+" : "";
+        var chgSign = (chg >= 0.0) ? "+" : "";
         dc.setColor(priceColor, Graphics.COLOR_TRANSPARENT);
         dc.drawText(
             cx,
             (h * 12) / 100,
             Graphics.FONT_XTINY,
-            "Now: " + cur + px.format("%.2f") + " (" + sign + pct.format("%.2f") + "%)",
+            "Now: " + cur + px.format("%.2f") + "  " + chgSign + chg.format("%.2f") + " (" + sign + pct.format("%.2f") + "%)",
             Graphics.TEXT_JUSTIFY_CENTER
         );
 

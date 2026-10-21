@@ -474,7 +474,12 @@ async function runSdlcSuite() {
   assert.ok(typeof firstWebHolding.dayHigh === "number" && firstWebHolding.dayHigh >= firstWebHolding.price, "Web holding must include dayHigh >= price");
   assert.ok(typeof firstWebHolding.dayLow === "number" && firstWebHolding.dayLow <= firstWebHolding.price, "Web holding must include dayLow <= price");
   assert.ok(typeof firstWatchHolding.px === "number" && firstWatchHolding.px > 0, "Watch holding must include px (current price)");
+  assert.ok(typeof firstWatchHolding.chg === "number", "Watch holding must include chg (daily change in currency)");
   assert.ok(typeof firstWatchHolding.pct === "number", "Watch holding must include pct (Last % change)");
+  assert.ok(
+    Math.abs(firstWebHolding.changePct) < 25,
+    "Daily changePct must reflect single-day Yahoo Finance change, not 3-month chartPreviousClose drift"
+  );
   assert.ok(typeof firstWatchHolding.sma === "number" && firstWatchHolding.sma > 0, "Watch holding must include sma (SMA20)");
   assert.ok(typeof firstWatchHolding.sPct === "number", "Watch holding must include sPct (SMA20 % distance)");
   assert.ok(/^e-\d{2}\/\d{2}\/\d{2}$/.test(firstWatchHolding.ed), "Watch equity holding must include ed (e-dd/mm/yy)");

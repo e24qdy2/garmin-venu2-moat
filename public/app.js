@@ -38,7 +38,7 @@
     if (compact && abs >= 1_000_000) {
       return `${val < 0 ? '-' : ''}${sym}${(abs / 1_000_000).toFixed(2)}M`;
     }
-    const decimals = abs >= 1000 ? 0 : abs < 10 && abs > 0 ? 3 : 2;
+    const decimals = compact && abs >= 1000 ? 0 : 2;
     return `${val < 0 ? '-' : ''}${sym}${abs.toLocaleString('en-US', {
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals
@@ -819,7 +819,7 @@
                   ${formatMoney(item.price, item.currency)}
                 </div>
                 <div class="text-xs font-semibold tabular-nums ${dayPos ? 'text-emerald' : 'text-crimson'}">
-                  ${formatSignedPct(item.changePct)}
+                  ${formatSignedMoney(item.change, item.currency)} (${formatSignedPct(item.changePct)})
                 </div>
               </div>
 
