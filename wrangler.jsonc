@@ -1,37 +1,36 @@
-﻿{
-    "$schema":  "node_modules/wrangler/config-schema.json",
-    "name":  "venu2-moat",
-    "account_id":  "a15ffdeef1d0b1f550bcd7a32f9b3666",
-    "main":  "src/worker.js",
-    "compatibility_date":  "2025-02-01",
-    "compatibility_flags":  [
-                                "nodejs_compat"
-                            ],
-    "workers_dev":  true,
-    "assets":  {
-                   "directory":  "./public",
-                   "binding":  "ASSETS",
-                   "run_worker_first":  true
-               },
-    "routes":  [
-                   {
-                       "pattern":  "moat.readybyte.top/*",
-                       "zone_name":  "readybyte.top"
-                   },
-                   {
-                       "pattern":  "admin-moat.readybyte.top/*",
-                       "zone_name":  "readybyte.top"
-                   }
-               ],
-    "vars":  {
-                 "OWNER_EMAIL":  "saharat.bun@icloud.com",
-                 "NOTIFY_EMAIL":  "e24qdy2@gmail.com"
-             },
-    "d1_databases":  [
-                         {
-                             "database_name":  "venu2-moat-db",
-                             "database_id":  "4cdb499f-1ac6-44ca-adb1-00fbdca43534",
-                             "binding":  "DB"
-                         }
-                     ]
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "venu2-moat",
+  "account_id": "a15ffdeef1d0b1f550bcd7a32f9b3666",
+  "main": "src/worker.js",
+  "compatibility_date": "2025-02-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "html_handling": "none",
+    "run_worker_first": true
+  },
+  "routes": [
+    {
+      "pattern": "moat.readybyte.top/*",
+      "zone_name": "readybyte.top"
+    },
+    {
+      "pattern": "admin-moat.readybyte.top/*",
+      "zone_name": "readybyte.top"
+    }
+  ],
+  "vars": {
+    "OWNER_EMAIL": "saharat.bun@icloud.com",
+    "NOTIFY_EMAIL": "e24qdy2@gmail.com"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "venu2-moat-db",
+      "database_id": "4cdb499f-1ac6-44ca-adb1-00fbdca43534"
+    }
+  ]
 }

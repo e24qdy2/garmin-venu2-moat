@@ -26,7 +26,7 @@ const SECURITY_HEADERS = {
   "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
   "Permissions-Policy": "geolocation=(), microphone=(), camera=()",
   "Content-Security-Policy":
-    "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://unpkg.com https://cdn.jsdelivr.net data:; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'"
+    "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://unpkg.com https://cdn.jsdelivr.net data:; img-src 'self' data: https:; connect-src 'self' https://cloudflareinsights.com https://*.cloudflareinsights.com; frame-ancestors 'none'; base-uri 'self'; object-src 'none'"
 };
 
 // In-memory state per Worker isolate, hydrated from D1 or KV if bound, or seeded from INITIAL_*_STORE
@@ -82,6 +82,19 @@ async function ensureStoreHydrated(env) {
   runtimePortfoliosStore = loadedPortfolios || deepClone(INITIAL_PORTFOLIOS_STORE);
   runtimeLicensesStore = loadedLicenses || deepClone(INITIAL_LICENSES_STORE);
 
+  // Repair default adminAuth if a previous cold start without explicit ADMIN_INITIAL_PASSWORD overwrote the seed hash
+  if (
+    runtimeLicensesStore &&
+    runtimeLicensesStore.adminAuth &&
+    runtimeLicensesStore.adminAuth.isDefaultPassword &&
+    INITIAL_LICENSES_STORE.adminAuth &&
+    runtimeLicensesStore.adminAuth.passwordHash !== INITIAL_LICENSES_STORE.adminAuth.passwordHash &&
+    !(env && env.ADMIN_INITIAL_PASSWORD)
+  ) {
+    runtimeLicensesStore.adminAuth = deepClone(INITIAL_LICENSES_STORE.adminAuth);
+    await persistKey(env, "licenses", runtimeLicensesStore);
+  }
+
   // Persist initial seed into D1/KV if it wasn't there yet
   if (!loadedPortfolios) {
     await persistKey(env, "portfolios", runtimePortfoliosStore);
@@ -95,10 +108,16 @@ async function ensureStoreHydrated(env) {
     (typeof process !== "undefined" && process.env && process.env.LICENSE_HMAC_SECRET) ||
     "VENU2-MOAT-PROD-HMAC-2026-SAHARAT-READYBYTE-TOP";
 
+  const defaultAdminPassword =
+    (env && env.ADMIN_INITIAL_PASSWORD) ||
+    (typeof process !== "undefined" && process.env && process.env.ADMIN_INITIAL_PASSWORD) ||
+    "";
+
   licenseManagerInstance = new LicenseManager({
     serverless: true,
     memoryDb: runtimeLicensesStore,
     secret,
+    defaultAdminPassword: defaultAdminPassword || undefined,
     onWriteDb: (updatedDb) => {
       runtimeLicensesStore = updatedDb;
     }
@@ -676,7 +695,7 @@ function jsonResponse(status, data, extraHeaders = {}) {
       "Content-Type": "application/json; charset=utf-8",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, X-Admin-Token, X-Admin-Email",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Admin-Token, X-Admin-Email",
       "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
       Pragma: "no-cache",
       Expires: "0",
@@ -703,7 +722,7 @@ function adminJsonResponse(reqHeaders, status, data, extraHeaders = {}) {
       "Content-Type": "application/json; charset=utf-8",
       ...corsHeaders,
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, X-Admin-Token, X-Admin-Email",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Admin-Token, X-Admin-Email",
       "Cache-Control": "no-store",
       ...extraHeaders
     }
@@ -742,6 +761,18 @@ export default {
       return jsonResponse(200, { ok: true });
     }
 
+    if (pathname === "/favicon.ico" && request.method === "GET") {
+      const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#0b1120"/><path d="M12 44 L24 30 L34 36 L52 18" stroke="#10b981" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="52" cy="18" r="4" fill="#34d399"/></svg>`;
+      return new Response(svgIcon, {
+        status: 200,
+        headers: {
+          ...SECURITY_HEADERS,
+          "Content-Type": "image/svg+xml",
+          "Cache-Control": "public, max-age=86400"
+        }
+      });
+    }
+
     // 1. HEALTH & COMPATIBLE GARMIN DEVICES API
     if (pathname === "/api/health" && request.method === "GET") {
       return jsonResponse(200, {
@@ -755,7 +786,7 @@ export default {
       });
     }
 
-    if (pathname === "/api/garmin/devices" && request.method === "GET") {
+    if ((pathname === "/api/garmin/devices" || pathname === "/api/devices/compatible") && request.method === "GET") {
       return jsonResponse(200, {
         ok: true,
         count: COMPATIBLE_GARMIN_DEVICES.length,
@@ -768,29 +799,41 @@ export default {
       const syncKey = query.key || "VENU2-88";
       const profile = getOrCreateProfile(syncKey);
       const payload = await buildEnrichedPayload(profile, {
-        deviceId: query.deviceId,
-        activationKey: query.licenseKey,
-        watchModel: query.watchModel
+        deviceId: query.did || query.deviceId,
+        activationKey: query.akey || query.licenseKey,
+        watchModel: query.model || query.watchModel
       });
       await flushStores(env, ctx);
       return jsonResponse(200, payload);
     }
 
+    // 2B. POST /api/refresh (Clear cache and return fresh quotes)
+    if (pathname === "/api/refresh" && request.method === "POST") {
+      const body = await parseRequestBody(request).catch(() => ({}));
+      const syncKey = (body.syncKey || query.key || "VENU2-88").trim().toUpperCase();
+      marketCache.clear();
+      const profile = getOrCreateProfile(syncKey);
+      const payload = await buildEnrichedPayload(profile);
+      await flushStores(env, ctx);
+      return jsonResponse(200, payload);
+    }
+
     // 3. GET ULTRA-COMPACT GARMIN WATCH PAYLOAD
-    if (pathname === "/api/watch" && request.method === "GET") {
-      const syncKey = query.key || "VENU2-88";
+    if ((pathname === "/api/watch" || pathname.startsWith("/api/watch/")) && request.method === "GET") {
+      const pathKey = pathname.startsWith("/api/watch/") ? pathname.replace("/api/watch/", "") : "";
+      const syncKey = pathKey || query.key || "VENU2-88";
       const profile = getOrCreateProfile(syncKey);
       const payload = await buildEnrichedPayload(profile, {
         deviceId: query.did || query.deviceId,
-        activationKey: query.lkey || query.licenseKey,
-        watchModel: query.mdl || query.watchModel
+        activationKey: query.akey || query.lkey || query.licenseKey,
+        watchModel: query.model || query.mdl || query.watchModel
       });
       await flushStores(env, ctx);
       return jsonResponse(200, payload.watch);
     }
 
     // 4. SAVE / UPDATE PORTFOLIO & WATCH SETTINGS FROM WEB APP
-    if (pathname === "/api/portfolio" && request.method === "PUT") {
+    if (pathname === "/api/portfolio" && (request.method === "PUT" || request.method === "POST")) {
       try {
         const body = await parseRequestBody(request);
         const syncKey = (body.syncKey || query.key || "VENU2-88").trim().toUpperCase();
@@ -800,25 +843,34 @@ export default {
           existing.watchSettings || DEFAULT_WATCH_SETTINGS
         );
 
+        const normalizedPortfolios = Array.isArray(body.portfolios)
+          ? body.portfolios.map((p, idx) => {
+              const rawList = Array.isArray(p.holdings) ? p.holdings : Array.isArray(p.items) ? p.items : [];
+              return {
+                id: p.id || `port-${idx + 1}`,
+                name: (p.name || `Portfolio ${idx + 1}`).slice(0, 28),
+                currency: p.currency === "THB" ? "THB" : "USD",
+                holdings: rawList.map((h) => ({
+                  symbol: String(h.symbol || "NVDA").trim().toUpperCase(),
+                  name: String(h.name || h.symbol || "").slice(0, 28),
+                  currency: h.currency || p.currency || "USD",
+                  shares: Math.max(0, Number(h.shares ?? 0)),
+                  avgCost: Math.max(0, Number(h.avgCost ?? 0)),
+                  targetPrice: Math.max(0, Number(h.targetPrice ?? 0)),
+                  stopPrice: Math.max(0, Number(h.stopPrice ?? 0)),
+                  alertDir: h.alertDir || (Number(h.stopPrice) > 0 && !Number(h.targetPrice) ? "BELOW" : "ABOVE"),
+                  memo: String(h.memo !== undefined ? h.memo : h.note || "").slice(0, 140)
+                }))
+              };
+            })
+          : existing.portfolios;
+
         runtimePortfoliosStore[syncKey] = {
           syncKey,
           baseCurrency: body.baseCurrency === "USD" ? "USD" : "THB",
           updatedAt: new Date().toISOString(),
           watchSettings: nextWatchSettings,
-          portfolios: (body.portfolios || []).map((p, idx) => ({
-            id: p.id || `port-${idx + 1}`,
-            name: (p.name || `Portfolio ${idx + 1}`).slice(0, 28),
-            currency: p.currency === "THB" ? "THB" : "USD",
-            holdings: (p.holdings || p.items || []).map((h) => ({
-              symbol: String(h.symbol || "NVDA").trim().toUpperCase(),
-              name: String(h.name || h.symbol || "").slice(0, 28),
-              shares: Math.max(0, Number(h.shares) || 0),
-              avgCost: Math.max(0, Number(h.avgCost) || 0),
-              targetPrice: Math.max(0, Number(h.targetPrice) || 0),
-              alertDir: h.alertDir === "BELOW" ? "BELOW" : "ABOVE",
-              memo: String(h.memo || "").slice(0, 90)
-            }))
-          }))
+          portfolios: normalizedPortfolios
         };
         const payload = await buildEnrichedPayload(runtimePortfoliosStore[syncKey], {
           deviceId: nextWatchSettings.deviceId,
@@ -892,8 +944,9 @@ export default {
         const deviceId = licenseManagerInstance.normalizeDeviceId(body.deviceId || profile.watchSettings.deviceId);
         const activationKey = licenseManagerInstance.normalizeKey(body.activationKey || "");
 
-        const result = licenseManagerInstance.activateDeviceWithKey(deviceId, activationKey, {
+        const result = licenseManagerInstance.activateDevice(deviceId, activationKey, {
           syncKey,
+          actor: "web-companion",
           label: body.label || ""
         });
         if (!result.ok) {
@@ -901,12 +954,13 @@ export default {
           return jsonResponse(400, result);
         }
 
+        const effectiveActivatedKey = result.activatedKey || result.license?.activatedKey || activationKey;
         if (runtimePortfoliosStore[syncKey]) {
           runtimePortfoliosStore[syncKey].watchSettings = sanitizeWatchSettings(
             {
               ...runtimePortfoliosStore[syncKey].watchSettings,
               deviceId,
-              activationKey: result.license.activatedKey
+              activationKey: effectiveActivatedKey
             },
             runtimePortfoliosStore[syncKey].watchSettings
           );
@@ -914,7 +968,7 @@ export default {
 
         const payload = await buildEnrichedPayload(getOrCreateProfile(syncKey), {
           deviceId,
-          activationKey: result.license.activatedKey
+          activationKey: effectiveActivatedKey
         });
         await flushStores(env, ctx);
         return jsonResponse(200, {
@@ -931,9 +985,11 @@ export default {
     if (pathname === "/api/device/status" && request.method === "GET") {
       const syncKey = String(query.key || "VENU2-88").trim().toUpperCase();
       const profile = getOrCreateProfile(syncKey);
-      const deviceId = licenseManagerInstance.normalizeDeviceId(query.deviceId || profile.watchSettings.deviceId);
+      const deviceId = licenseManagerInstance.normalizeDeviceId(
+        query.did || query.deviceId || profile.watchSettings.deviceId
+      );
       const activationKey = licenseManagerInstance.normalizeKey(
-        query.licenseKey || profile.watchSettings.activationKey || ""
+        query.akey || query.licenseKey || profile.watchSettings.activationKey || ""
       );
       const evaluated = licenseManagerInstance.evaluateDeviceLicense(deviceId, {
         syncKey,
@@ -948,7 +1004,7 @@ export default {
     }
 
     // 6B. CUSTOMER REQUESTS (Trial Extension / Buy PRO License) + Email Notification
-    if (pathname === "/api/device/request" && request.method === "POST") {
+    if ((pathname === "/api/license/request" || pathname === "/api/device/request") && request.method === "POST") {
       const rl = checkRateLimit(reqHeaders, "device_request", 10, 5 * 60 * 1000);
       if (!rl.allowed) {
         return jsonResponse(

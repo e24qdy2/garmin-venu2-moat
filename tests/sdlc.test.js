@@ -6,8 +6,21 @@ const { loadEnvFile } = require("../lib/envLoader");
 
 loadEnvFile();
 
-const BASE_URL = "http://localhost:3880";
+let BASE_URL = "http://localhost:3880";
 const INITIAL_ADMIN_PWD = process.env.ADMIN_INITIAL_PASSWORD || "MOAT-ADM-9X4K-7P2M";
+let ephemeralServer = null;
+
+async function ensureTestServer() {
+  try {
+    await httpRequest("GET", "/api/devices/compatible");
+  } catch (_) {
+    const { createAppServer } = require("../server");
+    ephemeralServer = createAppServer();
+    await new Promise((resolve) => ephemeralServer.listen(0, "127.0.0.1", resolve));
+    const addr = ephemeralServer.address();
+    BASE_URL = `http://127.0.0.1:${addr.port}`;
+  }
+}
 
 function httpRequest(method, reqPath, body = null, headers = {}) {
   return new Promise((resolve, reject) => {
@@ -46,6 +59,7 @@ function httpRequest(method, reqPath, body = null, headers = {}) {
 }
 
 async function runSdlcSuite() {
+  await ensureTestServer();
   console.log("==================================================================");
   console.log("  Venu2Moat SDLC + Security VA + Garmin 2024-2026 Automated Suite");
   console.log("==================================================================\n");
@@ -512,9 +526,15 @@ async function runSdlcSuite() {
   console.log("\n==================================================================");
   console.log("  ALL 12 SDLC + SECURITY VA + CLOUDFLARE WORKER SUITES PASSED (100%)");
   console.log("==================================================================");
+  if (ephemeralServer) {
+    ephemeralServer.close();
+  }
 }
 
 runSdlcSuite().catch((err) => {
+  if (ephemeralServer) {
+    ephemeralServer.close();
+  }
   console.error("[FAIL] SDLC Suite Error:", err);
   process.exit(1);
 });

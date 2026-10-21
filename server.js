@@ -646,7 +646,7 @@ const SECURITY_HEADERS = {
   "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
   "Permissions-Policy": "geolocation=(), microphone=(), camera=()",
   "Content-Security-Policy":
-    "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://unpkg.com https://cdn.jsdelivr.net data:; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'"
+    "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://unpkg.com https://cdn.jsdelivr.net data:; img-src 'self' data: https:; connect-src 'self' https://cloudflareinsights.com https://*.cloudflareinsights.com; frame-ancestors 'none'; base-uri 'self'; object-src 'none'"
 };
 
 function sendJson(res, status, obj, extraHeaders = {}) {
@@ -732,6 +732,16 @@ async function handleRequest(req, res) {
       return sendAdminJson(req, res, 200, { ok: true });
     }
     return sendJson(res, 200, { ok: true });
+  }
+
+  if (pathname === "/favicon.ico" && req.method === "GET") {
+    const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#0b1120"/><path d="M12 44 L24 30 L34 36 L52 18" stroke="#10b981" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="52" cy="18" r="4" fill="#34d399"/></svg>`;
+    res.writeHead(200, {
+      ...SECURITY_HEADERS,
+      "Content-Type": "image/svg+xml",
+      "Cache-Control": "public, max-age=86400"
+    });
+    return res.end(svgIcon);
   }
 
   // 0. GET /api/devices/compatible (2024-2026 Compatible Garmin Watches Catalog)
