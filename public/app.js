@@ -24,6 +24,7 @@
     license: null,
     autoSwipeRemainingSec: 5,
     autoSwipeIntervalId: null,
+    quoteRefreshIntervalId: null,
     menuOpen: false,
     searchTimer: null
   };
@@ -50,10 +51,41 @@
     return `${sign}${formatMoney(val, currency, compact)}`;
   }
 
-  function formatSignedPct(pct) {
+  function formatSignedPct(pct, decimals = 2) {
     const val = Number(pct || 0);
     const sign = val > 0 ? '+' : '';
-    return `${sign}${val.toFixed(2)}%`;
+    return `${sign}${val.toFixed(decimals)}%`;
+  }
+
+  function formatCompactPrice(amount, currency = 'USD') {
+    const val = Number(amount || 0);
+    const sym = currency === 'USD' ? '$' : '฿';
+    const abs = Math.abs(val);
+    const decimals = abs >= 100 ? 0 : abs < 10 && abs > 0 ? 2 : 1;
+    return `${val < 0 ? '-' : ''}${sym}${abs.toFixed(decimals)}`;
+  }
+
+  function getRsiZoneStyle(rsiVal) {
+    const r = Number(rsiVal ?? 50);
+    if (r <= 30) {
+      return {
+        textClass: 'text-emerald',
+        badgeClass: 'bg-emerald/15 text-emerald ring-1 ring-emerald/30',
+        zoneLabel: 'Oversold <=30'
+      };
+    }
+    if (r >= 70) {
+      return {
+        textClass: 'text-crimson',
+        badgeClass: 'bg-crimson/15 text-crimson ring-1 ring-crimson/30',
+        zoneLabel: 'Overbought >=70'
+      };
+    }
+    return {
+      textClass: 'text-purple-400',
+      badgeClass: 'bg-purple-500/15 text-purple-300 ring-1 ring-purple-500/30',
+      zoneLabel: 'Neutral 31-69'
+    };
   }
 
   function showToast(msg) {
@@ -113,7 +145,23 @@
 
         const dayLowVal = Number((h.dayLow ?? Math.min(h.price || minSpark, h.prevClose || minSpark)).toFixed(2));
         const dayHighVal = Number((h.dayHigh ?? Math.max(h.price || maxSpark, h.prevClose || maxSpark)).toFixed(2));
-        const sma20Val = Number((h.sma20 ?? h.price ?? 100).toFixed(2));
+        const priceVal = Number(h.price ?? 0);
+        const sma20Val = Number((h.sma20 ?? priceVal ?? 100).toFixed(2));
+        const smaPctVal = Number(
+          (
+            h.smaPct !== undefined
+              ? Number(h.smaPct)
+              : sma20Val > 0
+              ? ((priceVal - sma20Val) / sma20Val) * 100
+              : 0
+          ).toFixed(2)
+        );
+        const rsi14Val = Number(Number(h.rsi14 ?? h.rsi ?? 50).toFixed(1));
+        const rawEd = String(h.earningsDate || h.earningsBadge || h.ed || '')
+          .trim()
+          .replace(/^e-/i, '')
+          .trim();
+        const earningsBadge = rawEd ? `e-${rawEd}` : '';
 
         return {
           origIdx: h.origIdx !== undefined ? Number(h.origIdx) : hIdx,
@@ -122,7 +170,7 @@
           currency: h.currency || p.currency || 'USD',
           shares: Number(h.shares ?? 0),
           avgCost: Number(h.avgCost ?? 0),
-          price: Number(h.price ?? 0),
+          price: priceVal,
           prevClose: Number(h.prevClose ?? h.price ?? 0),
           change: Number(h.change ?? 0),
           changePct: Number(h.changePct ?? 0),
@@ -138,10 +186,14 @@
           targetPrice: Number(h.targetPrice ?? 0),
           stopPrice: h.alertDir === 'BELOW' ? Number(h.targetPrice ?? 0) : Number(h.stopPrice ?? 0),
           alertDir: h.alertDir || 'ABOVE',
+          earningsDate: rawEd,
+          earningsBadge,
           note: h.memo !== undefined ? h.memo : h.note || '',
           memo: h.memo !== undefined ? h.memo : h.note || '',
           sparkline: spark,
           sma20: sma20Val,
+          smaPct: smaPctVal,
+          rsi14: rsi14Val,
           upperBB: h.upperBB,
           lowerBB: h.lowerBB,
           smaSeries,
@@ -276,6 +328,7 @@
             avgCost: Number(it.avgCost || 0),
             targetPrice: Number(it.targetPrice || it.stopPrice || 0),
             alertDir: it.stopPrice > 0 && !it.targetPrice ? 'BELOW' : 'ABOVE',
+            earningsDate: it.earningsDate || '',
             memo: it.note || it.memo || ''
           }))
       }))
@@ -737,6 +790,7 @@
                 <div class="flex flex-wrap items-center gap-2">
                   <span class="font-mono font-bold text-sm sm:text-base text-alabaster">${escapeHtml(item.symbol)}</span>
                   <span class="text-xs text-slate-400">${escapeHtml(item.name)}</span>
+                  ${item.earningsBadge ? `<span class="rounded-full bg-amber/15 text-amber ring-1 ring-amber/30 px-2 py-0.5 font-mono text-[10px] font-semibold" title="วันประกาศงบถัดไป (Next Earnings Date)">${escapeHtml(item.earningsBadge)}</span>` : ''}
                   ${isWatchlistOnly ? '<span class="rounded-full bg-white/[0.06] px-2 py-0.5 font-mono text-[10px] text-slate-400">WATCHLIST</span>' : ''}
                   ${alertBadgeHtml}
                 </div>
@@ -749,7 +803,9 @@
                          <span>สัดส่วน: <strong class="text-cyan">${item.allocationPct}%</strong></span>`
                   }
                   <span>·</span>
-                  <span class="text-cyan">SMA20: <strong>${formatMoney(item.sma20, item.currency)}</strong></span>
+                  <span class="text-cyan">SMA20: <strong>${formatMoney(item.sma20, item.currency)}</strong> <span class="${(item.smaPct || 0) >= 0 ? 'text-emerald' : 'text-crimson'}">(${formatSignedPct(item.smaPct, 1)})</span></span>
+                  <span>·</span>
+                  <span class="${getRsiZoneStyle(item.rsi14).textClass}" title="RSI 14 วัน (${getRsiZoneStyle(item.rsi14).zoneLabel})">RSI14: <strong>${Number(item.rsi14 ?? 50).toFixed(1)}</strong></span>
                   <span>·</span>
                   <span>Day L: <strong class="text-crimson/90">${formatMoney(item.dayLow ?? item.low, item.currency)}</strong> / H: <strong class="text-emerald/90">${formatMoney(item.dayHigh ?? item.high, item.currency)}</strong></span>
                 </div>
@@ -900,44 +956,53 @@
     const watchListEl = el('watchHoldingsList');
     watchListEl.innerHTML = activePort.items.map((it, idx) => {
       const symShort = it.symbol.replace('.BK', '');
-      const rowPos = showingDay ? (it.changePct || 0) >= 0 : (it.unrealizedPnlPct || 0) >= 0;
-      const pctToShow = showingDay || it.shares <= 0 ? it.changePct : it.unrealizedPnlPct;
+      const lastPct = Number(it.changePct || 0);
+      const rowPos = lastPct >= 0;
+      const smaPct = Number(it.smaPct ?? (it.sma20 > 0 ? ((it.price - it.sma20) / it.sma20) * 100 : 0));
 
       let alertDot = '';
       if (it.alert?.status === 'TARGET_HIT') {
-        alertDot = '<span class="w-1.5 h-1.5 rounded-full bg-emerald inline-block"></span>';
+        alertDot = '<span class="w-1.5 h-1.5 rounded-full bg-emerald inline-block shrink-0"></span>';
       } else if (it.alert?.status === 'STOP_BREACH') {
-        alertDot = '<span class="w-1.5 h-1.5 rounded-full bg-crimson inline-block"></span>';
+        alertDot = '<span class="w-1.5 h-1.5 rounded-full bg-crimson inline-block shrink-0"></span>';
       } else if (it.alert?.status === 'NEAR_TARGET') {
-        alertDot = '<span class="w-1.5 h-1.5 rounded-full bg-amber inline-block"></span>';
+        alertDot = '<span class="w-1.5 h-1.5 rounded-full bg-amber inline-block shrink-0"></span>';
       }
+
+      const earningsHtml = it.earningsBadge
+        ? `<span class="text-[8px] text-amber/95 font-normal tracking-tighter">${escapeHtml(it.earningsBadge)}</span>`
+        : '';
 
       return `
         <button
           type="button"
           data-watch-item-idx="${idx}"
-          class="watch-holding-item w-full rounded-xl px-2.5 py-1.5 flex flex-col gap-0.5 font-mono text-xs transition ${
+          class="watch-holding-item w-full rounded-xl px-2 py-1 flex flex-col gap-0.5 font-mono text-[10px] leading-tight transition ${
             idx === state.activeSymbolIndex
               ? 'bg-white/[0.11] ring-1 ring-cyan/40'
               : 'bg-white/[0.035] hover:bg-white/[0.08]'
           }"
         >
-          <div class="w-full flex items-center justify-between">
-            <div class="flex items-center gap-1.5 text-left">
+          <div class="w-full flex items-center justify-between gap-1">
+            <div class="flex items-center gap-1 text-left min-w-0 truncate">
               ${alertDot}
-              <span class="font-bold text-alabaster">${escapeHtml(symShort)}</span>
-              ${it.note ? '<i class="ph-light ph-note text-[10px] text-cyan"></i>' : ''}
+              <span class="font-bold text-alabaster text-[11px]">${escapeHtml(symShort)}</span>
+              ${earningsHtml}
+              ${it.note ? '<i class="ph-light ph-note text-[9px] text-cyan shrink-0"></i>' : ''}
             </div>
-            <div class="flex items-center gap-2 tabular-nums">
-              <span class="text-slate-100 font-semibold">${formatMoney(it.price, it.currency)}</span>
-              <span class="font-semibold min-w-[50px] text-right ${rowPos ? 'text-emerald' : 'text-crimson'}">
-                ${formatSignedPct(pctToShow)}
+            <div class="flex items-center gap-1.5 tabular-nums shrink-0">
+              <span class="text-slate-100 font-semibold text-[10px]">${formatMoney(it.price, it.currency)}</span>
+              <span class="font-semibold text-[10px] min-w-[44px] text-right ${rowPos ? 'text-emerald' : 'text-crimson'}">
+                ${formatSignedPct(lastPct)}
               </span>
             </div>
           </div>
-          <div class="w-full flex items-center justify-between text-[9px] tabular-nums text-slate-400">
-            <span class="text-cyan/90">SMA20: ${formatMoney(it.sma20, it.currency)}</span>
-            <span>L: ${formatMoney(it.dayLow ?? it.low, it.currency)} · H: ${formatMoney(it.dayHigh ?? it.high, it.currency)}</span>
+          <div class="w-full flex items-center justify-between text-[8.5px] tabular-nums text-slate-400">
+            <div class="flex items-center gap-1 min-w-0 truncate">
+              <span class="text-cyan/95">SMA:${formatCompactPrice(it.sma20, it.currency)}(${formatSignedPct(smaPct, 1)})</span>
+              <span class="${getRsiZoneStyle(it.rsi14).textClass} font-bold">R:${Math.round(it.rsi14 ?? 50)}</span>
+            </div>
+            <span class="shrink-0">L${formatCompactPrice(it.dayLow ?? it.low, it.currency)} H${formatCompactPrice(it.dayHigh ?? it.high, it.currency)}</span>
           </div>
         </button>
       `;
@@ -966,6 +1031,16 @@
     el('watchDetailSymbol').textContent = item.symbol.replace('.BK', '');
     el('watchDetailPrice').textContent = formatMoney(item.price, item.currency);
 
+    const edBadgeEl = el('watchDetailEarningsBadge');
+    if (edBadgeEl) {
+      if (item.earningsBadge) {
+        edBadgeEl.textContent = item.earningsBadge;
+        edBadgeEl.classList.remove('hidden');
+      } else {
+        edBadgeEl.classList.add('hidden');
+      }
+    }
+
     const dPos = (item.changePct || 0) >= 0;
     el('watchDetailChange').textContent = `${formatSignedMoney(item.change, item.currency)} (${formatSignedPct(item.changePct)})`;
     el('watchDetailChange').className = `text-xs font-semibold tabular-nums ${dPos ? 'text-emerald' : 'text-crimson'}`;
@@ -987,7 +1062,8 @@
 
     el('watchChartLowLabel').textContent = `Day L: ${formatMoney(item.dayLow ?? item.low, item.currency)}`;
     el('watchChartHighLabel').textContent = `Day H: ${formatMoney(item.dayHigh ?? item.high, item.currency)}`;
-    el('watchToggleBbBtn').textContent = `SMA20: ${formatMoney(item.sma20 || item.price, item.currency)}${state.watchShowBb ? ' · BB' : ''}`;
+    const itemSmaPct = Number(item.smaPct ?? (item.sma20 > 0 ? ((item.price - item.sma20) / item.sma20) * 100 : 0));
+    el('watchToggleBbBtn').textContent = `SMA20: ${formatCompactPrice(item.sma20 || item.price, item.currency)} (${formatSignedPct(itemSmaPct, 1)}) · RSI14: ${Math.round(item.rsi14 ?? 50)}${state.watchShowBb ? ' · BB' : ''}`;
 
     if (item.shares > 0) {
       el('watchDetailPos').textContent = `${item.shares} @ ${formatMoney(item.avgCost, item.currency)}`;
@@ -1125,6 +1201,9 @@
       el('holdingAvgCostInput').value = existingItem.avgCost ?? 0;
       el('holdingTargetInput').value = existingItem.targetPrice || '';
       el('holdingStopInput').value = existingItem.stopPrice || '';
+      if (el('holdingEarningsDateInput')) {
+        el('holdingEarningsDateInput').value = existingItem.earningsDate || '';
+      }
       el('holdingNoteInput').value = existingItem.note || '';
       delBtn.classList.remove('hidden');
     } else {
@@ -1137,6 +1216,9 @@
       el('holdingAvgCostInput').value = 0;
       el('holdingTargetInput').value = '';
       el('holdingStopInput').value = '';
+      if (el('holdingEarningsDateInput')) {
+        el('holdingEarningsDateInput').value = '';
+      }
       el('holdingNoteInput').value = '';
       delBtn.classList.add('hidden');
     }
@@ -1598,6 +1680,7 @@
         avgCost: Number(el('holdingAvgCostInput').value || 0),
         targetPrice: Number(el('holdingTargetInput').value || 0),
         stopPrice: Number(el('holdingStopInput').value || 0),
+        earningsDate: (el('holdingEarningsDateInput')?.value || '').trim().replace(/^e-/i, ''),
         note: el('holdingNoteInput').value.trim()
       };
 
@@ -1961,10 +2044,30 @@
     document.querySelectorAll('.reveal-on-scroll').forEach(node => observer.observe(node));
   }
 
+  function startAutoQuoteRefreshTimer() {
+    if (state.quoteRefreshIntervalId) {
+      clearInterval(state.quoteRefreshIntervalId);
+      state.quoteRefreshIntervalId = null;
+    }
+    // Auto-refresh live quotes & technicals (SMA20 / RSI14) every 60 seconds
+    state.quoteRefreshIntervalId = setInterval(async () => {
+      if (document.hidden) return;
+      const holdingModalOpen = el('holdingModal') && !el('holdingModal').classList.contains('hidden');
+      const portfolioModalOpen = el('portfolioModal') && !el('portfolioModal').classList.contains('hidden');
+      if (holdingModalOpen || portfolioModalOpen) return;
+      try {
+        await loadPortfolio(state.syncKey);
+      } catch (_) {
+        // Ignore transient network errors during background poll
+      }
+    }, 60_000);
+  }
+
   document.addEventListener('DOMContentLoaded', async () => {
     initScrollReveal();
     bindEvents();
     await loadCompatibleGarminDevices();
     await loadPortfolio(state.syncKey);
+    startAutoQuoteRefreshTimer();
   });
 })();

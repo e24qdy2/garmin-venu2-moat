@@ -734,7 +734,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_133_8
         symbol [ y %tmp.40 133 12 13 ];
         %tmp.41 = lgetv %h.5;
         symbol [ h %tmp.41 133 17 18 ];
-        %tmp.42 = 9;
+        %tmp.42 = 8;
         %tmp.43 = mul %tmp.41 %tmp.42;
         %tmp.44 = 100;
         %tmp.45 = div %tmp.43 %tmp.44;
@@ -771,7 +771,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_140_1
         symbol [ y %tmp.55 140 12 13 ];
         %tmp.56 = lgetv %h.5;
         symbol [ h %tmp.56 140 18 19 ];
-        %tmp.57 = 9;
+        %tmp.57 = 8;
         %tmp.58 = mul %tmp.56 %tmp.57;
         %tmp.59 = 100;
         %tmp.60 = div %tmp.58 %tmp.59;
@@ -782,7 +782,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_140_3
         symbol [ y %tmp.62 140 34 35 ];
         %tmp.63 = lgetv %h.5;
         symbol [ h %tmp.63 140 39 40 ];
-        %tmp.64 = 15;
+        %tmp.64 = 13;
         %tmp.65 = mul %tmp.63 %tmp.64;
         %tmp.66 = 100;
         %tmp.67 = div %tmp.65 %tmp.66;
@@ -836,7 +836,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_150_1
         symbol [ y %tmp.82 150 12 13 ];
         %tmp.83 = lgetv %h.5;
         symbol [ h %tmp.83 150 18 19 ];
-        %tmp.84 = 15;
+        %tmp.84 = 13;
         %tmp.85 = mul %tmp.83 %tmp.84;
         %tmp.86 = 100;
         %tmp.87 = div %tmp.85 %tmp.86;
@@ -849,7 +849,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_150_3
         %tmp.91 = getv ? :_store;
         symbol [ rowStartY %tmp.92 150 47 56 ];
         %tmp.92 = getv %tmp.91 :rowStartY;
-        %tmp.93 = 6;
+        %tmp.93 = 4;
         %tmp.94 = sub %tmp.92 %tmp.93;
         %tmp.95 = lt %tmp.89 %tmp.94;
         push %tmp.95;
@@ -909,7 +909,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_158_1
         %tmp.118 = getv ? :_store;
         symbol [ rowStartY %tmp.119 158 25 34 ];
         %tmp.119 = getv %tmp.118 :rowStartY;
-        %tmp.120 = 6;
+        %tmp.120 = 4;
         %tmp.121 = sub %tmp.119 %tmp.120;
         %tmp.122 = gte %tmp.116 %tmp.121;
         bf %tmp.122 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatDelegate_mc_158_8_187_8_if_end;

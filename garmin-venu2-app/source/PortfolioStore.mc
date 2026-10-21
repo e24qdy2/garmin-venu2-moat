@@ -39,6 +39,7 @@ class PortfolioStore {
 
     private var _runtimeTimer as Timer.Timer?;
     private var _swipeElapsedSec as Number = 0;
+    private var _quoteRefreshSec as Number = 0;
     private var _backlightTick as Number = 0;
 
     function initialize() {
@@ -50,8 +51,8 @@ class PortfolioStore {
         screenW = w;
         screenH = h;
         visibleRows = (h < 320) ? 3 : 4;
-        rowStartY = (h * 33) / 100;
-        var availableH = h - rowStartY - ((h * 11) / 100);
+        rowStartY = (h * 27) / 100;
+        var availableH = h - rowStartY - ((h * 9) / 100);
         rowHeight = availableH / visibleRows;
         if (rowHeight < 34) {
             rowHeight = 34;
@@ -135,6 +136,15 @@ class PortfolioStore {
             if (_swipeElapsedSec >= autoSwipeSec) {
                 _swipeElapsedSec = 0;
                 stepAutoSwipe();
+            }
+        }
+
+        // 3. Auto-Refresh Live Quotes & Technicals (SMA20 / RSI14) every 60 seconds
+        _quoteRefreshSec += 1;
+        if (_quoteRefreshSec >= 60) {
+            _quoteRefreshSec = 0;
+            if (!isSyncing) {
+                fetchRemote();
             }
         }
     }
@@ -259,6 +269,7 @@ class PortfolioStore {
 
     function fetchRemote() as Void {
         isSyncing = true;
+        _quoteRefreshSec = 0;
         lastStatus = "SYNCING";
         var url = getApiBaseUrl() + "/api/watch?key=" + getSyncKey() + "&did=" + deviceId;
         if (activationKey.length() > 0) {

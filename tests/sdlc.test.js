@@ -469,13 +469,25 @@ async function runSdlcSuite() {
   const firstWatchHolding = finalPortfolioRes.json.watch.p[0].s[0];
   assert.ok(typeof firstWebHolding.price === "number" && firstWebHolding.price > 0, "Web holding must include current price");
   assert.ok(typeof firstWebHolding.sma20 === "number" && firstWebHolding.sma20 > 0, "Web holding must include sma20");
+  assert.ok(typeof firstWebHolding.smaPct === "number", "Web holding must include smaPct (% distance vs SMA20)");
+  assert.ok(/^e-\d{2}\/\d{2}\/\d{2}$/.test(firstWebHolding.earningsBadge), "Equity web holding must include earningsBadge (e-dd/mm/yy)");
   assert.ok(typeof firstWebHolding.dayHigh === "number" && firstWebHolding.dayHigh >= firstWebHolding.price, "Web holding must include dayHigh >= price");
   assert.ok(typeof firstWebHolding.dayLow === "number" && firstWebHolding.dayLow <= firstWebHolding.price, "Web holding must include dayLow <= price");
   assert.ok(typeof firstWatchHolding.px === "number" && firstWatchHolding.px > 0, "Watch holding must include px (current price)");
+  assert.ok(typeof firstWatchHolding.pct === "number", "Watch holding must include pct (Last % change)");
   assert.ok(typeof firstWatchHolding.sma === "number" && firstWatchHolding.sma > 0, "Watch holding must include sma (SMA20)");
+  assert.ok(typeof firstWatchHolding.sPct === "number", "Watch holding must include sPct (SMA20 % distance)");
+  assert.ok(/^e-\d{2}\/\d{2}\/\d{2}$/.test(firstWatchHolding.ed), "Watch equity holding must include ed (e-dd/mm/yy)");
   assert.ok(typeof firstWatchHolding.hi === "number" && firstWatchHolding.hi >= firstWatchHolding.px, "Watch holding must include hi (Day High)");
   assert.ok(typeof firstWatchHolding.lo === "number" && firstWatchHolding.lo <= firstWatchHolding.px, "Watch holding must include lo (Day Low)");
-  console.log("[PASS] 11. Watch & Web Stock Metrics (Current Price, SMA20, Day High & Day Low) verified");
+
+  // Verify ETFs / Crypto hide earnings badge ("")
+  const allWatchHoldings = finalPortfolioRes.json.watch.p.flatMap((port) => port.s);
+  const btcWatch = allWatchHoldings.find((item) => item.sym === "BTC-USD");
+  if (btcWatch) {
+    assert.strictEqual(btcWatch.ed, "", "Crypto/ETF holding (BTC-USD) must have empty earnings badge");
+  }
+  console.log("[PASS] 11. Watch & Web Stock Metrics (Current Price, Last % Change, SMA20 + SMA20 %, e-dd/mm/yy Earnings Date, Day High/Low) verified");
 
   // 12. Cloudflare Worker Serverless Bundle Parity Verification
   const workerSrcPath = path.join(__dirname, "..", "src", "worker.js");
@@ -497,6 +509,15 @@ async function runSdlcSuite() {
     assert.strictEqual(wWatchJson.lic.st, "ACTIVE");
     assert.ok(Array.isArray(wWatchJson.p) && wWatchJson.p.length >= 1, "Worker watch payload must contain portfolios");
     assert.ok(wWatchJson.p[0].s.length >= 1, "Worker watch payload must contain holdings");
+    assert.strictEqual(
+      typeof wWatchJson.p[0].s[0].rsi,
+      "number",
+      "Worker watch holding must include RSI14 (rsi) integer"
+    );
+    assert.ok(
+      wWatchJson.p[0].s[0].rsi >= 0 && wWatchJson.p[0].s[0].rsi <= 100,
+      "Worker watch holding RSI14 must be within 0..100"
+    );
 
     const wAdminLoginRes = await worker.fetch(
       new Request("https://admin-moat.readybyte.top/api/admin/auth/login", {

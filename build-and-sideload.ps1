@@ -46,6 +46,10 @@ if (-not (Test-Path $JavaExe)) {
     $CmdJava = Get-Command "java" -ErrorAction SilentlyContinue
     if ($CmdJava) { $JavaExe = $CmdJava.Source }
 }
+if (-not (Test-Path $JavaExe)) {
+    $TempJava = Get-ChildItem -Path (Join-Path $env:TEMP "jre_extract") -Recurse -Filter "java.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($TempJava) { $JavaExe = $TempJava.FullName }
+}
 
 $CiqBase = Join-Path $env:APPDATA "Garmin\ConnectIQ\Sdks"
 $MonkeyJar = $null
@@ -72,29 +76,40 @@ if (Test-Path $OutputPrg) {
     Write-Host "[OK] Built binary: $OutputPrg ($SizeKb KB)" -ForegroundColor Green
 }
 
-# 4. Auto-detect MTP-connected Garmin Watch via Windows Shell.Application
+# 4. Auto-detect MTP-connected Garmin Watch via Windows Shell.Application (with 8s non-blocking timeout)
 $Sideloaded = $false
 try {
-    $shell = New-Object -ComObject Shell.Application
-    $venu = $shell.NameSpace(17).Items() | Where-Object {
-        $_.Name -match "Venu|Forerunner|fenix|epix|vivoactive|Enduro|Approach|Garmin"
-    } | Select-Object -First 1
-    if ($venu) {
-        $internal = $venu.GetFolder.Items() | Where-Object { $_.Name -eq "Internal Storage" } | Select-Object -First 1
-        $garmin = $internal.GetFolder.Items() | Where-Object { $_.Name -eq "GARMIN" } | Select-Object -First 1
-        $apps = $garmin.GetFolder.Items() | Where-Object { $_.Name -eq "APPS" } | Select-Object -First 1
-        if ($apps) {
-            $existing = $apps.GetFolder.Items() | Where-Object { $_.Name -like "Venu2Moat*" }
-            if ($existing) {
-                foreach ($item in $existing) { $item.InvokeVerb("delete") }
-                Start-Sleep -Milliseconds 800
+    $mtpJob = Start-Job -ScriptBlock {
+        param($PrgPath)
+        $shell = New-Object -ComObject Shell.Application
+        $venu = $shell.NameSpace(17).Items() | Where-Object {
+            $_.Name -match "Venu|Forerunner|fenix|epix|vivoactive|Enduro|Approach|Garmin"
+        } | Select-Object -First 1
+        if ($venu) {
+            $internal = $venu.GetFolder.Items() | Where-Object { $_.Name -eq "Internal Storage" } | Select-Object -First 1
+            $garmin = $internal.GetFolder.Items() | Where-Object { $_.Name -eq "GARMIN" } | Select-Object -First 1
+            $apps = $garmin.GetFolder.Items() | Where-Object { $_.Name -eq "APPS" } | Select-Object -First 1
+            if ($apps) {
+                # Flags: 4 (No progress dialog) + 16 (Yes to All / Overwrite) + 512 (No confirm dir) + 1024 (No error UI) = 1556
+                $apps.GetFolder.CopyHere($PrgPath, 1556)
+                Start-Sleep -Seconds 2
+                return $venu.Name
             }
-            $apps.GetFolder.CopyHere($OutputPrg, 20)
-            Start-Sleep -Seconds 2
-            Write-Host "[OK] Sideloaded Venu2Moat.prg via MTP USB to '$($venu.Name)\Internal Storage\GARMIN\APPS\Venu2Moat.prg'!" -ForegroundColor Green
+        }
+        return $null
+    } -ArgumentList $OutputPrg
+
+    if (Wait-Job $mtpJob -Timeout 8) {
+        $watchName = Receive-Job $mtpJob
+        if ($watchName) {
+            Write-Host "[OK] Sideloaded Venu2Moat.prg via MTP USB to '$watchName\Internal Storage\GARMIN\APPS\Venu2Moat.prg'!" -ForegroundColor Green
             $Sideloaded = $true
         }
+    } else {
+        Stop-Job $mtpJob -ErrorAction SilentlyContinue
+        Write-Warning "MTP USB copy timed out (device may be busy or waiting in File Explorer)."
     }
+    Remove-Job $mtpJob -Force -ErrorAction SilentlyContinue
 } catch {
     Write-Warning "MTP check warning: $_"
 }

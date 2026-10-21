@@ -542,55 +542,55 @@
                     </div>
 
                     <!-- VIEW 2: MAIN PORTFOLIO & HOLDINGS LIST MODE -->
-                    <div id="watchViewList" class="watch-view w-full h-full flex flex-col justify-between pt-6 pb-7 px-6">
+                    <div id="watchViewList" class="watch-view w-full h-full flex flex-col justify-between pt-3.5 pb-4 px-5">
                       <!-- Curved Top Header: Clock + Portfolio Carousel Dots -->
                       <div class="text-center">
-                        <div class="flex items-center justify-center gap-1.5 text-[10px] font-mono text-slate-400">
+                        <div class="flex items-center justify-center gap-1 text-[9px] font-mono text-slate-400">
                           <span id="watchListClock">10:10</span>
                           <span>·</span>
                           <span id="watchListSyncKey" class="text-cyan">VENU2-88</span>
-                          <span id="watchBadgeAutoSwipe" class="px-1.5 py-0.2 rounded-full bg-cyan/15 text-cyan text-[9px]">AUTO 5s</span>
-                          <span id="watchBadgeAlwaysOn" class="hidden px-1.5 py-0.2 rounded-full bg-amber/20 text-amber text-[9px]">AON</span>
-                          <button id="watchBadgeSortOrder" type="button" class="px-1.5 py-0.2 rounded-full bg-crimson/20 text-crimson text-[9px] hover:opacity-80 transition" title="คลิกเพื่อสลับเรียงลำดับ % Change (ติดลบ→กำไร / กำไร→ติดลบ)">▲ -%→+%</button>
+                          <span id="watchBadgeAutoSwipe" class="px-1.5 py-0.2 rounded-full bg-cyan/15 text-cyan text-[8px]">AUTO 5s</span>
+                          <span id="watchBadgeAlwaysOn" class="hidden px-1.5 py-0.2 rounded-full bg-amber/20 text-amber text-[8px]">AON</span>
+                          <button id="watchBadgeSortOrder" type="button" class="px-1.5 py-0.2 rounded-full bg-crimson/20 text-crimson text-[8px] hover:opacity-80 transition" title="คลิกเพื่อสลับเรียงลำดับ % Change (ติดลบ→กำไร / กำไร→ติดลบ)">▲ -%→+%</button>
                         </div>
 
                         <!-- Portfolio Switcher Row -->
-                        <div class="mt-1 flex items-center justify-center gap-2">
-                          <button id="watchPrevPortBtn" type="button" class="w-6 h-6 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300 text-xs" title="พอร์ตก่อนหน้า">
+                        <div class="mt-0.5 flex items-center justify-center gap-2">
+                          <button id="watchPrevPortBtn" type="button" class="w-5 h-5 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300 text-[10px]" title="พอร์ตก่อนหน้า">
                             <i class="ph-light ph-caret-left"></i>
                           </button>
-                          <div id="watchPortShortName" class="font-sans text-xs font-extrabold tracking-wide text-cyan">
+                          <div id="watchPortShortName" class="font-sans text-[11px] font-extrabold tracking-wide text-cyan">
                             US MOAT
                           </div>
-                          <button id="watchNextPortBtn" type="button" class="w-6 h-6 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300 text-xs" title="พอร์ตถัดไป">
+                          <button id="watchNextPortBtn" type="button" class="w-5 h-5 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300 text-[10px]" title="พอร์ตถัดไป">
                             <i class="ph-light ph-caret-right"></i>
                           </button>
                         </div>
 
                         <!-- Portfolio Net Value & Toggleable Delta -->
                         <button id="watchTogglePnlModeBtn" type="button" class="mt-0.5 inline-flex flex-col items-center group" title="คลิกเพื่อสลับดู Day P&L หรือ Total Return">
-                          <div id="watchPortTotalVal" class="font-mono text-lg font-bold text-alabaster tabular-nums leading-tight">
+                          <div id="watchPortTotalVal" class="font-mono text-base font-bold text-alabaster tabular-nums leading-tight">
                             ฿1,120,450
                           </div>
-                          <div class="flex items-center gap-1.5 font-mono text-[11px]">
-                            <span id="watchPortPnlModeLabel" class="text-slate-400 text-[10px]">DAY:</span>
+                          <div class="flex items-center gap-1 font-mono text-[10px] leading-tight">
+                            <span id="watchPortPnlModeLabel" class="text-slate-400 text-[9px]">DAY:</span>
                             <span id="watchPortDeltaText" class="font-semibold text-emerald tabular-nums">+฿14,200 (+1.28%)</span>
                           </div>
                         </button>
                       </div>
 
                       <!-- Divider -->
-                      <div class="w-4/5 mx-auto h-[1px] bg-white/10 my-1"></div>
+                      <div class="w-4/5 mx-auto h-[1px] bg-white/10 my-0.5"></div>
 
                       <!-- Scrollable Holdings Rows inside 416x416 Circle -->
-                      <div id="watchHoldingsList" class="flex-1 overflow-y-auto watch-scroll space-y-1.5 px-1">
+                      <div id="watchHoldingsList" class="flex-1 overflow-y-auto watch-scroll space-y-1 px-0.5">
                         <!-- Populated dynamically by app.js -->
                       </div>
 
                       <!-- Bottom Circular Footer Dots -->
-                      <div class="pt-1 flex flex-col items-center">
+                      <div class="pt-0.5 flex flex-col items-center">
                         <div id="watchPortDots" class="flex items-center gap-1.5"></div>
-                        <div class="text-[9px] font-mono text-slate-500 mt-0.5">แตะชื่อหุ้นเพื่อดูกราฟ &amp; โน้ต</div>
+                        <div class="text-[8px] font-mono text-slate-500 mt-0.5">แตะชื่อหุ้นเพื่อดูกราฟ &amp; โน้ต</div>
                       </div>
                     </div>
 
@@ -598,11 +598,12 @@
                     <div id="watchViewDetail" class="watch-view hidden w-full h-full flex flex-col justify-between pt-6 pb-7 px-7">
                       <!-- Top Symbol Header -->
                       <div class="text-center">
-                        <div class="flex items-center justify-center gap-2">
+                        <div class="flex items-center justify-center gap-1.5">
                           <button id="watchBackToListBtn" type="button" class="w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-[10px] text-alabaster" title="กลับหน้ารายการ">
                             <i class="ph-light ph-arrow-left"></i>
                           </button>
                           <span id="watchDetailSymbol" class="font-mono text-sm font-extrabold text-alabaster">NVDA</span>
+                          <span id="watchDetailEarningsBadge" class="hidden text-[9px] font-mono px-1.5 py-0.5 rounded-full bg-amber/20 text-amber font-semibold">e-17/11/26</span>
                           <span id="watchDetailAlertBadge" class="text-[9px] font-mono px-1.5 py-0.5 rounded-full bg-emerald/20 text-emerald">ACTIVE</span>
                         </div>
                         <div class="mt-0.5 flex items-baseline justify-center gap-1.5 font-mono">
@@ -1023,7 +1024,7 @@
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label class="block text-xs text-emerald mb-1" for="holdingTargetInput">ราคาเป้าหมาย (Target Alert ▲)</label>
               <input id="holdingTargetInput" type="number" step="any" min="0" placeholder="0 = ไม่ตั้งเตือน" class="w-full rounded-xl bg-void ring-1 ring-emerald/30 focus:ring-emerald px-3.5 py-2.5 text-sm font-mono text-alabaster focus:outline-none" />
@@ -1031,6 +1032,10 @@
             <div>
               <label class="block text-xs text-crimson mb-1" for="holdingStopInput">จุดเฝ้าระวัง/คัทลอส (Stop Alert ▼)</label>
               <input id="holdingStopInput" type="number" step="any" min="0" placeholder="0 = ไม่ตั้งเตือน" class="w-full rounded-xl bg-void ring-1 ring-crimson/30 focus:ring-crimson px-3.5 py-2.5 text-sm font-mono text-alabaster focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs text-amber mb-1" for="holdingEarningsDateInput">งบถัดไป (Next Earnings: dd/mm/yy)</label>
+              <input id="holdingEarningsDateInput" type="text" maxlength="12" placeholder="เช่น 17/11/26 (ว่าง=อัตโนมัติ)" class="w-full rounded-xl bg-void ring-1 ring-amber/30 focus:ring-amber px-3.5 py-2.5 text-sm font-mono text-alabaster focus:outline-none" />
             </div>
           </div>
 
@@ -1266,6 +1271,6 @@
     </div>
   </div>
 
-  <script src="/app.js?v=20261021-sortfix"></script>
+  <script src="/app.js?v=20261021-rsi14"></script>
 </body>
 </html>

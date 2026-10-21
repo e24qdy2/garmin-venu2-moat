@@ -94,14 +94,21 @@ class SymbolDetailView extends WatchUi.View {
         var px = _store.getDictFloat(item, "px", "p", 0.0);
         var pct = _store.getDictFloat(item, "pct", "c", 0.0);
         var sma = _store.getDictFloat(item, "sma", null, px);
+        var defaultSmaPct = (sma > 0.0) ? (((px - sma) * 100.0) / sma) : 0.0;
+        var sPct = _store.getDictFloat(item, "sPct", null, defaultSmaPct);
+        var rsi = _store.getDictFloat(item, "rsi", "rsi14", 50.0);
+        var ed = item.hasKey("ed") ? (item.get("ed") as String?) : "";
         var ub = _store.getDictFloat(item, "ub", null, sma);
         var lb = _store.getDictFloat(item, "lb", null, sma);
         var dayHi = _store.getDictFloat(item, "hi", null, px);
         var dayLo = _store.getDictFloat(item, "lo", null, px);
         var alrt = (item.hasKey("alrt") ? item.get("alrt") : "NORMAL") as String;
 
-        // 1. Top Symbol & Alert Status
+        // 1. Top Symbol, Next Earnings Date (e-dd/mm/yy) & Alert Status
         var titleStr = "< " + sym;
+        if (ed != null && ed.length() > 0) {
+            titleStr = titleStr + " · " + ed;
+        }
         if (!alrt.equals("NORMAL")) {
             titleStr = titleStr + " · " + alrt;
         }
@@ -122,7 +129,7 @@ class SymbolDetailView extends WatchUi.View {
             Graphics.TEXT_JUSTIFY_CENTER
         );
 
-        // 3. Day High (H) & Day Low (L) of the Day + SMA20 Value Strip
+        // 3. Day High (H) & Day Low (L) of the Day + SMA20 Value & % Strip
         dc.setColor(0xE2E8F0, Graphics.COLOR_TRANSPARENT);
         dc.drawText(
             cx,
@@ -132,9 +139,10 @@ class SymbolDetailView extends WatchUi.View {
             Graphics.TEXT_JUSTIFY_CENTER
         );
 
-        var smaLineStr = "SMA20: " + cur + sma.format("%.2f");
+        var smaSign = (sPct >= 0.0) ? "+" : "";
+        var smaLineStr = "SMA20: " + cur + sma.format("%.1f") + " (" + smaSign + sPct.format("%.1f") + "%) · RSI14: " + rsi.format("%.0f");
         if (showBollinger && ub > lb) {
-            smaLineStr = smaLineStr + " · BB ON";
+            smaLineStr = smaLineStr + " · BB";
         }
         dc.setColor(0x06B6D4, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, (h * 25) / 100, Graphics.FONT_XTINY, smaLineStr, Graphics.TEXT_JUSTIFY_CENTER);

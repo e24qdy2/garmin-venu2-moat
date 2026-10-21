@@ -130,14 +130,14 @@ class Venu2MoatDelegate extends WatchUi.BehaviorDelegate {
         var h = _store.screenH;
 
         // Tap on top clock/mode bar toggles Auto-Swipe on/off quickly on watch
-        if (y < (h * 9) / 100) {
+        if (y < (h * 8) / 100) {
             _store.autoSwipeEnabled = !_store.autoSwipeEnabled;
             WatchUi.requestUpdate();
             return true;
         }
 
         // Tap on portfolio title (< US MOAT >) switches portfolio left/right
-        if (y >= (h * 9) / 100 && y < (h * 15) / 100) {
+        if (y >= (h * 8) / 100 && y < (h * 13) / 100) {
             if (x < (w / 2)) {
                 _store.prevPortfolio();
             } else {
@@ -147,7 +147,7 @@ class Venu2MoatDelegate extends WatchUi.BehaviorDelegate {
         }
 
         // Tap on Net Worth / P&L header toggles Day P&L / Total Return
-        if (y >= (h * 15) / 100 && y < (_store.rowStartY - 6)) {
+        if (y >= (h * 13) / 100 && y < (_store.rowStartY - 4)) {
             _store.showTotalReturn = !_store.showTotalReturn;
             WatchUi.requestUpdate();
             return true;
@@ -155,7 +155,7 @@ class Venu2MoatDelegate extends WatchUi.BehaviorDelegate {
 
         // Tap on any holding row opens the Individual Stock Chart + SMA20 + Day High/Low + WebMemo screen
         var rowsBottomY = _store.rowStartY + (_store.visibleRows * _store.rowHeight);
-        if (y >= (_store.rowStartY - 6) && y <= (rowsBottomY + 14)) {
+        if (y >= (_store.rowStartY - 4) && y <= (rowsBottomY + 14)) {
             var port = _store.getActivePortfolio();
             if (port != null) {
                 var items = port.get("s") as Array?;
