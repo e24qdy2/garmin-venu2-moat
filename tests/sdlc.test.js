@@ -592,8 +592,53 @@ async function runSdlcSuite() {
   assert.ok(seamQuote.sma20 > 100 && seamQuote.sma20 < 138, "SMA20 must reflect 20-day moving average");
   console.log("[PASS] 13. Deep Module Interface & Mock Seam (lib/moatEngine.js) verified");
 
+  // 14. Parts 2 & 3 Deep Modules Verification (MoatWatchLayout.mc + public/watchSimulator.js)
+  const watchLayoutMcPath = path.join(__dirname, "..", "garmin-venu2-app", "source", "MoatWatchLayout.mc");
+  const venu2ViewMcPath = path.join(__dirname, "..", "garmin-venu2-app", "source", "Venu2MoatView.mc");
+  const symbolDetailMcPath = path.join(__dirname, "..", "garmin-venu2-app", "source", "SymbolDetailView.mc");
+  const prgBinPath = path.join(__dirname, "..", "dist", "Venu2Moat.prg");
+  assert.ok(fs.existsSync(watchLayoutMcPath), "MoatWatchLayout.mc must exist");
+  assert.ok(fs.existsSync(prgBinPath), "Compiled Venu2Moat.prg binary must exist");
+  const watchLayoutMcContent = fs.readFileSync(watchLayoutMcPath, "utf8");
+  const venu2ViewMcContent = fs.readFileSync(venu2ViewMcPath, "utf8");
+  const symbolDetailMcContent = fs.readFileSync(symbolDetailMcPath, "utf8");
+  assert.ok(watchLayoutMcContent.includes("module MoatWatchLayout"), "MoatWatchLayout.mc must define module MoatWatchLayout");
+  assert.ok(watchLayoutMcContent.includes("function drawHoldingRowCard"), "MoatWatchLayout.mc must encapsulate drawHoldingRowCard");
+  assert.ok(watchLayoutMcContent.includes("function drawSparklineChart"), "MoatWatchLayout.mc must encapsulate drawSparklineChart");
+  assert.ok(venu2ViewMcContent.includes("MoatWatchLayout.drawHoldingRowCard"), "Venu2MoatView.mc must delegate to MoatWatchLayout.drawHoldingRowCard");
+  assert.ok(symbolDetailMcContent.includes("MoatWatchLayout.drawSparklineChart"), "SymbolDetailView.mc must delegate to MoatWatchLayout.drawSparklineChart");
+
+  const watchSimulator = require("../public/watchSimulator");
+  assert.strictEqual(typeof watchSimulator.normalizeServerPayload, "function", "watchSimulator must export normalizeServerPayload");
+  assert.strictEqual(typeof watchSimulator.sortPortfolioItems, "function", "watchSimulator must export sortPortfolioItems");
+  assert.strictEqual(typeof watchSimulator.buildWatchHoldingRowHtml, "function", "watchSimulator must export buildWatchHoldingRowHtml");
+  assert.strictEqual(typeof watchSimulator.renderGarminVenu2Watch, "function", "watchSimulator must export renderGarminVenu2Watch");
+
+  const normalizedProfile = watchSimulator.normalizeServerPayload(finalPortfolioRes.json, "VENU2-88");
+  assert.strictEqual(normalizedProfile.syncKey, "VENU2-88");
+  assert.ok(Array.isArray(normalizedProfile.portfolios) && normalizedProfile.portfolios.length >= 1);
+  const sampleItem = normalizedProfile.portfolios[0].items[0];
+  assert.strictEqual(typeof sampleItem.rsi14, "number", "Normalized item must include rsi14");
+  const rowHtml = watchSimulator.buildWatchHoldingRowHtml(sampleItem, 0, 0);
+  assert.ok(rowHtml.includes("SMA:") && rowHtml.includes("R:"), "Watch holding row HTML must render SMA and R:xx RSI14");
+
+  const sortedAsc = watchSimulator.sortPortfolioItems(
+    [
+      { symbol: "A", origIdx: 0, changePct: 4.2, unrealizedPnlPct: 12, shares: 10 },
+      { symbol: "B", origIdx: 1, changePct: -2.1, unrealizedPnlPct: -5, shares: 10 }
+    ],
+    "ASC",
+    "DAY"
+  );
+  assert.strictEqual(sortedAsc[0].symbol, "B", "sortPortfolioItems ASC must place negative % first");
+
+  const simJsRes = await httpRequest("GET", "/watchSimulator.js");
+  assert.strictEqual(simJsRes.status, 200, "/watchSimulator.js must be served with HTTP 200");
+  assert.ok(simJsRes.raw.includes("MoatWatchSimulator"), "/watchSimulator.js body must expose MoatWatchSimulator");
+  console.log("[PASS] 14. Parts 2 & 3 Deep Modules (MoatWatchLayout.mc + public/watchSimulator.js) verified");
+
   console.log("\n==================================================================");
-  console.log("  ALL 13 SDLC + DEEP MODULE + CLOUDFLARE WORKER SUITES PASSED (100%)");
+  console.log("  ALL 14 SDLC + DEEP MODULE + CLOUDFLARE WORKER SUITES PASSED (100%)");
   console.log("==================================================================");
   if (ephemeralServer) {
     ephemeralServer.close();
