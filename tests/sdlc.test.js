@@ -549,8 +549,51 @@ async function runSdlcSuite() {
     console.log("[PASS] 12. Cloudflare Worker Serverless Bundle (API / Watch / Stateless Admin Auth) verified");
   }
 
+  // 13. Deep Module Interface & Seam Verification (lib/moatEngine.js)
+  const moatEngine = require("../lib/moatEngine");
+  const mockCloses = Array.from({ length: 25 }, (_, idx) => 100 + idx * 1.5); // 100.0 -> 136.0
+  const mockFetchJson = async () => ({
+    chart: {
+      result: [
+        {
+          meta: {
+            currency: "USD",
+            shortName: "Mock Moat Corp",
+            regularMarketPrice: 138.0,
+            chartPreviousClose: 90.0, // 3-month ago close (must NOT be used as yesterday's close)
+            regularMarketDayHigh: 140.0,
+            regularMarketDayLow: 135.5
+          },
+          indicators: {
+            quote: [
+              {
+                close: mockCloses,
+                high: mockCloses.map((c) => c + 1),
+                low: mockCloses.map((c) => c - 1)
+              }
+            ]
+          }
+        }
+      ]
+    }
+  });
+  const seamQuote = await moatEngine.fetchSymbolMarketData("NVDA", {
+    bypassCache: true,
+    fetchJson: mockFetchJson
+  });
+  assert.strictEqual(seamQuote.source, "LIVE_YAHOO");
+  assert.strictEqual(seamQuote.price, 138.0);
+  // Prior daily close should be mockCloses[mockCloses.length - 2] = 134.5, NOT chartPreviousClose (90.0)
+  assert.strictEqual(seamQuote.prevClose, 134.5, "Must derive yesterday close from prior daily bar when meta.previousClose is omitted");
+  assert.strictEqual(seamQuote.change, 3.5);
+  assert.strictEqual(seamQuote.changePct, Number(((3.5 / 134.5) * 100).toFixed(2)));
+  assert.strictEqual(seamQuote.earningsBadge, "e-17/11/26");
+  assert.ok(seamQuote.rsi14 > 70, "Monotonically rising closes must yield RSI14 > 70");
+  assert.ok(seamQuote.sma20 > 100 && seamQuote.sma20 < 138, "SMA20 must reflect 20-day moving average");
+  console.log("[PASS] 13. Deep Module Interface & Mock Seam (lib/moatEngine.js) verified");
+
   console.log("\n==================================================================");
-  console.log("  ALL 12 SDLC + SECURITY VA + CLOUDFLARE WORKER SUITES PASSED (100%)");
+  console.log("  ALL 13 SDLC + DEEP MODULE + CLOUDFLARE WORKER SUITES PASSED (100%)");
   console.log("==================================================================");
   if (ephemeralServer) {
     ephemeralServer.close();
