@@ -122,16 +122,14 @@ class SymbolDetailView extends WatchUi.View {
         dc.drawText(cx, (h * 6) / 100, fVal, titleStr, Graphics.TEXT_JUSTIFY_CENTER);
 
         // 2. Current Price (ราคาปัจจุบัน) & % Change
-        var isUp = (pct >= 0.0);
-        var priceColor = isUp ? 0x10B981 : 0xF43F5E;
-        var sign = isUp ? "+" : "";
+        var priceColor = MoatWatchLayout.getPnlColor(pct);
         var chgSign = (chg >= 0.0) ? "+" : "";
         dc.setColor(priceColor, Graphics.COLOR_TRANSPARENT);
         dc.drawText(
             cx,
             (h * 14) / 100,
             fRow,
-            "Now: " + cur + px.format("%.2f") + "  " + chgSign + chg.format("%.2f") + " (" + sign + pct.format("%.2f") + "%)",
+            "Now: " + cur + px.format("%.2f") + "  " + chgSign + chg.format("%.2f") + " (" + MoatWatchLayout.formatSignedPct(pct) + ")",
             Graphics.TEXT_JUSTIFY_CENTER
         );
 
@@ -154,78 +152,22 @@ class SymbolDetailView extends WatchUi.View {
         dc.drawText(cx, (h * 26) / 100, fMicro, smaLineStr, Graphics.TEXT_JUSTIFY_CENTER);
 
         // 4. Responsive Sparkline + SMA-20 + Bollinger Chart Box
-        var chartX = (w * 14) / 100;
-        var chartY = (h * 33) / 100;
-        var chartW = w - (chartX * 2);
-        var chartH = (h * 21) / 100;
-
-        dc.setColor(0x0B0F17, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(chartX - 6, chartY - 4, chartW + 12, chartH + 8, 10);
-
         var spk = (item.hasKey("spk") ? item.get("spk") : item.get("sp")) as Array?;
-        if (spk != null && spk.size() > 1) {
-            var minVal = dayLo;
-            var maxVal = dayHi;
-            if (px < minVal) { minVal = px; }
-            if (px > maxVal) { maxVal = px; }
-            if (sma > 0.0) {
-                if (sma < minVal) { minVal = sma; }
-                if (sma > maxVal) { maxVal = sma; }
-            }
-            if (showBollinger && ub > 0.0 && lb > 0.0) {
-                if (lb < minVal) { minVal = lb; }
-                if (ub > maxVal) { maxVal = ub; }
-            }
-            for (var i = 0; i < spk.size(); i++) {
-                var v = _store.toFloat(spk[i], px);
-                if (v < minVal) { minVal = v; }
-                if (v > maxVal) { maxVal = v; }
-            }
-            var span = maxVal - minVal;
-            if (span <= 0.0001) { span = 1.0; }
-
-            // Draw Bollinger Bands (Upper & Lower) if enabled
-            if (showBollinger && ub > 0.0 && lb > 0.0) {
-                var ubY = chartY + chartH - (((ub - minVal) / span) * chartH).toNumber();
-                var lbY = chartY + chartH - (((lb - minVal) / span) * chartH).toNumber();
-                dc.setColor(0x1E3A8A, Graphics.COLOR_TRANSPARENT);
-                dc.setPenWidth(1);
-                dc.drawLine(chartX, ubY, chartX + chartW, ubY);
-                dc.drawLine(chartX, lbY, chartX + chartW, lbY);
-            }
-
-            // Draw SMA20 Line in Cyan across the chart
-            if (sma > 0.0) {
-                var smaY = chartY + chartH - (((sma - minVal) / span) * chartH).toNumber();
-                dc.setColor(0x06B6D4, Graphics.COLOR_TRANSPARENT);
-                dc.setPenWidth(2);
-                dc.drawLine(chartX, smaY, chartX + chartW, smaY);
-            }
-
-            // Primary Price Sparkline Stroke
-            dc.setColor(priceColor, Graphics.COLOR_TRANSPARENT);
-            dc.setPenWidth(3);
-            var lastX = chartX;
-            var lastY = chartY + (chartH / 2);
-            for (var k = 0; k < spk.size() - 1; k++) {
-                var v1 = _store.toFloat(spk[k], px);
-                var v2 = _store.toFloat(spk[k + 1], px);
-                var px1 = chartX + (k * chartW) / (spk.size() - 1);
-                var py1 = chartY + chartH - (((v1 - minVal) / span) * chartH).toNumber();
-                var px2 = chartX + ((k + 1) * chartW) / (spk.size() - 1);
-                var py2 = chartY + chartH - (((v2 - minVal) / span) * chartH).toNumber();
-                dc.drawLine(px1, py1, px2, py2);
-                lastX = px2;
-                lastY = py2;
-            }
-            dc.setPenWidth(1);
-
-            // Highlight Current Price Dot at end of sparkline
-            dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(lastX, lastY, 4);
-            dc.setColor(priceColor, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(lastX, lastY, 2);
-        }
+        MoatWatchLayout.drawSparklineChart(
+            dc,
+            _store,
+            spk,
+            px,
+            dayLo,
+            dayHi,
+            sma,
+            ub,
+            lb,
+            showBollinger,
+            priceColor,
+            w,
+            h
+        );
 
         // 5. Holdings & Target Summary Line
         var sh = _store.toFloat(item.get("sh"), 0.0);

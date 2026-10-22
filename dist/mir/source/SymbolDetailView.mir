@@ -419,9 +419,9 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_61_34_
     }
     [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc"; @line = 72; @symbol_functiondef = [onUpdate,72,13,21]; @symbol_param<0> = [dc,72,22,24]; @symbol_param<0>_type<0> = [Dc,72,28,30]; ]
     function onUpdate(dc as Dc) as Void {
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start:
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 73 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %w.1 = local;
         symbol [ w %w.1 73 12 13 ];
         %tmp.1 = lgetv %dc;
@@ -432,7 +432,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_
         lputv %w.1 %tmp.3;
         symbol [ w %w.1 73 12 13 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 74 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %h.2 = local;
         symbol [ h %h.2 74 12 13 ];
         %tmp.4 = lgetv %dc;
@@ -443,7 +443,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_
         lputv %h.2 %tmp.6;
         symbol [ h %h.2 74 12 13 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 75 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %cx.3 = local;
         symbol [ cx %cx.3 75 12 14 ];
         %tmp.7 = lgetv %w.1;
@@ -474,7 +474,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_77_34_
         goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_77_8_79_8_if_end;
 D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_77_8_79_8_if_end:
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 81 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %fMicro.4 = local;
         symbol [ fMicro %fMicro.4 81 12 18 ];
         symbol [ _store %tmp.19 81 21 27 ];
@@ -484,7 +484,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_77_8_7
         lputv %fMicro.4 %tmp.20;
         symbol [ fMicro %fMicro.4 81 12 18 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 82 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %fRow.5 = local;
         symbol [ fRow %fRow.5 82 12 16 ];
 D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_82_19_82_56_begin:
@@ -511,7 +511,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_82_19_
         lputv %fRow.5 %tmp.30;
         symbol [ fRow %fRow.5 82 12 16 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 83 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %fVal.6 = local;
         symbol [ fVal %fVal.6 83 12 16 ];
 D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_83_19_83_56_begin:
@@ -558,7 +558,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_83_19_
         %tmp.48 = getv function %tmp.47 :clear;
         invoke %tmp.47 %tmp.48();
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 88 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %item.7 = local;
         symbol [ item %item.7 88 12 16 ];
         %tmp.49 = self;
@@ -615,7 +615,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_89_26_
         goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_89_8_93_8_if_end;
 D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_89_8_93_8_if_end:
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 95 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %sym.8 = local;
         symbol [ sym %sym.8 95 12 15 ];
 D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_95_19_95_70_begin:
@@ -650,7 +650,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_95_19_
         lputv %sym.8 %tmp.84;
         symbol [ sym %sym.8 95 12 15 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 96 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %curStr.9 = local;
         symbol [ curStr %curStr.9 96 12 18 ];
 D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_96_21_96_72_begin:
@@ -680,7 +680,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_96_21_
         lputv %curStr.9 %tmp.95;
         symbol [ curStr %curStr.9 96 12 18 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 97 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %cur.10 = local;
         symbol [ cur %cur.10 97 12 15 ];
 D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_97_18_97_47_begin:
@@ -703,7 +703,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_97_18_
         lputv %cur.10 %tmp.102;
         symbol [ cur %cur.10 97 12 15 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 98 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %px.11 = local;
         symbol [ px %px.11 98 12 14 ];
         symbol [ _store %tmp.104 98 17 23 ];
@@ -719,7 +719,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_97_18_
         lputv %px.11 %tmp.110;
         symbol [ px %px.11 98 12 14 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 99 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %pct.12 = local;
         symbol [ pct %pct.12 99 12 15 ];
         symbol [ _store %tmp.112 99 18 24 ];
@@ -735,7 +735,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_97_18_
         lputv %pct.12 %tmp.118;
         symbol [ pct %pct.12 99 12 15 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 100 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %defaultChg.13 = local;
         symbol [ defaultChg %defaultChg.13 100 12 22 ];
 D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_100_25_100_81_begin:
@@ -767,7 +767,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_100_25
         lputv %defaultChg.13 %tmp.132;
         symbol [ defaultChg %defaultChg.13 100 12 22 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 101 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %chg.14 = local;
         symbol [ chg %chg.14 101 12 15 ];
         symbol [ _store %tmp.134 101 18 24 ];
@@ -784,7 +784,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_100_25
         lputv %chg.14 %tmp.140;
         symbol [ chg %chg.14 101 12 15 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 102 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %sma.15 = local;
         symbol [ sma %sma.15 102 12 15 ];
         symbol [ _store %tmp.142 102 18 24 ];
@@ -801,7 +801,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_100_25
         lputv %sma.15 %tmp.148;
         symbol [ sma %sma.15 102 12 15 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 103 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %defaultSmaPct.16 = local;
         symbol [ defaultSmaPct %defaultSmaPct.16 103 12 25 ];
 D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_103_28_103_73_begin:
@@ -831,7 +831,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_103_28
         lputv %defaultSmaPct.16 %tmp.160;
         symbol [ defaultSmaPct %defaultSmaPct.16 103 12 25 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 104 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %sPct.17 = local;
         symbol [ sPct %sPct.17 104 12 16 ];
         symbol [ _store %tmp.162 104 19 25 ];
@@ -848,7 +848,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_103_28
         lputv %sPct.17 %tmp.168;
         symbol [ sPct %sPct.17 104 12 16 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 105 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %rsi.18 = local;
         symbol [ rsi %rsi.18 105 12 15 ];
         symbol [ _store %tmp.170 105 18 24 ];
@@ -864,7 +864,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_103_28
         lputv %rsi.18 %tmp.176;
         symbol [ rsi %rsi.18 105 12 15 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 106 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %ed.19 = local;
         symbol [ ed %ed.19 106 12 14 ];
 D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_106_17_106_67_begin:
@@ -894,7 +894,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_106_17
         lputv %ed.19 %tmp.187;
         symbol [ ed %ed.19 106 12 14 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 107 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %ub.20 = local;
         symbol [ ub %ub.20 107 12 14 ];
         symbol [ _store %tmp.189 107 17 23 ];
@@ -911,7 +911,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_106_17
         lputv %ub.20 %tmp.195;
         symbol [ ub %ub.20 107 12 14 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 108 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %lb.21 = local;
         symbol [ lb %lb.21 108 12 14 ];
         symbol [ _store %tmp.197 108 17 23 ];
@@ -928,7 +928,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_106_17
         lputv %lb.21 %tmp.203;
         symbol [ lb %lb.21 108 12 14 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 109 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %dayHi.22 = local;
         symbol [ dayHi %dayHi.22 109 12 17 ];
         symbol [ _store %tmp.205 109 20 26 ];
@@ -945,7 +945,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_106_17
         lputv %dayHi.22 %tmp.211;
         symbol [ dayHi %dayHi.22 109 12 17 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 110 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %dayLo.23 = local;
         symbol [ dayLo %dayLo.23 110 12 17 ];
         symbol [ _store %tmp.213 110 20 26 ];
@@ -962,7 +962,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_106_17
         lputv %dayLo.23 %tmp.219;
         symbol [ dayLo %dayLo.23 110 12 17 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 111 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %alrt.24 = local;
         symbol [ alrt %alrt.24 111 12 16 ];
 D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_111_20_111_61_begin:
@@ -992,7 +992,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_111_20
         lputv %alrt.24 %tmp.230;
         symbol [ alrt %alrt.24 111 12 16 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 114 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
         %titleStr.25 = local;
         symbol [ titleStr %titleStr.25 114 12 20 ];
         %tmp.231 = "< ";
@@ -1100,1627 +1100,733 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_118_8_
         %tmp.277 = getv %tmp.276 :TEXT_JUSTIFY_CENTER;
         invoke %tmp.266 %tmp.267(%tmp.268, %tmp.273, %tmp.274, %tmp.275, %tmp.277);
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 125 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
-        %isUp.26 = local;
-        symbol [ isUp %isUp.26 125 12 16 ];
-        %tmp.278 = lgetv %pct.12;
-        symbol [ pct %tmp.278 125 20 23 ];
-        %tmp.279 = 0.0;
-        %tmp.280 = gte %tmp.278 %tmp.279;
-        lputv %isUp.26 %tmp.280;
-        symbol [ isUp %isUp.26 125 12 16 ];
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
+        %priceColor.26 = local;
+        symbol [ priceColor %priceColor.26 125 12 22 ];
+        symbol [ MoatWatchLayout %tmp.279 125 25 40 ];
+        %tmp.279 = getv ? :MoatWatchLayout;
+        symbol [ getPnlColor %tmp.280 125 41 52 ];
+        %tmp.280 = getv function %tmp.279 :getPnlColor;
+        %tmp.281 = lgetv %pct.12;
+        symbol [ pct %tmp.281 125 53 56 ];
+        %tmp.282 = invoke %tmp.279 %tmp.280(%tmp.281);
+        lputv %priceColor.26 %tmp.282;
+        symbol [ priceColor %priceColor.26 125 12 22 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 126 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
-        %priceColor.27 = local;
-        symbol [ priceColor %priceColor.27 126 12 22 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_126_25_126_43_begin:
-        %tmp.281 = lgetv %isUp.26;
-        symbol [ isUp %tmp.281 126 25 29 ];
-        bf %tmp.281 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_126_25_126_43_else_false;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_126_25_126_43_true:
-        %tmp.282 = 0x10B981;
-        push %tmp.282;
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_126_25_126_43_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_126_25_126_43_else_false:
-        %tmp.283 = 0xF43F5E;
-        push %tmp.283;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_126_25_126_43_end:
-        %tmp.284 = phi [%tmp.281 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_126_25_126_43_begin] [%tmp.282 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_126_25_126_43_true] [%tmp.283 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_126_25_126_43_else_false] [%tmp.284 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_126_25_126_43_end];
-        lputv %priceColor.27 %tmp.284;
-        symbol [ priceColor %priceColor.27 126 12 22 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 127 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
-        %sign.28 = local;
-        symbol [ sign %sign.28 127 12 16 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_127_19_127_32_begin:
-        %tmp.285 = lgetv %isUp.26;
-        symbol [ isUp %tmp.285 127 19 23 ];
-        bf %tmp.285 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_127_19_127_32_else_false;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_127_19_127_32_true:
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
+        %chgSign.27 = local;
+        symbol [ chgSign %chgSign.27 126 12 19 ];
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_126_22_126_43_begin:
+        %tmp.283 = lgetv %chg.14;
+        symbol [ chg %tmp.283 126 23 26 ];
+        %tmp.284 = 0.0;
+        %tmp.285 = gte %tmp.283 %tmp.284;
+        bf %tmp.285 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_126_22_126_43_else_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_126_22_126_43_true:
         %tmp.286 = "+";
         push %tmp.286;
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_127_19_127_32_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_127_19_127_32_else_false:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_126_22_126_43_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_126_22_126_43_else_false:
         %tmp.287 = "";
         push %tmp.287;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_127_19_127_32_end:
-        %tmp.288 = phi [%tmp.285 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_127_19_127_32_begin] [%tmp.286 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_127_19_127_32_true] [%tmp.287 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_127_19_127_32_else_false] [%tmp.288 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_127_19_127_32_end];
-        lputv %sign.28 %tmp.288;
-        symbol [ sign %sign.28 127 12 16 ];
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_126_22_126_43_end:
+        %tmp.288 = phi [%tmp.285 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_126_22_126_43_begin] [%tmp.286 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_126_22_126_43_true] [%tmp.287 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_126_22_126_43_else_false] [%tmp.288 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_126_22_126_43_end];
+        lputv %chgSign.27 %tmp.288;
+        symbol [ chgSign %chgSign.27 126 12 19 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 127 8 ]
+        %tmp.289 = lgetv %dc;
+        symbol [ dc %tmp.289 127 8 10 ];
+        symbol [ setColor %tmp.290 127 11 19 ];
+        %tmp.290 = getv function %tmp.289 :setColor;
+        %tmp.291 = lgetv %priceColor.26;
+        symbol [ priceColor %tmp.291 127 20 30 ];
+        symbol [ Graphics %tmp.292 127 32 40 ];
+        %tmp.292 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.293 127 41 58 ];
+        %tmp.293 = getv %tmp.292 :COLOR_TRANSPARENT;
+        invoke %tmp.289 %tmp.290(%tmp.291, %tmp.293);
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 128 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
-        %chgSign.29 = local;
-        symbol [ chgSign %chgSign.29 128 12 19 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_128_22_128_43_begin:
-        %tmp.289 = lgetv %chg.14;
-        symbol [ chg %tmp.289 128 23 26 ];
-        %tmp.290 = 0.0;
-        %tmp.291 = gte %tmp.289 %tmp.290;
-        bf %tmp.291 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_128_22_128_43_else_false;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_128_22_128_43_true:
-        %tmp.292 = "+";
-        push %tmp.292;
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_128_22_128_43_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_128_22_128_43_else_false:
-        %tmp.293 = "";
-        push %tmp.293;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_128_22_128_43_end:
-        %tmp.294 = phi [%tmp.291 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_128_22_128_43_begin] [%tmp.292 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_128_22_128_43_true] [%tmp.293 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_128_22_128_43_else_false] [%tmp.294 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_128_22_128_43_end];
-        lputv %chgSign.29 %tmp.294;
-        symbol [ chgSign %chgSign.29 128 12 19 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 129 8 ]
-        %tmp.295 = lgetv %dc;
-        symbol [ dc %tmp.295 129 8 10 ];
-        symbol [ setColor %tmp.296 129 11 19 ];
-        %tmp.296 = getv function %tmp.295 :setColor;
-        %tmp.297 = lgetv %priceColor.27;
-        symbol [ priceColor %tmp.297 129 20 30 ];
-        symbol [ Graphics %tmp.298 129 32 40 ];
-        %tmp.298 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.299 129 41 58 ];
-        %tmp.299 = getv %tmp.298 :COLOR_TRANSPARENT;
-        invoke %tmp.295 %tmp.296(%tmp.297, %tmp.299);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 130 8 ]
-        %tmp.300 = lgetv %dc;
-        symbol [ dc %tmp.300 130 8 10 ];
-        symbol [ drawText %tmp.301 130 11 19 ];
-        %tmp.301 = getv function %tmp.300 :drawText;
-        %tmp.302 = lgetv %cx.3;
-        symbol [ cx %tmp.302 131 12 14 ];
-        %tmp.303 = lgetv %h.2;
-        symbol [ h %tmp.303 132 13 14 ];
-        %tmp.304 = 14;
-        %tmp.305 = mul %tmp.303 %tmp.304;
-        %tmp.306 = 100;
-        %tmp.307 = div %tmp.305 %tmp.306;
-        %tmp.308 = lgetv %fRow.5;
-        symbol [ fRow %tmp.308 133 12 16 ];
-        %tmp.309 = "Now: ";
-        %tmp.310 = lgetv %cur.10;
-        symbol [ cur %tmp.310 134 22 25 ];
-        %tmp.311 = add %tmp.309 %tmp.310;
-        %tmp.312 = lgetv %px.11;
-        symbol [ px %tmp.312 134 28 30 ];
-        symbol [ format %tmp.313 134 31 37 ];
-        %tmp.313 = getv function %tmp.312 :format;
-        %tmp.314 = "%.2f";
-        %tmp.315 = invoke %tmp.312 %tmp.313(%tmp.314);
-        %tmp.316 = add %tmp.311 %tmp.315;
-        %tmp.317 = "  ";
-        %tmp.318 = add %tmp.316 %tmp.317;
-        %tmp.319 = lgetv %chgSign.29;
-        symbol [ chgSign %tmp.319 134 55 62 ];
-        %tmp.320 = add %tmp.318 %tmp.319;
-        %tmp.321 = lgetv %chg.14;
-        symbol [ chg %tmp.321 134 65 68 ];
-        symbol [ format %tmp.322 134 69 75 ];
-        %tmp.322 = getv function %tmp.321 :format;
-        %tmp.323 = "%.2f";
-        %tmp.324 = invoke %tmp.321 %tmp.322(%tmp.323);
-        %tmp.325 = add %tmp.320 %tmp.324;
-        %tmp.326 = " (";
-        %tmp.327 = add %tmp.325 %tmp.326;
-        %tmp.328 = lgetv %sign.28;
-        symbol [ sign %tmp.328 134 93 97 ];
+        %tmp.294 = lgetv %dc;
+        symbol [ dc %tmp.294 128 8 10 ];
+        symbol [ drawText %tmp.295 128 11 19 ];
+        %tmp.295 = getv function %tmp.294 :drawText;
+        %tmp.296 = lgetv %cx.3;
+        symbol [ cx %tmp.296 129 12 14 ];
+        %tmp.297 = lgetv %h.2;
+        symbol [ h %tmp.297 130 13 14 ];
+        %tmp.298 = 14;
+        %tmp.299 = mul %tmp.297 %tmp.298;
+        %tmp.300 = 100;
+        %tmp.301 = div %tmp.299 %tmp.300;
+        %tmp.302 = lgetv %fRow.5;
+        symbol [ fRow %tmp.302 131 12 16 ];
+        %tmp.303 = "Now: ";
+        %tmp.304 = lgetv %cur.10;
+        symbol [ cur %tmp.304 132 22 25 ];
+        %tmp.305 = add %tmp.303 %tmp.304;
+        %tmp.306 = lgetv %px.11;
+        symbol [ px %tmp.306 132 28 30 ];
+        symbol [ format %tmp.307 132 31 37 ];
+        %tmp.307 = getv function %tmp.306 :format;
+        %tmp.308 = "%.2f";
+        %tmp.309 = invoke %tmp.306 %tmp.307(%tmp.308);
+        %tmp.310 = add %tmp.305 %tmp.309;
+        %tmp.311 = "  ";
+        %tmp.312 = add %tmp.310 %tmp.311;
+        %tmp.313 = lgetv %chgSign.27;
+        symbol [ chgSign %tmp.313 132 55 62 ];
+        %tmp.314 = add %tmp.312 %tmp.313;
+        %tmp.315 = lgetv %chg.14;
+        symbol [ chg %tmp.315 132 65 68 ];
+        symbol [ format %tmp.316 132 69 75 ];
+        %tmp.316 = getv function %tmp.315 :format;
+        %tmp.317 = "%.2f";
+        %tmp.318 = invoke %tmp.315 %tmp.316(%tmp.317);
+        %tmp.319 = add %tmp.314 %tmp.318;
+        %tmp.320 = " (";
+        %tmp.321 = add %tmp.319 %tmp.320;
+        symbol [ MoatWatchLayout %tmp.323 132 93 108 ];
+        %tmp.323 = getv ? :MoatWatchLayout;
+        symbol [ formatSignedPct %tmp.324 132 109 124 ];
+        %tmp.324 = getv function %tmp.323 :formatSignedPct;
+        %tmp.325 = lgetv %pct.12;
+        symbol [ pct %tmp.325 132 125 128 ];
+        %tmp.326 = invoke %tmp.323 %tmp.324(%tmp.325);
+        %tmp.327 = add %tmp.321 %tmp.326;
+        %tmp.328 = ")";
         %tmp.329 = add %tmp.327 %tmp.328;
-        %tmp.330 = lgetv %pct.12;
-        symbol [ pct %tmp.330 134 100 103 ];
-        symbol [ format %tmp.331 134 104 110 ];
-        %tmp.331 = getv function %tmp.330 :format;
-        %tmp.332 = "%.2f";
-        %tmp.333 = invoke %tmp.330 %tmp.331(%tmp.332);
-        %tmp.334 = add %tmp.329 %tmp.333;
-        %tmp.335 = "%)";
-        %tmp.336 = add %tmp.334 %tmp.335;
-        symbol [ Graphics %tmp.337 135 12 20 ];
-        %tmp.337 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_CENTER %tmp.338 135 21 40 ];
-        %tmp.338 = getv %tmp.337 :TEXT_JUSTIFY_CENTER;
-        invoke %tmp.300 %tmp.301(%tmp.302, %tmp.307, %tmp.308, %tmp.336, %tmp.338);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 139 8 ]
-        %tmp.339 = lgetv %dc;
-        symbol [ dc %tmp.339 139 8 10 ];
-        symbol [ setColor %tmp.340 139 11 19 ];
-        %tmp.340 = getv function %tmp.339 :setColor;
-        %tmp.341 = 0xE2E8F0;
-        symbol [ Graphics %tmp.342 139 30 38 ];
-        %tmp.342 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.343 139 39 56 ];
-        %tmp.343 = getv %tmp.342 :COLOR_TRANSPARENT;
-        invoke %tmp.339 %tmp.340(%tmp.341, %tmp.343);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 140 8 ]
-        %tmp.344 = lgetv %dc;
-        symbol [ dc %tmp.344 140 8 10 ];
-        symbol [ drawText %tmp.345 140 11 19 ];
-        %tmp.345 = getv function %tmp.344 :drawText;
-        %tmp.346 = lgetv %cx.3;
-        symbol [ cx %tmp.346 141 12 14 ];
-        %tmp.347 = lgetv %h.2;
-        symbol [ h %tmp.347 142 13 14 ];
-        %tmp.348 = 20;
-        %tmp.349 = mul %tmp.347 %tmp.348;
-        %tmp.350 = 100;
-        %tmp.351 = div %tmp.349 %tmp.350;
-        %tmp.352 = lgetv %fMicro.4;
-        symbol [ fMicro %tmp.352 143 12 18 ];
-        %tmp.353 = "Day L: ";
-        %tmp.354 = lgetv %cur.10;
-        symbol [ cur %tmp.354 144 24 27 ];
+        symbol [ Graphics %tmp.330 133 12 20 ];
+        %tmp.330 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.331 133 21 40 ];
+        %tmp.331 = getv %tmp.330 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.294 %tmp.295(%tmp.296, %tmp.301, %tmp.302, %tmp.329, %tmp.331);
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 137 8 ]
+        %tmp.332 = lgetv %dc;
+        symbol [ dc %tmp.332 137 8 10 ];
+        symbol [ setColor %tmp.333 137 11 19 ];
+        %tmp.333 = getv function %tmp.332 :setColor;
+        %tmp.334 = 0xE2E8F0;
+        symbol [ Graphics %tmp.335 137 30 38 ];
+        %tmp.335 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.336 137 39 56 ];
+        %tmp.336 = getv %tmp.335 :COLOR_TRANSPARENT;
+        invoke %tmp.332 %tmp.333(%tmp.334, %tmp.336);
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 138 8 ]
+        %tmp.337 = lgetv %dc;
+        symbol [ dc %tmp.337 138 8 10 ];
+        symbol [ drawText %tmp.338 138 11 19 ];
+        %tmp.338 = getv function %tmp.337 :drawText;
+        %tmp.339 = lgetv %cx.3;
+        symbol [ cx %tmp.339 139 12 14 ];
+        %tmp.340 = lgetv %h.2;
+        symbol [ h %tmp.340 140 13 14 ];
+        %tmp.341 = 20;
+        %tmp.342 = mul %tmp.340 %tmp.341;
+        %tmp.343 = 100;
+        %tmp.344 = div %tmp.342 %tmp.343;
+        %tmp.345 = lgetv %fMicro.4;
+        symbol [ fMicro %tmp.345 141 12 18 ];
+        %tmp.346 = "Day L: ";
+        %tmp.347 = lgetv %cur.10;
+        symbol [ cur %tmp.347 142 24 27 ];
+        %tmp.348 = add %tmp.346 %tmp.347;
+        %tmp.349 = lgetv %dayLo.23;
+        symbol [ dayLo %tmp.349 142 30 35 ];
+        symbol [ format %tmp.350 142 36 42 ];
+        %tmp.350 = getv function %tmp.349 :format;
+        %tmp.351 = "%.2f";
+        %tmp.352 = invoke %tmp.349 %tmp.350(%tmp.351);
+        %tmp.353 = add %tmp.348 %tmp.352;
+        %tmp.354 = "  H: ";
         %tmp.355 = add %tmp.353 %tmp.354;
-        %tmp.356 = lgetv %dayLo.23;
-        symbol [ dayLo %tmp.356 144 30 35 ];
-        symbol [ format %tmp.357 144 36 42 ];
-        %tmp.357 = getv function %tmp.356 :format;
-        %tmp.358 = "%.2f";
-        %tmp.359 = invoke %tmp.356 %tmp.357(%tmp.358);
-        %tmp.360 = add %tmp.355 %tmp.359;
-        %tmp.361 = "  H: ";
-        %tmp.362 = add %tmp.360 %tmp.361;
-        %tmp.363 = lgetv %cur.10;
-        symbol [ cur %tmp.363 144 63 66 ];
-        %tmp.364 = add %tmp.362 %tmp.363;
-        %tmp.365 = lgetv %dayHi.22;
-        symbol [ dayHi %tmp.365 144 69 74 ];
-        symbol [ format %tmp.366 144 75 81 ];
-        %tmp.366 = getv function %tmp.365 :format;
-        %tmp.367 = "%.2f";
-        %tmp.368 = invoke %tmp.365 %tmp.366(%tmp.367);
-        %tmp.369 = add %tmp.364 %tmp.368;
-        symbol [ Graphics %tmp.370 145 12 20 ];
-        %tmp.370 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_CENTER %tmp.371 145 21 40 ];
-        %tmp.371 = getv %tmp.370 :TEXT_JUSTIFY_CENTER;
-        invoke %tmp.344 %tmp.345(%tmp.346, %tmp.351, %tmp.352, %tmp.369, %tmp.371);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 148 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
-        %smaSign.30 = local;
-        symbol [ smaSign %smaSign.30 148 12 19 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_22_148_44_begin:
-        %tmp.372 = lgetv %sPct.17;
-        symbol [ sPct %tmp.372 148 23 27 ];
-        %tmp.373 = 0.0;
-        %tmp.374 = gte %tmp.372 %tmp.373;
-        bf %tmp.374 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_22_148_44_else_false;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_22_148_44_true:
-        %tmp.375 = "+";
-        push %tmp.375;
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_22_148_44_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_22_148_44_else_false:
-        %tmp.376 = "";
-        push %tmp.376;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_22_148_44_end:
-        %tmp.377 = phi [%tmp.374 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_22_148_44_begin] [%tmp.375 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_22_148_44_true] [%tmp.376 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_22_148_44_else_false] [%tmp.377 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_22_148_44_end];
-        lputv %smaSign.30 %tmp.377;
-        symbol [ smaSign %smaSign.30 148 12 19 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 149 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
-        %smaLineStr.31 = local;
-        symbol [ smaLineStr %smaLineStr.31 149 12 22 ];
-        %tmp.378 = "SMA20: ";
-        %tmp.379 = lgetv %cur.10;
-        symbol [ cur %tmp.379 149 37 40 ];
+        %tmp.356 = lgetv %cur.10;
+        symbol [ cur %tmp.356 142 63 66 ];
+        %tmp.357 = add %tmp.355 %tmp.356;
+        %tmp.358 = lgetv %dayHi.22;
+        symbol [ dayHi %tmp.358 142 69 74 ];
+        symbol [ format %tmp.359 142 75 81 ];
+        %tmp.359 = getv function %tmp.358 :format;
+        %tmp.360 = "%.2f";
+        %tmp.361 = invoke %tmp.358 %tmp.359(%tmp.360);
+        %tmp.362 = add %tmp.357 %tmp.361;
+        symbol [ Graphics %tmp.363 143 12 20 ];
+        %tmp.363 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.364 143 21 40 ];
+        %tmp.364 = getv %tmp.363 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.337 %tmp.338(%tmp.339, %tmp.344, %tmp.345, %tmp.362, %tmp.364);
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 146 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
+        %smaSign.28 = local;
+        symbol [ smaSign %smaSign.28 146 12 19 ];
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_146_22_146_44_begin:
+        %tmp.365 = lgetv %sPct.17;
+        symbol [ sPct %tmp.365 146 23 27 ];
+        %tmp.366 = 0.0;
+        %tmp.367 = gte %tmp.365 %tmp.366;
+        bf %tmp.367 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_146_22_146_44_else_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_146_22_146_44_true:
+        %tmp.368 = "+";
+        push %tmp.368;
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_146_22_146_44_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_146_22_146_44_else_false:
+        %tmp.369 = "";
+        push %tmp.369;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_146_22_146_44_end:
+        %tmp.370 = phi [%tmp.367 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_146_22_146_44_begin] [%tmp.368 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_146_22_146_44_true] [%tmp.369 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_146_22_146_44_else_false] [%tmp.370 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_146_22_146_44_end];
+        lputv %smaSign.28 %tmp.370;
+        symbol [ smaSign %smaSign.28 146 12 19 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 147 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
+        %smaLineStr.29 = local;
+        symbol [ smaLineStr %smaLineStr.29 147 12 22 ];
+        %tmp.371 = "SMA20: ";
+        %tmp.372 = lgetv %cur.10;
+        symbol [ cur %tmp.372 147 37 40 ];
+        %tmp.373 = add %tmp.371 %tmp.372;
+        %tmp.374 = lgetv %sma.15;
+        symbol [ sma %tmp.374 147 43 46 ];
+        symbol [ format %tmp.375 147 47 53 ];
+        %tmp.375 = getv function %tmp.374 :format;
+        %tmp.376 = "%.1f";
+        %tmp.377 = invoke %tmp.374 %tmp.375(%tmp.376);
+        %tmp.378 = add %tmp.373 %tmp.377;
+        %tmp.379 = " (";
         %tmp.380 = add %tmp.378 %tmp.379;
-        %tmp.381 = lgetv %sma.15;
-        symbol [ sma %tmp.381 149 43 46 ];
-        symbol [ format %tmp.382 149 47 53 ];
-        %tmp.382 = getv function %tmp.381 :format;
-        %tmp.383 = "%.1f";
-        %tmp.384 = invoke %tmp.381 %tmp.382(%tmp.383);
-        %tmp.385 = add %tmp.380 %tmp.384;
-        %tmp.386 = " (";
-        %tmp.387 = add %tmp.385 %tmp.386;
-        %tmp.388 = lgetv %smaSign.30;
-        symbol [ smaSign %tmp.388 149 71 78 ];
+        %tmp.381 = lgetv %smaSign.28;
+        symbol [ smaSign %tmp.381 147 71 78 ];
+        %tmp.382 = add %tmp.380 %tmp.381;
+        %tmp.383 = lgetv %sPct.17;
+        symbol [ sPct %tmp.383 147 81 85 ];
+        symbol [ format %tmp.384 147 86 92 ];
+        %tmp.384 = getv function %tmp.383 :format;
+        %tmp.385 = "%.1f";
+        %tmp.386 = invoke %tmp.383 %tmp.384(%tmp.385);
+        %tmp.387 = add %tmp.382 %tmp.386;
+        %tmp.388 = "%) · RSI14: ";
         %tmp.389 = add %tmp.387 %tmp.388;
-        %tmp.390 = lgetv %sPct.17;
-        symbol [ sPct %tmp.390 149 81 85 ];
-        symbol [ format %tmp.391 149 86 92 ];
+        %tmp.390 = lgetv %rsi.18;
+        symbol [ rsi %tmp.390 147 120 123 ];
+        symbol [ format %tmp.391 147 124 130 ];
         %tmp.391 = getv function %tmp.390 :format;
-        %tmp.392 = "%.1f";
+        %tmp.392 = "%.0f";
         %tmp.393 = invoke %tmp.390 %tmp.391(%tmp.392);
         %tmp.394 = add %tmp.389 %tmp.393;
-        %tmp.395 = "%) · RSI14: ";
-        %tmp.396 = add %tmp.394 %tmp.395;
-        %tmp.397 = lgetv %rsi.18;
-        symbol [ rsi %tmp.397 149 120 123 ];
-        symbol [ format %tmp.398 149 124 130 ];
-        %tmp.398 = getv function %tmp.397 :format;
-        %tmp.399 = "%.0f";
-        %tmp.400 = invoke %tmp.397 %tmp.398(%tmp.399);
-        %tmp.401 = add %tmp.396 %tmp.400;
-        lputv %smaLineStr.31 %tmp.401;
-        symbol [ smaLineStr %smaLineStr.31 149 12 22 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 150 8 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_150_8_152_8_if_stmt:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_150_12_150_34_begin:
-        symbol [ showBollinger %tmp.403 150 12 25 ];
-        %tmp.403 = getv ? :showBollinger;
-        bf %tmp.403 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_150_8_152_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_150_29_150_34_true:
-        %tmp.404 = lgetv %ub.20;
-        symbol [ ub %tmp.404 150 29 31 ];
-        %tmp.405 = lgetv %lb.21;
-        symbol [ lb %tmp.405 150 34 36 ];
-        %tmp.406 = gt %tmp.404 %tmp.405;
-        push %tmp.406;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_150_29_150_34_end:
-        %tmp.407 = phi [%tmp.403 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_150_12_150_34_begin] [%tmp.406 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_150_29_150_34_true] [%tmp.407 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_150_29_150_34_end];
-        bf %tmp.407 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_150_8_152_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_150_8_152_8_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_150_38_152_8_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 151 12 ]
-        %tmp.408 = lgetv %smaLineStr.31;
-        symbol [ smaLineStr %tmp.408 151 25 35 ];
-        %tmp.409 = " · BB";
-        %tmp.410 = add %tmp.408 %tmp.409;
-        lputv %smaLineStr.31 %tmp.410;
-        symbol [ smaLineStr %smaLineStr.31 151 12 22 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_150_38_152_8_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_150_8_152_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_150_8_152_8_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 153 8 ]
-        %tmp.411 = lgetv %dc;
-        symbol [ dc %tmp.411 153 8 10 ];
-        symbol [ setColor %tmp.412 153 11 19 ];
-        %tmp.412 = getv function %tmp.411 :setColor;
-        %tmp.413 = 0x06B6D4;
-        symbol [ Graphics %tmp.414 153 30 38 ];
-        %tmp.414 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.415 153 39 56 ];
-        %tmp.415 = getv %tmp.414 :COLOR_TRANSPARENT;
-        invoke %tmp.411 %tmp.412(%tmp.413, %tmp.415);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 154 8 ]
-        %tmp.416 = lgetv %dc;
-        symbol [ dc %tmp.416 154 8 10 ];
-        symbol [ drawText %tmp.417 154 11 19 ];
-        %tmp.417 = getv function %tmp.416 :drawText;
-        %tmp.418 = lgetv %cx.3;
-        symbol [ cx %tmp.418 154 20 22 ];
-        %tmp.419 = lgetv %h.2;
-        symbol [ h %tmp.419 154 25 26 ];
-        %tmp.420 = 26;
-        %tmp.421 = mul %tmp.419 %tmp.420;
-        %tmp.422 = 100;
-        %tmp.423 = div %tmp.421 %tmp.422;
-        %tmp.424 = lgetv %fMicro.4;
-        symbol [ fMicro %tmp.424 154 40 46 ];
-        %tmp.425 = lgetv %smaLineStr.31;
-        symbol [ smaLineStr %tmp.425 154 48 58 ];
-        symbol [ Graphics %tmp.426 154 60 68 ];
-        %tmp.426 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_CENTER %tmp.427 154 69 88 ];
-        %tmp.427 = getv %tmp.426 :TEXT_JUSTIFY_CENTER;
-        invoke %tmp.416 %tmp.417(%tmp.418, %tmp.423, %tmp.424, %tmp.425, %tmp.427);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 157 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
-        %chartX.32 = local;
-        symbol [ chartX %chartX.32 157 12 18 ];
-        %tmp.428 = lgetv %w.1;
-        symbol [ w %tmp.428 157 22 23 ];
-        %tmp.429 = 14;
-        %tmp.430 = mul %tmp.428 %tmp.429;
-        %tmp.431 = 100;
-        %tmp.432 = div %tmp.430 %tmp.431;
-        lputv %chartX.32 %tmp.432;
-        symbol [ chartX %chartX.32 157 12 18 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 158 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
-        %chartY.33 = local;
-        symbol [ chartY %chartY.33 158 12 18 ];
-        %tmp.433 = lgetv %h.2;
-        symbol [ h %tmp.433 158 22 23 ];
-        %tmp.434 = 33;
-        %tmp.435 = mul %tmp.433 %tmp.434;
-        %tmp.436 = 100;
-        %tmp.437 = div %tmp.435 %tmp.436;
-        lputv %chartY.33 %tmp.437;
-        symbol [ chartY %chartY.33 158 12 18 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 159 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
-        %chartW.34 = local;
-        symbol [ chartW %chartW.34 159 12 18 ];
-        %tmp.438 = lgetv %w.1;
-        symbol [ w %tmp.438 159 21 22 ];
-        %tmp.439 = lgetv %chartX.32;
-        symbol [ chartX %tmp.439 159 26 32 ];
-        %tmp.440 = 2;
-        %tmp.441 = mul %tmp.439 %tmp.440;
-        %tmp.442 = sub %tmp.438 %tmp.441;
-        lputv %chartW.34 %tmp.442;
-        symbol [ chartW %chartW.34 159 12 18 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 160 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
-        %chartH.35 = local;
-        symbol [ chartH %chartH.35 160 12 18 ];
-        %tmp.443 = lgetv %h.2;
-        symbol [ h %tmp.443 160 22 23 ];
-        %tmp.444 = 21;
-        %tmp.445 = mul %tmp.443 %tmp.444;
-        %tmp.446 = 100;
-        %tmp.447 = div %tmp.445 %tmp.446;
-        lputv %chartH.35 %tmp.447;
-        symbol [ chartH %chartH.35 160 12 18 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 162 8 ]
-        %tmp.448 = lgetv %dc;
-        symbol [ dc %tmp.448 162 8 10 ];
-        symbol [ setColor %tmp.449 162 11 19 ];
-        %tmp.449 = getv function %tmp.448 :setColor;
-        %tmp.450 = 0x0B0F17;
-        symbol [ Graphics %tmp.451 162 30 38 ];
-        %tmp.451 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.452 162 39 56 ];
-        %tmp.452 = getv %tmp.451 :COLOR_TRANSPARENT;
-        invoke %tmp.448 %tmp.449(%tmp.450, %tmp.452);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 163 8 ]
-        %tmp.453 = lgetv %dc;
-        symbol [ dc %tmp.453 163 8 10 ];
-        symbol [ fillRoundedRectangle %tmp.454 163 11 31 ];
-        %tmp.454 = getv function %tmp.453 :fillRoundedRectangle;
-        %tmp.455 = lgetv %chartX.32;
-        symbol [ chartX %tmp.455 163 32 38 ];
-        %tmp.456 = 6;
-        %tmp.457 = sub %tmp.455 %tmp.456;
-        %tmp.458 = lgetv %chartY.33;
-        symbol [ chartY %tmp.458 163 44 50 ];
-        %tmp.459 = 4;
-        %tmp.460 = sub %tmp.458 %tmp.459;
-        %tmp.461 = lgetv %chartW.34;
-        symbol [ chartW %tmp.461 163 56 62 ];
-        %tmp.462 = 12;
-        %tmp.463 = add %tmp.461 %tmp.462;
-        %tmp.464 = lgetv %chartH.35;
-        symbol [ chartH %tmp.464 163 69 75 ];
-        %tmp.465 = 8;
-        %tmp.466 = add %tmp.464 %tmp.465;
-        %tmp.467 = 10;
-        invoke %tmp.453 %tmp.454(%tmp.457, %tmp.460, %tmp.463, %tmp.466, %tmp.467);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 165 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
-        %spk.36 = local;
-        symbol [ spk %spk.36 165 12 15 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_165_19_165_71_begin:
-        %tmp.468 = lgetv %item.7;
-        symbol [ item %tmp.468 165 19 23 ];
-        symbol [ hasKey %tmp.469 165 24 30 ];
-        %tmp.469 = getv function %tmp.468 :hasKey;
-        %tmp.470 = "spk";
-        %tmp.471 = invoke %tmp.468 %tmp.469(%tmp.470);
-        bf %tmp.471 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_165_19_165_71_else_false;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_165_19_165_71_true:
-        %tmp.472 = lgetv %item.7;
-        symbol [ item %tmp.472 165 40 44 ];
-        symbol [ get %tmp.473 165 45 48 ];
-        %tmp.473 = getv function %tmp.472 :get;
-        %tmp.474 = "spk";
-        %tmp.475 = invoke %tmp.472 %tmp.473(%tmp.474);
-        push %tmp.475;
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_165_19_165_71_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_165_19_165_71_else_false:
-        %tmp.476 = lgetv %item.7;
-        symbol [ item %tmp.476 165 58 62 ];
-        symbol [ get %tmp.477 165 63 66 ];
-        %tmp.477 = getv function %tmp.476 :get;
-        %tmp.478 = "sp";
-        %tmp.479 = invoke %tmp.476 %tmp.477(%tmp.478);
-        push %tmp.479;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_165_19_165_71_end:
-        %tmp.480 = phi [%tmp.471 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_165_19_165_71_begin] [%tmp.475 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_165_19_165_71_true] [%tmp.479 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_165_19_165_71_else_false] [%tmp.480 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_165_19_165_71_end];
-        %tmp.481 = as %tmp.480 Array or Null;
-        symbol [ Array %tmp.481 165 77 82 ];
-        lputv %spk.36 %tmp.481;
-        symbol [ spk %spk.36 165 12 15 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 166 8 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_8_228_8_if_stmt:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_12_166_40_begin:
-        %tmp.482 = lgetv %spk.36;
-        symbol [ spk %tmp.482 166 12 15 ];
-        %tmp.483 = null;
-        %tmp.484 = ne %tmp.482 %tmp.483;
-        bf %tmp.484 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_8_228_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_27_166_40_true:
-        %tmp.485 = lgetv %spk.36;
-        symbol [ spk %tmp.485 166 27 30 ];
-        %tmp.486 = as %tmp.485 { (!Null) };
-        symbol [ size %tmp.487 166 31 35 ];
-        %tmp.487 = getv function %tmp.486 :size;
-        %tmp.488 = invoke %tmp.486 %tmp.487();
-        %tmp.489 = 1;
-        %tmp.490 = gt %tmp.488 %tmp.489;
-        push %tmp.490;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_27_166_40_end:
-        %tmp.491 = phi [%tmp.484 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_12_166_40_begin] [%tmp.490 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_27_166_40_true] [%tmp.491 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_27_166_40_end];
-        bf %tmp.491 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_8_228_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_8_228_8_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_43_228_8_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 167 12 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_43_228_8_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_43_228_8_stop" ]
-        %minVal.37 = local;
-        symbol [ minVal %minVal.37 167 16 22 ];
-        %tmp.492 = lgetv %dayLo.23;
-        symbol [ dayLo %tmp.492 167 25 30 ];
-        lputv %minVal.37 %tmp.492;
-        symbol [ minVal %minVal.37 167 16 22 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 168 12 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_43_228_8_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_43_228_8_stop" ]
-        %maxVal.38 = local;
-        symbol [ maxVal %maxVal.38 168 16 22 ];
-        %tmp.493 = lgetv %dayHi.22;
-        symbol [ dayHi %tmp.493 168 25 30 ];
-        lputv %maxVal.38 %tmp.493;
-        symbol [ maxVal %maxVal.38 168 16 22 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 169 12 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_169_12_169_44_if_stmt:
-        %tmp.494 = lgetv %px.11;
-        symbol [ px %tmp.494 169 16 18 ];
-        %tmp.495 = lgetv %minVal.37;
-        symbol [ minVal %tmp.495 169 21 27 ];
-        %tmp.496 = lt %tmp.494 %tmp.495;
-        bf %tmp.496 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_169_12_169_44_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_169_12_169_44_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_169_29_169_44_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 169 31 ]
-        %tmp.497 = lgetv %px.11;
-        symbol [ px %tmp.497 169 40 42 ];
-        lputv %minVal.37 %tmp.497;
-        symbol [ minVal %minVal.37 169 31 37 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_169_29_169_44_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_169_12_169_44_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_169_12_169_44_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 170 12 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_170_12_170_44_if_stmt:
-        %tmp.498 = lgetv %px.11;
-        symbol [ px %tmp.498 170 16 18 ];
-        %tmp.499 = lgetv %maxVal.38;
-        symbol [ maxVal %tmp.499 170 21 27 ];
-        %tmp.500 = gt %tmp.498 %tmp.499;
-        bf %tmp.500 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_170_12_170_44_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_170_12_170_44_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_170_29_170_44_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 170 31 ]
-        %tmp.501 = lgetv %px.11;
-        symbol [ px %tmp.501 170 40 42 ];
-        lputv %maxVal.38 %tmp.501;
-        symbol [ maxVal %maxVal.38 170 31 37 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_170_29_170_44_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_170_12_170_44_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_170_12_170_44_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 171 12 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_171_12_174_12_if_stmt:
-        %tmp.502 = lgetv %sma.15;
-        symbol [ sma %tmp.502 171 16 19 ];
-        %tmp.503 = 0.0;
-        %tmp.504 = gt %tmp.502 %tmp.503;
-        bf %tmp.504 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_171_12_174_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_171_12_174_12_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_171_27_174_12_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 172 16 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_172_16_172_50_if_stmt:
-        %tmp.505 = lgetv %sma.15;
-        symbol [ sma %tmp.505 172 20 23 ];
-        %tmp.506 = lgetv %minVal.37;
-        symbol [ minVal %tmp.506 172 26 32 ];
-        %tmp.507 = lt %tmp.505 %tmp.506;
-        bf %tmp.507 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_172_16_172_50_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_172_16_172_50_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_172_34_172_50_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 172 36 ]
-        %tmp.508 = lgetv %sma.15;
-        symbol [ sma %tmp.508 172 45 48 ];
-        lputv %minVal.37 %tmp.508;
-        symbol [ minVal %minVal.37 172 36 42 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_172_34_172_50_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_172_16_172_50_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_172_16_172_50_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 173 16 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_173_16_173_50_if_stmt:
-        %tmp.509 = lgetv %sma.15;
-        symbol [ sma %tmp.509 173 20 23 ];
-        %tmp.510 = lgetv %maxVal.38;
-        symbol [ maxVal %tmp.510 173 26 32 ];
-        %tmp.511 = gt %tmp.509 %tmp.510;
-        bf %tmp.511 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_173_16_173_50_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_173_16_173_50_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_173_34_173_50_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 173 36 ]
-        %tmp.512 = lgetv %sma.15;
-        symbol [ sma %tmp.512 173 45 48 ];
-        lputv %maxVal.38 %tmp.512;
-        symbol [ maxVal %maxVal.38 173 36 42 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_173_34_173_50_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_173_16_173_50_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_173_16_173_50_if_end:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_171_27_174_12_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_171_12_174_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_171_12_174_12_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 175 12 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_175_12_178_12_if_stmt:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_175_16_175_50_begin:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_175_16_175_38_begin:
-        symbol [ showBollinger %tmp.514 175 16 29 ];
-        %tmp.514 = getv ? :showBollinger;
-        bf %tmp.514 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_175_12_178_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_175_33_175_38_true:
-        %tmp.515 = lgetv %ub.20;
-        symbol [ ub %tmp.515 175 33 35 ];
-        %tmp.516 = 0.0;
-        %tmp.517 = gt %tmp.515 %tmp.516;
-        push %tmp.517;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_175_33_175_38_end:
-        %tmp.518 = phi [%tmp.514 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_175_16_175_38_begin] [%tmp.517 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_175_33_175_38_true] [%tmp.518 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_175_33_175_38_end];
-        bf %tmp.518 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_175_12_178_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_175_45_175_50_true:
-        %tmp.519 = lgetv %lb.21;
-        symbol [ lb %tmp.519 175 45 47 ];
-        %tmp.520 = 0.0;
-        %tmp.521 = gt %tmp.519 %tmp.520;
-        push %tmp.521;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_175_45_175_50_end:
-        %tmp.522 = phi [%tmp.518 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_175_16_175_50_begin] [%tmp.521 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_175_45_175_50_true] [%tmp.522 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_175_45_175_50_end];
-        bf %tmp.522 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_175_12_178_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_175_12_178_12_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_175_55_178_12_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 176 16 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_176_16_176_48_if_stmt:
-        %tmp.523 = lgetv %lb.21;
-        symbol [ lb %tmp.523 176 20 22 ];
-        %tmp.524 = lgetv %minVal.37;
-        symbol [ minVal %tmp.524 176 25 31 ];
-        %tmp.525 = lt %tmp.523 %tmp.524;
-        bf %tmp.525 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_176_16_176_48_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_176_16_176_48_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_176_33_176_48_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 176 35 ]
-        %tmp.526 = lgetv %lb.21;
-        symbol [ lb %tmp.526 176 44 46 ];
-        lputv %minVal.37 %tmp.526;
-        symbol [ minVal %minVal.37 176 35 41 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_176_33_176_48_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_176_16_176_48_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_176_16_176_48_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 177 16 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_177_16_177_48_if_stmt:
-        %tmp.527 = lgetv %ub.20;
-        symbol [ ub %tmp.527 177 20 22 ];
-        %tmp.528 = lgetv %maxVal.38;
-        symbol [ maxVal %tmp.528 177 25 31 ];
-        %tmp.529 = gt %tmp.527 %tmp.528;
-        bf %tmp.529 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_177_16_177_48_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_177_16_177_48_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_177_33_177_48_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 177 35 ]
-        %tmp.530 = lgetv %ub.20;
-        symbol [ ub %tmp.530 177 44 46 ];
-        lputv %maxVal.38 %tmp.530;
-        symbol [ maxVal %maxVal.38 177 35 41 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_177_33_177_48_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_177_16_177_48_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_177_16_177_48_if_end:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_175_55_178_12_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_175_12_178_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_175_12_178_12_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 179 12 ]
-        for @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_12_183_12_for_test @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_12_183_12_for_incr @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_12_183_12_for_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_12_183_12_for_init:
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_12_183_12_for_begin" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_12_183_12_for_end" ]
-        %i.39 = local;
-        symbol [ i %i.39 179 21 22 ];
-        %tmp.531 = 0;
-        lputv %i.39 %tmp.531;
-        symbol [ i %i.39 179 21 22 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_12_183_12_for_test:
-        %tmp.532 = lgetv %i.39;
-        symbol [ i %tmp.532 179 28 29 ];
-        %tmp.533 = lgetv %spk.36;
-        symbol [ spk %tmp.533 179 32 35 ];
-        %tmp.534 = as %tmp.533 { (!Null) };
-        symbol [ size %tmp.535 179 36 40 ];
-        %tmp.535 = getv function %tmp.534 :size;
-        %tmp.536 = invoke %tmp.534 %tmp.535();
-        %tmp.537 = lt %tmp.532 %tmp.536;
-        bf %tmp.537 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_12_183_12_for_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_12_183_12_for_begin:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_49_183_12_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 180 16 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_49_183_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_49_183_12_stop" ]
-        %v.40 = local;
-        symbol [ v %v.40 180 20 21 ];
-        symbol [ _store %tmp.539 180 24 30 ];
-        %tmp.539 = getv ? :_store;
-        symbol [ toFloat %tmp.540 180 31 38 ];
-        %tmp.540 = getv function %tmp.539 :toFloat;
-        %tmp.541 = lgetv %spk.36;
-        symbol [ spk %tmp.541 180 39 42 ];
-        %tmp.542 = as %tmp.541 { (!Null) };
-        %tmp.543 = lgetv %i.39;
-        symbol [ i %tmp.543 180 43 44 ];
-        %tmp.544 = agetv %tmp.542 %tmp.543;
-        %tmp.545 = lgetv %px.11;
-        symbol [ px %tmp.545 180 47 49 ];
-        %tmp.546 = invoke %tmp.539 %tmp.540(%tmp.544, %tmp.545);
-        lputv %v.40 %tmp.546;
-        symbol [ v %v.40 180 20 21 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 181 16 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_181_16_181_46_if_stmt:
-        %tmp.547 = lgetv %v.40;
-        symbol [ v %tmp.547 181 20 21 ];
-        %tmp.548 = lgetv %minVal.37;
-        symbol [ minVal %tmp.548 181 24 30 ];
-        %tmp.549 = lt %tmp.547 %tmp.548;
-        bf %tmp.549 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_181_16_181_46_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_181_16_181_46_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_181_32_181_46_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 181 34 ]
-        %tmp.550 = lgetv %v.40;
-        symbol [ v %tmp.550 181 43 44 ];
-        lputv %minVal.37 %tmp.550;
-        symbol [ minVal %minVal.37 181 34 40 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_181_32_181_46_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_181_16_181_46_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_181_16_181_46_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 182 16 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_182_16_182_46_if_stmt:
-        %tmp.551 = lgetv %v.40;
-        symbol [ v %tmp.551 182 20 21 ];
-        %tmp.552 = lgetv %maxVal.38;
-        symbol [ maxVal %tmp.552 182 24 30 ];
-        %tmp.553 = gt %tmp.551 %tmp.552;
-        bf %tmp.553 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_182_16_182_46_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_182_16_182_46_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_182_32_182_46_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 182 34 ]
-        %tmp.554 = lgetv %v.40;
-        symbol [ v %tmp.554 182 43 44 ];
-        lputv %maxVal.38 %tmp.554;
-        symbol [ maxVal %maxVal.38 182 34 40 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_182_32_182_46_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_182_16_182_46_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_182_16_182_46_if_end:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_49_183_12_stop:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_12_183_12_for_incr:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 179 ]
-        %tmp.557 = lgetv %i.39;
-        symbol [ i %tmp.557 179 44 45 ];
-        %tmp.558 = add %tmp.557 1;
-        lputv %i.39 %tmp.558;
-        symbol [ i %i.39 179 44 45 ];
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_12_183_12_for_test;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_12_183_12_for_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 184 12 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_43_228_8_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_43_228_8_stop" ]
-        %span.41 = local;
-        symbol [ span %span.41 184 16 20 ];
-        %tmp.559 = lgetv %maxVal.38;
-        symbol [ maxVal %tmp.559 184 23 29 ];
-        %tmp.560 = lgetv %minVal.37;
-        symbol [ minVal %tmp.560 184 32 38 ];
-        %tmp.561 = sub %tmp.559 %tmp.560;
-        lputv %span.41 %tmp.561;
-        symbol [ span %span.41 184 16 20 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 185 12 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_185_12_185_46_if_stmt:
-        %tmp.562 = lgetv %span.41;
-        symbol [ span %tmp.562 185 16 20 ];
-        %tmp.563 = 0.0001;
-        %tmp.564 = lte %tmp.562 %tmp.563;
-        bf %tmp.564 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_185_12_185_46_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_185_12_185_46_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_185_32_185_46_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 185 34 ]
-        %tmp.565 = 1.0;
-        lputv %span.41 %tmp.565;
-        symbol [ span %span.41 185 34 38 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_185_32_185_46_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_185_12_185_46_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_185_12_185_46_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 188 12 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_12_195_12_if_stmt:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_16_188_50_begin:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_16_188_38_begin:
-        symbol [ showBollinger %tmp.567 188 16 29 ];
-        %tmp.567 = getv ? :showBollinger;
-        bf %tmp.567 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_12_195_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_33_188_38_true:
-        %tmp.568 = lgetv %ub.20;
-        symbol [ ub %tmp.568 188 33 35 ];
-        %tmp.569 = 0.0;
-        %tmp.570 = gt %tmp.568 %tmp.569;
-        push %tmp.570;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_33_188_38_end:
-        %tmp.571 = phi [%tmp.567 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_16_188_38_begin] [%tmp.570 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_33_188_38_true] [%tmp.571 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_33_188_38_end];
-        bf %tmp.571 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_12_195_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_45_188_50_true:
-        %tmp.572 = lgetv %lb.21;
-        symbol [ lb %tmp.572 188 45 47 ];
-        %tmp.573 = 0.0;
-        %tmp.574 = gt %tmp.572 %tmp.573;
-        push %tmp.574;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_45_188_50_end:
-        %tmp.575 = phi [%tmp.571 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_16_188_50_begin] [%tmp.574 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_45_188_50_true] [%tmp.575 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_45_188_50_end];
-        bf %tmp.575 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_12_195_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_12_195_12_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_55_195_12_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 189 16 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_55_195_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_55_195_12_stop" ]
-        %ubY.42 = local;
-        symbol [ ubY %ubY.42 189 20 23 ];
-        %tmp.576 = lgetv %chartY.33;
-        symbol [ chartY %tmp.576 189 26 32 ];
-        %tmp.577 = lgetv %chartH.35;
-        symbol [ chartH %tmp.577 189 35 41 ];
-        %tmp.578 = add %tmp.576 %tmp.577;
-        %tmp.579 = lgetv %ub.20;
-        symbol [ ub %tmp.579 189 47 49 ];
-        %tmp.580 = lgetv %minVal.37;
-        symbol [ minVal %tmp.580 189 52 58 ];
-        %tmp.581 = sub %tmp.579 %tmp.580;
-        %tmp.582 = lgetv %span.41;
-        symbol [ span %tmp.582 189 62 66 ];
-        %tmp.583 = div %tmp.581 %tmp.582;
-        %tmp.584 = lgetv %chartH.35;
-        symbol [ chartH %tmp.584 189 70 76 ];
-        %tmp.585 = mul %tmp.583 %tmp.584;
-        symbol [ toNumber %tmp.586 189 78 86 ];
-        %tmp.586 = getv function %tmp.585 :toNumber;
-        %tmp.587 = invoke %tmp.585 %tmp.586();
-        %tmp.588 = sub %tmp.578 %tmp.587;
-        lputv %ubY.42 %tmp.588;
-        symbol [ ubY %ubY.42 189 20 23 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 190 16 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_55_195_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_55_195_12_stop" ]
-        %lbY.43 = local;
-        symbol [ lbY %lbY.43 190 20 23 ];
-        %tmp.589 = lgetv %chartY.33;
-        symbol [ chartY %tmp.589 190 26 32 ];
-        %tmp.590 = lgetv %chartH.35;
-        symbol [ chartH %tmp.590 190 35 41 ];
-        %tmp.591 = add %tmp.589 %tmp.590;
-        %tmp.592 = lgetv %lb.21;
-        symbol [ lb %tmp.592 190 47 49 ];
-        %tmp.593 = lgetv %minVal.37;
-        symbol [ minVal %tmp.593 190 52 58 ];
-        %tmp.594 = sub %tmp.592 %tmp.593;
-        %tmp.595 = lgetv %span.41;
-        symbol [ span %tmp.595 190 62 66 ];
-        %tmp.596 = div %tmp.594 %tmp.595;
-        %tmp.597 = lgetv %chartH.35;
-        symbol [ chartH %tmp.597 190 70 76 ];
-        %tmp.598 = mul %tmp.596 %tmp.597;
-        symbol [ toNumber %tmp.599 190 78 86 ];
-        %tmp.599 = getv function %tmp.598 :toNumber;
-        %tmp.600 = invoke %tmp.598 %tmp.599();
-        %tmp.601 = sub %tmp.591 %tmp.600;
-        lputv %lbY.43 %tmp.601;
-        symbol [ lbY %lbY.43 190 20 23 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 191 16 ]
-        %tmp.602 = lgetv %dc;
-        symbol [ dc %tmp.602 191 16 18 ];
-        symbol [ setColor %tmp.603 191 19 27 ];
-        %tmp.603 = getv function %tmp.602 :setColor;
-        %tmp.604 = 0x1E3A8A;
-        symbol [ Graphics %tmp.605 191 38 46 ];
-        %tmp.605 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.606 191 47 64 ];
-        %tmp.606 = getv %tmp.605 :COLOR_TRANSPARENT;
-        invoke %tmp.602 %tmp.603(%tmp.604, %tmp.606);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 192 16 ]
-        %tmp.607 = lgetv %dc;
-        symbol [ dc %tmp.607 192 16 18 ];
-        symbol [ setPenWidth %tmp.608 192 19 30 ];
-        %tmp.608 = getv function %tmp.607 :setPenWidth;
-        %tmp.609 = 1;
-        invoke %tmp.607 %tmp.608(%tmp.609);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 193 16 ]
-        %tmp.610 = lgetv %dc;
-        symbol [ dc %tmp.610 193 16 18 ];
-        symbol [ drawLine %tmp.611 193 19 27 ];
-        %tmp.611 = getv function %tmp.610 :drawLine;
-        %tmp.612 = lgetv %chartX.32;
-        symbol [ chartX %tmp.612 193 28 34 ];
-        %tmp.613 = lgetv %ubY.42;
-        symbol [ ubY %tmp.613 193 36 39 ];
-        %tmp.614 = lgetv %chartX.32;
-        symbol [ chartX %tmp.614 193 41 47 ];
-        %tmp.615 = lgetv %chartW.34;
-        symbol [ chartW %tmp.615 193 50 56 ];
-        %tmp.616 = add %tmp.614 %tmp.615;
-        %tmp.617 = lgetv %ubY.42;
-        symbol [ ubY %tmp.617 193 58 61 ];
-        invoke %tmp.610 %tmp.611(%tmp.612, %tmp.613, %tmp.616, %tmp.617);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 194 16 ]
-        %tmp.618 = lgetv %dc;
-        symbol [ dc %tmp.618 194 16 18 ];
-        symbol [ drawLine %tmp.619 194 19 27 ];
-        %tmp.619 = getv function %tmp.618 :drawLine;
-        %tmp.620 = lgetv %chartX.32;
-        symbol [ chartX %tmp.620 194 28 34 ];
-        %tmp.621 = lgetv %lbY.43;
-        symbol [ lbY %tmp.621 194 36 39 ];
-        %tmp.622 = lgetv %chartX.32;
-        symbol [ chartX %tmp.622 194 41 47 ];
-        %tmp.623 = lgetv %chartW.34;
-        symbol [ chartW %tmp.623 194 50 56 ];
-        %tmp.624 = add %tmp.622 %tmp.623;
-        %tmp.625 = lgetv %lbY.43;
-        symbol [ lbY %tmp.625 194 58 61 ];
-        invoke %tmp.618 %tmp.619(%tmp.620, %tmp.621, %tmp.624, %tmp.625);
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_55_195_12_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_12_195_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_188_12_195_12_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 198 12 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_198_12_203_12_if_stmt:
-        %tmp.626 = lgetv %sma.15;
-        symbol [ sma %tmp.626 198 16 19 ];
-        %tmp.627 = 0.0;
-        %tmp.628 = gt %tmp.626 %tmp.627;
-        bf %tmp.628 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_198_12_203_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_198_12_203_12_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_198_27_203_12_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 199 16 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_198_27_203_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_198_27_203_12_stop" ]
-        %smaY.44 = local;
-        symbol [ smaY %smaY.44 199 20 24 ];
-        %tmp.629 = lgetv %chartY.33;
-        symbol [ chartY %tmp.629 199 27 33 ];
-        %tmp.630 = lgetv %chartH.35;
-        symbol [ chartH %tmp.630 199 36 42 ];
-        %tmp.631 = add %tmp.629 %tmp.630;
-        %tmp.632 = lgetv %sma.15;
-        symbol [ sma %tmp.632 199 48 51 ];
-        %tmp.633 = lgetv %minVal.37;
-        symbol [ minVal %tmp.633 199 54 60 ];
-        %tmp.634 = sub %tmp.632 %tmp.633;
-        %tmp.635 = lgetv %span.41;
-        symbol [ span %tmp.635 199 64 68 ];
-        %tmp.636 = div %tmp.634 %tmp.635;
-        %tmp.637 = lgetv %chartH.35;
-        symbol [ chartH %tmp.637 199 72 78 ];
-        %tmp.638 = mul %tmp.636 %tmp.637;
-        symbol [ toNumber %tmp.639 199 80 88 ];
-        %tmp.639 = getv function %tmp.638 :toNumber;
-        %tmp.640 = invoke %tmp.638 %tmp.639();
-        %tmp.641 = sub %tmp.631 %tmp.640;
-        lputv %smaY.44 %tmp.641;
-        symbol [ smaY %smaY.44 199 20 24 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 200 16 ]
-        %tmp.642 = lgetv %dc;
-        symbol [ dc %tmp.642 200 16 18 ];
-        symbol [ setColor %tmp.643 200 19 27 ];
-        %tmp.643 = getv function %tmp.642 :setColor;
-        %tmp.644 = 0x06B6D4;
-        symbol [ Graphics %tmp.645 200 38 46 ];
-        %tmp.645 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.646 200 47 64 ];
-        %tmp.646 = getv %tmp.645 :COLOR_TRANSPARENT;
-        invoke %tmp.642 %tmp.643(%tmp.644, %tmp.646);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 201 16 ]
-        %tmp.647 = lgetv %dc;
-        symbol [ dc %tmp.647 201 16 18 ];
-        symbol [ setPenWidth %tmp.648 201 19 30 ];
-        %tmp.648 = getv function %tmp.647 :setPenWidth;
-        %tmp.649 = 2;
-        invoke %tmp.647 %tmp.648(%tmp.649);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 202 16 ]
-        %tmp.650 = lgetv %dc;
-        symbol [ dc %tmp.650 202 16 18 ];
-        symbol [ drawLine %tmp.651 202 19 27 ];
-        %tmp.651 = getv function %tmp.650 :drawLine;
-        %tmp.652 = lgetv %chartX.32;
-        symbol [ chartX %tmp.652 202 28 34 ];
-        %tmp.653 = lgetv %smaY.44;
-        symbol [ smaY %tmp.653 202 36 40 ];
-        %tmp.654 = lgetv %chartX.32;
-        symbol [ chartX %tmp.654 202 42 48 ];
-        %tmp.655 = lgetv %chartW.34;
-        symbol [ chartW %tmp.655 202 51 57 ];
-        %tmp.656 = add %tmp.654 %tmp.655;
-        %tmp.657 = lgetv %smaY.44;
-        symbol [ smaY %tmp.657 202 59 63 ];
-        invoke %tmp.650 %tmp.651(%tmp.652, %tmp.653, %tmp.656, %tmp.657);
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_198_27_203_12_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_198_12_203_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_198_12_203_12_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 206 12 ]
-        %tmp.658 = lgetv %dc;
-        symbol [ dc %tmp.658 206 12 14 ];
-        symbol [ setColor %tmp.659 206 15 23 ];
-        %tmp.659 = getv function %tmp.658 :setColor;
-        %tmp.660 = lgetv %priceColor.27;
-        symbol [ priceColor %tmp.660 206 24 34 ];
-        symbol [ Graphics %tmp.661 206 36 44 ];
-        %tmp.661 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.662 206 45 62 ];
-        %tmp.662 = getv %tmp.661 :COLOR_TRANSPARENT;
-        invoke %tmp.658 %tmp.659(%tmp.660, %tmp.662);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 207 12 ]
-        %tmp.663 = lgetv %dc;
-        symbol [ dc %tmp.663 207 12 14 ];
-        symbol [ setPenWidth %tmp.664 207 15 26 ];
-        %tmp.664 = getv function %tmp.663 :setPenWidth;
-        %tmp.665 = 3;
-        invoke %tmp.663 %tmp.664(%tmp.665);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 208 12 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_43_228_8_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_43_228_8_stop" ]
-        %lastX.45 = local;
-        symbol [ lastX %lastX.45 208 16 21 ];
-        %tmp.666 = lgetv %chartX.32;
-        symbol [ chartX %tmp.666 208 24 30 ];
-        lputv %lastX.45 %tmp.666;
-        symbol [ lastX %lastX.45 208 16 21 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 209 12 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_43_228_8_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_43_228_8_stop" ]
-        %lastY.46 = local;
-        symbol [ lastY %lastY.46 209 16 21 ];
-        %tmp.667 = lgetv %chartY.33;
-        symbol [ chartY %tmp.667 209 24 30 ];
-        %tmp.668 = lgetv %chartH.35;
-        symbol [ chartH %tmp.668 209 34 40 ];
-        %tmp.669 = 2;
-        %tmp.670 = div %tmp.668 %tmp.669;
-        %tmp.671 = add %tmp.667 %tmp.670;
-        lputv %lastY.46 %tmp.671;
-        symbol [ lastY %lastY.46 209 16 21 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 210 12 ]
-        for @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_12_220_12_for_test @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_12_220_12_for_incr @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_12_220_12_for_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_12_220_12_for_init:
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_12_220_12_for_begin" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_12_220_12_for_end" ]
-        %k.47 = local;
-        symbol [ k %k.47 210 21 22 ];
-        %tmp.672 = 0;
-        lputv %k.47 %tmp.672;
-        symbol [ k %k.47 210 21 22 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_12_220_12_for_test:
-        %tmp.673 = lgetv %k.47;
-        symbol [ k %tmp.673 210 28 29 ];
-        %tmp.674 = lgetv %spk.36;
-        symbol [ spk %tmp.674 210 32 35 ];
-        %tmp.675 = as %tmp.674 { (!Null) };
-        symbol [ size %tmp.676 210 36 40 ];
-        %tmp.676 = getv function %tmp.675 :size;
-        %tmp.677 = invoke %tmp.675 %tmp.676();
-        %tmp.678 = 1;
-        %tmp.679 = sub %tmp.677 %tmp.678;
-        %tmp.680 = lt %tmp.673 %tmp.679;
-        bf %tmp.680 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_12_220_12_for_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_12_220_12_for_begin:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_53_220_12_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 211 16 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_53_220_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_53_220_12_stop" ]
-        %v1.48 = local;
-        symbol [ v1 %v1.48 211 20 22 ];
-        symbol [ _store %tmp.682 211 25 31 ];
-        %tmp.682 = getv ? :_store;
-        symbol [ toFloat %tmp.683 211 32 39 ];
-        %tmp.683 = getv function %tmp.682 :toFloat;
-        %tmp.684 = lgetv %spk.36;
-        symbol [ spk %tmp.684 211 40 43 ];
-        %tmp.685 = as %tmp.684 { (!Null) };
-        %tmp.686 = lgetv %k.47;
-        symbol [ k %tmp.686 211 44 45 ];
-        %tmp.687 = agetv %tmp.685 %tmp.686;
-        %tmp.688 = lgetv %px.11;
-        symbol [ px %tmp.688 211 48 50 ];
-        %tmp.689 = invoke %tmp.682 %tmp.683(%tmp.687, %tmp.688);
-        lputv %v1.48 %tmp.689;
-        symbol [ v1 %v1.48 211 20 22 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 212 16 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_53_220_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_53_220_12_stop" ]
-        %v2.49 = local;
-        symbol [ v2 %v2.49 212 20 22 ];
-        symbol [ _store %tmp.691 212 25 31 ];
-        %tmp.691 = getv ? :_store;
-        symbol [ toFloat %tmp.692 212 32 39 ];
-        %tmp.692 = getv function %tmp.691 :toFloat;
-        %tmp.693 = lgetv %spk.36;
-        symbol [ spk %tmp.693 212 40 43 ];
-        %tmp.694 = as %tmp.693 { (!Null) };
-        %tmp.695 = lgetv %k.47;
-        symbol [ k %tmp.695 212 44 45 ];
-        %tmp.696 = 1;
-        %tmp.697 = add %tmp.695 %tmp.696;
-        %tmp.698 = agetv %tmp.694 %tmp.697;
-        %tmp.699 = lgetv %px.11;
-        symbol [ px %tmp.699 212 52 54 ];
-        %tmp.700 = invoke %tmp.691 %tmp.692(%tmp.698, %tmp.699);
-        lputv %v2.49 %tmp.700;
-        symbol [ v2 %v2.49 212 20 22 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 213 16 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_53_220_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_53_220_12_stop" ]
-        %px1.50 = local;
-        symbol [ px1 %px1.50 213 20 23 ];
-        %tmp.701 = lgetv %chartX.32;
-        symbol [ chartX %tmp.701 213 26 32 ];
-        %tmp.702 = lgetv %k.47;
-        symbol [ k %tmp.702 213 36 37 ];
-        %tmp.703 = lgetv %chartW.34;
-        symbol [ chartW %tmp.703 213 40 46 ];
-        %tmp.704 = mul %tmp.702 %tmp.703;
-        %tmp.705 = lgetv %spk.36;
-        symbol [ spk %tmp.705 213 51 54 ];
-        %tmp.706 = as %tmp.705 { (!Null) };
-        symbol [ size %tmp.707 213 55 59 ];
-        %tmp.707 = getv function %tmp.706 :size;
-        %tmp.708 = invoke %tmp.706 %tmp.707();
-        %tmp.709 = 1;
-        %tmp.710 = sub %tmp.708 %tmp.709;
-        %tmp.711 = div %tmp.704 %tmp.710;
-        %tmp.712 = add %tmp.701 %tmp.711;
-        lputv %px1.50 %tmp.712;
-        symbol [ px1 %px1.50 213 20 23 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 214 16 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_53_220_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_53_220_12_stop" ]
-        %py1.51 = local;
-        symbol [ py1 %py1.51 214 20 23 ];
-        %tmp.713 = lgetv %chartY.33;
-        symbol [ chartY %tmp.713 214 26 32 ];
-        %tmp.714 = lgetv %chartH.35;
-        symbol [ chartH %tmp.714 214 35 41 ];
-        %tmp.715 = add %tmp.713 %tmp.714;
-        %tmp.716 = lgetv %v1.48;
-        symbol [ v1 %tmp.716 214 47 49 ];
-        %tmp.717 = lgetv %minVal.37;
-        symbol [ minVal %tmp.717 214 52 58 ];
-        %tmp.718 = sub %tmp.716 %tmp.717;
-        %tmp.719 = lgetv %span.41;
-        symbol [ span %tmp.719 214 62 66 ];
-        %tmp.720 = div %tmp.718 %tmp.719;
-        %tmp.721 = lgetv %chartH.35;
-        symbol [ chartH %tmp.721 214 70 76 ];
-        %tmp.722 = mul %tmp.720 %tmp.721;
-        symbol [ toNumber %tmp.723 214 78 86 ];
-        %tmp.723 = getv function %tmp.722 :toNumber;
-        %tmp.724 = invoke %tmp.722 %tmp.723();
-        %tmp.725 = sub %tmp.715 %tmp.724;
-        lputv %py1.51 %tmp.725;
-        symbol [ py1 %py1.51 214 20 23 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 215 16 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_53_220_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_53_220_12_stop" ]
-        %px2.52 = local;
-        symbol [ px2 %px2.52 215 20 23 ];
-        %tmp.726 = lgetv %chartX.32;
-        symbol [ chartX %tmp.726 215 26 32 ];
-        %tmp.727 = lgetv %k.47;
-        symbol [ k %tmp.727 215 37 38 ];
-        %tmp.728 = 1;
-        %tmp.729 = add %tmp.727 %tmp.728;
-        %tmp.730 = lgetv %chartW.34;
-        symbol [ chartW %tmp.730 215 46 52 ];
-        %tmp.731 = mul %tmp.729 %tmp.730;
-        %tmp.732 = lgetv %spk.36;
-        symbol [ spk %tmp.732 215 57 60 ];
-        %tmp.733 = as %tmp.732 { (!Null) };
-        symbol [ size %tmp.734 215 61 65 ];
-        %tmp.734 = getv function %tmp.733 :size;
-        %tmp.735 = invoke %tmp.733 %tmp.734();
-        %tmp.736 = 1;
-        %tmp.737 = sub %tmp.735 %tmp.736;
-        %tmp.738 = div %tmp.731 %tmp.737;
-        %tmp.739 = add %tmp.726 %tmp.738;
-        lputv %px2.52 %tmp.739;
-        symbol [ px2 %px2.52 215 20 23 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 216 16 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_53_220_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_53_220_12_stop" ]
-        %py2.53 = local;
-        symbol [ py2 %py2.53 216 20 23 ];
-        %tmp.740 = lgetv %chartY.33;
-        symbol [ chartY %tmp.740 216 26 32 ];
-        %tmp.741 = lgetv %chartH.35;
-        symbol [ chartH %tmp.741 216 35 41 ];
-        %tmp.742 = add %tmp.740 %tmp.741;
-        %tmp.743 = lgetv %v2.49;
-        symbol [ v2 %tmp.743 216 47 49 ];
-        %tmp.744 = lgetv %minVal.37;
-        symbol [ minVal %tmp.744 216 52 58 ];
-        %tmp.745 = sub %tmp.743 %tmp.744;
-        %tmp.746 = lgetv %span.41;
-        symbol [ span %tmp.746 216 62 66 ];
-        %tmp.747 = div %tmp.745 %tmp.746;
-        %tmp.748 = lgetv %chartH.35;
-        symbol [ chartH %tmp.748 216 70 76 ];
-        %tmp.749 = mul %tmp.747 %tmp.748;
-        symbol [ toNumber %tmp.750 216 78 86 ];
-        %tmp.750 = getv function %tmp.749 :toNumber;
-        %tmp.751 = invoke %tmp.749 %tmp.750();
-        %tmp.752 = sub %tmp.742 %tmp.751;
-        lputv %py2.53 %tmp.752;
-        symbol [ py2 %py2.53 216 20 23 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 217 16 ]
-        %tmp.753 = lgetv %dc;
-        symbol [ dc %tmp.753 217 16 18 ];
-        symbol [ drawLine %tmp.754 217 19 27 ];
-        %tmp.754 = getv function %tmp.753 :drawLine;
-        %tmp.755 = lgetv %px1.50;
-        symbol [ px1 %tmp.755 217 28 31 ];
-        %tmp.756 = lgetv %py1.51;
-        symbol [ py1 %tmp.756 217 33 36 ];
-        %tmp.757 = lgetv %px2.52;
-        symbol [ px2 %tmp.757 217 38 41 ];
-        %tmp.758 = lgetv %py2.53;
-        symbol [ py2 %tmp.758 217 43 46 ];
-        invoke %tmp.753 %tmp.754(%tmp.755, %tmp.756, %tmp.757, %tmp.758);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 218 16 ]
-        %tmp.759 = lgetv %px2.52;
-        symbol [ px2 %tmp.759 218 24 27 ];
-        lputv %lastX.45 %tmp.759;
-        symbol [ lastX %lastX.45 218 16 21 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 219 16 ]
-        %tmp.760 = lgetv %py2.53;
-        symbol [ py2 %tmp.760 219 24 27 ];
-        lputv %lastY.46 %tmp.760;
-        symbol [ lastY %lastY.46 219 16 21 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_53_220_12_stop:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_12_220_12_for_incr:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 210 ]
-        %tmp.763 = lgetv %k.47;
-        symbol [ k %tmp.763 210 48 49 ];
-        %tmp.764 = add %tmp.763 1;
-        lputv %k.47 %tmp.764;
-        symbol [ k %k.47 210 48 49 ];
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_12_220_12_for_test;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_210_12_220_12_for_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 221 12 ]
-        %tmp.765 = lgetv %dc;
-        symbol [ dc %tmp.765 221 12 14 ];
-        symbol [ setPenWidth %tmp.766 221 15 26 ];
-        %tmp.766 = getv function %tmp.765 :setPenWidth;
-        %tmp.767 = 1;
-        invoke %tmp.765 %tmp.766(%tmp.767);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 224 12 ]
-        %tmp.768 = lgetv %dc;
-        symbol [ dc %tmp.768 224 12 14 ];
-        symbol [ setColor %tmp.769 224 15 23 ];
-        %tmp.769 = getv function %tmp.768 :setColor;
-        symbol [ Graphics %tmp.770 224 24 32 ];
-        %tmp.770 = getm $.Toybox.Graphics;
-        symbol [ COLOR_WHITE %tmp.771 224 33 44 ];
-        %tmp.771 = getv %tmp.770 :COLOR_WHITE;
-        symbol [ Graphics %tmp.772 224 46 54 ];
-        %tmp.772 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.773 224 55 72 ];
-        %tmp.773 = getv %tmp.772 :COLOR_TRANSPARENT;
-        invoke %tmp.768 %tmp.769(%tmp.771, %tmp.773);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 225 12 ]
-        %tmp.774 = lgetv %dc;
-        symbol [ dc %tmp.774 225 12 14 ];
-        symbol [ fillCircle %tmp.775 225 15 25 ];
-        %tmp.775 = getv function %tmp.774 :fillCircle;
-        %tmp.776 = lgetv %lastX.45;
-        symbol [ lastX %tmp.776 225 26 31 ];
-        %tmp.777 = lgetv %lastY.46;
-        symbol [ lastY %tmp.777 225 33 38 ];
-        %tmp.778 = 4;
-        invoke %tmp.774 %tmp.775(%tmp.776, %tmp.777, %tmp.778);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 226 12 ]
-        %tmp.779 = lgetv %dc;
-        symbol [ dc %tmp.779 226 12 14 ];
-        symbol [ setColor %tmp.780 226 15 23 ];
-        %tmp.780 = getv function %tmp.779 :setColor;
-        %tmp.781 = lgetv %priceColor.27;
-        symbol [ priceColor %tmp.781 226 24 34 ];
-        symbol [ Graphics %tmp.782 226 36 44 ];
-        %tmp.782 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.783 226 45 62 ];
-        %tmp.783 = getv %tmp.782 :COLOR_TRANSPARENT;
-        invoke %tmp.779 %tmp.780(%tmp.781, %tmp.783);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 227 12 ]
-        %tmp.784 = lgetv %dc;
-        symbol [ dc %tmp.784 227 12 14 ];
-        symbol [ fillCircle %tmp.785 227 15 25 ];
-        %tmp.785 = getv function %tmp.784 :fillCircle;
-        %tmp.786 = lgetv %lastX.45;
-        symbol [ lastX %tmp.786 227 26 31 ];
-        %tmp.787 = lgetv %lastY.46;
-        symbol [ lastY %tmp.787 227 33 38 ];
-        %tmp.788 = 2;
-        invoke %tmp.784 %tmp.785(%tmp.786, %tmp.787, %tmp.788);
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_43_228_8_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_8_228_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_166_8_228_8_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 231 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
-        %sh.54 = local;
-        symbol [ sh %sh.54 231 12 14 ];
-        symbol [ _store %tmp.790 231 17 23 ];
-        %tmp.790 = getv ? :_store;
-        symbol [ toFloat %tmp.791 231 24 31 ];
-        %tmp.791 = getv function %tmp.790 :toFloat;
-        %tmp.792 = lgetv %item.7;
-        symbol [ item %tmp.792 231 32 36 ];
-        symbol [ get %tmp.793 231 37 40 ];
-        %tmp.793 = getv function %tmp.792 :get;
-        %tmp.794 = "sh";
-        %tmp.795 = invoke %tmp.792 %tmp.793(%tmp.794);
-        %tmp.796 = 0.0;
-        %tmp.797 = invoke %tmp.790 %tmp.791(%tmp.795, %tmp.796);
-        lputv %sh.54 %tmp.797;
-        symbol [ sh %sh.54 231 12 14 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 232 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
-        %avg.55 = local;
-        symbol [ avg %avg.55 232 12 15 ];
-        symbol [ _store %tmp.799 232 18 24 ];
-        %tmp.799 = getv ? :_store;
-        symbol [ getDictFloat %tmp.800 232 25 37 ];
-        %tmp.800 = getv function %tmp.799 :getDictFloat;
-        %tmp.801 = lgetv %item.7;
-        symbol [ item %tmp.801 232 38 42 ];
-        %tmp.802 = "avg";
-        %tmp.803 = "ac";
-        %tmp.804 = 0.0;
-        %tmp.805 = invoke %tmp.799 %tmp.800(%tmp.801, %tmp.802, %tmp.803, %tmp.804);
-        lputv %avg.55 %tmp.805;
-        symbol [ avg %avg.55 232 12 15 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 233 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
-        %pPct.56 = local;
-        symbol [ pPct %pPct.56 233 12 16 ];
-        symbol [ _store %tmp.807 233 19 25 ];
-        %tmp.807 = getv ? :_store;
-        symbol [ getDictFloat %tmp.808 233 26 38 ];
-        %tmp.808 = getv function %tmp.807 :getDictFloat;
-        %tmp.809 = lgetv %item.7;
-        symbol [ item %tmp.809 233 39 43 ];
-        %tmp.810 = "pPct";
-        %tmp.811 = "tPct";
-        %tmp.812 = 0.0;
-        %tmp.813 = invoke %tmp.807 %tmp.808(%tmp.809, %tmp.810, %tmp.811, %tmp.812);
-        lputv %pPct.56 %tmp.813;
-        symbol [ pPct %pPct.56 233 12 16 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 234 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
-        %tgt.57 = local;
-        symbol [ tgt %tgt.57 234 12 15 ];
-        symbol [ _store %tmp.815 234 18 24 ];
-        %tmp.815 = getv ? :_store;
-        symbol [ getDictFloat %tmp.816 234 25 37 ];
-        %tmp.816 = getv function %tmp.815 :getDictFloat;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_234_38_234_71_begin:
-        %tmp.817 = lgetv %item.7;
-        symbol [ item %tmp.817 234 38 42 ];
-        symbol [ get %tmp.818 234 43 46 ];
-        %tmp.818 = getv function %tmp.817 :get;
-        %tmp.819 = "tgt";
-        %tmp.820 = invoke %tmp.817 %tmp.818(%tmp.819);
-        %tmp.821 = null;
-        %tmp.822 = ne %tmp.820 %tmp.821;
-        bf %tmp.822 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_234_38_234_71_else_false;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_234_38_234_71_true:
-        %tmp.823 = lgetv %item.7;
-        symbol [ item %tmp.823 234 64 68 ];
-        push %tmp.823;
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_234_38_234_71_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_234_38_234_71_else_false:
-        %tmp.824 = lgetv %item.7;
-        symbol [ item %tmp.824 234 71 75 ];
-        push %tmp.824;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_234_38_234_71_end:
-        %tmp.825 = phi [%tmp.822 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_234_38_234_71_begin] [%tmp.823 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_234_38_234_71_true] [%tmp.824 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_234_38_234_71_else_false] [%tmp.825 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_234_38_234_71_end];
-        %tmp.826 = "tgt";
-        %tmp.827 = "tg";
-        %tmp.828 = 0.0;
-        %tmp.829 = invoke %tmp.815 %tmp.816(%tmp.825, %tmp.826, %tmp.827, %tmp.828);
-        lputv %tgt.57 %tmp.829;
-        symbol [ tgt %tgt.57 234 12 15 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 236 8 ]
-        %tmp.830 = lgetv %dc;
-        symbol [ dc %tmp.830 236 8 10 ];
-        symbol [ setColor %tmp.831 236 11 19 ];
-        %tmp.831 = getv function %tmp.830 :setColor;
-        %tmp.832 = 0xCBD5E1;
-        symbol [ Graphics %tmp.833 236 30 38 ];
-        %tmp.833 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.834 236 39 56 ];
-        %tmp.834 = getv %tmp.833 :COLOR_TRANSPARENT;
-        invoke %tmp.830 %tmp.831(%tmp.832, %tmp.834);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 237 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
-        %posLine.58 = local;
-        symbol [ posLine %posLine.58 237 12 19 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_237_22_239_64_begin:
-        %tmp.835 = lgetv %sh.54;
-        symbol [ sh %tmp.835 237 23 25 ];
-        %tmp.836 = 0.0;
-        %tmp.837 = gt %tmp.835 %tmp.836;
-        bf %tmp.837 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_237_22_239_64_else_false;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_237_22_239_64_true:
-        %tmp.838 = "Hold: ";
-        %tmp.839 = lgetv %sh.54;
-        symbol [ sh %tmp.839 238 26 28 ];
-        symbol [ format %tmp.840 238 29 35 ];
-        %tmp.840 = getv function %tmp.839 :format;
-        %tmp.841 = "%.1f";
-        %tmp.842 = invoke %tmp.839 %tmp.840(%tmp.841);
-        %tmp.843 = add %tmp.838 %tmp.842;
-        %tmp.844 = " @ ";
-        %tmp.845 = add %tmp.843 %tmp.844;
-        %tmp.846 = lgetv %cur.10;
-        symbol [ cur %tmp.846 238 54 57 ];
-        %tmp.847 = add %tmp.845 %tmp.846;
-        %tmp.848 = lgetv %avg.55;
-        symbol [ avg %tmp.848 238 60 63 ];
-        symbol [ format %tmp.849 238 64 70 ];
-        %tmp.849 = getv function %tmp.848 :format;
-        %tmp.850 = "%.1f";
-        %tmp.851 = invoke %tmp.848 %tmp.849(%tmp.850);
-        %tmp.852 = add %tmp.847 %tmp.851;
-        %tmp.853 = " (";
-        %tmp.854 = add %tmp.852 %tmp.853;
-        %tmp.855 = lgetv %pPct.56;
-        symbol [ pPct %tmp.855 238 88 92 ];
-        symbol [ format %tmp.856 238 93 99 ];
-        %tmp.856 = getv function %tmp.855 :format;
-        %tmp.857 = "%.1f";
-        %tmp.858 = invoke %tmp.855 %tmp.856(%tmp.857);
-        %tmp.859 = add %tmp.854 %tmp.858;
-        %tmp.860 = "%)";
-        %tmp.861 = add %tmp.859 %tmp.860;
-        push %tmp.861;
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_237_22_239_64_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_237_22_239_64_else_false:
-        %tmp.862 = "Watchlist · Target: ";
-        %tmp.863 = lgetv %cur.10;
-        symbol [ cur %tmp.863 239 40 43 ];
-        %tmp.864 = add %tmp.862 %tmp.863;
-        %tmp.865 = lgetv %tgt.57;
-        symbol [ tgt %tmp.865 239 46 49 ];
-        symbol [ format %tmp.866 239 50 56 ];
-        %tmp.866 = getv function %tmp.865 :format;
-        %tmp.867 = "%.1f";
-        %tmp.868 = invoke %tmp.865 %tmp.866(%tmp.867);
-        %tmp.869 = add %tmp.864 %tmp.868;
-        push %tmp.869;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_237_22_239_64_end:
-        %tmp.870 = phi [%tmp.837 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_237_22_239_64_begin] [%tmp.861 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_237_22_239_64_true] [%tmp.869 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_237_22_239_64_else_false] [%tmp.870 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_237_22_239_64_end];
-        lputv %posLine.58 %tmp.870;
-        symbol [ posLine %posLine.58 237 12 19 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 240 8 ]
-        %tmp.871 = lgetv %dc;
-        symbol [ dc %tmp.871 240 8 10 ];
-        symbol [ drawText %tmp.872 240 11 19 ];
-        %tmp.872 = getv function %tmp.871 :drawText;
-        %tmp.873 = lgetv %cx.3;
-        symbol [ cx %tmp.873 240 20 22 ];
-        %tmp.874 = lgetv %h.2;
-        symbol [ h %tmp.874 240 25 26 ];
-        %tmp.875 = 58;
-        %tmp.876 = mul %tmp.874 %tmp.875;
-        %tmp.877 = 100;
-        %tmp.878 = div %tmp.876 %tmp.877;
-        %tmp.879 = lgetv %fMicro.4;
-        symbol [ fMicro %tmp.879 240 40 46 ];
-        %tmp.880 = lgetv %posLine.58;
-        symbol [ posLine %tmp.880 240 48 55 ];
-        symbol [ Graphics %tmp.881 240 57 65 ];
-        %tmp.881 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_CENTER %tmp.882 240 66 85 ];
-        %tmp.882 = getv %tmp.881 :TEXT_JUSTIFY_CENTER;
-        invoke %tmp.871 %tmp.872(%tmp.873, %tmp.878, %tmp.879, %tmp.880, %tmp.882);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 243 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
-        %note.59 = local;
-        symbol [ note %note.59 243 12 16 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_243_20_243_73_begin:
-        %tmp.883 = lgetv %item.7;
-        symbol [ item %tmp.883 243 20 24 ];
-        symbol [ hasKey %tmp.884 243 25 31 ];
-        %tmp.884 = getv function %tmp.883 :hasKey;
-        %tmp.885 = "note";
-        %tmp.886 = invoke %tmp.883 %tmp.884(%tmp.885);
-        bf %tmp.886 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_243_20_243_73_else_false;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_243_20_243_73_true:
-        %tmp.887 = lgetv %item.7;
-        symbol [ item %tmp.887 243 42 46 ];
-        symbol [ get %tmp.888 243 47 50 ];
-        %tmp.888 = getv function %tmp.887 :get;
-        %tmp.889 = "note";
-        %tmp.890 = invoke %tmp.887 %tmp.888(%tmp.889);
-        push %tmp.890;
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_243_20_243_73_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_243_20_243_73_else_false:
-        %tmp.891 = lgetv %item.7;
-        symbol [ item %tmp.891 243 61 65 ];
-        symbol [ get %tmp.892 243 66 69 ];
-        %tmp.892 = getv function %tmp.891 :get;
-        %tmp.893 = "m";
-        %tmp.894 = invoke %tmp.891 %tmp.892(%tmp.893);
-        push %tmp.894;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_243_20_243_73_end:
-        %tmp.895 = phi [%tmp.886 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_243_20_243_73_begin] [%tmp.890 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_243_20_243_73_true] [%tmp.894 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_243_20_243_73_else_false] [%tmp.895 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_243_20_243_73_end];
-        %tmp.896 = as %tmp.895 String or Null;
-        symbol [ String %tmp.896 243 79 85 ];
-        lputv %note.59 %tmp.896;
-        symbol [ note %note.59 243 12 16 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 244 8 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_244_8_246_8_if_stmt:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_244_12_244_45_begin:
-        %tmp.897 = lgetv %note.59;
-        symbol [ note %tmp.897 244 12 16 ];
-        %tmp.898 = null;
-        %tmp.899 = eq %tmp.897 %tmp.898;
-        bt %tmp.899 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_244_8_246_8_if_true;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_244_28_244_45_false:
-        %tmp.900 = lgetv %note.59;
-        symbol [ note %tmp.900 244 28 32 ];
-        %tmp.901 = as %tmp.900 { (!Null) };
-        symbol [ length %tmp.902 244 33 39 ];
-        %tmp.902 = getv function %tmp.901 :length;
-        %tmp.903 = invoke %tmp.901 %tmp.902();
-        %tmp.904 = 0;
-        %tmp.905 = eq %tmp.903 %tmp.904;
-        push %tmp.905;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_244_28_244_45_end:
-        %tmp.906 = phi [%tmp.899 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_244_12_244_45_begin] [%tmp.905 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_244_28_244_45_false] [%tmp.906 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_244_28_244_45_end];
-        bf %tmp.906 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_244_8_246_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_244_8_246_8_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_244_48_246_8_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 245 12 ]
-        %tmp.907 = "No WebMemo attached";
-        lputv %note.59 %tmp.907;
-        symbol [ note %note.59 245 12 16 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_244_48_246_8_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_244_8_246_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_244_8_246_8_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 247 8 ]
-        %tmp.908 = lgetv %dc;
-        symbol [ dc %tmp.908 247 8 10 ];
-        symbol [ setColor %tmp.909 247 11 19 ];
-        %tmp.909 = getv function %tmp.908 :setColor;
-        %tmp.910 = 0x06B6D4;
-        symbol [ Graphics %tmp.911 247 30 38 ];
-        %tmp.911 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.912 247 39 56 ];
-        %tmp.912 = getv %tmp.911 :COLOR_TRANSPARENT;
-        invoke %tmp.908 %tmp.909(%tmp.910, %tmp.912);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 248 8 ]
-        %tmp.913 = lgetv %dc;
-        symbol [ dc %tmp.913 248 8 10 ];
-        symbol [ drawText %tmp.914 248 11 19 ];
-        %tmp.914 = getv function %tmp.913 :drawText;
-        %tmp.915 = lgetv %cx.3;
-        symbol [ cx %tmp.915 248 20 22 ];
-        %tmp.916 = lgetv %h.2;
-        symbol [ h %tmp.916 248 25 26 ];
-        %tmp.917 = 65;
-        %tmp.918 = mul %tmp.916 %tmp.917;
-        %tmp.919 = 100;
-        %tmp.920 = div %tmp.918 %tmp.919;
-        %tmp.921 = lgetv %fMicro.4;
-        symbol [ fMicro %tmp.921 248 40 46 ];
-        %tmp.922 = "WEBMEMO";
-        symbol [ Graphics %tmp.923 248 59 67 ];
-        %tmp.923 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_CENTER %tmp.924 248 68 87 ];
-        %tmp.924 = getv %tmp.923 :TEXT_JUSTIFY_CENTER;
-        invoke %tmp.913 %tmp.914(%tmp.915, %tmp.920, %tmp.921, %tmp.922, %tmp.924);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 250 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop" ]
-        %fittedNote.60 = local;
-        symbol [ fittedNote %fittedNote.60 250 12 22 ];
-        symbol [ Graphics %tmp.925 250 25 33 ];
-        %tmp.925 = getm $.Toybox.Graphics;
-        symbol [ fitTextToArea %tmp.926 250 34 47 ];
-        %tmp.926 = getv function %tmp.925 :fitTextToArea;
-        %tmp.927 = lgetv %note.59;
-        symbol [ note %tmp.927 250 48 52 ];
-        %tmp.928 = lgetv %fMicro.4;
-        symbol [ fMicro %tmp.928 250 54 60 ];
-        %tmp.929 = lgetv %w.1;
-        symbol [ w %tmp.929 250 62 63 ];
-        %tmp.930 = lgetv %w.1;
-        symbol [ w %tmp.930 250 68 69 ];
-        %tmp.931 = 28;
-        %tmp.932 = mul %tmp.930 %tmp.931;
-        %tmp.933 = 100;
-        %tmp.934 = div %tmp.932 %tmp.933;
-        %tmp.935 = sub %tmp.929 %tmp.934;
-        %tmp.936 = lgetv %h.2;
-        symbol [ h %tmp.936 250 85 86 ];
-        %tmp.937 = 16;
-        %tmp.938 = mul %tmp.936 %tmp.937;
-        %tmp.939 = 100;
-        %tmp.940 = div %tmp.938 %tmp.939;
-        %tmp.941 = true;
-        %tmp.942 = invoke %tmp.925 %tmp.926(%tmp.927, %tmp.928, %tmp.935, %tmp.940, %tmp.941);
-        lputv %fittedNote.60 %tmp.942;
-        symbol [ fittedNote %fittedNote.60 250 12 22 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 251 8 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_251_8_253_8_if_stmt:
-        %tmp.943 = lgetv %fittedNote.60;
-        symbol [ fittedNote %tmp.943 251 12 22 ];
-        %tmp.944 = null;
-        %tmp.945 = eq %tmp.943 %tmp.944;
-        bf %tmp.945 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_251_8_253_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_251_8_253_8_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_251_32_253_8_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 252 12 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_252_25_252_82_begin:
-        %tmp.946 = lgetv %note.59;
-        symbol [ note %tmp.946 252 26 30 ];
-        symbol [ length %tmp.947 252 31 37 ];
-        %tmp.947 = getv function %tmp.946 :length;
-        %tmp.948 = invoke %tmp.946 %tmp.947();
-        %tmp.949 = 28;
-        %tmp.950 = gt %tmp.948 %tmp.949;
-        bf %tmp.950 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_252_25_252_82_else_false;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_252_25_252_82_true:
-        %tmp.951 = lgetv %note.59;
-        symbol [ note %tmp.951 252 49 53 ];
-        symbol [ substring %tmp.952 252 54 63 ];
-        %tmp.952 = getv function %tmp.951 :substring;
-        %tmp.953 = 0;
-        %tmp.954 = 28;
-        %tmp.955 = invoke %tmp.951 %tmp.952(%tmp.953, %tmp.954);
-        %tmp.956 = "...";
-        %tmp.957 = add %tmp.955 %tmp.956;
-        push %tmp.957;
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_252_25_252_82_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_252_25_252_82_else_false:
-        %tmp.958 = lgetv %note.59;
-        symbol [ note %tmp.958 252 82 86 ];
-        push %tmp.958;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_252_25_252_82_end:
-        %tmp.959 = phi [%tmp.950 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_252_25_252_82_begin] [%tmp.957 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_252_25_252_82_true] [%tmp.958 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_252_25_252_82_else_false] [%tmp.959 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_252_25_252_82_end];
-        lputv %fittedNote.60 %tmp.959;
-        symbol [ fittedNote %fittedNote.60 252 12 22 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_251_32_253_8_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_251_8_253_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_251_8_253_8_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 254 8 ]
-        %tmp.960 = lgetv %dc;
-        symbol [ dc %tmp.960 254 8 10 ];
-        symbol [ setColor %tmp.961 254 11 19 ];
-        %tmp.961 = getv function %tmp.960 :setColor;
-        symbol [ Graphics %tmp.962 254 20 28 ];
-        %tmp.962 = getm $.Toybox.Graphics;
-        symbol [ COLOR_WHITE %tmp.963 254 29 40 ];
-        %tmp.963 = getv %tmp.962 :COLOR_WHITE;
-        symbol [ Graphics %tmp.964 254 42 50 ];
-        %tmp.964 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.965 254 51 68 ];
-        %tmp.965 = getv %tmp.964 :COLOR_TRANSPARENT;
-        invoke %tmp.960 %tmp.961(%tmp.963, %tmp.965);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 255 8 ]
-        %tmp.966 = lgetv %dc;
-        symbol [ dc %tmp.966 255 8 10 ];
-        symbol [ drawText %tmp.967 255 11 19 ];
-        %tmp.967 = getv function %tmp.966 :drawText;
-        %tmp.968 = lgetv %cx.3;
-        symbol [ cx %tmp.968 256 12 14 ];
-        %tmp.969 = lgetv %h.2;
-        symbol [ h %tmp.969 257 13 14 ];
-        %tmp.970 = 71;
-        %tmp.971 = mul %tmp.969 %tmp.970;
-        %tmp.972 = 100;
-        %tmp.973 = div %tmp.971 %tmp.972;
-        %tmp.974 = lgetv %fMicro.4;
-        symbol [ fMicro %tmp.974 258 12 18 ];
-        %tmp.975 = lgetv %fittedNote.60;
-        symbol [ fittedNote %tmp.975 259 12 22 ];
-        symbol [ Graphics %tmp.976 260 12 20 ];
-        %tmp.976 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_CENTER %tmp.977 260 21 40 ];
-        %tmp.977 = getv %tmp.976 :TEXT_JUSTIFY_CENTER;
-        invoke %tmp.966 %tmp.967(%tmp.968, %tmp.973, %tmp.974, %tmp.975, %tmp.977);
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_262_4_stop:
+        lputv %smaLineStr.29 %tmp.394;
+        symbol [ smaLineStr %smaLineStr.29 147 12 22 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 148 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_8_150_8_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_12_148_34_begin:
+        symbol [ showBollinger %tmp.396 148 12 25 ];
+        %tmp.396 = getv ? :showBollinger;
+        bf %tmp.396 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_8_150_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_29_148_34_true:
+        %tmp.397 = lgetv %ub.20;
+        symbol [ ub %tmp.397 148 29 31 ];
+        %tmp.398 = lgetv %lb.21;
+        symbol [ lb %tmp.398 148 34 36 ];
+        %tmp.399 = gt %tmp.397 %tmp.398;
+        push %tmp.399;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_29_148_34_end:
+        %tmp.400 = phi [%tmp.396 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_12_148_34_begin] [%tmp.399 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_29_148_34_true] [%tmp.400 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_29_148_34_end];
+        bf %tmp.400 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_8_150_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_8_150_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_38_150_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 149 12 ]
+        %tmp.401 = lgetv %smaLineStr.29;
+        symbol [ smaLineStr %tmp.401 149 25 35 ];
+        %tmp.402 = " · BB";
+        %tmp.403 = add %tmp.401 %tmp.402;
+        lputv %smaLineStr.29 %tmp.403;
+        symbol [ smaLineStr %smaLineStr.29 149 12 22 ];
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_38_150_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_8_150_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_148_8_150_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 151 8 ]
+        %tmp.404 = lgetv %dc;
+        symbol [ dc %tmp.404 151 8 10 ];
+        symbol [ setColor %tmp.405 151 11 19 ];
+        %tmp.405 = getv function %tmp.404 :setColor;
+        %tmp.406 = 0x06B6D4;
+        symbol [ Graphics %tmp.407 151 30 38 ];
+        %tmp.407 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.408 151 39 56 ];
+        %tmp.408 = getv %tmp.407 :COLOR_TRANSPARENT;
+        invoke %tmp.404 %tmp.405(%tmp.406, %tmp.408);
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 152 8 ]
+        %tmp.409 = lgetv %dc;
+        symbol [ dc %tmp.409 152 8 10 ];
+        symbol [ drawText %tmp.410 152 11 19 ];
+        %tmp.410 = getv function %tmp.409 :drawText;
+        %tmp.411 = lgetv %cx.3;
+        symbol [ cx %tmp.411 152 20 22 ];
+        %tmp.412 = lgetv %h.2;
+        symbol [ h %tmp.412 152 25 26 ];
+        %tmp.413 = 26;
+        %tmp.414 = mul %tmp.412 %tmp.413;
+        %tmp.415 = 100;
+        %tmp.416 = div %tmp.414 %tmp.415;
+        %tmp.417 = lgetv %fMicro.4;
+        symbol [ fMicro %tmp.417 152 40 46 ];
+        %tmp.418 = lgetv %smaLineStr.29;
+        symbol [ smaLineStr %tmp.418 152 48 58 ];
+        symbol [ Graphics %tmp.419 152 60 68 ];
+        %tmp.419 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.420 152 69 88 ];
+        %tmp.420 = getv %tmp.419 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.409 %tmp.410(%tmp.411, %tmp.416, %tmp.417, %tmp.418, %tmp.420);
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 155 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
+        %spk.30 = local;
+        symbol [ spk %spk.30 155 12 15 ];
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_155_19_155_71_begin:
+        %tmp.421 = lgetv %item.7;
+        symbol [ item %tmp.421 155 19 23 ];
+        symbol [ hasKey %tmp.422 155 24 30 ];
+        %tmp.422 = getv function %tmp.421 :hasKey;
+        %tmp.423 = "spk";
+        %tmp.424 = invoke %tmp.421 %tmp.422(%tmp.423);
+        bf %tmp.424 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_155_19_155_71_else_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_155_19_155_71_true:
+        %tmp.425 = lgetv %item.7;
+        symbol [ item %tmp.425 155 40 44 ];
+        symbol [ get %tmp.426 155 45 48 ];
+        %tmp.426 = getv function %tmp.425 :get;
+        %tmp.427 = "spk";
+        %tmp.428 = invoke %tmp.425 %tmp.426(%tmp.427);
+        push %tmp.428;
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_155_19_155_71_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_155_19_155_71_else_false:
+        %tmp.429 = lgetv %item.7;
+        symbol [ item %tmp.429 155 58 62 ];
+        symbol [ get %tmp.430 155 63 66 ];
+        %tmp.430 = getv function %tmp.429 :get;
+        %tmp.431 = "sp";
+        %tmp.432 = invoke %tmp.429 %tmp.430(%tmp.431);
+        push %tmp.432;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_155_19_155_71_end:
+        %tmp.433 = phi [%tmp.424 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_155_19_155_71_begin] [%tmp.428 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_155_19_155_71_true] [%tmp.432 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_155_19_155_71_else_false] [%tmp.433 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_155_19_155_71_end];
+        %tmp.434 = as %tmp.433 Array or Null;
+        symbol [ Array %tmp.434 155 77 82 ];
+        lputv %spk.30 %tmp.434;
+        symbol [ spk %spk.30 155 12 15 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 156 8 ]
+        symbol [ MoatWatchLayout %tmp.436 156 8 23 ];
+        %tmp.436 = getv ? :MoatWatchLayout;
+        symbol [ drawSparklineChart %tmp.437 156 24 42 ];
+        %tmp.437 = getv function %tmp.436 :drawSparklineChart;
+        %tmp.438 = lgetv %dc;
+        symbol [ dc %tmp.438 157 12 14 ];
+        symbol [ _store %tmp.440 158 12 18 ];
+        %tmp.440 = getv ? :_store;
+        %tmp.441 = lgetv %spk.30;
+        symbol [ spk %tmp.441 159 12 15 ];
+        %tmp.442 = lgetv %px.11;
+        symbol [ px %tmp.442 160 12 14 ];
+        %tmp.443 = lgetv %dayLo.23;
+        symbol [ dayLo %tmp.443 161 12 17 ];
+        %tmp.444 = lgetv %dayHi.22;
+        symbol [ dayHi %tmp.444 162 12 17 ];
+        %tmp.445 = lgetv %sma.15;
+        symbol [ sma %tmp.445 163 12 15 ];
+        %tmp.446 = lgetv %ub.20;
+        symbol [ ub %tmp.446 164 12 14 ];
+        %tmp.447 = lgetv %lb.21;
+        symbol [ lb %tmp.447 165 12 14 ];
+        symbol [ showBollinger %tmp.449 166 12 25 ];
+        %tmp.449 = getv ? :showBollinger;
+        %tmp.450 = lgetv %priceColor.26;
+        symbol [ priceColor %tmp.450 167 12 22 ];
+        %tmp.451 = lgetv %w.1;
+        symbol [ w %tmp.451 168 12 13 ];
+        %tmp.452 = lgetv %h.2;
+        symbol [ h %tmp.452 169 12 13 ];
+        invoke %tmp.436 %tmp.437(%tmp.438, %tmp.440, %tmp.441, %tmp.442, %tmp.443, %tmp.444, %tmp.445, %tmp.446, %tmp.447, %tmp.449, %tmp.450, %tmp.451, %tmp.452);
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 173 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
+        %sh.31 = local;
+        symbol [ sh %sh.31 173 12 14 ];
+        symbol [ _store %tmp.454 173 17 23 ];
+        %tmp.454 = getv ? :_store;
+        symbol [ toFloat %tmp.455 173 24 31 ];
+        %tmp.455 = getv function %tmp.454 :toFloat;
+        %tmp.456 = lgetv %item.7;
+        symbol [ item %tmp.456 173 32 36 ];
+        symbol [ get %tmp.457 173 37 40 ];
+        %tmp.457 = getv function %tmp.456 :get;
+        %tmp.458 = "sh";
+        %tmp.459 = invoke %tmp.456 %tmp.457(%tmp.458);
+        %tmp.460 = 0.0;
+        %tmp.461 = invoke %tmp.454 %tmp.455(%tmp.459, %tmp.460);
+        lputv %sh.31 %tmp.461;
+        symbol [ sh %sh.31 173 12 14 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 174 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
+        %avg.32 = local;
+        symbol [ avg %avg.32 174 12 15 ];
+        symbol [ _store %tmp.463 174 18 24 ];
+        %tmp.463 = getv ? :_store;
+        symbol [ getDictFloat %tmp.464 174 25 37 ];
+        %tmp.464 = getv function %tmp.463 :getDictFloat;
+        %tmp.465 = lgetv %item.7;
+        symbol [ item %tmp.465 174 38 42 ];
+        %tmp.466 = "avg";
+        %tmp.467 = "ac";
+        %tmp.468 = 0.0;
+        %tmp.469 = invoke %tmp.463 %tmp.464(%tmp.465, %tmp.466, %tmp.467, %tmp.468);
+        lputv %avg.32 %tmp.469;
+        symbol [ avg %avg.32 174 12 15 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 175 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
+        %pPct.33 = local;
+        symbol [ pPct %pPct.33 175 12 16 ];
+        symbol [ _store %tmp.471 175 19 25 ];
+        %tmp.471 = getv ? :_store;
+        symbol [ getDictFloat %tmp.472 175 26 38 ];
+        %tmp.472 = getv function %tmp.471 :getDictFloat;
+        %tmp.473 = lgetv %item.7;
+        symbol [ item %tmp.473 175 39 43 ];
+        %tmp.474 = "pPct";
+        %tmp.475 = "tPct";
+        %tmp.476 = 0.0;
+        %tmp.477 = invoke %tmp.471 %tmp.472(%tmp.473, %tmp.474, %tmp.475, %tmp.476);
+        lputv %pPct.33 %tmp.477;
+        symbol [ pPct %pPct.33 175 12 16 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 176 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
+        %tgt.34 = local;
+        symbol [ tgt %tgt.34 176 12 15 ];
+        symbol [ _store %tmp.479 176 18 24 ];
+        %tmp.479 = getv ? :_store;
+        symbol [ getDictFloat %tmp.480 176 25 37 ];
+        %tmp.480 = getv function %tmp.479 :getDictFloat;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_176_38_176_71_begin:
+        %tmp.481 = lgetv %item.7;
+        symbol [ item %tmp.481 176 38 42 ];
+        symbol [ get %tmp.482 176 43 46 ];
+        %tmp.482 = getv function %tmp.481 :get;
+        %tmp.483 = "tgt";
+        %tmp.484 = invoke %tmp.481 %tmp.482(%tmp.483);
+        %tmp.485 = null;
+        %tmp.486 = ne %tmp.484 %tmp.485;
+        bf %tmp.486 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_176_38_176_71_else_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_176_38_176_71_true:
+        %tmp.487 = lgetv %item.7;
+        symbol [ item %tmp.487 176 64 68 ];
+        push %tmp.487;
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_176_38_176_71_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_176_38_176_71_else_false:
+        %tmp.488 = lgetv %item.7;
+        symbol [ item %tmp.488 176 71 75 ];
+        push %tmp.488;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_176_38_176_71_end:
+        %tmp.489 = phi [%tmp.486 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_176_38_176_71_begin] [%tmp.487 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_176_38_176_71_true] [%tmp.488 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_176_38_176_71_else_false] [%tmp.489 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_176_38_176_71_end];
+        %tmp.490 = "tgt";
+        %tmp.491 = "tg";
+        %tmp.492 = 0.0;
+        %tmp.493 = invoke %tmp.479 %tmp.480(%tmp.489, %tmp.490, %tmp.491, %tmp.492);
+        lputv %tgt.34 %tmp.493;
+        symbol [ tgt %tgt.34 176 12 15 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 178 8 ]
+        %tmp.494 = lgetv %dc;
+        symbol [ dc %tmp.494 178 8 10 ];
+        symbol [ setColor %tmp.495 178 11 19 ];
+        %tmp.495 = getv function %tmp.494 :setColor;
+        %tmp.496 = 0xCBD5E1;
+        symbol [ Graphics %tmp.497 178 30 38 ];
+        %tmp.497 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.498 178 39 56 ];
+        %tmp.498 = getv %tmp.497 :COLOR_TRANSPARENT;
+        invoke %tmp.494 %tmp.495(%tmp.496, %tmp.498);
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 179 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
+        %posLine.35 = local;
+        symbol [ posLine %posLine.35 179 12 19 ];
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_22_181_64_begin:
+        %tmp.499 = lgetv %sh.31;
+        symbol [ sh %tmp.499 179 23 25 ];
+        %tmp.500 = 0.0;
+        %tmp.501 = gt %tmp.499 %tmp.500;
+        bf %tmp.501 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_22_181_64_else_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_22_181_64_true:
+        %tmp.502 = "Hold: ";
+        %tmp.503 = lgetv %sh.31;
+        symbol [ sh %tmp.503 180 26 28 ];
+        symbol [ format %tmp.504 180 29 35 ];
+        %tmp.504 = getv function %tmp.503 :format;
+        %tmp.505 = "%.1f";
+        %tmp.506 = invoke %tmp.503 %tmp.504(%tmp.505);
+        %tmp.507 = add %tmp.502 %tmp.506;
+        %tmp.508 = " @ ";
+        %tmp.509 = add %tmp.507 %tmp.508;
+        %tmp.510 = lgetv %cur.10;
+        symbol [ cur %tmp.510 180 54 57 ];
+        %tmp.511 = add %tmp.509 %tmp.510;
+        %tmp.512 = lgetv %avg.32;
+        symbol [ avg %tmp.512 180 60 63 ];
+        symbol [ format %tmp.513 180 64 70 ];
+        %tmp.513 = getv function %tmp.512 :format;
+        %tmp.514 = "%.1f";
+        %tmp.515 = invoke %tmp.512 %tmp.513(%tmp.514);
+        %tmp.516 = add %tmp.511 %tmp.515;
+        %tmp.517 = " (";
+        %tmp.518 = add %tmp.516 %tmp.517;
+        %tmp.519 = lgetv %pPct.33;
+        symbol [ pPct %tmp.519 180 88 92 ];
+        symbol [ format %tmp.520 180 93 99 ];
+        %tmp.520 = getv function %tmp.519 :format;
+        %tmp.521 = "%.1f";
+        %tmp.522 = invoke %tmp.519 %tmp.520(%tmp.521);
+        %tmp.523 = add %tmp.518 %tmp.522;
+        %tmp.524 = "%)";
+        %tmp.525 = add %tmp.523 %tmp.524;
+        push %tmp.525;
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_22_181_64_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_22_181_64_else_false:
+        %tmp.526 = "Watchlist · Target: ";
+        %tmp.527 = lgetv %cur.10;
+        symbol [ cur %tmp.527 181 40 43 ];
+        %tmp.528 = add %tmp.526 %tmp.527;
+        %tmp.529 = lgetv %tgt.34;
+        symbol [ tgt %tmp.529 181 46 49 ];
+        symbol [ format %tmp.530 181 50 56 ];
+        %tmp.530 = getv function %tmp.529 :format;
+        %tmp.531 = "%.1f";
+        %tmp.532 = invoke %tmp.529 %tmp.530(%tmp.531);
+        %tmp.533 = add %tmp.528 %tmp.532;
+        push %tmp.533;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_22_181_64_end:
+        %tmp.534 = phi [%tmp.501 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_22_181_64_begin] [%tmp.525 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_22_181_64_true] [%tmp.533 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_22_181_64_else_false] [%tmp.534 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_179_22_181_64_end];
+        lputv %posLine.35 %tmp.534;
+        symbol [ posLine %posLine.35 179 12 19 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 182 8 ]
+        %tmp.535 = lgetv %dc;
+        symbol [ dc %tmp.535 182 8 10 ];
+        symbol [ drawText %tmp.536 182 11 19 ];
+        %tmp.536 = getv function %tmp.535 :drawText;
+        %tmp.537 = lgetv %cx.3;
+        symbol [ cx %tmp.537 182 20 22 ];
+        %tmp.538 = lgetv %h.2;
+        symbol [ h %tmp.538 182 25 26 ];
+        %tmp.539 = 58;
+        %tmp.540 = mul %tmp.538 %tmp.539;
+        %tmp.541 = 100;
+        %tmp.542 = div %tmp.540 %tmp.541;
+        %tmp.543 = lgetv %fMicro.4;
+        symbol [ fMicro %tmp.543 182 40 46 ];
+        %tmp.544 = lgetv %posLine.35;
+        symbol [ posLine %tmp.544 182 48 55 ];
+        symbol [ Graphics %tmp.545 182 57 65 ];
+        %tmp.545 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.546 182 66 85 ];
+        %tmp.546 = getv %tmp.545 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.535 %tmp.536(%tmp.537, %tmp.542, %tmp.543, %tmp.544, %tmp.546);
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 185 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
+        %note.36 = local;
+        symbol [ note %note.36 185 12 16 ];
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_185_20_185_73_begin:
+        %tmp.547 = lgetv %item.7;
+        symbol [ item %tmp.547 185 20 24 ];
+        symbol [ hasKey %tmp.548 185 25 31 ];
+        %tmp.548 = getv function %tmp.547 :hasKey;
+        %tmp.549 = "note";
+        %tmp.550 = invoke %tmp.547 %tmp.548(%tmp.549);
+        bf %tmp.550 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_185_20_185_73_else_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_185_20_185_73_true:
+        %tmp.551 = lgetv %item.7;
+        symbol [ item %tmp.551 185 42 46 ];
+        symbol [ get %tmp.552 185 47 50 ];
+        %tmp.552 = getv function %tmp.551 :get;
+        %tmp.553 = "note";
+        %tmp.554 = invoke %tmp.551 %tmp.552(%tmp.553);
+        push %tmp.554;
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_185_20_185_73_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_185_20_185_73_else_false:
+        %tmp.555 = lgetv %item.7;
+        symbol [ item %tmp.555 185 61 65 ];
+        symbol [ get %tmp.556 185 66 69 ];
+        %tmp.556 = getv function %tmp.555 :get;
+        %tmp.557 = "m";
+        %tmp.558 = invoke %tmp.555 %tmp.556(%tmp.557);
+        push %tmp.558;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_185_20_185_73_end:
+        %tmp.559 = phi [%tmp.550 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_185_20_185_73_begin] [%tmp.554 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_185_20_185_73_true] [%tmp.558 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_185_20_185_73_else_false] [%tmp.559 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_185_20_185_73_end];
+        %tmp.560 = as %tmp.559 String or Null;
+        symbol [ String %tmp.560 185 79 85 ];
+        lputv %note.36 %tmp.560;
+        symbol [ note %note.36 185 12 16 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 186 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_186_8_188_8_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_186_12_186_45_begin:
+        %tmp.561 = lgetv %note.36;
+        symbol [ note %tmp.561 186 12 16 ];
+        %tmp.562 = null;
+        %tmp.563 = eq %tmp.561 %tmp.562;
+        bt %tmp.563 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_186_8_188_8_if_true;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_186_28_186_45_false:
+        %tmp.564 = lgetv %note.36;
+        symbol [ note %tmp.564 186 28 32 ];
+        %tmp.565 = as %tmp.564 { (!Null) };
+        symbol [ length %tmp.566 186 33 39 ];
+        %tmp.566 = getv function %tmp.565 :length;
+        %tmp.567 = invoke %tmp.565 %tmp.566();
+        %tmp.568 = 0;
+        %tmp.569 = eq %tmp.567 %tmp.568;
+        push %tmp.569;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_186_28_186_45_end:
+        %tmp.570 = phi [%tmp.563 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_186_12_186_45_begin] [%tmp.569 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_186_28_186_45_false] [%tmp.570 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_186_28_186_45_end];
+        bf %tmp.570 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_186_8_188_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_186_8_188_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_186_48_188_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 187 12 ]
+        %tmp.571 = "No WebMemo attached";
+        lputv %note.36 %tmp.571;
+        symbol [ note %note.36 187 12 16 ];
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_186_48_188_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_186_8_188_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_186_8_188_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 189 8 ]
+        %tmp.572 = lgetv %dc;
+        symbol [ dc %tmp.572 189 8 10 ];
+        symbol [ setColor %tmp.573 189 11 19 ];
+        %tmp.573 = getv function %tmp.572 :setColor;
+        %tmp.574 = 0x06B6D4;
+        symbol [ Graphics %tmp.575 189 30 38 ];
+        %tmp.575 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.576 189 39 56 ];
+        %tmp.576 = getv %tmp.575 :COLOR_TRANSPARENT;
+        invoke %tmp.572 %tmp.573(%tmp.574, %tmp.576);
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 190 8 ]
+        %tmp.577 = lgetv %dc;
+        symbol [ dc %tmp.577 190 8 10 ];
+        symbol [ drawText %tmp.578 190 11 19 ];
+        %tmp.578 = getv function %tmp.577 :drawText;
+        %tmp.579 = lgetv %cx.3;
+        symbol [ cx %tmp.579 190 20 22 ];
+        %tmp.580 = lgetv %h.2;
+        symbol [ h %tmp.580 190 25 26 ];
+        %tmp.581 = 65;
+        %tmp.582 = mul %tmp.580 %tmp.581;
+        %tmp.583 = 100;
+        %tmp.584 = div %tmp.582 %tmp.583;
+        %tmp.585 = lgetv %fMicro.4;
+        symbol [ fMicro %tmp.585 190 40 46 ];
+        %tmp.586 = "WEBMEMO";
+        symbol [ Graphics %tmp.587 190 59 67 ];
+        %tmp.587 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.588 190 68 87 ];
+        %tmp.588 = getv %tmp.587 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.577 %tmp.578(%tmp.579, %tmp.584, %tmp.585, %tmp.586, %tmp.588);
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 192 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop" ]
+        %fittedNote.37 = local;
+        symbol [ fittedNote %fittedNote.37 192 12 22 ];
+        symbol [ Graphics %tmp.589 192 25 33 ];
+        %tmp.589 = getm $.Toybox.Graphics;
+        symbol [ fitTextToArea %tmp.590 192 34 47 ];
+        %tmp.590 = getv function %tmp.589 :fitTextToArea;
+        %tmp.591 = lgetv %note.36;
+        symbol [ note %tmp.591 192 48 52 ];
+        %tmp.592 = lgetv %fMicro.4;
+        symbol [ fMicro %tmp.592 192 54 60 ];
+        %tmp.593 = lgetv %w.1;
+        symbol [ w %tmp.593 192 62 63 ];
+        %tmp.594 = lgetv %w.1;
+        symbol [ w %tmp.594 192 68 69 ];
+        %tmp.595 = 28;
+        %tmp.596 = mul %tmp.594 %tmp.595;
+        %tmp.597 = 100;
+        %tmp.598 = div %tmp.596 %tmp.597;
+        %tmp.599 = sub %tmp.593 %tmp.598;
+        %tmp.600 = lgetv %h.2;
+        symbol [ h %tmp.600 192 85 86 ];
+        %tmp.601 = 16;
+        %tmp.602 = mul %tmp.600 %tmp.601;
+        %tmp.603 = 100;
+        %tmp.604 = div %tmp.602 %tmp.603;
+        %tmp.605 = true;
+        %tmp.606 = invoke %tmp.589 %tmp.590(%tmp.591, %tmp.592, %tmp.599, %tmp.604, %tmp.605);
+        lputv %fittedNote.37 %tmp.606;
+        symbol [ fittedNote %fittedNote.37 192 12 22 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 193 8 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_193_8_195_8_if_stmt:
+        %tmp.607 = lgetv %fittedNote.37;
+        symbol [ fittedNote %tmp.607 193 12 22 ];
+        %tmp.608 = null;
+        %tmp.609 = eq %tmp.607 %tmp.608;
+        bf %tmp.609 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_193_8_195_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_193_8_195_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_193_32_195_8_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 194 12 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_194_25_194_82_begin:
+        %tmp.610 = lgetv %note.36;
+        symbol [ note %tmp.610 194 26 30 ];
+        symbol [ length %tmp.611 194 31 37 ];
+        %tmp.611 = getv function %tmp.610 :length;
+        %tmp.612 = invoke %tmp.610 %tmp.611();
+        %tmp.613 = 28;
+        %tmp.614 = gt %tmp.612 %tmp.613;
+        bf %tmp.614 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_194_25_194_82_else_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_194_25_194_82_true:
+        %tmp.615 = lgetv %note.36;
+        symbol [ note %tmp.615 194 49 53 ];
+        symbol [ substring %tmp.616 194 54 63 ];
+        %tmp.616 = getv function %tmp.615 :substring;
+        %tmp.617 = 0;
+        %tmp.618 = 28;
+        %tmp.619 = invoke %tmp.615 %tmp.616(%tmp.617, %tmp.618);
+        %tmp.620 = "...";
+        %tmp.621 = add %tmp.619 %tmp.620;
+        push %tmp.621;
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_194_25_194_82_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_194_25_194_82_else_false:
+        %tmp.622 = lgetv %note.36;
+        symbol [ note %tmp.622 194 82 86 ];
+        push %tmp.622;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_194_25_194_82_end:
+        %tmp.623 = phi [%tmp.614 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_194_25_194_82_begin] [%tmp.621 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_194_25_194_82_true] [%tmp.622 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_194_25_194_82_else_false] [%tmp.623 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_194_25_194_82_end];
+        lputv %fittedNote.37 %tmp.623;
+        symbol [ fittedNote %fittedNote.37 194 12 22 ];
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_193_32_195_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_193_8_195_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_193_8_195_8_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 196 8 ]
+        %tmp.624 = lgetv %dc;
+        symbol [ dc %tmp.624 196 8 10 ];
+        symbol [ setColor %tmp.625 196 11 19 ];
+        %tmp.625 = getv function %tmp.624 :setColor;
+        symbol [ Graphics %tmp.626 196 20 28 ];
+        %tmp.626 = getm $.Toybox.Graphics;
+        symbol [ COLOR_WHITE %tmp.627 196 29 40 ];
+        %tmp.627 = getv %tmp.626 :COLOR_WHITE;
+        symbol [ Graphics %tmp.628 196 42 50 ];
+        %tmp.628 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.629 196 51 68 ];
+        %tmp.629 = getv %tmp.628 :COLOR_TRANSPARENT;
+        invoke %tmp.624 %tmp.625(%tmp.627, %tmp.629);
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc" 197 8 ]
+        %tmp.630 = lgetv %dc;
+        symbol [ dc %tmp.630 197 8 10 ];
+        symbol [ drawText %tmp.631 197 11 19 ];
+        %tmp.631 = getv function %tmp.630 :drawText;
+        %tmp.632 = lgetv %cx.3;
+        symbol [ cx %tmp.632 198 12 14 ];
+        %tmp.633 = lgetv %h.2;
+        symbol [ h %tmp.633 199 13 14 ];
+        %tmp.634 = 71;
+        %tmp.635 = mul %tmp.633 %tmp.634;
+        %tmp.636 = 100;
+        %tmp.637 = div %tmp.635 %tmp.636;
+        %tmp.638 = lgetv %fMicro.4;
+        symbol [ fMicro %tmp.638 200 12 18 ];
+        %tmp.639 = lgetv %fittedNote.37;
+        symbol [ fittedNote %tmp.639 201 12 22 ];
+        symbol [ Graphics %tmp.640 202 12 20 ];
+        %tmp.640 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.641 202 21 40 ];
+        %tmp.641 = getv %tmp.640 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.630 %tmp.631(%tmp.632, %tmp.637, %tmp.638, %tmp.639, %tmp.641);
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_SymbolDetailView_mc_72_40_204_4_stop:
     }
 }
 [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\SymbolDetailView.mc"; @line = 1; ]
