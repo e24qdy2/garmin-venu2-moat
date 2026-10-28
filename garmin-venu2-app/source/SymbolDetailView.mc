@@ -152,17 +152,10 @@ class SymbolDetailView extends WatchUi.View {
         dc.drawText(cx, (h * 26) / 100, fMicro, smaLineStr, Graphics.TEXT_JUSTIFY_CENTER);
 
         // 4. Responsive Sparkline + SMA-20 + Bollinger Chart Box
-        var spk = (item.hasKey("spk") ? item.get("spk") : item.get("sp")) as Array?;
         MoatWatchLayout.drawSparklineChart(
             dc,
             _store,
-            spk,
-            px,
-            dayLo,
-            dayHi,
-            sma,
-            ub,
-            lb,
+            item,
             showBollinger,
             priceColor,
             w,

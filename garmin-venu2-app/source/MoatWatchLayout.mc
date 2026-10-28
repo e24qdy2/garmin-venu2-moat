@@ -129,16 +129,16 @@ module MoatWatchLayout {
         dc as Dc,
         store as PortfolioStore,
         item as Dictionary,
-        w as Number,
         rowY as Number,
         cardH as Number,
-        minSidePad as Number,
         fRow as FontDefinition,
-        fMicro as FontDefinition,
-        rowFontH as Number,
-        microFontH as Number,
-        showSubMetrics as Boolean
+        fMicro as FontDefinition
     ) as Void {
+        var w = dc.getWidth();
+        var minSidePad = (w * 6) / 100;
+        var rowFontH = dc.getFontHeight(fRow);
+        var microFontH = dc.getFontHeight(fMicro);
+        var showSubMetrics = (cardH >= (rowFontH + microFontH));
         var sym = (item.hasKey("sym") ? item.get("sym") : item.get("s")) as String;
         var px = store.getDictFloat(item, "px", "p", 0.0);
         var lastPct = store.getDictFloat(item, "pct", "c", 0.0);
@@ -266,18 +266,19 @@ module MoatWatchLayout {
     function drawSparklineChart(
         dc as Dc,
         store as PortfolioStore,
-        spk as Array?,
-        px as Float,
-        dayLo as Float,
-        dayHi as Float,
-        sma as Float,
-        ub as Float,
-        lb as Float,
+        item as Dictionary,
         showBollinger as Boolean,
         priceColor as Number,
         w as Number,
         h as Number
     ) as Void {
+        var spk = (item.hasKey("spk") ? item.get("spk") : item.get("sp")) as Array?;
+        var px = store.getDictFloat(item, "px", "p", 0.0);
+        var dayHi = store.getDictFloat(item, "hi", null, px);
+        var dayLo = store.getDictFloat(item, "lo", null, px);
+        var sma = store.getDictFloat(item, "sma", null, px);
+        var ub = store.getDictFloat(item, "ub", null, sma);
+        var lb = store.getDictFloat(item, "lb", null, sma);
         var chartX = (w * 14) / 100;
         var chartY = (h * 33) / 100;
         var chartW = w - (chartX * 2);

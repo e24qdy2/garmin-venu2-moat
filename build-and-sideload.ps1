@@ -9,7 +9,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 Write-Host "`n==================================================================" -ForegroundColor Cyan
-Write-Host "  GarminMoat - Garmin 2024-2026 Multi-Device Build & USB Sideloader" -ForegroundColor Cyan
+Write-Host "  MoatWatch - Garmin 2024-2026 Multi-Device Build & USB Sideloader" -ForegroundColor Cyan
 Write-Host "==================================================================`n" -ForegroundColor Cyan
 
 $AppDir = Join-Path $PSScriptRoot "garmin-venu2-app"
@@ -71,16 +71,19 @@ if (-not $MonkeyJar -or -not (Test-Path $JavaExe)) {
     throw "Garmin Connect IQ SDK (monkeybrains.jar) or Java runtime was not found."
 }
 
-# 3. Compile GarminMoat.prg (and keep Venu2Moat.prg in sync for backward compatibility)
-$OutputPrg = Join-Path $DistDir "GarminMoat.prg"
+# 3. Compile MoatWatch.prg (and keep GarminMoat.prg & Venu2Moat.prg in sync for backward compatibility)
+$OutputPrg = Join-Path $DistDir "MoatWatch.prg"
+$GarminMoatPrg = Join-Path $DistDir "GarminMoat.prg"
 $LegacyPrg = Join-Path $DistDir "Venu2Moat.prg"
 $JungleFile = Join-Path $AppDir "monkey.jungle"
-Write-Host "[*] Compiling GarminMoat.prg for device '$Device'..." -ForegroundColor Cyan
+Write-Host "[*] Compiling MoatWatch.prg for device '$Device'..." -ForegroundColor Cyan
 & $JavaExe "-Xms1g" "-Dfile.encoding=UTF-8" -jar $MonkeyJar -o $OutputPrg -f $JungleFile -y $KeyPath -d $Device -w
 
 if (Test-Path $OutputPrg) {
+    Copy-Item -Path $OutputPrg -Destination $GarminMoatPrg -Force
     Copy-Item -Path $OutputPrg -Destination $LegacyPrg -Force
     if (Test-Path "$OutputPrg.debug.xml") {
+        Copy-Item -Path "$OutputPrg.debug.xml" -Destination "$GarminMoatPrg.debug.xml" -Force
         Copy-Item -Path "$OutputPrg.debug.xml" -Destination "$LegacyPrg.debug.xml" -Force
     }
     $SizeKb = [Math]::Round((Get-Item $OutputPrg).Length / 1KB, 1)
@@ -88,10 +91,12 @@ if (Test-Path $OutputPrg) {
 }
 
 if ($PackageStoreIq) {
-    $OutputIq = Join-Path $DistDir "GarminMoat.iq"
+    $OutputIq = Join-Path $DistDir "MoatWatch.iq"
+    $GarminMoatIq = Join-Path $DistDir "GarminMoat.iq"
     Write-Host "[*] Packaging Garmin Connect IQ Store bundle: $OutputIq (20 Garmin models)..." -ForegroundColor Cyan
     & $JavaExe "-Xms1g" "-Dfile.encoding=UTF-8" -jar $MonkeyJar -e -r -o $OutputIq -f $JungleFile -y $KeyPath -w
     if (Test-Path $OutputIq) {
+        Copy-Item -Path $OutputIq -Destination $GarminMoatIq -Force
         $IqSizeKb = [Math]::Round((Get-Item $OutputIq).Length / 1KB, 1)
         Write-Host "[OK] Built Connect IQ Store Package: $OutputIq ($IqSizeKb KB)" -ForegroundColor Green
     }

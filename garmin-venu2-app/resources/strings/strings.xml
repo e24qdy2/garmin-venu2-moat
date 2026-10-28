@@ -1,5 +1,5 @@
 <strings>
-    <string id="AppName">GarminMoat</string>
+    <string id="AppName">MoatWatch</string>
     <string id="SyncKeyTitle">Sync Key (Blank = Auto Device ID)</string>
     <string id="ApiUrlTitle">Server HTTPS Base URL</string>
     <string id="ShowBollingerTitle">Show SMA20 + Bollinger Bands</string>

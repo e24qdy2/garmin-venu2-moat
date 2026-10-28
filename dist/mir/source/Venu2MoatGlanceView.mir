@@ -462,10 +462,10 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_27_
         %tmp.157 = getm $.Toybox.Graphics;
         symbol [ FONT_XTINY %tmp.158 55 35 45 ];
         %tmp.158 = getv %tmp.157 :FONT_XTINY;
-        %tmp.159 = "GARMINMOAT PORTFOLIO";
-        symbol [ Graphics %tmp.160 55 71 79 ];
+        %tmp.159 = "MOATWATCH PORTFOLIO";
+        symbol [ Graphics %tmp.160 55 70 78 ];
         %tmp.160 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_LEFT %tmp.161 55 80 97 ];
+        symbol [ TEXT_JUSTIFY_LEFT %tmp.161 55 79 96 ];
         %tmp.161 = getv %tmp.160 :TEXT_JUSTIFY_LEFT;
         invoke %tmp.153 %tmp.154(%tmp.155, %tmp.156, %tmp.158, %tmp.159, %tmp.161);
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 58 8 ]

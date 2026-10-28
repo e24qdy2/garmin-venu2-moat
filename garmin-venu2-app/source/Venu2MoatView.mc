@@ -54,7 +54,7 @@ class Venu2MoatView extends WatchUi.View {
         var port = _store.getActivePortfolio();
         if (port == null) {
             dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, h / 2 - 24, fVal, "GarminMoat", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, h / 2 - 24, fVal, "MoatWatch", Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(0x06B6D4, Graphics.COLOR_TRANSPARENT);
             dc.drawText(cx, h / 2 + 6, fRow, "Key: " + _store.getSyncKey(), Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(0x64748B, Graphics.COLOR_TRANSPARENT);
@@ -100,7 +100,6 @@ class Venu2MoatView extends WatchUi.View {
 
         // Subtle Divider Line
         var divY = (h * 27) / 100;
-        var minSidePad = (w * 6) / 100;
         var divPad = _store.getCirclePadX(divY, divY + 1, (w * 9) / 100);
         dc.setColor(0x1E293B, Graphics.COLOR_TRANSPARENT);
         dc.drawLine(divPad, divY, w - divPad, divY);
@@ -110,9 +109,6 @@ class Venu2MoatView extends WatchUi.View {
         var rowY = _store.rowStartY;
         var rowHeight = _store.rowHeight;
         var cardH = rowHeight - 4;
-        var rowFontH = dc.getFontHeight(fRow);
-        var microFontH = dc.getFontHeight(fMicro);
-        var showSubMetrics = (cardH >= (rowFontH + microFontH));
 
         for (var i = 0; i < visRows; i++) {
             var itemIdx = startIdx + i;
@@ -124,15 +120,10 @@ class Venu2MoatView extends WatchUi.View {
                 dc,
                 _store,
                 item,
-                w,
                 rowY,
                 cardH,
-                minSidePad,
                 fRow,
-                fMicro,
-                rowFontH,
-                microFontH,
-                showSubMetrics
+                fMicro
             );
             rowY += rowHeight;
         }
