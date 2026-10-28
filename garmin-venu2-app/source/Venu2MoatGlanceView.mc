@@ -15,7 +15,10 @@ class Venu2MoatGlanceView extends WatchUi.GlanceView {
         dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
         dc.clear();
 
-        var cached = Application.Storage.getValue("venu2moat_payload") as Dictionary?;
+        var cached = Application.Storage.getValue("venu2moat_v3") as Dictionary?;
+        if (cached == null) {
+            cached = Application.Storage.getValue("venu2moat_payload") as Dictionary?;
+        }
         var netWorthStr = "THB 1,482,910";
         var dayPnlStr = "+18,420 (+1.25%)";
         var isPositive = true;

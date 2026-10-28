@@ -637,8 +637,88 @@ async function runSdlcSuite() {
   assert.ok(simJsRes.raw.includes("MoatWatchSimulator"), "/watchSimulator.js body must expose MoatWatchSimulator");
   console.log("[PASS] 14. Parts 2 & 3 Deep Modules (MoatWatchLayout.mc + public/watchSimulator.js) verified");
 
+  // 15. Multi-User Profile & Trial Isolation Verification (Web, Node API, Cloudflare Worker, Watch Auto-Device-ID)
+  const userAKey = "V2-USERA111";
+  const userBKey = "V2-USERB222";
+  const portfoliosJsonPath = path.join(__dirname, "..", "data", "portfolios.json");
+  const licensesJsonPath = path.join(__dirname, "..", "data", "licenses.json");
+  const originalPortfoliosJson = fs.existsSync(portfoliosJsonPath) ? fs.readFileSync(portfoliosJsonPath, "utf8") : null;
+  const originalLicensesJson = fs.existsSync(licensesJsonPath) ? fs.readFileSync(licensesJsonPath, "utf8") : null;
+
+  try {
+    const userARes = await httpRequest("GET", `/api/portfolio?key=${userAKey}`);
+    const userBRes = await httpRequest("GET", `/api/portfolio?key=${userBKey}`);
+    assert.strictEqual(userARes.status, 200);
+    assert.strictEqual(userBRes.status, 200);
+    assert.strictEqual(userARes.json.web.syncKey, userAKey);
+    assert.strictEqual(userBRes.json.web.syncKey, userBKey);
+    assert.strictEqual(
+      userARes.json.web.watchSettings.deviceId,
+      userAKey,
+      "User A must get isolated deviceId (must NOT collide with V2-88VENU20)"
+    );
+    assert.strictEqual(
+      userBRes.json.web.watchSettings.deviceId,
+      userBKey,
+      "User B must get isolated deviceId (must NOT collide with User A or V2-88VENU20)"
+    );
+    assert.strictEqual(userARes.json.web.license.status, "TRIAL", "New User A must start on an independent 14-day TRIAL");
+    assert.strictEqual(userBRes.json.web.license.status, "TRIAL", "New User B must start on an independent 14-day TRIAL");
+
+    // Mutate User A's portfolio and verify User B and VENU2-88 remain untouched
+    const userAMutatedProfile = {
+      syncKey: userAKey,
+      ownerName: "Alice Isolated Investor",
+      baseCurrency: userARes.json.web.baseCurrency,
+      watchSettings: userARes.json.web.watchSettings,
+      portfolios: JSON.parse(JSON.stringify(userARes.json.web.portfolios))
+    };
+    userAMutatedProfile.portfolios[0].name = "Alice Secret Alpha";
+    const saveARes = await httpRequest("PUT", "/api/portfolio", userAMutatedProfile);
+    assert.strictEqual(saveARes.status, 200);
+
+    const userBAfterRes = await httpRequest("GET", `/api/portfolio?key=${userBKey}`);
+    assert.notStrictEqual(
+      userBAfterRes.json.web.ownerName,
+      "Alice Isolated Investor",
+      "Modifying User A must NOT overwrite User B profile"
+    );
+    assert.notStrictEqual(
+      userBAfterRes.json.web.portfolios[0].name,
+      "Alice Secret Alpha",
+      "Modifying User A portfolio name must NOT leak into User B"
+    );
+
+    // Watch Auto-Device-ID mode (?key=&did=V2-USERA111) resolves to User A's isolated profile
+    const watchAutoRes = await httpRequest("GET", `/api/watch?key=&did=${userAKey}`);
+    assert.strictEqual(watchAutoRes.status, 200);
+    assert.strictEqual(watchAutoRes.json.k, userAKey, "Watch with blank SyncKey and hardware did=V2-USERA111 must resolve to User A");
+    assert.strictEqual(watchAutoRes.json.p[0].n, "Alice Secret Alpha");
+
+    // Verify Cloudflare Worker also isolates multi-user profiles & auto-device-ID
+    if (fs.existsSync(workerSrcPath)) {
+      const { pathToFileURL } = require("url");
+      const workerMod = await import(pathToFileURL(workerSrcPath).href);
+      const worker = workerMod.default;
+      const wUserRes = await worker.fetch(new Request(`https://moat.readybyte.top/api/watch?key=&did=${userBKey}`), {});
+      const wUserJson = await wUserRes.json();
+      assert.strictEqual(wUserRes.status, 200);
+      assert.strictEqual(wUserJson.k, userBKey, "Cloudflare Worker must isolate auto-device-ID profile per watch");
+      assert.strictEqual(wUserJson.lic.did, userBKey, "Cloudflare Worker license did must match isolated watch ID");
+      assert.strictEqual(wUserJson.lic.st, "TRIAL", "Cloudflare Worker new watch must start on independent TRIAL");
+    }
+    console.log("[PASS] 15. Multi-User Profile & Trial Isolation (Web + Node + Cloudflare Worker + Watch Auto-Device-ID) verified");
+  } finally {
+    if (originalPortfoliosJson !== null) {
+      fs.writeFileSync(portfoliosJsonPath, originalPortfoliosJson, "utf8");
+    }
+    if (originalLicensesJson !== null) {
+      fs.writeFileSync(licensesJsonPath, originalLicensesJson, "utf8");
+    }
+  }
+
   console.log("\n==================================================================");
-  console.log("  ALL 14 SDLC + DEEP MODULE + CLOUDFLARE WORKER SUITES PASSED (100%)");
+  console.log("  ALL 15 SDLC + MULTI-USER ISOLATION + WORKER SUITES PASSED (100%)");
   console.log("==================================================================");
   if (ephemeralServer) {
     ephemeralServer.close();

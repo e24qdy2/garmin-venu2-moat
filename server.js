@@ -19,6 +19,10 @@ const {
   SECURITY_HEADERS,
   clearMarketCache,
   sanitizeWatchSettings: sanitizeWatchSettingsCore,
+  deriveDeviceIdForSyncKey,
+  createIsolatedProfile,
+  ensureIsolatedProfileSettings,
+  resolveWatchProfile,
   normalizeEarningsDate,
   normalizePortfoliosInput,
   fetchSymbolMarketData,
@@ -123,16 +127,11 @@ function getOrCreateProfile(syncKey) {
   const store = readStore();
   let dirty = false;
   if (!store[key]) {
-    store[key] = JSON.parse(JSON.stringify(DEFAULT_DATA["VENU2-88"]));
-    store[key].syncKey = key;
-    store[key].updatedAt = new Date().toISOString();
+    store[key] = createIsolatedProfile(key, DEFAULT_DATA["VENU2-88"], licenseManager);
     dirty = true;
   }
-  if (!store[key].watchSettings) {
-    store[key].watchSettings = { ...DEFAULT_WATCH_SETTINGS };
+  if (ensureIsolatedProfileSettings(store[key], licenseManager)) {
     dirty = true;
-  } else {
-    store[key].watchSettings = sanitizeWatchSettings(store[key].watchSettings);
   }
   if (dirty) {
     writeStore(store);
@@ -314,6 +313,18 @@ async function handleRequest(req, res) {
         watchSettings: mergedWatchSettings,
         portfolios: normalizedPortfolios
       };
+      // If user paired a physical Garmin Device ID (e.g. V2-XXXXXXXX) whose watch auto-syncs via its Device ID, keep that device profile in sync
+      const boundDid = mergedWatchSettings.deviceId;
+      if (boundDid && boundDid !== "V2-88VENU20" && boundDid !== syncKey && store[boundDid]) {
+        store[boundDid] = {
+          ...store[syncKey],
+          syncKey: boundDid,
+          watchSettings: {
+            ...mergedWatchSettings,
+            activationKey: store[boundDid].watchSettings?.activationKey || mergedWatchSettings.activationKey
+          }
+        };
+      }
       writeStore(store);
 
       const payload = await buildEnrichedPayload(store[syncKey], {
@@ -376,8 +387,14 @@ async function handleRequest(req, res) {
   // 3. GET /api/watch?key=VENU2-88&did=V2-XXXX&akey=... (Compact JSON endpoint for Garmin Watch App)
   if ((pathname === "/api/watch" || pathname.startsWith("/api/watch/")) && req.method === "GET") {
     const pathKey = pathname.startsWith("/api/watch/") ? pathname.replace("/api/watch/", "") : "";
-    const syncKey = pathKey || parsedUrl.query.key || "VENU2-88";
-    const profile = getOrCreateProfile(syncKey);
+    const rawSyncKey = pathKey || parsedUrl.query.key || "";
+    const profile = resolveWatchProfile(
+      readStore(),
+      rawSyncKey,
+      parsedUrl.query.did,
+      getOrCreateProfile,
+      licenseManager
+    );
     const payload = await buildEnrichedPayload(profile, {
       deviceId: parsedUrl.query.did,
       activationKey: parsedUrl.query.akey,

@@ -2,7 +2,7 @@
   "settings" : [ {
     "key" : "syncKey",
     "valueType" : "string",
-    "defaultValue" : "VENU2-88",
+    "defaultValue" : "\n  ",
     "configTitle" : "SyncKeyTitle",
     "configPrompt" : null,
     "configType" : "alphaNumeric",
@@ -113,7 +113,7 @@
       "AutoSwipeSecTitle" : "Auto-Swipe Interval (Seconds)",
       "ApiUrlTitle" : "Server HTTPS Base URL",
       "ActivationKeyTitle" : "Device Activation Code (Paid)",
-      "SyncKeyTitle" : "Sync Key (Venu2Moat Web)",
+      "SyncKeyTitle" : "Sync Key (Blank = Auto Device ID)",
       "AlwaysOnDisplayTitle" : "Always-On Screen While Open",
       "AppName" : "Venu2Moat"
     }

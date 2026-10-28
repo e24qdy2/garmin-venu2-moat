@@ -235,6 +235,8 @@
       };
     });
 
+    const effectiveSyncKey = String(web.syncKey || fallbackSyncKey || 'VENU2-88').trim().toUpperCase();
+    const fallbackDid = effectiveSyncKey === 'VENU2-88' ? 'V2-88VENU20' : effectiveSyncKey;
     const rawSortOrder = String(web.watchSettings?.sortByPctOrder || 'ASC').toUpperCase();
     const rawSortMetric = String(web.watchSettings?.sortByPctMetric || 'DAY').toUpperCase();
     const watchSettings = {
@@ -243,12 +245,12 @@
       alwaysOnDisplay: Boolean(web.watchSettings?.alwaysOnDisplay ?? false),
       sortByPctOrder: ['ASC', 'DESC', 'NONE'].includes(rawSortOrder) ? rawSortOrder : 'ASC',
       sortByPctMetric: ['DAY', 'TOTAL'].includes(rawSortMetric) ? rawSortMetric : 'DAY',
-      deviceId: web.watchSettings?.deviceId || 'V2-88VENU20',
+      deviceId: web.watchSettings?.deviceId || fallbackDid,
       activationKey: web.watchSettings?.activationKey || ''
     };
 
     return {
-      syncKey: web.syncKey || fallbackSyncKey,
+      syncKey: effectiveSyncKey,
       baseCurrency: web.baseCurrency || 'THB',
       usdThbRate: Number(web.usdThbRate || 34.45),
       fetchedAt: web.updatedAt || new Date().toISOString(),

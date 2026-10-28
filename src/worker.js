@@ -13,6 +13,10 @@ const {
   FALLBACK_BASE,
   clearMarketCache,
   sanitizeWatchSettings: sanitizeWatchSettingsCore,
+  deriveDeviceIdForSyncKey,
+  createIsolatedProfile,
+  ensureIsolatedProfileSettings,
+  resolveWatchProfile,
   normalizePortfoliosInput,
   defaultFetchJson,
   fetchSymbolMarketData,
@@ -170,15 +174,9 @@ function getOrCreateProfile(syncKey) {
   const key = (syncKey || "VENU2-88").trim().toUpperCase();
   if (!runtimePortfoliosStore[key]) {
     const template = runtimePortfoliosStore["VENU2-88"] || INITIAL_PORTFOLIOS_STORE["VENU2-88"];
-    runtimePortfoliosStore[key] = deepClone(template);
-    runtimePortfoliosStore[key].syncKey = key;
-    runtimePortfoliosStore[key].updatedAt = new Date().toISOString();
+    runtimePortfoliosStore[key] = createIsolatedProfile(key, template, licenseManagerInstance);
   }
-  if (!runtimePortfoliosStore[key].watchSettings) {
-    runtimePortfoliosStore[key].watchSettings = { ...DEFAULT_WATCH_SETTINGS };
-  } else {
-    runtimePortfoliosStore[key].watchSettings = sanitizeWatchSettings(runtimePortfoliosStore[key].watchSettings);
-  }
+  ensureIsolatedProfileSettings(runtimePortfoliosStore[key], licenseManagerInstance);
   return runtimePortfoliosStore[key];
 }
 
@@ -375,10 +373,17 @@ export default {
     // 3. GET ULTRA-COMPACT GARMIN WATCH PAYLOAD
     if ((pathname === "/api/watch" || pathname.startsWith("/api/watch/")) && request.method === "GET") {
       const pathKey = pathname.startsWith("/api/watch/") ? pathname.replace("/api/watch/", "") : "";
-      const syncKey = pathKey || query.key || "VENU2-88";
-      const profile = getOrCreateProfile(syncKey);
+      const rawSyncKey = pathKey || query.key || "";
+      const rawDid = query.did || query.deviceId;
+      const profile = resolveWatchProfile(
+        runtimePortfoliosStore,
+        rawSyncKey,
+        rawDid,
+        getOrCreateProfile,
+        licenseManagerInstance
+      );
       const payload = await buildEnrichedPayload(profile, {
-        deviceId: query.did || query.deviceId,
+        deviceId: rawDid,
         activationKey: query.akey || query.lkey || query.licenseKey,
         watchModel: query.model || query.mdl || query.watchModel
       });
@@ -406,6 +411,17 @@ export default {
           watchSettings: nextWatchSettings,
           portfolios: normalizedPortfolios
         };
+        const boundDid = nextWatchSettings.deviceId;
+        if (boundDid && boundDid !== "V2-88VENU20" && boundDid !== syncKey && runtimePortfoliosStore[boundDid]) {
+          runtimePortfoliosStore[boundDid] = {
+            ...runtimePortfoliosStore[syncKey],
+            syncKey: boundDid,
+            watchSettings: {
+              ...nextWatchSettings,
+              activationKey: runtimePortfoliosStore[boundDid].watchSettings?.activationKey || nextWatchSettings.activationKey
+            }
+          };
+        }
         const payload = await buildEnrichedPayload(runtimePortfoliosStore[syncKey], {
           deviceId: nextWatchSettings.deviceId,
           activationKey: nextWatchSettings.activationKey,

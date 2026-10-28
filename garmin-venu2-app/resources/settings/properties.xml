@@ -1,5 +1,6 @@
 <properties>
-  <property id="syncKey" type="string">VENU2-88</property>
+  <property id="syncKey" type="string">
+  </property>
   <property id="apiUrl" type="string">https://moat.readybyte.top</property>
   <property id="showBollinger" type="boolean">true</property>
   <property id="autoSwipeEnabled" type="boolean">true</property>

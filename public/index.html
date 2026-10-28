@@ -1074,18 +1074,28 @@
       <div class="double-bezel-core p-6 sm:p-7">
         <div class="flex items-center justify-between mb-4">
           <div>
-            <h3 class="text-lg font-bold text-alabaster">ตั้งค่า Sync Key &amp; ตรวจสอบ JSON สำหรับ Garmin Venu 2</h3>
-            <p class="text-xs text-slate-400">ใช้รหัส Sync Key เดียวกันนี้ในตั้งค่าแอป Garmin Connect บนมือถือของคุณ</p>
+            <h3 class="text-lg font-bold text-alabaster">ตั้งค่า Sync Key ส่วนตัว &amp; เชื่อมต่อนาฬิกา Garmin (Multi-User Isolation)</h3>
+            <p class="text-xs text-slate-400">กรอกรหัส <code class="font-mono text-cyan">KEY: V2-XXXXXXXX</code> ที่แสดงบนหน้าจอนาฬิกาของคุณ หรือตั้งรหัส Sync Key ส่วนตัวเพื่อแยกพอร์ตไม่ให้ปะปนกับผู้ใช้อื่น</p>
           </div>
           <button id="closeSyncModalBtn" type="button" class="w-8 h-8 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300">
             <i class="ph-light ph-x"></i>
           </button>
         </div>
 
-        <div class="flex flex-col sm:flex-row gap-3 mb-5">
-          <input id="syncKeyInput" type="text" value="VENU2-88" placeholder="เช่น VENU2-88" class="flex-1 rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-4 py-2.5 font-mono text-sm text-alabaster uppercase focus:outline-none" />
-          <button id="applySyncKeyBtn" type="button" class="rounded-full bg-cyan text-void font-bold text-xs px-6 py-2.5 spring-transition active:scale-[0.98]">
+        <div class="flex flex-col sm:flex-row gap-2.5 mb-3">
+          <input id="syncKeyInput" type="text" value="VENU2-88" placeholder="เช่น V2-A1B2C3D4 หรือตั้งรหัสส่วนตัว" class="flex-1 rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-4 py-2.5 font-mono text-sm text-alabaster uppercase focus:outline-none" />
+          <button id="applySyncKeyBtn" type="button" class="rounded-full bg-cyan text-void font-bold text-xs px-5 py-2.5 spring-transition active:scale-[0.98]">
             โหลด / สลับ Sync Key
+          </button>
+          <button id="createNewSyncKeyBtn" type="button" class="rounded-full bg-emerald/15 hover:bg-emerald/25 text-emerald ring-1 ring-emerald/35 font-semibold text-xs px-4 py-2.5 spring-transition active:scale-[0.98]">
+            + สร้างพอร์ตใหม่
+          </button>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-white/[0.03] ring-1 ring-white/10 px-3.5 py-2 mb-4 text-[11px]">
+          <span class="text-slate-400">ลิงก์เข้าพอร์ตส่วนตัวของคุณโดยตรง: <code id="personalProfileUrlLabel" class="font-mono text-cyan">/?key=VENU2-88</code></span>
+          <button id="copyProfileUrlBtn" type="button" class="rounded-full bg-white/[0.08] hover:bg-white/[0.15] text-alabaster px-3 py-1 font-mono text-[11px] spring-transition">
+            คัดลอกลิงก์ส่วนตัว
           </button>
         </div>
 
@@ -1271,7 +1281,7 @@
     </div>
   </div>
 
-  <script src="/watchSimulator.js?v=20261022-deep"></script>
-  <script src="/app.js?v=20261022-deep"></script>
+  <script src="/watchSimulator.js?v=20261028-multiuser"></script>
+  <script src="/app.js?v=20261028-multiuser"></script>
 </body>
 </html>

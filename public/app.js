@@ -17,8 +17,53 @@
     applyWatchModelPreview: rawApplyWatchModelPreview
   } = window.MoatWatchSimulator;
 
+  function generateRandomSyncKey() {
+    const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code = '';
+    const rand = new Uint8Array(6);
+    if (window.crypto && typeof window.crypto.getRandomValues === 'function') {
+      window.crypto.getRandomValues(rand);
+      for (let i = 0; i < 6; i++) {
+        code += alphabet[rand[i] % alphabet.length];
+      }
+    } else {
+      for (let i = 0; i < 6; i++) {
+        code += alphabet[Math.floor(Math.random() * alphabet.length)];
+      }
+    }
+    return `V2-${code}`;
+  }
+
+  function resolveInitialSyncKey() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const urlKey = (params.get('key') || params.get('syncKey') || '').trim().toUpperCase();
+      if (urlKey) {
+        localStorage.setItem('venu2_sync_key', urlKey);
+        localStorage.setItem('venu2_sync_key_isolated', '1');
+        return urlKey;
+      }
+    } catch (_) {
+      // Ignore URL parsing errors
+    }
+
+    const stored = (localStorage.getItem('venu2_sync_key') || '').trim().toUpperCase();
+    const isIsolated = localStorage.getItem('venu2_sync_key_isolated') === '1';
+    if (stored && (isIsolated || stored !== 'VENU2-88')) {
+      localStorage.setItem('venu2_sync_key_isolated', '1');
+      return stored;
+    }
+
+    const generated = generateRandomSyncKey();
+    localStorage.setItem('venu2_sync_key', generated);
+    localStorage.setItem('venu2_sync_key_isolated', '1');
+    return generated;
+  }
+
+  const initialSyncKey = resolveInitialSyncKey();
+
   const state = {
-    syncKey: localStorage.getItem('venu2_sync_key') || 'VENU2-88',
+    syncKey: initialSyncKey,
     selectedWatchModel: localStorage.getItem('venu2_watch_model') || 'venu2',
     compatibleDevices: [],
     profile: null,
@@ -34,7 +79,7 @@
       alwaysOnDisplay: false,
       sortByPctOrder: 'ASC', // 'ASC' (ติดลบ -> กำไร) | 'DESC' (กำไร -> ติดลบ) | 'NONE' (ปกติ)
       sortByPctMetric: 'DAY', // 'DAY' (% Change วันนี้) | 'TOTAL' (% กำไรรวม)
-      deviceId: 'V2-88VENU20',
+      deviceId: initialSyncKey === 'VENU2-88' ? 'V2-88VENU20' : initialSyncKey,
       activationKey: ''
     },
     license: null,
@@ -95,9 +140,10 @@
   }
 
   async function loadPortfolio(syncKey = state.syncKey) {
-    const cleanKey = String(syncKey || 'VENU2-88').trim().toUpperCase();
+    const cleanKey = String(syncKey || state.syncKey || generateRandomSyncKey()).trim().toUpperCase();
     state.syncKey = cleanKey;
     localStorage.setItem('venu2_sync_key', cleanKey);
+    localStorage.setItem('venu2_sync_key_isolated', '1');
 
     const res = await fetch(`/api/portfolio?key=${encodeURIComponent(cleanKey)}`);
     if (!res.ok) throw new Error('ไม่สามารถโหลดข้อมูลพอร์ตได้');
@@ -733,6 +779,10 @@
     el('syncKeyInput').value = state.syncKey;
     const didParam = state.watchSettings.deviceId ? `&did=${encodeURIComponent(state.watchSettings.deviceId)}` : '';
     el('modalWatchEndpointLabel').textContent = `/api/watch?key=${state.syncKey}${didParam}`;
+    const urlLabel = el('personalProfileUrlLabel');
+    if (urlLabel) {
+      urlLabel.textContent = `${window.location.origin}/?key=${state.syncKey}`;
+    }
     modal.classList.remove('hidden');
     modal.classList.add('flex');
 
@@ -1365,6 +1415,20 @@
       await loadPortfolio(newKey);
       await openSyncPayloadModal();
       showToast(`สลับไปยัง Sync Key: ${newKey}`);
+    });
+
+    el('createNewSyncKeyBtn')?.addEventListener('click', async () => {
+      const freshKey = generateRandomSyncKey();
+      el('syncKeyInput').value = freshKey;
+      await loadPortfolio(freshKey);
+      await openSyncPayloadModal();
+      showToast(`สร้างพอร์ตส่วนตัวใหม่สำเร็จ: ${freshKey}`);
+    });
+
+    el('copyProfileUrlBtn')?.addEventListener('click', async () => {
+      const url = `${window.location.origin}/?key=${encodeURIComponent(state.syncKey)}`;
+      await navigator.clipboard.writeText(url);
+      showToast(`คัดลอกลิงก์พอร์ตส่วนตัว (${state.syncKey}) เรียบร้อยแล้ว`);
     });
 
     // Copy Watch API URL

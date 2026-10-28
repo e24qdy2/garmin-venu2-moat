@@ -1,5 +1,5 @@
 param(
-    [string]$SyncKey = "VENU2-88",
+    [string]$SyncKey = "",
     [string]$ApiUrl = "https://moat.readybyte.top",
     [Alias("DeviceId")][string]$Device = "venu2",
     [string]$KeyPath = "$PSScriptRoot\keys\developer_key.der",
@@ -27,10 +27,15 @@ $PropsFile = Join-Path $AppDir "resources\settings\properties.xml"
 if (Test-Path $PropsFile) {
     [xml]$xml = Get-Content $PropsFile
     foreach ($prop in $xml.properties.property) {
-        if ($prop.id -eq "syncKey" -and $SyncKey) {
-            $propInnerText = $SyncKey.ToUpper()
-            $prop.InnerText = $propInnerText
-            Write-Host "[OK] Embedded Default Sync Key : $propInnerText" -ForegroundColor Green
+        if ($prop.id -eq "syncKey") {
+            if ($SyncKey -and $SyncKey -ne "AUTO") {
+                $propInnerText = $SyncKey.ToUpper()
+                $prop.InnerText = $propInnerText
+                Write-Host "[OK] Embedded Default Sync Key : $propInnerText" -ForegroundColor Green
+            } else {
+                $prop.InnerText = ""
+                Write-Host "[OK] Embedded Default Sync Key : AUTO (Per-Device Unique Hardware ID)" -ForegroundColor Green
+            }
         }
         if ($prop.id -eq "apiUrl" -and $ApiUrl) {
             $prop.InnerText = $ApiUrl.TrimEnd('/')

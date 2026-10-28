@@ -241,8 +241,12 @@ module MoatWatchLayout {
         }
     }
 
-    // Bottom Portfolio Pagination Dots Indicator
+    // Bottom Portfolio Pagination Dots Indicator + Active Sync Key / Device ID Badge
     function drawPortfolioDots(dc as Dc, store as PortfolioStore, h as Number, cx as Number) as Void {
+        var syncKeyLabel = "KEY: " + store.getSyncKey();
+        dc.setColor(0x64748B, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, (h * 86) / 100, store.fontMicro, syncKeyLabel, Graphics.TEXT_JUSTIFY_CENTER);
+
         var allPorts = store.getPortfolios();
         var dotSpan = allPorts.size() * 14;
         var dotStartX = cx - (dotSpan / 2) + 7;

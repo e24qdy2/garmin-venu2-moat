@@ -37,6 +37,7 @@ class PortfolioStore {
     public var inDetailView as Boolean = false;
 
     // 14-Day Trial & Per-Device Activation Key State (Owner: saharat.bun@icloud.com)
+    public var hardwareDeviceId as String = "V2-88VENU20";
     public var deviceId as String = "V2-88VENU20";
     public var activationKey as String = "";
     public var licenseStatus as String = "TRIAL";
@@ -106,7 +107,8 @@ class PortfolioStore {
             if (uid != null && uid.length() >= 6) {
                 var tail = uid.substring(uid.length() - 8, uid.length());
                 if (tail != null) {
-                    deviceId = "V2-" + tail.toUpper();
+                    hardwareDeviceId = "V2-" + tail.toUpper();
+                    deviceId = hardwareDeviceId;
                 }
             }
         }
@@ -302,8 +304,8 @@ class PortfolioStore {
 
     function getSyncKey() as String {
         var key = Application.Properties.getValue("syncKey") as String?;
-        if (key == null || key.length() == 0) {
-            return "VENU2-88";
+        if (key == null || key.length() == 0 || key.equals("AUTO")) {
+            return hardwareDeviceId;
         }
         return key;
     }
@@ -320,7 +322,7 @@ class PortfolioStore {
         isSyncing = true;
         _quoteRefreshSec = 0;
         lastStatus = "SYNCING";
-        var url = getApiBaseUrl() + "/api/watch?key=" + getSyncKey() + "&did=" + deviceId;
+        var url = getApiBaseUrl() + "/api/watch?key=" + getSyncKey() + "&did=" + hardwareDeviceId;
         if (activationKey.length() > 0) {
             url = url + "&akey=" + activationKey;
         }
