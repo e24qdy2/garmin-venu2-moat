@@ -54,7 +54,7 @@ class Venu2MoatView extends WatchUi.View {
         var port = _store.getActivePortfolio();
         if (port == null) {
             dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, h / 2 - 24, fVal, "Venu2Moat", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, h / 2 - 24, fVal, "GarminMoat", Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(0x06B6D4, Graphics.COLOR_TRANSPARENT);
             dc.drawText(cx, h / 2 + 6, fRow, "Key: " + _store.getSyncKey(), Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(0x64748B, Graphics.COLOR_TRANSPARENT);

@@ -878,10 +878,10 @@ function createAppServer() {
 if (require.main === module) {
   const server = createAppServer();
   server.listen(PORT, () => {
-    console.log(`[Venu2Moat] Server running at http://localhost:${PORT}`);
-    console.log(`[Venu2Moat] Garmin Connect IQ Watch API: http://localhost:${PORT}/api/watch?key=VENU2-88`);
-    console.log(`[Venu2Moat] Compatible Garmin Watches: ${COMPATIBLE_GARMIN_DEVICES.length} models (2024-2026)`);
-    console.log(`[Venu2Moat] Admin Portal (Subdomain): http://localhost:${PORT}/admin (https://admin-moat.readybyte.top)`);
+    console.log(`[GarminMoat] Server running at http://localhost:${PORT}`);
+    console.log(`[GarminMoat] Garmin Connect IQ Watch API: http://localhost:${PORT}/api/watch?key=VENU2-88`);
+    console.log(`[GarminMoat] Compatible Garmin Watches: ${COMPATIBLE_GARMIN_DEVICES.length} models (2024-2026)`);
+    console.log(`[GarminMoat] Admin Portal (Subdomain): http://localhost:${PORT}/admin (https://admin-moat.readybyte.top)`);
   });
 }
 

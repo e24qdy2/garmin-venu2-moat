@@ -52,7 +52,7 @@ class Venu2MoatGlanceView extends WatchUi.GlanceView {
 
         // Header label
         dc.setColor(0x06B6D4, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(4, 6, Graphics.FONT_XTINY, "VENU2MOAT PORTFOLIO", Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(4, 6, Graphics.FONT_XTINY, "GARMINMOAT PORTFOLIO", Graphics.TEXT_JUSTIFY_LEFT);
 
         // Total Net Worth or Trial Expired Alert
         dc.setColor(isExpired ? 0xF43F5E : Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);

@@ -8,7 +8,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 Write-Host "`n==================================================================" -ForegroundColor Cyan
-Write-Host "  Venu2Moat - Garmin 2024-2026 Multi-Device Build & USB Sideloader" -ForegroundColor Cyan
+Write-Host "  GarminMoat - Garmin 2024-2026 Multi-Device Build & USB Sideloader" -ForegroundColor Cyan
 Write-Host "==================================================================`n" -ForegroundColor Cyan
 
 $AppDir = Join-Path $PSScriptRoot "garmin-venu2-app"
@@ -70,13 +70,18 @@ if (-not $MonkeyJar -or -not (Test-Path $JavaExe)) {
     throw "Garmin Connect IQ SDK (monkeybrains.jar) or Java runtime was not found."
 }
 
-# 3. Compile Venu2Moat.prg for Garmin Venu 2
-$OutputPrg = Join-Path $DistDir "Venu2Moat.prg"
+# 3. Compile GarminMoat.prg (and keep Venu2Moat.prg in sync for backward compatibility)
+$OutputPrg = Join-Path $DistDir "GarminMoat.prg"
+$LegacyPrg = Join-Path $DistDir "Venu2Moat.prg"
 $JungleFile = Join-Path $AppDir "monkey.jungle"
-Write-Host "[*] Compiling Venu2Moat.prg for device '$Device'..." -ForegroundColor Cyan
+Write-Host "[*] Compiling GarminMoat.prg for device '$Device'..." -ForegroundColor Cyan
 & $JavaExe "-Xms1g" "-Dfile.encoding=UTF-8" -jar $MonkeyJar -o $OutputPrg -f $JungleFile -y $KeyPath -d $Device -w
 
 if (Test-Path $OutputPrg) {
+    Copy-Item -Path $OutputPrg -Destination $LegacyPrg -Force
+    if (Test-Path "$OutputPrg.debug.xml") {
+        Copy-Item -Path "$OutputPrg.debug.xml" -Destination "$LegacyPrg.debug.xml" -Force
+    }
     $SizeKb = [Math]::Round((Get-Item $OutputPrg).Length / 1KB, 1)
     Write-Host "[OK] Built binary: $OutputPrg ($SizeKb KB)" -ForegroundColor Green
 }
@@ -85,7 +90,7 @@ if (Test-Path $OutputPrg) {
 $Sideloaded = $false
 try {
     $mtpJob = Start-Job -ScriptBlock {
-        param($PrgPath)
+        param($PrgPath, $LegacyPrgPath)
         $shell = New-Object -ComObject Shell.Application
         $venu = $shell.NameSpace(17).Items() | Where-Object {
             $_.Name -match "Venu|Forerunner|fenix|epix|vivoactive|Enduro|Approach|Garmin"
@@ -95,19 +100,21 @@ try {
             $garmin = $internal.GetFolder.Items() | Where-Object { $_.Name -eq "GARMIN" } | Select-Object -First 1
             $apps = $garmin.GetFolder.Items() | Where-Object { $_.Name -eq "APPS" } | Select-Object -First 1
             if ($apps) {
+                $existingLegacy = $apps.GetFolder.Items() | Where-Object { $_.Name -match "^Venu2Moat(\.prg)?$" } | Select-Object -First 1
+                $sourceToCopy = if ($existingLegacy) { $LegacyPrgPath } else { $PrgPath }
                 # Flags: 4 (No progress dialog) + 16 (Yes to All / Overwrite) + 512 (No confirm dir) + 1024 (No error UI) = 1556
-                $apps.GetFolder.CopyHere($PrgPath, 1556)
+                $apps.GetFolder.CopyHere($sourceToCopy, 1556)
                 Start-Sleep -Seconds 2
                 return $venu.Name
             }
         }
         return $null
-    } -ArgumentList $OutputPrg
+    } -ArgumentList $OutputPrg, $LegacyPrg
 
     if (Wait-Job $mtpJob -Timeout 8) {
         $watchName = Receive-Job $mtpJob
         if ($watchName) {
-            Write-Host "[OK] Sideloaded Venu2Moat.prg via MTP USB to '$watchName\Internal Storage\GARMIN\APPS\Venu2Moat.prg'!" -ForegroundColor Green
+            Write-Host "[OK] Sideloaded GarminMoat via MTP USB to '$watchName\Internal Storage\GARMIN\APPS'!" -ForegroundColor Green
             $Sideloaded = $true
         }
     } else {
@@ -127,8 +134,12 @@ if (-not $Sideloaded) {
     if ($GarminDrives) {
         foreach ($drv in $GarminDrives) {
             $TargetAppsDir = Join-Path $drv.Root "GARMIN\APPS"
-            Copy-Item -Path $OutputPrg -Destination (Join-Path $TargetAppsDir "Venu2Moat.prg") -Force
-            Write-Host "[OK] Sideloaded Venu2Moat.prg to $TargetAppsDir\Venu2Moat.prg!" -ForegroundColor Green
+            $OldPrgOnDrive = Join-Path $TargetAppsDir "Venu2Moat.prg"
+            if (Test-Path $OldPrgOnDrive) {
+                Remove-Item -Path $OldPrgOnDrive -Force -ErrorAction SilentlyContinue
+            }
+            Copy-Item -Path $OutputPrg -Destination (Join-Path $TargetAppsDir "GarminMoat.prg") -Force
+            Write-Host "[OK] Sideloaded GarminMoat.prg to $TargetAppsDir\GarminMoat.prg!" -ForegroundColor Green
             $Sideloaded = $true
         }
     }
@@ -142,7 +153,7 @@ if (-not $Sideloaded) {
 $SyncScript = Join-Path $PSScriptRoot "sync-github.ps1"
 if (-not $SkipGitSync -and (Test-Path $SyncScript)) {
     try {
-        & $SyncScript -Message "chore(build): rebuild Venu2Moat.prg ($Device) and sync source changes"
+        & $SyncScript -Message "chore(build): rebuild GarminMoat.prg ($Device) and sync source changes"
     } catch {
         Write-Warning "GitHub auto-sync warning: $_"
     }

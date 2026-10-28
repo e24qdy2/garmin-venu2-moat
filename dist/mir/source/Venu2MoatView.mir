@@ -365,10 +365,10 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatView_mc_55_26_63_
         %tmp.127 = sub %tmp.125 %tmp.126;
         %tmp.128 = lgetv %fVal.6;
         symbol [ fVal %tmp.128 57 40 44 ];
-        %tmp.129 = "Venu2Moat";
-        symbol [ Graphics %tmp.130 57 59 67 ];
+        %tmp.129 = "GarminMoat";
+        symbol [ Graphics %tmp.130 57 60 68 ];
         %tmp.130 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_CENTER %tmp.131 57 68 87 ];
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.131 57 69 88 ];
         %tmp.131 = getv %tmp.130 :TEXT_JUSTIFY_CENTER;
         invoke %tmp.120 %tmp.121(%tmp.122, %tmp.127, %tmp.128, %tmp.129, %tmp.131);
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatView.mc" 58 12 ]

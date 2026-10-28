@@ -61,7 +61,7 @@ function httpRequest(method, reqPath, body = null, headers = {}) {
 async function runSdlcSuite() {
   await ensureTestServer();
   console.log("==================================================================");
-  console.log("  Venu2Moat SDLC + Security VA + Garmin 2024-2026 Automated Suite");
+  console.log("  GarminMoat SDLC + Security VA + Garmin 2024-2026 Automated Suite");
   console.log("==================================================================\n");
 
   const testDeviceId = "V2-SDLC9901";
@@ -72,7 +72,7 @@ async function runSdlcSuite() {
   });
   assert.strictEqual(adminHtmlRes.status, 200, "Admin subdomain should return HTTP 200");
   assert.ok(
-    adminHtmlRes.raw.includes("Venu2Moat Admin") &&
+    adminHtmlRes.raw.includes("GarminMoat Admin") &&
       adminHtmlRes.raw.includes("saharat.bun@icloud.com") &&
       adminHtmlRes.raw.includes("e24qdy2@gmail.com") &&
       adminHtmlRes.raw.includes("adminPasswordLoginForm") &&

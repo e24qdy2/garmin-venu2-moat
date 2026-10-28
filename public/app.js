@@ -1445,7 +1445,7 @@
       const blob = new Blob([JSON.stringify(state.profile, null, 2)], { type: 'application/json' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `venu2moat-${state.syncKey.toLowerCase()}.json`;
+      a.download = `garminmoat-${state.syncKey.toLowerCase()}.json`;
       a.click();
       showToast('ดาวน์โหลดไฟล์ JSON สำเร็จ');
     });
@@ -1473,7 +1473,7 @@
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `venu2moat-${state.syncKey.toLowerCase()}.csv`;
+      a.download = `garminmoat-${state.syncKey.toLowerCase()}.csv`;
       a.click();
       showToast('ส่งออกตาราง CSV สำเร็จ');
     });

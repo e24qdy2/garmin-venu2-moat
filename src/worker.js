@@ -329,7 +329,7 @@ export default {
     if (pathname === "/api/health" && request.method === "GET") {
       return jsonResponse(200, {
         ok: true,
-        service: "Venu2Moat Portfolio Server",
+        service: "GarminMoat Portfolio Server",
         runtime: "cloudflare-workers",
         version: "2.3.0",
         trialDays: TRIAL_DAYS,
