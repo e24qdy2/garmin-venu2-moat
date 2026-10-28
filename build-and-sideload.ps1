@@ -3,6 +3,7 @@ param(
     [string]$ApiUrl = "https://moat.readybyte.top",
     [Alias("DeviceId")][string]$Device = "venu2",
     [string]$KeyPath = "$PSScriptRoot\keys\developer_key.der",
+    [switch]$PackageStoreIq,
     [switch]$SkipGitSync
 )
 
@@ -84,6 +85,16 @@ if (Test-Path $OutputPrg) {
     }
     $SizeKb = [Math]::Round((Get-Item $OutputPrg).Length / 1KB, 1)
     Write-Host "[OK] Built binary: $OutputPrg ($SizeKb KB)" -ForegroundColor Green
+}
+
+if ($PackageStoreIq) {
+    $OutputIq = Join-Path $DistDir "GarminMoat.iq"
+    Write-Host "[*] Packaging Garmin Connect IQ Store bundle: $OutputIq (20 Garmin models)..." -ForegroundColor Cyan
+    & $JavaExe "-Xms1g" "-Dfile.encoding=UTF-8" -jar $MonkeyJar -e -r -o $OutputIq -f $JungleFile -y $KeyPath -w
+    if (Test-Path $OutputIq) {
+        $IqSizeKb = [Math]::Round((Get-Item $OutputIq).Length / 1KB, 1)
+        Write-Host "[OK] Built Connect IQ Store Package: $OutputIq ($IqSizeKb KB)" -ForegroundColor Green
+    }
 }
 
 # 4. Auto-detect MTP-connected Garmin Watch via Windows Shell.Application (with 8s non-blocking timeout)
