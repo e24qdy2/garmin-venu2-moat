@@ -902,6 +902,8 @@ export default {
       assetPath = isAdminSubdomain ? "/admin.html" : "/index.html";
     } else if (pathname === "/admin" || pathname === "/admin/") {
       assetPath = "/admin.html";
+    } else if (pathname === "/privacy" || pathname === "/privacy/") {
+      assetPath = "/privacy.html";
     }
 
     if (env && env.ASSETS && typeof env.ASSETS.fetch === "function") {

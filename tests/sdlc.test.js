@@ -717,8 +717,66 @@ async function runSdlcSuite() {
     }
   }
 
+  // 16. Daily US Market Fear & Greed Index (FG:xxG / FG:xxEF) Across Backend, Web & Garmin Watch
+  assert.strictEqual(typeof moatEngine.classifyFearGreed, "function", "moatEngine must export classifyFearGreed");
+  assert.strictEqual(typeof moatEngine.fetchFearGreedIndex, "function", "moatEngine must export fetchFearGreedIndex");
+  const fgEf = moatEngine.classifyFearGreed(18, 22, "CNN_LIVE");
+  const fgF = moatEngine.classifyFearGreed(35, 38, "CNN_LIVE");
+  const fgN = moatEngine.classifyFearGreed(50, 49, "CNN_LIVE");
+  const fgG = moatEngine.classifyFearGreed(68, 64, "CNN_LIVE");
+  const fgEg = moatEngine.classifyFearGreed(82, 77, "CNN_LIVE");
+  assert.strictEqual(fgEf.badge, "FG:18EF");
+  assert.strictEqual(fgF.badge, "FG:35F");
+  assert.strictEqual(fgN.badge, "FG:50N");
+  assert.strictEqual(fgG.badge, "FG:68G");
+  assert.strictEqual(fgEg.badge, "FG:82EG");
+
+  const mockCnnFg = await moatEngine.fetchFearGreedIndex({
+    bypassCache: true,
+    fetchJson: async () => ({
+      fear_and_greed: {
+        score: 68.4,
+        previous_close: 64.1
+      }
+    })
+  });
+  assert.strictEqual(mockCnnFg.score, 68);
+  assert.strictEqual(mockCnnFg.prevClose, 64);
+  assert.strictEqual(mockCnnFg.change, 4);
+  assert.strictEqual(mockCnnFg.code, "G");
+  assert.strictEqual(mockCnnFg.badge, "FG:68G");
+  assert.strictEqual(mockCnnFg.source, "CNN_LIVE");
+
+  assert.ok(finalPortfolioRes.json.web.fearGreed, "Web payload must include fearGreed object");
+  assert.ok(
+    /^FG:\d{1,3}(EF|F|N|G|EG)$/.test(finalPortfolioRes.json.web.fearGreed.badge),
+    "Web fearGreed.badge must match FG:<0..100><EF|F|N|G|EG>"
+  );
+  assert.ok(finalPortfolioRes.json.watch.fg, "Watch payload must include compact fg object");
+  assert.strictEqual(typeof finalPortfolioRes.json.watch.fg.s, "number", "Watch fg.s must be integer score");
+  assert.ok(
+    /^FG:\d{1,3}(EF|F|N|G|EG)$/.test(finalPortfolioRes.json.watch.fg.b),
+    "Watch fg.b must match FG:<0..100><EF|F|N|G|EG>"
+  );
+
+  assert.strictEqual(typeof watchSimulator.getFearGreedZoneStyle, "function", "watchSimulator must export getFearGreedZoneStyle");
+  assert.strictEqual(watchSimulator.getFearGreedZoneStyle(22).badge, "FG:22EF");
+  assert.strictEqual(watchSimulator.getFearGreedZoneStyle(68).badge, "FG:68G");
+  assert.ok(normalizedProfile.fearGreed && /^FG:\d{1,3}(EF|F|N|G|EG)$/.test(normalizedProfile.fearGreed.badge));
+
+  assert.ok(watchLayoutMcContent.includes("function getFearGreedColor"), "MoatWatchLayout.mc must define getFearGreedColor");
+  assert.ok(
+    watchLayoutMcContent.includes("function drawPortfolioPnlAndFearGreed"),
+    "MoatWatchLayout.mc must define drawPortfolioPnlAndFearGreed"
+  );
+  assert.ok(
+    venu2ViewMcContent.includes("MoatWatchLayout.drawPortfolioPnlAndFearGreed"),
+    "Venu2MoatView.mc must render P&L and Fear & Greed via MoatWatchLayout.drawPortfolioPnlAndFearGreed"
+  );
+  console.log("[PASS] 16. Daily US Market Fear & Greed Index (FG:xxG / FG:xxEF) across Backend, Web & Watch verified");
+
   console.log("\n==================================================================");
-  console.log("  ALL 15 SDLC + MULTI-USER ISOLATION + WORKER SUITES PASSED (100%)");
+  console.log("  ALL 16 SDLC + MULTI-USER + FEAR & GREED SUITES PASSED (100%)");
   console.log("==================================================================");
   if (ephemeralServer) {
     ephemeralServer.close();

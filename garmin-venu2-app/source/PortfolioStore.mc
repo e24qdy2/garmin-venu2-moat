@@ -36,6 +36,11 @@ class PortfolioStore {
     public var sortByPctMetric as String = "DAY"; // "DAY" or "TOTAL"
     public var inDetailView as Boolean = false;
 
+    // Daily US Market Fear & Greed Index (0..100 + EF/F/N/G/EG compact badge)
+    public var fgScore as Number = 64;
+    public var fgCode as String = "G";
+    public var fgBadge as String = "FG:64G";
+
     // 14-Day Trial & Per-Device Activation Key State (Owner: saharat.bun@icloud.com)
     public var hardwareDeviceId as String = "V2-88VENU20";
     public var deviceId as String = "V2-88VENU20";
@@ -279,6 +284,29 @@ class PortfolioStore {
                     if (ownStr != null && ownStr.length() > 0) {
                         ownerEmail = ownStr;
                     }
+                }
+            }
+        }
+
+        if (data.hasKey("fg")) {
+            var fg = data.get("fg") as Dictionary?;
+            if (fg != null) {
+                if (fg.hasKey("s")) {
+                    fgScore = toNum(fg.get("s"), 64);
+                }
+                if (fg.hasKey("c")) {
+                    var fgCodeStr = fg.get("c") as String?;
+                    if (fgCodeStr != null && fgCodeStr.length() > 0) {
+                        fgCode = fgCodeStr;
+                    }
+                }
+                if (fg.hasKey("b")) {
+                    var fgBadgeStr = fg.get("b") as String?;
+                    if (fgBadgeStr != null && fgBadgeStr.length() > 0) {
+                        fgBadge = fgBadgeStr;
+                    }
+                } else {
+                    fgBadge = "FG:" + fgScore.toString() + fgCode;
                 }
             }
         }

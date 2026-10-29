@@ -89,6 +89,68 @@
     };
   }
 
+  function getFearGreedZoneStyle(rawScore) {
+    const score = Math.max(0, Math.min(100, Math.round(Number.isFinite(Number(rawScore)) ? Number(rawScore) : 64)));
+    if (score <= 24) {
+      return {
+        score,
+        code: 'EF',
+        rating: 'Extreme Fear',
+        ratingTh: 'กลัวสุดขีด',
+        badge: `FG:${score}EF`,
+        textClass: 'text-crimson',
+        badgeClass: 'bg-crimson/15 text-crimson ring-1 ring-crimson/35',
+        barColor: '#F43F5E'
+      };
+    }
+    if (score <= 44) {
+      return {
+        score,
+        code: 'F',
+        rating: 'Fear',
+        ratingTh: 'กลัว',
+        badge: `FG:${score}F`,
+        textClass: 'text-amber',
+        badgeClass: 'bg-amber/15 text-amber ring-1 ring-amber/35',
+        barColor: '#F59E0B'
+      };
+    }
+    if (score <= 55) {
+      return {
+        score,
+        code: 'N',
+        rating: 'Neutral',
+        ratingTh: 'เป็นกลาง',
+        badge: `FG:${score}N`,
+        textClass: 'text-cyan',
+        badgeClass: 'bg-cyan/15 text-cyan ring-1 ring-cyan/35',
+        barColor: '#38BDF8'
+      };
+    }
+    if (score <= 74) {
+      return {
+        score,
+        code: 'G',
+        rating: 'Greed',
+        ratingTh: 'โลภ',
+        badge: `FG:${score}G`,
+        textClass: 'text-emerald',
+        badgeClass: 'bg-emerald/15 text-emerald ring-1 ring-emerald/35',
+        barColor: '#34D399'
+      };
+    }
+    return {
+      score,
+      code: 'EG',
+      rating: 'Extreme Greed',
+      ratingTh: 'โลภสุดขีด',
+      badge: `FG:${score}EG`,
+      textClass: 'text-emerald font-extrabold',
+      badgeClass: 'bg-emerald/25 text-emerald ring-1 ring-emerald/50 font-extrabold',
+      barColor: '#10B981'
+    };
+  }
+
   function getEffectiveSortPct(item, sortMetric) {
     const metric = String(sortMetric || 'DAY').toUpperCase();
     if (metric === 'TOTAL' && Number(item?.shares || 0) > 0) {
@@ -249,6 +311,20 @@
       activationKey: web.watchSettings?.activationKey || ''
     };
 
+    const rawFg = web.fearGreed || raw?.watch?.fg || {};
+    const fgZone = getFearGreedZoneStyle(rawFg.score ?? rawFg.s ?? 64);
+    const fgPrevClose = Number.isFinite(Number(rawFg.prevClose)) ? Math.round(Number(rawFg.prevClose)) : fgZone.score;
+    const fearGreed = {
+      score: fgZone.score,
+      prevClose: fgPrevClose,
+      change: Number.isFinite(Number(rawFg.change)) ? Math.round(Number(rawFg.change)) : fgZone.score - fgPrevClose,
+      code: rawFg.code || rawFg.c || fgZone.code,
+      rating: rawFg.rating || fgZone.rating,
+      ratingTh: rawFg.ratingTh || fgZone.ratingTh,
+      badge: rawFg.badge || rawFg.b || fgZone.badge,
+      source: rawFg.source || 'US_MARKET'
+    };
+
     return {
       syncKey: effectiveSyncKey,
       baseCurrency: web.baseCurrency || 'THB',
@@ -256,6 +332,7 @@
       fetchedAt: web.updatedAt || new Date().toISOString(),
       watchSettings,
       license: web.license || null,
+      fearGreed,
       summary: {
         totalValueBase: Number(totals.marketValueBase ?? totals.totalValueBase ?? 0),
         totalCostBase: Number(totals.costBasisBase ?? totals.totalCostBase ?? 0),
@@ -508,6 +585,11 @@
       el('watchPortDeltaText').textContent = `${formatSignedMoney(deltaVal, baseCur, true)} (${formatSignedPct(deltaPct)})`;
       el('watchPortDeltaText').className = `font-semibold tabular-nums ${deltaPos ? 'text-emerald' : 'text-crimson'}`;
     }
+    const fgStyle = getFearGreedZoneStyle(p.fearGreed?.score ?? 64);
+    if (el('watchPortFgBadge')) {
+      el('watchPortFgBadge').textContent = p.fearGreed?.badge || fgStyle.badge;
+      el('watchPortFgBadge').className = `font-bold tabular-nums ${fgStyle.textClass}`;
+    }
 
     const watchListEl = el('watchHoldingsList');
     if (watchListEl) {
@@ -666,6 +748,7 @@
     formatCompactPrice,
     formatDeviceRes,
     getRsiZoneStyle,
+    getFearGreedZoneStyle,
     getEffectiveSortPct,
     sortPortfolioItems,
     normalizeServerPayload,

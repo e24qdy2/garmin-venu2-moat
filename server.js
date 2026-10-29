@@ -833,6 +833,8 @@ async function handleRequest(req, res) {
     safePath = isAdminSubdomain ? "/admin.html" : "/index.html";
   } else if (pathname === "/admin") {
     safePath = "/admin.html";
+  } else if (pathname === "/privacy" || pathname === "/privacy/") {
+    safePath = "/privacy.html";
   } else {
     safePath = pathname;
   }

@@ -10,6 +10,7 @@
     formatSignedPct,
     formatDeviceRes,
     getRsiZoneStyle,
+    getFearGreedZoneStyle,
     getEffectiveSortPct,
     sortPortfolioItems,
     normalizeServerPayload: rawNormalizeServerPayload,
@@ -161,7 +162,7 @@
     restartAutoSwipeTimer();
   }
 
-  async function savePortfolioState(toastText = 'ซิงก์ข้อมูลและการตั้งค่าเข้า Garmin Venu 2 แล้ว') {
+  async function savePortfolioState(toastText = 'ซิงก์ข้อมูลและการตั้งค่าเข้า Garmin แล้ว') {
     if (!state.profile) return;
     const payload = {
       syncKey: state.syncKey,
@@ -504,6 +505,30 @@
     el('grandTotalCost').textContent = formatMoney(s.totalCostBase, baseCur);
     el('fxRateReadout').textContent = Number(p.usdThbRate || 34.45).toFixed(2);
 
+    const fg = p.fearGreed || {};
+    const fgStyle = getFearGreedZoneStyle(fg.score ?? 64);
+    const fgBadgeEl = el('fearGreedBadge');
+    if (fgBadgeEl) {
+      fgBadgeEl.textContent = fg.badge || fgStyle.badge;
+      fgBadgeEl.className = `px-2 py-0.5 rounded-full font-bold tabular-nums ${fgStyle.badgeClass}`;
+    }
+    const fgLabelEl = el('fearGreedLabel');
+    if (fgLabelEl) {
+      fgLabelEl.textContent = `${fg.rating || fgStyle.rating} (${fg.ratingTh || fgStyle.ratingTh})`;
+      fgLabelEl.className = `font-semibold ${fgStyle.textClass}`;
+    }
+    const fgPrevEl = el('fearGreedPrevText');
+    if (fgPrevEl) {
+      const diff = Number(fg.change ?? 0);
+      const diffSign = diff > 0 ? '+' : '';
+      fgPrevEl.textContent = `Prev: ${fg.prevClose ?? fgStyle.score} (${diffSign}${diff})`;
+    }
+    const fgBarEl = el('fearGreedBarFill');
+    if (fgBarEl) {
+      fgBarEl.style.width = `${fgStyle.score}%`;
+      fgBarEl.style.backgroundColor = fgStyle.barColor;
+    }
+
     const fetchedDate = p.fetchedAt ? new Date(p.fetchedAt) : new Date();
     const hh = String(fetchedDate.getHours()).padStart(2, '0');
     const mm = String(fetchedDate.getMinutes()).padStart(2, '0');
@@ -568,7 +593,7 @@
     if (!active) return;
 
     el('activePortfolioTitle').textContent = active.name;
-    el('activePortfolioMeta').textContent = `ชื่อย่อบนนาฬิกา Venu 2: ${active.shortName || active.name.toUpperCase()} · ${active.items.length} รายการ`;
+    el('activePortfolioMeta').textContent = `ชื่อย่อบนนาฬิกา Garmin: ${active.shortName || active.name.toUpperCase()} · ${active.items.length} รายการ`;
     el('activePortValue').textContent = formatMoney(active.totalValueBase, baseCur);
 
     const dayPos = (active.dayPnlBase || 0) >= 0;
@@ -588,7 +613,7 @@
       container.innerHTML = `
         <div class="rounded-2xl bg-void/60 ring-1 ring-white/[0.06] p-8 text-center">
           <p class="text-sm font-semibold text-alabaster mb-1">ยังไม่มีสินทรัพย์ในพอร์ตนี้</p>
-          <p class="text-xs text-slate-400 mb-4">พิมพ์ค้นหาชื่อหุ้นในช่องด้านบน หรือกดปุ่ม "เพิ่มรายการใหม่" เพื่อเริ่มสร้างพอร์ตเข้า Garmin Venu 2</p>
+          <p class="text-xs text-slate-400 mb-4">พิมพ์ค้นหาชื่อหุ้นในช่องด้านบน หรือกดปุ่ม "เพิ่มรายการใหม่" เพื่อเริ่มสร้างพอร์ตเข้า Garmin</p>
         </div>
       `;
       return;
@@ -696,7 +721,7 @@
                      <span class="font-mono text-[11px] text-cyan shrink-0">WebMemo:</span>
                      <span class="text-slate-300">${escapeHtml(item.note)}</span>
                    </div>
-                   <span class="text-[10px] font-mono text-slate-500 hidden sm:inline">แตะเพื่อดูบนจอ Venu 2 →</span>
+                   <span class="text-[10px] font-mono text-slate-500 hidden sm:inline">แตะเพื่อดูบนจอ Garmin →</span>
                  </div>`
               : ''
           }
@@ -980,7 +1005,7 @@
         const cleanId = watchDeviceIdInput.value.trim().toUpperCase();
         if (!cleanId) return;
         state.watchSettings.deviceId = cleanId;
-        await savePortfolioState(`ซิงก์รหัสเครื่อง Garmin Venu 2: ${cleanId}`);
+        await savePortfolioState(`ซิงก์รหัสเครื่องนาฬิกา Garmin: ${cleanId}`);
       });
     }
 
@@ -1231,7 +1256,7 @@
       }
 
       closeHoldingModal();
-      await savePortfolioState(`บันทึก ${sym} เข้าพอร์ตและซิงก์ Venu 2 แล้ว`);
+      await savePortfolioState(`บันทึก ${sym} เข้าพอร์ตและซิงก์เข้า Garmin แล้ว`);
     });
 
     el('deleteHoldingBtn').addEventListener('click', async () => {

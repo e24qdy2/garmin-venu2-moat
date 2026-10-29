@@ -1,7 +1,7 @@
 {
   "name": "venu2-moat-portfolio",
-  "version": "2.0.0",
-  "description": "Easymoat-style Portfolio & WebMemo Companion for Garmin Venu 2 with Auto-Swipe, Always-On Display, 14-Day Trial & Per-Device Licensing Admin Portal",
+  "version": "2.1.0",
+  "description": "MoatWatch — Multi-Device Garmin Portfolio Companion (20 Models 2024-2026) with Daily US Market Fear & Greed Index, Auto-Swipe, Always-On Display, 14-Day Trial & Per-Device Licensing Admin Portal",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

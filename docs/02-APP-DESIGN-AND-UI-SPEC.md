@@ -1,42 +1,46 @@
-# Venu2Moat — App Design & Garmin Venu 2 416×416 AMOLED UI Specification
+# MoatWatch — App Design & Multi-Device Garmin Round Display (`260×260`–`454×454`) UI Specification
 
-เอกสารฉบับนี้อธิบายการออกแบบสถาปัตยกรรมหน้าจอ (UI/UX Blueprint), ข้อจำกัดฮาร์ดแวร์ของ **Garmin Venu 2**, ระบบสี AMOLED True Black, และการออกแบบคลาสในภาษา **Monkey C (Connect IQ SDK 8.4.1)**
+เอกสารฉบับนี้อธิบายการออกแบบสถาปัตยกรรมหน้าจอ (UI/UX Blueprint), ระบบคำนวณพิกัดตามสัดส่วนหน้าจอกลม (**Proportional Layout Engine — `MoatWatchLayout.mc`**) สำหรับนาฬิกา **Garmin ทั้ง 20 รุ่น (2024–2026)**, ระบบสี AMOLED True Black, ป้ายสถานะ **Daily US Market Fear & Greed Index (`FG:xxG` / `FG:xxEF`)**, และการออกแบบคลาสในภาษา **Monkey C (`minApiLevel 3.2.0`)**
 
 ---
 
-## 1. ข้อมูลจำเพาะทางฮาร์ดแวร์ของ Garmin Venu 2 (`venu2`)
+## 1. ข้อมูลจำเพาะทางฮาร์ดแวร์ของนาฬิกา Garmin ทั้ง 20 รุ่นที่รองรับ
 
-| พารามิเตอร์ฮาร์ดแวร์ | ค่ามาตรฐานของ Garmin Venu 2 | แนวทางการออกแบบใน Venu2Moat |
+| พารามิเตอร์ฮาร์ดแวร์ | ค่ามาตรฐานของตระกูล Garmin (2024–2026) | แนวทางการออกแบบใน MoatWatch |
 | :--- | :--- | :--- |
-| **ความละเอียดหน้าจอ** | **416 × 416 พิกเซล** (ทรงกลม Round Display) | คำนวณระยะขอบโค้ง (Circular Safe Zone) ทุกแถวต้องมีระยะร่นซ้าย-ขวาอย่างน้อย `44px–56px` เพื่อไม่ให้ตัวอักษรตกขอบโค้ง |
-| **ชนิดหน้าจอ** | **AMOLED** (65,536 สี) | ใช้พื้นหลัง **True Void Black (`0x000000`)** เพื่อปิดพิกเซลสีดำสนิท ลดการใช้พลังงานแบตเตอรี่สูงสุดแม้เปิดโหมด Always-On |
-| **หน่วยความจำ HTTP JSON** | จำกัดการแปลง JSON ในหน่วยความจำ (`Communications.makeWebRequest`) | ออกแบบ Compact Watch Payload (`/api/watch`) ใช้คีย์ย่อ (`p`, `s`, `cfg`, `lic`, `tot`) ให้ขนาดเพย์โหลดรวมต่ำกว่า `4 KB` |
-| **ปุ่มกดและอินพุต** | 2 ปุ่มกายภาพ (`Select` ขวาบน, `Back/Menu` ขวาล่าง) + หน้าจอสัมผัส (`Swipe`, `Tap`) | รองรับทั้งการกดปุ่ม, การปัดจอ 4 ทิศทาง, การแตะแถวหุ้น, และระบบ **Auto-Swipe** แบบไร้สัมผัส |
+| **ความละเอียดหน้าจอ** | **`260×260` ถึง `454×454` พิกเซล** (ทรงกลม Round Display) | ใช้โมดูล `MoatWatchLayout.computeLayout(w, h)` คำนวณระยะขอบโค้งตามคณิตศาสตร์วงกลม (`Chord Safe Width`) ไม่ให้ข้อความตกขอบในทุกขนาดหน้าจอ |
+| **ชนิดหน้าจอ** | **AMOLED** (Venu 2/3, Forerunner 165/265/965, fēnix 8, epix Pro, vívoactive 5, Approach S70) และ **Solar MIP** (fēnix 8 Solar, Enduro 3) | ใช้พื้นหลัง **True Void Black (`0x000000`)** เพื่อประหยัดพลังงานแบตเตอรี่สูงสุดและให้อัตราส่วนคอนทราสต์คมชัดทั้งบนจอ AMOLED และ MIP |
+| **หน่วยความจำ HTTP JSON** | จำกัดการแปลง JSON ในหน่วยความจำ (`Communications.makeWebRequest`) | ออกแบบ Compact Watch Payload (`/api/watch`) ใช้คีย์ย่อ (`p`, `s`, `cfg`, `lic`, `tot`, `fg`) ให้ขนาดเพย์โหลดรวมต่ำกว่า `4 KB` |
+| **ปุ่มกดและอินพุต** | 2 ถึง 5 ปุ่มกายภาพ + หน้าจอสัมผัส (`Swipe`, `Tap`) | รองรับทั้งการกดปุ่ม, การปัดจอ 4 ทิศทาง, การแตะแถวหุ้น, และระบบ **Auto-Swipe** แบบไร้สัมผัส |
 
 ---
 
-## 2. ผังพิกัดหน้าจอ 416×416 พิกเซล (Coordinate-Level Screen Blueprints)
+## 2. ผังพิกัดหน้าจอนาฬิกา Garmin (Coordinate-Level Screen Blueprints — อ้างอิงสเกล 416×416)
 
-### 2.1 หน้าจอหลัก: Portfolio & Holdings View (`Venu2MoatView.mc`)
+### 2.1 หน้าจอหลัก: Portfolio, US Fear & Greed Badge (`FG:xx`) & Holdings View (`Venu2MoatView.mc`)
 
 ```
                     ╭───────────────────────────────╮
-                 ╭──╯     14:30 · 5s · AON · 14d    ╰──╮   [y = 16px]  Clock + Auto-Swipe + Always-On + Trial/PRO
-              ╭──╯       < US Wide Moat 1/2 >          ╰──╮ [y = 42px]  Portfolio Title + Page Indicator
-            ╭─╯               ฿1,482,910                  ╰─╮ [y = 64px]  Portfolio Net Value (FONT_MEDIUM)
-           ╭╯         DAY: +฿18,420 (+1.25%)                ╰╮ [y = 102px] Day P&L / Total Return Toggle
-          ╭╯  ─────────────────────────────────────────────  ╰╮ [y = 128px] Divider Line (x: 52..364)
+                 ╭──╯  14:30 · FG:64G · 5s · PRO    ╰──╮   [y = 14px]  Clock + Colored FG:xx Badge + Auto-Swipe + PRO/Trial
+              ╭──╯       < US Wide Moat 1/2 >          ╰──╮ [y = 40px]  Portfolio Title + Page Indicator
+            ╭─╯               ฿1,482,910                  ╰─╮ [y = 60px]  Portfolio Net Value (FONT_MEDIUM)
+           ╭╯         DAY: +฿18,420 (+1.25%)                ╰╮ [y = 98px]  Day P&L / Total Return Toggle
+          ╭╯  ─────────────────────────────────────────────  ╰╮ [y = 122px] Divider Line
           │   ┌───────────────────────────────────────────┐   │
-          │   │ ● NVDA               $138.60     +2.82%   │   │ [y = 136px] Row 1 (Height: 48px, Radius: 12px)
+          │   │ ● NVDA  e-28/05/26   $138.60     +2.82%   │   │ [y = 132px] Row 1 (Line 1: Symbol, Earnings, Price, %Chg)
+          │   │   SMA:132(+4.7%) RSI:61.2 L:135 H:139     │   │             Row 1 (Line 2: SMA20, RSI14 Zone, Day Low/High)
           │   └───────────────────────────────────────────┘   │
           │   ┌───────────────────────────────────────────┐   │
-          │   │   MSFT               $428.50     +1.04%   │   │ [y = 190px] Row 2
+          │   │   MSFT  e-24/07/26   $428.50     +1.04%   │   │ [y = 188px] Row 2
+          │   │   SMA:420(+2.0%) RSI:54.8 L:424 H:430     │   │
           │   └───────────────────────────────────────────┘   │
           │   ┌───────────────────────────────────────────┐   │
           │   │   GOOGL              $181.40     +1.28%   │   │ [y = 244px] Row 3
+          │   │   SMA:176(+3.1%) RSI:58.0 L:179 H:182     │   │
           │   └───────────────────────────────────────────┘   │
           │   ┌───────────────────────────────────────────┐   │
-          │   │   BRK-B              $454.80     +0.62%   │   │ [y = 298px] Row 4
+          │   │   BRK-B              $454.80     +0.62%   │   │ [y = 300px] Row 4
+          │   │   SMA:449(+1.3%) RSI:52.1 L:451 H:456     │   │
           │   └───────────────────────────────────────────┘   │
            ╰╮                                               ╭╯
             ╰─╮                  ●  ○  ○                  ╭─╯ [y = 390px] Portfolio Pagination Dots
@@ -85,19 +89,29 @@
 
 ---
 
-## 3. ระบบสี AMOLED & Design Tokens (`Color & Typography System`)
+## 3. ระบบสี AMOLED & โซนสีของดัชนี US Fear & Greed (`Color & Sentiment Zone System`)
 
-เพื่อให้สอดคล้องกันทั้งบนหน้าปัดนาฬิกา Garmin Venu 2 และหน้าเว็บ Companion/Admin:
+### 3.1 ตารางโซนสีของ Daily US Market Fear & Greed Index (`FG:xx<Code>`)
+
+| ช่วงคะแนน (0–100) | ตัวย่อบนนาฬิกา (`shortText`) | ความหมาย (`rating`) | Web Hex | Monkey C Hex |
+| :--- | :--- | :--- | :--- | :--- |
+| **`0 – 24`** | **`FG:xxEF`** (เช่น `FG:18EF`) | **Extreme Fear (กลัวสุดขีด)** | `#F43F5E` | `0xF43F5E` (Crimson Rose) |
+| **`25 – 44`** | **`FG:xxF`** (เช่น `FG:38F`) | **Fear (กลัว)** | `#FB923C` | `0xFB923C` (Orange) |
+| **`45 – 55`** | **`FG:xxN`** (เช่น `FG:50N`) | **Neutral (เป็นกลาง)** | `#94A3B8` | `0x94A3B8` (Slate) |
+| **`56 – 74`** | **`FG:xxG`** (เช่น `FG:64G`) | **Greed (โลภ/คึกคัก)** | `#10B981` | `0x10B981` (Profit Emerald) |
+| **`75 – 100`** | **`FG:xxEG`** (เช่น `FG:82EG`) | **Extreme Greed (โลภสุดขีด)** | `#06B6D4` | `0x06B6D4` (Moat Cyan) |
+
+### 3.2 ระบบสีหลักของแอป (Core Design Tokens)
 
 | Token Name | Hex Code | Monkey C Hex | การนำไปใช้งาน |
 | :--- | :--- | :--- | :--- |
 | **Void Black** | `#000000` / `#050608` | `Graphics.COLOR_BLACK` | พื้นหลังหลักของหน้าปัดนาฬิกา (ปิดเม็ดพิกเซล AMOLED เพื่อประหยัดพลังงาน) |
-| **Row Surface Tray** | `#0D131C` | `0x0D131C` | พื้นหลังแถวรายการหุ้นทรงแคปซูลโค้งมน (`radius = 12px`) |
-| **Alabaster White** | `#FFFFFF` | `Graphics.COLOR_WHITE` | มูลค่าพอร์ตสุทธิ, ชื่อย่อหุ้น (`sym`), และข้อความหลักที่ต้องการความคมชัดสูงสุด |
-| **Moat Cyan** | `#06B6D4` | `0x06B6D4` | ชื่อพอร์ตโฟลิโอ, จุดบอกหน้าพอร์ตปัจจุบัน, เส้นค่าเฉลี่ย `SMA-20`, และอีเมลเจ้าของระบบ `saharat.bun@icloud.com` |
-| **Profit Emerald** | `#10B981` | `0x10B981` | กำไรเป็นบวก (`+P&L`), กราฟขาขึ้น, จุดแจ้งเตือน `TARGET_HIT`, และสถานะ `ACTIVE` |
-| **Loss Crimson Rose** | `#F43F5E` | `0xF43F5E` | ขาดทุนติดลบ (`-P&L`), จุดแจ้งเตือน `STOP_BREACH`, และกรอบล็อกหน้าจอ `TRIAL 14D EXPIRED` |
-| **Warning Amber** | `#F59E0B` | `0xF59E0B` | แจ้งเตือนเข้าใกล้เป้าหมาย (`NEAR_TARGET`) และป้ายแสดงรหัส `Device ID` |
+| **Row Surface Tray** | `#0D131C` | `0x0D131C` | พื้นหลังแถวรายการหุ้นทรงแคปซูลโค้งมน |
+| **Alabaster White** | `#FFFFFF` | `Graphics.COLOR_WHITE` | มูลค่าพอร์ตสุทธิ, ชื่อย่อหุ้น (`sym`), และข้อความหลัก |
+| **Moat Cyan** | `#06B6D4` | `0x06B6D4` | ชื่อพอร์ตโฟลิโอ, เส้นค่าเฉลี่ย `SMA-20`, โซน `Extreme Greed (EG)`, และอีเมลเจ้าของระบบ |
+| **Profit Emerald** | `#10B981` | `0x10B981` | กำไรเป็นบวก (`+P&L`), โซน `Greed (G)`, จุดแจ้งเตือน `TARGET_HIT`, และสถานะ `ACTIVE` |
+| **Loss Crimson Rose** | `#F43F5E` | `0xF43F5E` | ขาดทุนติดลบ (`-P&L`), โซน `Extreme Fear (EF)`, จุดแจ้งเตือน `STOP_BREACH`, และกรอบล็อก `TRIAL 14D EXPIRED` |
+| **Warning Amber** | `#F59E0B` | `0xF59E0B` | วันประกาศงบ `e-dd/mm/yy`, แจ้งเตือน `NEAR_TARGET`, และป้ายแสดงรหัส `Device ID` |
 
 ---
 
@@ -115,6 +129,14 @@ classDiagram
         +getGlanceView() Array
     }
 
+    class MoatWatchLayout {
+        +computeLayout(width, height) Dictionary
+        +chordHalfWidth(radius, y, inset) Number
+        +formatTopStatusBar(clockText, autoSwipeEnabled, autoSwipeSec, alwaysOnDisplay, licenseStatus, trialDaysLeft, fgShortText) String
+        +formatRowSubline(smaValue, smaPctValue, rsiValue, dayLow, dayHigh) String
+        +getRsiColorHex(rsiValue) Number
+    }
+
     class PortfolioStore {
         +Dictionary payload
         +Number activePortfolioIdx
@@ -123,32 +145,29 @@ classDiagram
         +Boolean autoSwipeEnabled
         +Number autoSwipeSec
         +Boolean alwaysOnDisplay
+        +Boolean showFearGreed
+        +String fgShortText
+        +String fgCode
+        +Number fgScore
         +Boolean inDetailView
         +String deviceId
-        +String activationKey
+        +String syncKey
         +String licenseStatus
         +Number trialDaysLeft
         +Boolean trialExpired
-        +String ownerEmail
-        -Timer _runtimeTimer
-        -Number _swipeElapsedSec
-        -Number _backlightTick
         +initHardwareDeviceId() Void
-        +loadLocalProperties() Void
         +startRuntimeTimer() Void
-        +stopRuntimeTimer() Void
         +onRuntimeTick() Void
         +stepAutoSwipe() Void
-        +applyBacklightIfEnabled() Void
         +applyRemoteConfigAndLicense(data) Void
         +fetchRemote() Void
-        +onReceivePayload(responseCode, data) Void
     }
 
     class Venu2MoatView {
         -PortfolioStore _store
         +onShow() Void
         +onUpdate(dc) Void
+        +getFearGreedColor(code) Number
         +drawTrialExpiredScreen(dc, w, h, cx) Void
     }
 
@@ -166,23 +185,9 @@ classDiagram
         +onUpdate(dc) Void
     }
 
-    class SymbolDetailDelegate {
-        -SymbolDetailView _view
-        +onTap(evt) Boolean
-        +onSelect() Boolean
-        +onBack() Boolean
-    }
-
-    class Venu2MoatGlanceView {
-        +onUpdate(dc) Void
-    }
-
     Venu2MoatApp --> PortfolioStore : owns & starts timer
-    Venu2MoatApp --> Venu2MoatView : creates
-    Venu2MoatApp --> Venu2MoatDelegate : creates
-    Venu2MoatApp --> Venu2MoatGlanceView : creates (:glance)
-    Venu2MoatView --> PortfolioStore : reads state & renders 416x416
+    Venu2MoatView --> PortfolioStore : reads state & renders screen
+    Venu2MoatView --> MoatWatchLayout : computes proportional coordinates
     Venu2MoatDelegate --> PortfolioStore : dispatches touch/button events
     Venu2MoatDelegate --> SymbolDetailView : pushes on row tap
-    SymbolDetailDelegate --> SymbolDetailView : toggles SMA20/Bollinger
 ```

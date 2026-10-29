@@ -23,6 +23,68 @@ module MoatWatchLayout {
         return 0xC084FC;
     }
 
+    // Standard CNN Fear & Greed Zone Color (0-24 EF Rose, 25-44 F Amber, 45-55 N Cyan, 56-74 G Light Emerald, 75-100 EG Bright Emerald)
+    function getFearGreedColor(score as Number) as Number {
+        if (score <= 24) {
+            return 0xF43F5E;
+        }
+        if (score <= 44) {
+            return 0xF59E0B;
+        }
+        if (score <= 55) {
+            return 0x38BDF8;
+        }
+        if (score <= 74) {
+            return 0x34D399;
+        }
+        return 0x10B981;
+    }
+
+    // Draw Portfolio P&L + Daily Fear & Greed Abbreviation side-by-side at y=22%
+    function drawPortfolioPnlAndFearGreed(
+        dc as Dc,
+        store as PortfolioStore,
+        port as Dictionary,
+        curSym as String,
+        w as Number,
+        h as Number,
+        cx as Number,
+        fMicro as FontDefinition
+    ) as Void {
+        var pnlVal = store.showTotalReturn ? store.toNum(port.get("tp"), 0) : store.toNum(port.get("dp"), 0);
+        var pnlPct = store.showTotalReturn ? store.toFloat(port.get("tPct"), 0.0) : store.toFloat(port.get("dPct"), 0.0);
+        var modePrefix = store.showTotalReturn ? ((w < 320) ? "TOT:" : "TOTAL: ") : ((w < 320) ? "DAY:" : "DAY: ");
+        var sign = (pnlVal >= 0) ? "+" : "";
+        var pnlColor = getPnlColor(pnlVal.toFloat());
+        var pnlText = modePrefix + sign + curSym + pnlVal.toString() + " (" + formatSignedPct(pnlPct) + ")";
+        var sepText = " · ";
+        var fgText = store.fgBadge;
+        var lineY = (h * 22) / 100;
+
+        var pnlW = dc.getTextWidthInPixels(pnlText, fMicro);
+        var sepW = dc.getTextWidthInPixels(sepText, fMicro);
+        var fgW = dc.getTextWidthInPixels(fgText, fMicro);
+        var totalW = pnlW + sepW + fgW;
+
+        var maxChordW = w - (store.getCirclePadX(lineY, lineY + dc.getFontHeight(fMicro), (w * 8) / 100) * 2);
+        if (totalW > maxChordW) {
+            // Compact prefix if chord width is tight on smaller MIP bezels
+            pnlText = (store.showTotalReturn ? "T:" : "D:") + sign + curSym + pnlVal.toString() + "(" + formatSignedPct(pnlPct) + ")";
+            pnlW = dc.getTextWidthInPixels(pnlText, fMicro);
+            totalW = pnlW + sepW + fgW;
+        }
+
+        var startX = cx - (totalW / 2);
+        dc.setColor(pnlColor, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(startX, lineY, fMicro, pnlText, Graphics.TEXT_JUSTIFY_LEFT);
+
+        dc.setColor(0x64748B, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(startX + pnlW, lineY, fMicro, sepText, Graphics.TEXT_JUSTIFY_LEFT);
+
+        dc.setColor(getFearGreedColor(store.fgScore), Graphics.COLOR_TRANSPARENT);
+        dc.drawText(startX + pnlW + sepW, lineY, fMicro, fgText, Graphics.TEXT_JUSTIFY_LEFT);
+    }
+
     // Alert Status Dot Color (0 if NORMAL)
     function getAlertColor(alrt as String) as Number {
         if (alrt.equals("TARGET_HIT")) {

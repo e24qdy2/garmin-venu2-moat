@@ -82,21 +82,8 @@ class Venu2MoatView extends WatchUi.View {
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, (h * 15) / 100, fVal, curSym + portVal.toString(), Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Day P&L vs Total Return Toggle Line
-        var pnlVal = _store.showTotalReturn ? _store.toNum(port.get("tp"), 0) : _store.toNum(port.get("dp"), 0);
-        var pnlPct = _store.showTotalReturn ? _store.toFloat(port.get("tPct"), 0.0) : _store.toFloat(port.get("dPct"), 0.0);
-        var modePrefix = _store.showTotalReturn ? "TOTAL: " : "DAY: ";
-        var sign = (pnlVal >= 0) ? "+" : "";
-        var pnlColor = MoatWatchLayout.getPnlColor(pnlVal.toFloat());
-
-        dc.setColor(pnlColor, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(
-            cx,
-            (h * 22) / 100,
-            fMicro,
-            modePrefix + sign + curSym + pnlVal.toString() + " (" + MoatWatchLayout.formatSignedPct(pnlPct) + ")",
-            Graphics.TEXT_JUSTIFY_CENTER
-        );
+        // Day P&L vs Total Return Toggle Line + Daily Fear & Greed Badge (FG:xxG)
+        MoatWatchLayout.drawPortfolioPnlAndFearGreed(dc, _store, port, curSym, w, h, cx, fMicro);
 
         // Subtle Divider Line
         var divY = (h * 27) / 100;

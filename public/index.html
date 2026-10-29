@@ -54,18 +54,18 @@
           <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald"></span>
         </span>
         <span class="font-bold tracking-tight text-sm text-alabaster">MoatWatch</span>
-        <span class="hidden md:inline-block font-mono text-[11px] text-slate-400 bg-white/[0.04] px-2 py-0.5 rounded-full ring-1 ring-white/10">416×416 AMOLED</span>
+        <span class="hidden md:inline-block font-mono text-[11px] text-slate-400 bg-white/[0.04] px-2 py-0.5 rounded-full ring-1 ring-white/10">GARMIN 20 MODELS</span>
       </a>
 
       <!-- Sync Key Pill -->
-      <button id="openSyncModalBtn" type="button" class="group flex items-center gap-2 rounded-full bg-white/[0.04] hover:bg-white/[0.08] ring-1 ring-white/10 px-3.5 py-1.5 text-xs spring-transition active:scale-[0.98]" title="เปลี่ยนรหัส Sync Key ของนาฬิกา Venu 2">
+      <button id="openSyncModalBtn" type="button" class="group flex items-center gap-2 rounded-full bg-white/[0.04] hover:bg-white/[0.08] ring-1 ring-white/10 px-3.5 py-1.5 text-xs spring-transition active:scale-[0.98]" title="เปลี่ยนรหัส Sync Key ของนาฬิกา Garmin">
         <i class="ph-light ph-watch text-cyan text-sm"></i>
         <span class="text-slate-400 hidden sm:inline">Sync Key:</span>
         <span id="navSyncKeyDisplay" class="font-mono font-semibold text-alabaster">VENU2-88</span>
       </button>
 
       <!-- License Status Badge -->
-      <a href="#watchSettingsCard" id="navLicenseBadge" class="hidden md:flex items-center gap-1.5 rounded-full bg-emerald/15 ring-1 ring-emerald/30 px-3 py-1 text-[11px] font-mono text-emerald spring-transition hover:bg-emerald/25" title="สถานะสิทธิ์การใช้งาน Garmin Venu 2 (14-Day Trial / Pro)">
+      <a href="#watchSettingsCard" id="navLicenseBadge" class="hidden md:flex items-center gap-1.5 rounded-full bg-emerald/15 ring-1 ring-emerald/30 px-3 py-1 text-[11px] font-mono text-emerald spring-transition hover:bg-emerald/25" title="สถานะสิทธิ์การใช้งานนาฬิกา Garmin (14-Day Trial / Pro)">
         <i class="ph-light ph-shield-check text-xs"></i>
         <span id="navLicenseText">TRIAL 14D</span>
       </a>
@@ -89,7 +89,7 @@
       </button>
 
       <!-- Morphing 2-Line Hamburger Button -->
-      <button id="menuToggleBtn" type="button" aria-label="เปิดเมนูเครื่องมือและคู่มือการซิงก์ Garmin Venu 2" aria-expanded="false" class="relative w-9 h-9 rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 flex items-center justify-center spring-transition active:scale-[0.96]">
+      <button id="menuToggleBtn" type="button" aria-label="เปิดเมนูเครื่องมือและคู่มือการซิงก์นาฬิกา Garmin" aria-expanded="false" class="relative w-9 h-9 rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 flex items-center justify-center spring-transition active:scale-[0.96]">
         <span class="hamburger-line hamburger-line-top"></span>
         <span class="hamburger-line hamburger-line-bottom"></span>
       </button>
@@ -99,7 +99,7 @@
   <!-- Full-Screen Glass Modal Menu (Fluid Island Reveal) -->
   <div id="islandMenuOverlay" class="fixed inset-0 z-20 bg-void/85 backdrop-blur-3xl opacity-0 pointer-events-none spring-transition flex flex-col justify-center items-center px-6">
     <div class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6">
-      <!-- Card 1: Garmin Venu 2 Endpoint & Sync -->
+      <!-- Card 1: Garmin Watch Endpoint & Sync -->
       <div class="menu-reveal-item translate-y-12 opacity-0 spring-transition delay-100 double-bezel-shell">
         <div class="double-bezel-core p-6 h-full flex flex-col justify-between">
           <div>
@@ -109,7 +109,7 @@
             </div>
             <h3 class="text-lg font-bold text-alabaster mb-2">Watch JSON Endpoint</h3>
             <p class="text-xs text-slate-400 leading-relaxed mb-4">
-              URL ที่แอปบนนาฬิกา Garmin Venu 2 ใช้ดึงข้อมูลพอร์ตและกราฟราคาผ่าน <code class="font-mono text-alabaster">makeWebRequest</code>
+              URL ที่แอปบนนาฬิกา Garmin ใช้ดึงข้อมูลพอร์ตและกราฟราคาผ่าน <code class="font-mono text-alabaster">makeWebRequest</code>
             </p>
             <div class="rounded-2xl bg-void/80 ring-1 ring-white/10 p-3 font-mono text-[11px] text-emerald break-all" id="watchEndpointUrlBox">
               /api/watch?key=VENU2-88
@@ -158,12 +158,12 @@
         <div class="double-bezel-core p-6 h-full flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4">
-              <span class="text-xs font-mono text-amber">VENU 2 HARDWARE</span>
+              <span class="text-xs font-mono text-amber">GARMIN HARDWARE</span>
               <i class="ph-light ph-cpu text-xl text-amber"></i>
             </div>
-            <h3 class="text-lg font-bold text-alabaster mb-2">ติดตั้งลง Garmin Venu 2</h3>
+            <h3 class="text-lg font-bold text-alabaster mb-2">ติดตั้งลงนาฬิกา Garmin</h3>
             <p class="text-xs text-slate-400 leading-relaxed mb-3">
-              ซอร์สโค้ด Monkey C สำหรับ Garmin Venu 2 อยู่ในโฟลเดอร์ <code class="font-mono text-alabaster">garmin-venu2-app/</code> พร้อมสคริปต์ Build &amp; Sideload ลงนาฬิกาผ่านสาย USB
+              ซอร์สโค้ด Monkey C สำหรับนาฬิกา Garmin อยู่ในโฟลเดอร์ <code class="font-mono text-alabaster">garmin-venu2-app/</code> พร้อมสคริปต์ Build &amp; Sideload ลงนาฬิกาผ่านสาย USB
             </p>
             <div class="rounded-2xl bg-void/80 ring-1 ring-white/10 p-3 font-mono text-[11px] text-slate-300">
               .\build-and-sideload.ps1 -SyncKey VENU2-88
@@ -171,7 +171,7 @@
           </div>
           <button id="inspectPayloadBtn" type="button" class="mt-5 w-full rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 py-2.5 px-4 text-xs font-medium flex items-center justify-center gap-2 spring-transition active:scale-[0.98]">
             <i class="ph-light ph-code text-sm"></i>
-            <span>ดูข้อมูลดิบที่ส่งเข้า Venu 2</span>
+            <span>ดูข้อมูลดิบที่ส่งเข้า Garmin</span>
           </button>
         </div>
       </div>
@@ -187,14 +187,14 @@
         <div>
           <div class="inline-flex items-center gap-2 rounded-full bg-white/[0.04] ring-1 ring-white/10 px-3.5 py-1 mb-4">
             <span class="h-1.5 w-1.5 rounded-full bg-cyan"></span>
-            <span class="text-xs font-medium text-slate-300">Garmin Venu 2 Portfolio &amp; WebMemo Companion</span>
+            <span class="text-xs font-medium text-slate-300">Garmin Watch Portfolio &amp; WebMemo Companion</span>
           </div>
           <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-alabaster leading-[1.12]">
-            พอร์ตหุ้นและบันทึกช่วยจำ<br class="hidden sm:inline" />บนข้อมือ Garmin Venu 2 ของคุณ
+            พอร์ตหุ้นและบันทึกช่วยจำ<br class="hidden sm:inline" />บนข้อมือนาฬิกา Garmin ของคุณ
           </h1>
         </div>
         <p class="text-sm text-slate-400 max-w-md leading-relaxed">
-          จัดการหลายพอร์ตการลงทุน คำนวณกำไร-ขาดทุนจริงตั้งแต่วันที่ซื้อ ตั้งเตือนราคาเป้าหมาย และซิงก์โน้ตย่อเข้าหน้าจอสัมผัส AMOLED 416×416 พิกเซลของ Venu 2 ทันที
+          จัดการหลายพอร์ตการลงทุน คำนวณกำไร-ขาดทุนจริงตั้งแต่วันที่ซื้อ ตั้งเตือนราคาเป้าหมาย ดัชนี Fear &amp; Greed รายวัน และซิงก์โน้ตย่อเข้าหน้าจอนาฬิกา Garmin ของคุณทันที
         </p>
       </div>
 
@@ -215,6 +215,20 @@
                 <span class="text-slate-400">ต้นทุนรวม: <strong id="grandTotalCost" class="text-slate-200 font-medium">฿0.00</strong></span>
                 <span class="text-slate-600">|</span>
                 <span class="text-slate-400">USD/THB: <strong id="fxRateReadout" class="text-cyan font-medium">33.85</strong></span>
+              </div>
+              <!-- Daily US Market Fear & Greed Index Badge + Mini Gauge Bar (0–100) -->
+              <div class="mt-3 rounded-xl bg-white/[0.03] ring-1 ring-white/[0.08] px-3 py-2">
+                <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono">
+                  <div class="flex items-center gap-2">
+                    <span class="text-slate-400">US Fear &amp; Greed:</span>
+                    <span id="fearGreedBadge" class="px-2 py-0.5 rounded-full bg-emerald/15 text-emerald ring-1 ring-emerald/35 font-bold tabular-nums">FG:64G</span>
+                    <span id="fearGreedLabel" class="text-emerald font-semibold">Greed (โลภ)</span>
+                  </div>
+                  <span id="fearGreedPrevText" class="text-[10px] text-slate-400 tabular-nums">Prev: 61 (+3)</span>
+                </div>
+                <div class="mt-1.5 h-1.5 w-full rounded-full bg-white/[0.07] overflow-hidden relative">
+                  <div id="fearGreedBarFill" class="h-full rounded-full transition-all duration-500" style="width: 64%; background-color: #34D399;"></div>
+                </div>
               </div>
             </div>
 
@@ -357,7 +371,7 @@
             <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
               <div>
                 <h3 class="text-base font-bold text-alabaster">รายการสินทรัพย์และ WebMemo</h3>
-                <p class="text-xs text-slate-400">คลิกที่แถวหุ้นเพื่อจำลองหน้าจอกราฟและโน้ตบนนาฬิกา Garmin Venu 2 ทางขวา</p>
+                <p class="text-xs text-slate-400">คลิกที่แถวหุ้นเพื่อจำลองหน้าจอกราฟและโน้ตบนนาฬิกา Garmin ทางขวา</p>
               </div>
               <div class="flex flex-wrap items-center gap-3">
                 <!-- Quick 1-Click Auto-Sort % Change Toggle Bar -->
@@ -406,7 +420,7 @@
 
       </div>
 
-      <!-- RIGHT 5 COLUMNS: STICKY 1:1 GARMIN VENU 2 (416x416 AMOLED) HARDWARE BENCH -->
+      <!-- RIGHT 5 COLUMNS: STICKY 1:1 GARMIN WATCH HARDWARE BENCH -->
       <div class="lg:col-span-5 lg:sticky lg:top-24 space-y-6 reveal-on-scroll">
         <div class="double-bezel-shell">
           <div class="double-bezel-core p-5 sm:p-7 flex flex-col items-center">
@@ -416,7 +430,7 @@
               <div>
                 <div class="flex items-center gap-2">
                   <span class="h-2 w-2 rounded-full bg-emerald"></span>
-                  <h3 id="watchHardwareTitle" class="text-sm font-bold text-alabaster">Garmin Venu 2 Hardware Preview</h3>
+                  <h3 id="watchHardwareTitle" class="text-sm font-bold text-alabaster">Garmin Watch Hardware Preview</h3>
                 </div>
                 <p id="watchHardwareSpecLabel" class="text-[11px] text-slate-400 font-mono mt-0.5">416×416 Round AMOLED · รองรับ 20 รุ่นยอดนิยม (2024–2026)</p>
               </div>
@@ -491,10 +505,10 @@
                 <span class="venu2-pusher-label">B · BACK</span>
               </button>
 
-              <!-- Stainless Steel Bezel + Minute Chapter Ring + 416x416 Round AMOLED Viewport -->
+              <!-- Stainless Steel Bezel + Minute Chapter Ring + Round Watch Viewport -->
               <div class="venu2-bezel">
                 <div class="venu2-chapter-ring">
-                  <div id="venuScreenViewport" class="venu2-amoled-screen" role="region" aria-label="หน้าจอจำลอง Garmin Venu 2 ขนาด 416x416 พิกเซล">
+                  <div id="venuScreenViewport" class="venu2-amoled-screen" role="region" aria-label="หน้าจอจำลองนาฬิกา Garmin">
 
                     <!-- VIEW 1: GLANCE WIDGET CAROUSEL MODE -->
                     <div id="watchViewGlance" class="watch-view hidden w-full h-full flex flex-col justify-between py-9 px-8 text-center">
@@ -575,6 +589,8 @@
                           <div class="flex items-center gap-1 font-mono text-[10px] leading-tight">
                             <span id="watchPortPnlModeLabel" class="text-slate-400 text-[9px]">DAY:</span>
                             <span id="watchPortDeltaText" class="font-semibold text-emerald tabular-nums">+฿14,200 (+1.28%)</span>
+                            <span class="text-slate-600">·</span>
+                            <span id="watchPortFgBadge" class="font-bold text-emerald tabular-nums" title="Daily US Market Fear &amp; Greed Index (0-100)">FG:64G</span>
                           </div>
                         </button>
                       </div>
@@ -707,7 +723,7 @@
               <div>
                 <div class="flex items-center gap-2">
                   <i class="ph-light ph-sliders-horizontal text-cyan text-base"></i>
-                  <h3 class="text-sm font-bold text-alabaster">ตั้งค่าหน้าจอนาฬิกา &amp; สิทธิ์การใช้งาน (Venu 2 Settings)</h3>
+                  <h3 class="text-sm font-bold text-alabaster">ตั้งค่าหน้าจอนาฬิกา &amp; สิทธิ์การใช้งาน (Garmin Settings)</h3>
                 </div>
                 <p class="text-[11px] text-slate-400 mt-0.5">ซิงก์การเลื่อนหน้าจออัตโนมัติ (Auto-Swipe), โหมดจอไม่ดับ (Always-On) และสถานะ License เข้าสู่นาฬิกา</p>
               </div>
@@ -751,7 +767,7 @@
                   <span>เปิดหน้าจอค้างไว้เมื่อเปิดแอป (Always-On Screen)</span>
                   <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-white/[0.06] text-slate-400">Optional</span>
                 </div>
-                <p class="text-[11px] text-slate-400">ป้องกันไม่ให้หน้าจอ Garmin Venu 2 ดับขณะเปิดดูพอร์ต (ไม่บังคับเปิด เลือกเปิด/ปิดได้ตลอดเวลา)</p>
+                <p class="text-[11px] text-slate-400">ป้องกันไม่ให้หน้าจอนาฬิกา Garmin ดับขณะเปิดดูพอร์ต (ไม่บังคับเปิด เลือกเปิด/ปิดได้ตลอดเวลา)</p>
               </div>
               <label class="relative inline-flex items-center cursor-pointer shrink-0">
                 <input id="alwaysOnToggle" type="checkbox" class="sr-only peer" />
@@ -840,7 +856,7 @@
                   <div class="text-[11px] font-mono text-slate-400">GARMIN DEVICE LICENSE (14-DAY TRIAL)</div>
                   <div class="flex items-center gap-2 mt-0.5">
                     <span class="text-xs text-slate-400">Device ID:</span>
-                    <input id="watchDeviceIdInput" type="text" value="V2-88VENU20" class="w-32 rounded-lg bg-core ring-1 ring-white/10 px-2 py-0.5 font-mono text-xs font-bold text-cyan uppercase focus:outline-none focus:ring-cyan" title="รหัสประจำเครื่องนาฬิกา Garmin Venu 2" />
+                    <input id="watchDeviceIdInput" type="text" value="V2-88VENU20" class="w-32 rounded-lg bg-core ring-1 ring-white/10 px-2 py-0.5 font-mono text-xs font-bold text-cyan uppercase focus:outline-none focus:ring-cyan" title="รหัสประจำเครื่องนาฬิกา Garmin" />
                   </div>
                 </div>
                 <span id="licenseStatusPill" class="font-mono text-[11px] px-2.5 py-1 rounded-full bg-emerald/15 text-emerald ring-1 ring-emerald/30 font-semibold">
@@ -903,7 +919,7 @@
 
     </section>
 
-    <!-- Secondary Bento Section: Garmin Venu 2 Connect IQ Companion Architecture & Sideload Guide -->
+    <!-- Secondary Bento Section: Garmin Connect IQ Companion Architecture & Sideload Guide -->
     <section class="mt-24 reveal-on-scroll">
       <div class="mb-8">
         <div class="inline-flex items-center gap-2 rounded-full bg-white/[0.04] ring-1 ring-white/10 px-3.5 py-1 mb-3">
@@ -911,7 +927,7 @@
           <span class="text-xs font-medium text-slate-300">Connect IQ Monkey C Native App Included</span>
         </div>
         <h2 class="text-2xl sm:text-3xl font-extrabold text-alabaster tracking-tight">
-          พร้อมติดตั้งลงนาฬิกา Garmin Venu 2 จริงของคุณ
+          พร้อมติดตั้งลงนาฬิกา Garmin จริงของคุณ
         </h2>
       </div>
 
@@ -966,7 +982,7 @@
             </div>
 
             <button id="openPayloadModalFromBentoBtn" type="button" class="group mt-6 w-full rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 pl-5 pr-2 py-2 text-xs font-semibold text-alabaster flex items-center justify-between spring-transition active:scale-[0.98]">
-              <span>ตรวจสอบ JSON สำหรับ Venu 2</span>
+              <span>ตรวจสอบ JSON สำหรับ Garmin</span>
               <span class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center spring-transition group-hover:translate-x-0.5 group-hover:-translate-y-[1px]">
                 <i class="ph-light ph-arrow-up-right text-sm text-cyan"></i>
               </span>
@@ -1056,7 +1072,7 @@
                 ยกเลิก
               </button>
               <button type="submit" class="group rounded-full bg-emerald text-void font-bold text-xs pl-5 pr-2 py-2 flex items-center gap-2.5 spring-transition active:scale-[0.98]">
-                <span>บันทึกและซิงก์เข้า Venu 2</span>
+                <span>บันทึกและซิงก์เข้า Garmin</span>
                 <span class="w-6 h-6 rounded-full bg-void/15 flex items-center justify-center">
                   <i class="ph-light ph-check text-xs font-bold"></i>
                 </span>
@@ -1281,7 +1297,7 @@
     </div>
   </div>
 
-  <script src="/watchSimulator.js?v=20261028-multiuser"></script>
-  <script src="/app.js?v=20261028-multiuser"></script>
+  <script src="/watchSimulator.js?v=20261029-garmin"></script>
+  <script src="/app.js?v=20261029-garmin"></script>
 </body>
 </html>
