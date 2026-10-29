@@ -12,6 +12,7 @@ import asyncio
 import json
 import logging
 import os
+import sys
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -309,18 +310,52 @@ def _handle_webmemo_slash_command(args_str: str) -> str:
 def _install_discord_interaction_hook() -> None:
     try:
         import discord
-        from plugins.platforms.discord.adapter import DiscordAdapter
     except Exception as e:
-        logger.debug("DiscordAdapter not imported in this process: %s", e)
+        logger.debug("discord.py not available in this process: %s", e)
         return
 
-    if getattr(DiscordAdapter, "_webmemo_hook_installed", False):
+    adapter_classes = []
+
+    try:
+        from gateway.platform_registry import platform_registry
+        platform_registry._resolve("discord")
+        entry = getattr(platform_registry, "_entries", {}).get("discord")
+        if entry is not None and getattr(entry, "adapter_factory", None) is not None:
+            mod = sys.modules.get(entry.adapter_factory.__module__)
+            cls = getattr(mod, "DiscordAdapter", None) if mod else None
+            if cls is not None and cls not in adapter_classes:
+                adapter_classes.append(cls)
+    except Exception as e:
+        logger.debug("platform_registry discord resolve skipped: %s", e)
+
+    for mod_name in (
+        "hermes_plugins.discord_platform.adapter",
+        "plugins.platforms.discord.adapter",
+        "gateway.platforms.discord",
+    ):
+        try:
+            mod = sys.modules.get(mod_name) or __import__(mod_name, fromlist=["DiscordAdapter"])
+            cls = getattr(mod, "DiscordAdapter", None)
+            if cls is not None and cls not in adapter_classes:
+                adapter_classes.append(cls)
+        except Exception:
+            pass
+
+    if not adapter_classes:
+        logger.debug("No DiscordAdapter class found to hook")
         return
 
+    for DiscordAdapter in adapter_classes:
+        if getattr(DiscordAdapter, "_webmemo_hook_installed", False):
+            continue
+        _hook_single_discord_adapter_class(DiscordAdapter, discord)
+
+
+def _hook_single_discord_adapter_class(DiscordAdapter, discord) -> None:
     orig_register_slash = DiscordAdapter._register_slash_commands
 
-    async def _wrapped_register_slash_commands(self) -> None:
-        await orig_register_slash(self)
+    def _wrapped_register_slash_commands(self) -> None:
+        orig_register_slash(self)
         client = getattr(self, "_client", None)
         if client is None or getattr(client, "_webmemo_listener_attached", False):
             return
