@@ -3,11 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MoatWatch — Portfolio &amp; WebMemo Telemetry for Garmin Watches</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/light/style.css" />
+  <title>MoatWatch — Garmin Connect IQ Portfolio & Market Intelligence Terminal</title>
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -15,7 +12,7 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', '"Noto Sans Thai"', 'system-ui', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'monospace']
           },
           colors: {
@@ -23,407 +20,645 @@
             core: '#0B0E14',
             rim: '#161B24',
             alabaster: '#F2F5F8',
-            emerald: '#10B981',
             crimson: '#F43F5E',
-            cyan: '#06B6D4',
-            amber: '#F59E0B'
+            emerald: {
+              DEFAULT: '#10B981'
+            },
+            cyan: {
+              DEFAULT: '#06B6D4'
+            },
+            amber: {
+              DEFAULT: '#F59E0B'
+            }
           }
         }
       }
     };
   </script>
-  <link rel="stylesheet" href="/styles.css?v=20261029-en1" />
+  <!-- Google Fonts: Plus Jakarta Sans + Noto Sans Thai + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="/styles.css" />
 </head>
-<body class="bg-void text-alabaster font-sans antialiased selection:bg-emerald/30 selection:text-alabaster min-h-[100dvh] overflow-x-hidden">
+<body class="min-h-screen flex flex-col selection:bg-cyan-500 selection:text-slate-950">
 
-  <!-- Fixed Ambient Radial Mesh (GPU-safe, non-scrolling) -->
-  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-    <div class="ambient-orb ambient-orb-emerald"></div>
-    <div class="ambient-orb ambient-orb-cyan"></div>
-  </div>
-
-  <!-- Fixed Film Grain Overlay (strictly fixed pointer-events-none per guardrail) -->
-  <div class="fixed inset-0 pointer-events-none z-40 noise-overlay" aria-hidden="true"></div>
-
-  <!-- Floating Fluid Island Navbar -->
-  <header class="sticky top-6 z-30 px-4">
-    <nav class="mx-auto w-max max-w-full rounded-full bg-void/75 backdrop-blur-2xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.16)] px-3 py-2 flex items-center gap-3 sm:gap-5 spring-transition">
-      <a href="#top" class="flex items-center gap-2.5 pl-2 pr-1">
-        <span class="relative flex h-2.5 w-2.5">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald"></span>
-        </span>
-        <span class="font-bold tracking-tight text-sm text-alabaster">MoatWatch</span>
-        <span class="hidden md:inline-block font-mono text-[11px] text-slate-400 bg-white/[0.04] px-2 py-0.5 rounded-full ring-1 ring-white/10">GARMIN 20 MODELS</span>
+  <!-- ========================================================================
+       1. TOP GLOBAL COMMAND & NAVIGATION BAR
+       ======================================================================== -->
+  <header class="mw-topbar">
+    <div class="mw-topbar-inner">
+      <!-- Brand Identity -->
+      <a href="#top" class="mw-brand">
+        <div class="mw-brand-icon">
+          <i class="ph-fill ph-watch text-xl"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-base font-extrabold tracking-tight text-white">MoatWatch</span>
+            <span class="px-1.5 py-0.5 text-[9px] font-mono font-bold uppercase tracking-widest rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+              TERMINAL
+            </span>
+          </div>
+          <p class="hidden 2xl:block text-[10px] text-slate-400 font-medium tracking-wide">Garmin Connect IQ · Portfolio &amp; Market Intelligence</p>
+        </div>
       </a>
 
-      <!-- Sync Key Pill -->
-      <button id="openSyncModalBtn" type="button" class="group flex items-center gap-2 rounded-full bg-white/[0.04] hover:bg-white/[0.08] ring-1 ring-white/10 px-3.5 py-1.5 text-xs spring-transition active:scale-[0.98]" title="Switch Garmin Watch Sync Key">
-        <i class="ph-light ph-watch text-cyan text-sm"></i>
-        <span class="text-slate-400 hidden sm:inline">Sync Key:</span>
-        <span id="navSyncKeyDisplay" class="font-mono font-semibold text-alabaster">GARMIN-88</span>
-      </button>
+      <!-- Primary Horizontal Navigation -->
+      <nav class="mw-nav-links" aria-label="Primary Workspace Navigation">
+        <button type="button" class="mw-nav-btn active" data-nav-target="section-portfolio">
+          <i class="ph-bold ph-briefcase"></i>
+          <span>Portfolio</span>
+        </button>
+        <button type="button" class="mw-nav-btn" data-nav-target="section-kpi">
+          <i class="ph-bold ph-chart-line-up"></i>
+          <span>Markets</span>
+        </button>
+        <button type="button" class="mw-nav-btn" data-nav-target="section-intelligence-memo">
+          <i class="ph-bold ph-notebook"></i>
+          <span>WebMemo</span>
+        </button>
+        <button type="button" class="mw-nav-btn" data-nav-target="section-intelligence-earnings">
+          <i class="ph-bold ph-calendar-check"></i>
+          <span>Earnings</span>
+        </button>
+        <button type="button" class="mw-nav-btn" data-nav-target="section-garmin-dock">
+          <i class="ph-bold ph-watch"></i>
+          <span>Garmin</span>
+        </button>
+        <button type="button" class="mw-nav-btn" data-nav-target="section-intelligence-alerts">
+          <i class="ph-bold ph-bell-ringing"></i>
+          <span>Alerts</span>
+        </button>
+        <button type="button" class="mw-nav-btn" data-nav-target="section-settings-tools">
+          <i class="ph-bold ph-sliders-horizontal"></i>
+          <span>Settings</span>
+        </button>
+      </nav>
 
-      <!-- License Status Badge -->
-      <a href="#watchSettingsCard" id="navLicenseBadge" class="hidden md:flex items-center gap-1.5 rounded-full bg-emerald/15 ring-1 ring-emerald/30 px-3 py-1 text-[11px] font-mono text-emerald spring-transition hover:bg-emerald/25" title="Garmin Watch License Status (14-Day Trial / Pro)">
-        <i class="ph-light ph-shield-check text-xs"></i>
-        <span id="navLicenseText">TRIAL 14D</span>
-      </a>
-
-      <!-- Admin Subdomain Link -->
-      <a href="https://admin-moat.readybyte.top" target="_blank" rel="noopener" id="navAdminPortalLink" class="hidden lg:flex items-center gap-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] ring-1 ring-white/10 px-3 py-1.5 text-[11px] font-mono text-slate-300 spring-transition" title="Open Web Admin Portal (Cloudflare OTP Protected)">
-        <i class="ph-light ph-key text-amber text-xs"></i>
-        <span>Admin</span>
-      </a>
-
-      <!-- Base Currency Switcher -->
-      <div class="flex items-center rounded-full bg-white/[0.04] ring-1 ring-white/10 p-0.5 text-xs font-mono">
-        <button id="curThbBtn" type="button" class="px-2.5 py-1 rounded-full spring-transition font-semibold bg-emerald/20 text-emerald">฿ THB</button>
-        <button id="curUsdBtn" type="button" class="px-2.5 py-1 rounded-full spring-transition text-slate-400 hover:text-alabaster">$ USD</button>
+      <!-- Global Search Input -->
+      <div class="mw-search-wrap">
+        <i class="ph-bold ph-magnifying-glass text-slate-400 text-xs absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+        <input
+          id="globalSearchInput"
+          type="search"
+          placeholder="Search ticker, memo, or portfolio..."
+          class="mw-search-input"
+          autocomplete="off"
+        />
+        <button
+          id="clearGlobalSearchBtn"
+          type="button"
+          title="Clear search"
+          class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs"
+        >
+          <i class="ph-bold ph-x-circle"></i>
+        </button>
       </div>
 
-      <!-- Refresh Quotes Button -->
-      <button id="refreshQuotesBtn" type="button" class="flex items-center gap-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] ring-1 ring-white/10 px-3 py-1.5 text-xs text-slate-300 spring-transition active:scale-[0.98]" title="Fetch Latest Market Quotes from Yahoo Finance">
-        <i id="refreshSpinnerIcon" class="ph-light ph-arrows-clockwise text-sm text-emerald"></i>
-        <span class="hidden sm:inline">Refresh Quotes</span>
-      </button>
+      <!-- Right Action Controls -->
+      <div class="flex items-center gap-1.5 flex-wrap flex-shrink-0">
+        <!-- Live Market Quote Refresh -->
+        <button
+          id="refreshLiveBtn"
+          type="button"
+          class="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-[#0A111C] hover:bg-[#132135] border border-cyan-500/20 text-xs font-medium text-slate-200 transition"
+          title="Refresh Yahoo Finance Live Quotes & Fear/Greed Index"
+        >
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <i id="refreshSpinIcon" class="ph-bold ph-arrows-clockwise text-cyan-400"></i>
+          <span id="lastUpdatedBadge" class="font-mono text-[10px] text-slate-300">Live</span>
+        </button>
 
-      <!-- Morphing 2-Line Hamburger Button -->
-      <button id="menuToggleBtn" type="button" aria-label="Open Tools Menu and Garmin Sync Guide" aria-expanded="false" class="relative w-9 h-9 rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 flex items-center justify-center spring-transition active:scale-[0.96]">
-        <span class="hamburger-line hamburger-line-top"></span>
-        <span class="hamburger-line hamburger-line-bottom"></span>
-      </button>
-    </nav>
-  </header>
+        <!-- Base Currency Switcher -->
+        <div class="flex items-center gap-1 bg-[#0A111C] border border-slate-800 rounded-lg px-2 py-1">
+          <i class="ph-bold ph-currency-circle-dollar text-cyan-400 text-xs"></i>
+          <label for="baseCurrencySelect" class="sr-only">Base Currency</label>
+          <select
+            id="baseCurrencySelect"
+            class="bg-transparent text-xs font-mono font-semibold text-white focus:outline-none cursor-pointer"
+          >
+            <option value="THB" class="bg-slate-900">THB (฿)</option>
+            <option value="USD" class="bg-slate-900">USD ($)</option>
+          </select>
+        </div>
 
-  <!-- Full-Screen Glass Modal Menu (Fluid Island Reveal) -->
-  <div id="islandMenuOverlay" class="fixed inset-0 z-20 bg-void/85 backdrop-blur-3xl opacity-0 pointer-events-none spring-transition flex flex-col justify-center items-center px-6">
-    <div class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6">
-      <!-- Card 1: Garmin Watch Endpoint & Sync -->
-      <div class="menu-reveal-item translate-y-12 opacity-0 spring-transition delay-100 double-bezel-shell">
-        <div class="double-bezel-core p-6 h-full flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="text-xs font-mono text-cyan">GARMIN CONNECT IQ</span>
-              <i class="ph-light ph-broadcast text-xl text-cyan"></i>
-            </div>
-            <h3 class="text-lg font-bold text-alabaster mb-2">Watch JSON Endpoint</h3>
-            <p class="text-xs text-slate-400 leading-relaxed mb-4">
-              Endpoint URL used by the Garmin Watch app to fetch live portfolios and sparklines via <code class="font-mono text-alabaster">makeWebRequest</code>
-            </p>
-            <div class="rounded-2xl bg-void/80 ring-1 ring-white/10 p-3 font-mono text-[11px] text-emerald break-all" id="watchEndpointUrlBox">
-              /api/watch?key=GARMIN-88
-            </div>
-          </div>
-          <button id="copyWatchApiBtn" type="button" class="mt-5 w-full rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 py-2.5 px-4 text-xs font-medium flex items-center justify-center gap-2 spring-transition active:scale-[0.98]">
-            <i class="ph-light ph-copy text-sm"></i>
-            <span>Copy Watch API URL</span>
+        <!-- Alert Notification Bell -->
+        <button
+          id="headerAlertBellBtn"
+          type="button"
+          class="relative flex items-center justify-center w-8 h-8 rounded-lg bg-[#0A111C] hover:bg-[#132135] border border-slate-800 text-slate-300 hover:text-cyan-300 transition"
+          title="Jump to Active Price Alerts & RSI Signals"
+        >
+          <i class="ph-bold ph-bell text-sm"></i>
+          <span
+            id="headerAlertBadge"
+            class="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-cyan-500 text-slate-950 font-mono text-[9px] font-bold flex items-center justify-center"
+          >0</span>
+        </button>
+
+        <!-- Sync Key & Privacy Mask Control -->
+        <div class="flex items-center rounded-lg bg-cyan-950/35 border border-cyan-500/30 overflow-hidden">
+          <button
+            id="openSyncModalBtn"
+            type="button"
+            class="flex items-center gap-1.5 px-2.5 py-1.5 hover:bg-cyan-500/15 text-xs font-mono text-cyan-300 transition"
+            title="Switch or Configure Garmin Watch Sync Key"
+          >
+            <i class="ph-bold ph-key text-cyan-400"></i>
+            <span id="currentSyncKeyLabel" class="font-bold tracking-wider">VENU2-88</span>
+          </button>
+          <button
+            id="toggleKeyMaskBtn"
+            type="button"
+            class="px-2 py-1.5 border-l border-cyan-500/20 text-slate-400 hover:text-cyan-200 text-xs transition"
+            title="Mask or reveal Sync Key & Device ID for screenshots"
+          >
+            <i id="toggleKeyMaskIcon" class="ph-bold ph-eye-slash"></i>
           </button>
         </div>
-      </div>
 
-      <!-- Card 2: Import / Export Portfolio -->
-      <div class="menu-reveal-item translate-y-12 opacity-0 spring-transition delay-150 double-bezel-shell">
-        <div class="double-bezel-core p-6 h-full flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="text-xs font-mono text-emerald">PORTFOLIO BACKUP</span>
-              <i class="ph-light ph-file-arrow-down text-xl text-emerald"></i>
-            </div>
-            <h3 class="text-lg font-bold text-alabaster mb-2">Import &amp; Export Portfolio</h3>
-            <p class="text-xs text-slate-400 leading-relaxed mb-4">
-              Back up all portfolios and WebMemo notes as JSON/CSV files, or restore from an existing backup file.
-            </p>
-          </div>
-          <div class="space-y-2.5">
-            <button id="exportJsonBtn" type="button" class="w-full rounded-full bg-emerald/15 hover:bg-emerald/25 ring-1 ring-emerald/30 text-emerald py-2.5 px-4 text-xs font-semibold flex items-center justify-center gap-2 spring-transition active:scale-[0.98]">
-              <i class="ph-light ph-download-simple text-sm"></i>
-              <span>Download Portfolio (JSON)</span>
-            </button>
-            <button id="exportCsvBtn" type="button" class="w-full rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 text-alabaster py-2.5 px-4 text-xs font-medium flex items-center justify-center gap-2 spring-transition active:scale-[0.98]">
-              <i class="ph-light ph-table text-sm"></i>
-              <span>Export Holdings (CSV)</span>
-            </button>
-            <label class="w-full rounded-full bg-white/[0.04] hover:bg-white/[0.09] ring-1 ring-white/10 text-slate-300 py-2.5 px-4 text-xs font-medium flex items-center justify-center gap-2 cursor-pointer spring-transition active:scale-[0.98]">
-              <i class="ph-light ph-upload-simple text-sm"></i>
-              <span>Import Portfolio File (JSON)</span>
-              <input id="importJsonInput" type="file" accept=".json" class="hidden" />
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 3: Connect IQ Build & Sideload Guide -->
-      <div class="menu-reveal-item translate-y-12 opacity-0 spring-transition delay-200 double-bezel-shell">
-        <div class="double-bezel-core p-6 h-full flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="text-xs font-mono text-amber">GARMIN HARDWARE</span>
-              <i class="ph-light ph-cpu text-xl text-amber"></i>
-            </div>
-            <h3 class="text-lg font-bold text-alabaster mb-2">Install on Garmin Watch</h3>
-            <p class="text-xs text-slate-400 leading-relaxed mb-3">
-              Complete Monkey C source code for Garmin watches with a 1-click USB Build &amp; Sideload script.
-            </p>
-            <div class="rounded-2xl bg-void/80 ring-1 ring-white/10 p-3 font-mono text-[11px] text-slate-300">
-              .\build-and-sideload.ps1
-            </div>
-          </div>
-          <button id="inspectPayloadBtn" type="button" class="mt-5 w-full rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 py-2.5 px-4 text-xs font-medium flex items-center justify-center gap-2 spring-transition active:scale-[0.98]">
-            <i class="ph-light ph-code text-sm"></i>
-            <span>Inspect Raw Garmin Payload</span>
-          </button>
-        </div>
+        <!-- Header License Status Badge -->
+        <button
+          id="headerLicenseBadge"
+          type="button"
+          class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/25 transition"
+          title="View Garmin Device License Status"
+        >
+          <i class="ph-fill ph-shield-check text-xs"></i>
+          <span id="headerLicenseBadgeText">PRO ACTIVE</span>
+        </button>
       </div>
     </div>
-  </div>
+  </header>
 
-  <!-- Main Editorial Split + Asymmetrical Bento Workspace -->
-  <main id="top" class="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-8 pt-12 pb-28 md:py-20">
+  <!-- ========================================================================
+       MAIN TERMINAL CONTAINER
+       ======================================================================== -->
+  <main id="top" class="flex-1 max-w-[1600px] w-full mx-auto px-3 sm:px-5 py-4">
 
-    <!-- Hero Telemetry Chronometer Bridge -->
-    <section class="reveal-on-scroll mb-12">
-      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
+    <!-- ======================================================================
+         2. ATMOSPHERIC MOUNTAIN HORIZON HERO BANNER
+         ====================================================================== -->
+    <section class="mw-hero-banner" aria-label="MoatWatch Terminal Overview">
+      <div class="mw-hero-grid-overlay"></div>
+
+      <!-- Mountain Silhouette & Glowing Cyan Horizon Ridge SVG -->
+      <svg class="mw-hero-mountains" viewBox="0 0 1600 180" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="mwMountainBack" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0D2238" stop-opacity="0.65" />
+            <stop offset="100%" stop-color="#050911" stop-opacity="0.95" />
+          </linearGradient>
+          <linearGradient id="mwMountainFront" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0B192C" stop-opacity="0.92" />
+            <stop offset="100%" stop-color="#050911" stop-opacity="1" />
+          </linearGradient>
+          <linearGradient id="mwRidgeGlow" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.05" />
+            <stop offset="25%" stop-color="#22D3EE" stop-opacity="0.55" />
+            <stop offset="55%" stop-color="#14B8A6" stop-opacity="0.85" />
+            <stop offset="82%" stop-color="#06B6D4" stop-opacity="0.45" />
+            <stop offset="100%" stop-color="#06B6D4" stop-opacity="0.05" />
+          </linearGradient>
+        </defs>
+        <!-- Distant Alpine Peaks -->
+        <path
+          d="M0,180 L0,118 L140,86 L290,122 L470,64 L640,108 L820,48 L990,102 L1160,54 L1340,98 L1490,70 L1600,96 L1600,180 Z"
+          fill="url(#mwMountainBack)"
+        />
+        <!-- Foreground Mountain Ridge -->
+        <path
+          d="M0,180 L0,136 L190,98 L360,132 L560,78 L750,118 L940,66 L1120,114 L1290,76 L1460,112 L1600,88 L1600,180 Z"
+          fill="url(#mwMountainFront)"
+        />
+        <!-- Glowing Cyan/Teal Ridge Contour Line -->
+        <path
+          d="M0,136 L190,98 L360,132 L560,78 L750,118 L940,66 L1120,114 L1290,76 L1460,112 L1600,88"
+          fill="none"
+          stroke="url(#mwRidgeGlow)"
+          stroke-width="2"
+        />
+      </svg>
+
+      <div class="mw-hero-content">
         <div>
-          <div class="inline-flex items-center gap-2 rounded-full bg-white/[0.04] ring-1 ring-white/10 px-3.5 py-1 mb-4">
-            <span class="h-1.5 w-1.5 rounded-full bg-cyan"></span>
-            <span class="text-xs font-medium text-slate-300">Garmin Watch Portfolio &amp; WebMemo Companion</span>
+          <div class="mw-hero-eyebrow">
+            <i class="ph-fill ph-mountains"></i>
+            <span>FROM SCREEN TO WRIST · GARMIN CONNECT IQ ECOSYSTEM</span>
           </div>
-          <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-alabaster leading-[1.12]">
-            Stock Portfolio &amp; WebMemo<br class="hidden sm:inline" />Right on Your Garmin Watch
-          </h1>
+          <h1 class="mw-hero-title">INVEST SMARTER · ANYTIME, ANYWHERE</h1>
+          <p class="mw-hero-subtitle">
+            Real-time multi-portfolio valuation, 20-day SMA &amp; RSI-14 technicals, earnings catalysts (<span class="font-mono text-cyan-300">e-dd/mm/yy</span>), and thesis WebMemos synchronized directly to your Garmin AMOLED watch.
+          </p>
         </div>
-        <p class="text-sm text-slate-400 max-w-md leading-relaxed">
-          Manage multiple investment portfolios, track real-time unrealized P&amp;L, set target &amp; stop price alerts, monitor the daily US Fear &amp; Greed Index, and sync WebMemo notes directly to your Garmin watch.
-        </p>
-      </div>
 
-      <!-- Unified Chronometer Summary Tray (Double-Bezel Architecture) -->
-      <div class="double-bezel-shell">
-        <div class="double-bezel-core p-6 sm:p-8">
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-            <!-- Net Worth Readout (5 cols) -->
-            <div class="md:col-span-5 md:border-r md:border-white/[0.07] md:pr-6">
-              <div class="flex items-center justify-between mb-1.5">
-                <span class="text-xs text-slate-400 font-medium">Total Portfolio Value (Net Worth)</span>
-                <span id="lastUpdatedBadge" class="font-mono text-[11px] text-slate-400">Last synced --:--</span>
-              </div>
-              <div id="grandTotalValue" class="font-mono text-3xl sm:text-4xl font-bold tracking-tight text-alabaster tabular-nums">
-                ฿0.00
-              </div>
-              <div class="mt-2 flex flex-wrap items-center gap-3 text-xs font-mono">
-                <span class="text-slate-400">Total Cost: <strong id="grandTotalCost" class="text-slate-200 font-medium">฿0.00</strong></span>
-                <span class="text-slate-600">|</span>
-                <span class="text-slate-400">USD/THB: <strong id="fxRateReadout" class="text-cyan font-medium">33.85</strong></span>
-              </div>
-              <!-- Daily US Market Fear & Greed Index Badge + Mini Gauge Bar (0–100) -->
-              <div class="mt-3 rounded-xl bg-white/[0.03] ring-1 ring-white/[0.08] px-3 py-2">
-                <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono">
-                  <div class="flex items-center gap-2">
-                    <span class="text-slate-400">US Fear &amp; Greed:</span>
-                    <span id="fearGreedBadge" class="px-2 py-0.5 rounded-full bg-emerald/15 text-emerald ring-1 ring-emerald/35 font-bold tabular-nums">FG:64G</span>
-                    <span id="fearGreedLabel" class="text-emerald font-semibold">Greed</span>
-                  </div>
-                  <span id="fearGreedPrevText" class="text-[10px] text-slate-400 tabular-nums">Prev: 61 (+3)</span>
-                </div>
-                <div class="mt-1.5 h-1.5 w-full rounded-full bg-white/[0.07] overflow-hidden relative">
-                  <div id="fearGreedBarFill" class="h-full rounded-full transition-all duration-500" style="width: 64%; background-color: #34D399;"></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Daily P&L + Total Unrealized Return + Alerts (7 cols) -->
-            <div class="md:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <!-- Daily P&L -->
-              <div class="rounded-2xl bg-white/[0.025] ring-1 ring-white/[0.06] p-4">
-                <div class="text-xs text-slate-400 mb-1">Today's Change (Day P&amp;L)</div>
-                <div id="grandDayPnl" class="font-mono text-lg font-bold tabular-nums text-emerald">+฿0.00</div>
-                <div id="grandDayPct" class="font-mono text-xs tabular-nums text-emerald/80 mt-0.5">+0.00%</div>
-              </div>
-
-              <!-- Total Unrealized Return -->
-              <div class="rounded-2xl bg-white/[0.025] ring-1 ring-white/[0.06] p-4">
-                <div class="text-xs text-slate-400 mb-1">Unrealized P&amp;L (Total Return)</div>
-                <div id="grandTotalPnl" class="font-mono text-lg font-bold tabular-nums text-emerald">+฿0.00</div>
-                <div id="grandTotalPct" class="font-mono text-xs tabular-nums text-emerald/80 mt-0.5">+0.00%</div>
-              </div>
-
-              <!-- Active Target Alerts -->
-              <div class="rounded-2xl bg-white/[0.025] ring-1 ring-white/[0.06] p-4 flex flex-col justify-between">
-                <div class="flex items-center justify-between">
-                  <span class="text-xs text-slate-400">Active Watch Alerts</span>
-                  <i class="ph-light ph-bell-ringing text-amber text-base"></i>
-                </div>
-                <div class="mt-1 flex items-baseline gap-2">
-                  <span id="activeAlertCount" class="font-mono text-xl font-bold text-alabaster tabular-nums">0</span>
-                  <span class="text-xs text-slate-400">Target / Stop Signals</span>
-                </div>
-                <div id="portfolioCountSummary" class="text-[11px] font-mono text-slate-400 mt-0.5">3 Portfolios · 13 Assets</div>
-              </div>
+        <!-- Hero Right Live Telemetry Strip -->
+        <div class="flex items-center gap-2.5 flex-wrap">
+          <div class="px-3 py-2 rounded-xl bg-[#07111E]/90 border border-cyan-500/25 backdrop-blur-md">
+            <span class="block text-[9px] font-bold uppercase tracking-widest text-slate-400">FX Rate (USD/THB)</span>
+            <div class="flex items-center gap-1.5 mt-0.5">
+              <i class="ph-bold ph-arrows-left-right text-cyan-400 text-xs"></i>
+              <span id="fxRateReadout" class="font-mono text-sm font-bold text-white">34.50</span>
+              <span class="text-[10px] font-mono text-emerald-400">LIVE</span>
             </div>
           </div>
+
+          <div class="px-3 py-2 rounded-xl bg-[#07111E]/90 border border-cyan-500/25 backdrop-blur-md">
+            <span class="block text-[9px] font-bold uppercase tracking-widest text-slate-400">Garmin Sync Status</span>
+            <div class="flex items-center gap-1.5 mt-0.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span id="heroWatchModelBadge" class="font-mono text-xs font-bold text-cyan-200">20 Models Ready</span>
+            </div>
+          </div>
+
+          <button
+            id="heroQuickAddBtn"
+            type="button"
+            class="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/20 transition flex items-center gap-1.5"
+          >
+            <i class="ph-bold ph-plus-circle text-sm"></i>
+            <span>Add Asset</span>
+          </button>
         </div>
       </div>
     </section>
 
-    <!-- Primary Editorial Split: Left 7 Cols (Portfolio Ledger) | Right 5 Cols (Interactive Garmin Watch Bench) -->
-    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- ======================================================================
+         3. 5-CARD EXECUTIVE KPI & MARKET SUMMARY ROW
+         ====================================================================== -->
+    <section id="section-kpi" class="mw-kpi-grid" aria-label="Portfolio & Market Key Performance Indicators">
 
-      <!-- LEFT 7 COLUMNS: MULTI-PORTFOLIO WORKSPACE & WEBMEMO LEDGER -->
-      <div class="lg:col-span-7 space-y-6 reveal-on-scroll">
+      <!-- KPI Card 1: Total Portfolio Value (Base + Secondary Currency + Privacy Toggle) -->
+      <article class="mw-card mw-kpi-card">
+        <div>
+          <div class="mw-kpi-label">
+            <span class="flex items-center gap-1.5">
+              <i class="ph-duotone ph-wallet text-cyan-400 text-sm"></i>
+              <span>Total Portfolio Value</span>
+            </span>
+            <button
+              id="togglePrivacyBtn"
+              type="button"
+              class="text-slate-400 hover:text-cyan-300 transition text-xs"
+              title="Hide or show monetary balances"
+            >
+              <i id="togglePrivacyIcon" class="ph-bold ph-eye"></i>
+            </button>
+          </div>
+          <div id="grandTotalValue" class="mw-kpi-value">฿0.00</div>
+          <div class="flex items-center justify-between gap-2 mt-1">
+            <span id="grandTotalSecondaryValue" class="text-[11px] font-mono text-cyan-300/90">≈ $0.00 USD</span>
+            <span id="portfolioCountSummary" class="text-[10px] font-mono text-slate-400">0 Portfolios</span>
+          </div>
+        </div>
+        <div class="mw-kpi-subrow pt-2 border-t border-slate-800/80">
+          <span class="text-[11px] text-slate-400">Cost Basis:</span>
+          <span id="grandTotalCost" class="font-mono text-[11px] font-semibold text-slate-300">฿0.00</span>
+        </div>
+      </article>
 
-        <!-- Multi-Portfolio Tabs + Add Portfolio Button -->
-        <div class="double-bezel-shell">
-          <div class="double-bezel-core p-4 sm:p-5">
-            <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-              <div id="portfolioTabsContainer" class="flex flex-wrap items-center gap-2" role="tablist">
-                <!-- Populated dynamically by app.js -->
-              </div>
-
-              <div class="flex items-center gap-2">
-                <button id="addPortfolioBtn" type="button" class="rounded-full bg-white/[0.05] hover:bg-white/[0.1] ring-1 ring-white/10 px-3.5 py-1.5 text-xs font-medium text-alabaster flex items-center gap-1.5 spring-transition active:scale-[0.97]">
-                  <i class="ph-light ph-folder-plus text-sm text-cyan"></i>
-                  <span>New Portfolio</span>
-                </button>
-                <button id="deletePortfolioBtn" type="button" class="rounded-full bg-white/[0.03] hover:bg-crimson/20 ring-1 ring-white/10 hover:ring-crimson/40 p-2 text-xs text-slate-400 hover:text-crimson spring-transition" title="Delete Portfolio">
-                  <i class="ph-light ph-trash text-sm"></i>
-                </button>
-              </div>
+      <!-- KPI Card 2: Today's P&L (Day Change + Live Contribution Bar Sparkline) -->
+      <article class="mw-card mw-kpi-card">
+        <div class="flex items-start justify-between gap-2">
+          <div>
+            <div class="mw-kpi-label">
+              <span class="flex items-center gap-1.5">
+                <i class="ph-duotone ph-trend-up text-emerald-400 text-sm"></i>
+                <span>Today's P&amp;L</span>
+              </span>
             </div>
+            <div id="grandDayPnl" class="mw-kpi-value">+฿0.00</div>
+          </div>
+          <span id="grandDayPct" class="mw-badge-up mt-0.5">+0.00%</span>
+        </div>
+        <div class="mt-2 pt-1.5 border-t border-slate-800/70 flex items-end justify-between gap-2">
+          <div class="text-[10px] text-slate-400 leading-tight">
+            <span class="block font-semibold text-slate-300">24h Session</span>
+            <span id="kpiDayBreadthText" class="font-mono text-[10px] text-slate-400">0 Up · 0 Down</span>
+          </div>
+          <canvas id="kpiDayPnlCanvas" width="128" height="34" class="w-[128px] h-[34px]"></canvas>
+        </div>
+      </article>
 
-            <!-- Active Portfolio Sub-Summary Bar -->
-            <div class="rounded-2xl bg-void/70 ring-1 ring-white/[0.06] px-4 py-3 flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <div class="flex items-center gap-2">
-                  <h2 id="activePortfolioTitle" class="text-base font-bold text-alabaster">US Core &amp; AI Moat</h2>
-                  <button id="renamePortfolioBtn" type="button" class="text-slate-400 hover:text-alabaster text-xs p-1 rounded-lg" title="Rename Portfolio">
-                    <i class="ph-light ph-pencil-simple"></i>
-                  </button>
-                </div>
-                <p class="text-xs text-slate-400 font-mono" id="activePortfolioMeta">Watch Label: US MOAT</p>
-              </div>
+      <!-- KPI Card 3: Total Return (Unrealized P&L + Live Weighted Trend Curve) -->
+      <article class="mw-card mw-kpi-card">
+        <div class="flex items-start justify-between gap-2">
+          <div>
+            <div class="mw-kpi-label">
+              <span class="flex items-center gap-1.5">
+                <i class="ph-duotone ph-chart-line-up text-cyan-400 text-sm"></i>
+                <span>Total Return</span>
+              </span>
+            </div>
+            <div id="grandTotalPnl" class="mw-kpi-value">+฿0.00</div>
+          </div>
+          <span id="grandTotalPct" class="mw-badge-up mt-0.5">+0.00%</span>
+        </div>
+        <div class="mt-2 pt-1.5 border-t border-slate-800/70 flex items-end justify-between gap-2">
+          <div class="text-[10px] text-slate-400 leading-tight">
+            <span class="block font-semibold text-slate-300">Unrealized Net</span>
+            <span id="kpiTopWinnerText" class="font-mono text-[10px] text-cyan-300">14D Curve</span>
+          </div>
+          <canvas id="kpiTotalReturnCanvas" width="128" height="34" class="w-[128px] h-[34px]"></canvas>
+        </div>
+      </article>
 
-              <div class="flex items-center gap-6 font-mono text-right">
-                <div>
-                  <div class="text-[11px] text-slate-400">Portfolio Value</div>
-                  <div id="activePortValue" class="text-sm font-bold text-alabaster tabular-nums">฿0.00</div>
-                </div>
-                <div>
-                  <div class="text-[11px] text-slate-400">Day P&amp;L</div>
-                  <div id="activePortDayPnl" class="text-sm font-semibold text-emerald tabular-nums">+0.00%</div>
-                </div>
-                <div>
-                  <div class="text-[11px] text-slate-400">Total Return</div>
-                  <div id="activePortTotalPnl" class="text-sm font-semibold text-emerald tabular-nums">+0.00%</div>
-                </div>
-              </div>
+      <!-- KPI Card 4: Market Sentiment (US Fear & Greed Circular Gauge) -->
+      <article class="mw-card mw-kpi-card">
+        <div class="mw-kpi-label">
+          <span class="flex items-center gap-1.5">
+            <i class="ph-duotone ph-gauge text-amber-400 text-sm"></i>
+            <span>Market Sentiment</span>
+          </span>
+          <span
+            id="fearGreedBadge"
+            class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-800 text-slate-300 border border-slate-700"
+          >FG:--</span>
+        </div>
+
+        <div class="mw-fg-gauge-wrap">
+          <!-- Semi-Circular Radial Gauge SVG -->
+          <svg id="fearGreedGaugeSvg" class="mw-fg-svg" viewBox="0 0 100 58" aria-label="Fear and Greed Index Gauge">
+            <defs>
+              <linearGradient id="fgGaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#F43F5E" />
+                <stop offset="30%" stop-color="#F59E0B" />
+                <stop offset="55%" stop-color="#38BDF8" />
+                <stop offset="100%" stop-color="#10B981" />
+              </linearGradient>
+            </defs>
+            <!-- Track -->
+            <path
+              d="M 10 48 A 40 40 0 0 1 90 48"
+              fill="none"
+              stroke="rgba(148, 163, 184, 0.16)"
+              stroke-width="8"
+              stroke-linecap="round"
+            />
+            <!-- Active Value Arc (pathLength=100 for direct score mapping) -->
+            <path
+              id="fearGreedGaugeArc"
+              d="M 10 48 A 40 40 0 0 1 90 48"
+              pathLength="100"
+              fill="none"
+              stroke="url(#fgGaugeGrad)"
+              stroke-width="8"
+              stroke-linecap="round"
+              stroke-dasharray="50 100"
+            />
+            <text
+              id="fearGreedScoreReadout"
+              x="50"
+              y="46"
+              text-anchor="middle"
+              class="font-mono font-bold fill-white text-[18px]"
+            >--</text>
+          </svg>
+
+          <div class="flex-1 min-w-0">
+            <p id="fearGreedLabel" class="text-xs font-bold text-white truncate">Loading Index...</p>
+            <p id="fearGreedPrevText" class="text-[10px] font-mono text-slate-400 mt-0.5">Prev: --</p>
+            <div class="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden border border-slate-800/80 mt-1.5">
+              <div
+                id="fearGreedBarFill"
+                class="h-full bg-gradient-to-r from-rose-500 via-amber-400 to-emerald-400 transition-all duration-500"
+                style="width: 50%"
+              ></div>
             </div>
           </div>
         </div>
+      </article>
 
-        <!-- Quick Symbol Search & Add Holding Tray (Double-Bezel) -->
-        <div class="double-bezel-shell">
-          <div class="double-bezel-core p-5 sm:p-6">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-              <div>
-                <h3 class="text-base font-bold text-alabaster flex items-center gap-2">
-                  <i class="ph-light ph-magnifying-glass text-emerald"></i>
-                  <span>Add Asset or WebMemo Note</span>
-                </h3>
-                <p class="text-xs text-slate-400 mt-0.5">
-                  Search US stocks (<code class="font-mono text-slate-200">NVDA</code>), Thai SET stocks (<code class="font-mono text-slate-200">ADVANC.BK</code>), Crypto (<code class="font-mono text-slate-200">BTC-USD</code>), or Gold (<code class="font-mono text-slate-200">GC=F</code>)
-                </p>
+      <!-- KPI Card 5: Portfolio & Market Pulse Breakdown -->
+      <article class="mw-card mw-kpi-card">
+        <div class="mw-kpi-label">
+          <span class="flex items-center gap-1.5">
+            <i class="ph-duotone ph-pulse text-cyan-400 text-sm"></i>
+            <span>Portfolio Pulse</span>
+          </span>
+          <span
+            id="activeAlertCount"
+            class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30"
+          >0 Alerts</span>
+        </div>
+        <div id="kpiMarketPulseList" class="mt-1.5 space-y-1.5 flex-1 flex flex-col justify-center">
+          <!-- Dynamically populated from real portfolios / holdings -->
+        </div>
+      </article>
+
+    </section>
+
+    <!-- ======================================================================
+         4. MAIN 2-COLUMN WORKSPACE (LEFT: HOLDINGS TABLE | RIGHT: GARMIN DOCK)
+         ====================================================================== -->
+    <div id="section-portfolio" class="mw-main-workspace">
+
+      <!-- ====================================================================
+           LEFT COLUMN: HIGH-DENSITY HOLDINGS TABLE & PORTFOLIO CONTROLS
+           ==================================================================== -->
+      <section class="mw-workspace-left min-w-0 space-y-3" aria-label="Portfolio Holdings Terminal">
+
+        <!-- Portfolio Switcher Tabs + Quick Filters -->
+        <div class="mw-card p-3">
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-800/80">
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0" id="portfolioTabsWrapper">
+              <button
+                id="viewAllPortfoliosBtn"
+                type="button"
+                class="mw-portfolio-tab"
+                title="View combined holdings across all portfolios"
+              >
+                <i class="ph-bold ph-stack"></i>
+                <span>All Portfolios</span>
+              </button>
+              <div id="portfolioTabsContainer" class="flex items-center gap-1.5">
+                <!-- Populated by app.js -->
               </div>
-              <!-- Primary CTA with Button-in-Button Architecture -->
-              <button id="openAddModalBtn" type="button" class="group rounded-full bg-emerald text-void font-bold text-xs pl-5 pr-1.5 py-1.5 flex items-center gap-3 self-start sm:self-auto spring-transition active:scale-[0.98] shadow-lg shadow-emerald/15">
-                <span>Add Asset</span>
-                <span class="w-7 h-7 rounded-full bg-void/15 flex items-center justify-center spring-transition group-hover:translate-x-0.5 group-hover:-translate-y-[1px] group-hover:scale-105">
-                  <i class="ph-light ph-plus text-sm text-void font-bold"></i>
-                </span>
+            </div>
+
+            <div class="flex items-center gap-1.5">
+              <button
+                id="openAddPortfolioModalBtn"
+                type="button"
+                class="px-2.5 py-1.5 rounded-lg bg-[#0E1826] hover:bg-[#16263D] border border-cyan-500/25 text-xs font-semibold text-cyan-300 flex items-center gap-1 transition"
+              >
+                <i class="ph-bold ph-folder-plus"></i>
+                <span>+ New Portfolio</span>
               </button>
             </div>
-
-            <!-- Live Autocomplete Input -->
-            <div class="relative">
-              <div class="flex items-center rounded-2xl bg-void/90 ring-1 ring-white/10 focus-within:ring-emerald/60 px-4 py-2.5 gap-3 spring-transition">
-                <i class="ph-light ph-sparkle text-emerald text-base"></i>
-                <input
-                  id="quickSearchInput"
-                  type="text"
-                  placeholder="Quick search e.g. AAPL, TSLA, SCB.BK, AOT.BK, SOL-USD and click to add..."
-                  autocomplete="off"
-                  class="w-full bg-transparent text-xs sm:text-sm text-alabaster placeholder-slate-500 focus:outline-none font-mono"
-                />
-                <span id="searchStatusBadge" class="text-[11px] font-mono text-slate-500 whitespace-nowrap">Yahoo Live</span>
-              </div>
-
-              <!-- Autocomplete Dropdown -->
-              <div id="searchDropdown" class="hidden absolute left-0 right-0 top-full mt-2 z-30 rounded-2xl bg-core ring-1 ring-white/15 shadow-2xl overflow-hidden divide-y divide-white/[0.06]">
-                <!-- Populated dynamically -->
-              </div>
-            </div>
           </div>
-        </div>
 
-        <!-- Holdings & WebMemo Ledger Table (Double-Bezel) -->
-        <div class="double-bezel-shell">
-          <div class="double-bezel-core p-4 sm:p-6">
-            <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <!-- Active Portfolio Summary & Action Ribbon -->
+          <div class="pt-2.5 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-3">
               <div>
-                <h3 class="text-base font-bold text-alabaster">Holdings &amp; WebMemo Ledger</h3>
-                <p class="text-xs text-slate-400">Click any asset row to preview its sparkline chart and WebMemo on the Garmin watch simulator</p>
-              </div>
-              <div class="flex flex-wrap items-center gap-3">
-                <!-- Quick 1-Click Auto-Sort % Change Toggle Bar -->
-                <div class="inline-flex items-center gap-1 rounded-full bg-void ring-1 ring-white/10 p-1 text-[11px] font-mono">
-                  <span class="px-2 text-slate-400 hidden sm:inline">Sort %:</span>
+                <div class="flex items-center gap-2">
+                  <h2 id="activePortfolioTitle" class="text-base font-extrabold text-white tracking-tight">Portfolio</h2>
                   <button
+                    id="renamePortfolioBtn"
                     type="button"
-                    data-sort-order="ASC"
-                    class="sort-order-btn px-2.5 py-1 rounded-full bg-crimson/20 text-crimson ring-1 ring-crimson/40 font-semibold spring-transition"
-                    title="Sort % Change from Most Negative to Most Positive (Top-to-Bottom)"
+                    class="text-slate-400 hover:text-cyan-300 text-xs transition"
+                    title="Rename active portfolio"
                   >
-                    ▲ Loss → Gain
+                    <i class="ph-bold ph-pencil-simple"></i>
                   </button>
                   <button
+                    id="deletePortfolioBtn"
                     type="button"
-                    data-sort-order="DESC"
-                    class="sort-order-btn px-2.5 py-1 rounded-full text-slate-400 hover:text-alabaster spring-transition"
-                    title="Sort % Change from Most Positive to Most Negative (Top-to-Bottom)"
+                    class="text-slate-400 hover:text-rose-400 text-xs transition"
+                    title="Delete active portfolio"
                   >
-                    ▼ Gain → Loss
-                  </button>
-                  <button
-                    type="button"
-                    data-sort-order="NONE"
-                    class="sort-order-btn px-2 py-1 rounded-full text-slate-400 hover:text-alabaster spring-transition"
-                    title="Manual Order (As Added)"
-                  >
-                    Manual
+                    <i class="ph-bold ph-trash"></i>
                   </button>
                 </div>
+                <p id="activePortfolioMeta" class="text-[11px] text-slate-400">Syncs directly with Garmin Watch Glance &amp; Detail Views</p>
+              </div>
 
-                <div class="flex items-center gap-2 text-xs font-mono text-slate-400">
-                  <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald"></span>Target Hit</span>
-                  <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber"></span>Near Target</span>
-                  <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-crimson"></span>Stop Breach</span>
+              <!-- Active Portfolio Mini Telemetry Pills -->
+              <div class="flex items-center gap-2 flex-wrap">
+                <div class="px-2.5 py-1 rounded-lg bg-[#060B13] border border-slate-800/90 text-xs">
+                  <span class="text-slate-400 text-[10px] mr-1">Value:</span>
+                  <span id="activePortValue" class="font-mono font-bold text-white">฿0</span>
+                </div>
+                <div class="px-2.5 py-1 rounded-lg bg-[#060B13] border border-slate-800/90 text-xs">
+                  <span class="text-slate-400 text-[10px] mr-1">Day:</span>
+                  <span id="activePortDayPnl" class="font-mono font-bold text-emerald-400">+฿0</span>
+                </div>
+                <div class="px-2.5 py-1 rounded-lg bg-[#060B13] border border-slate-800/90 text-xs">
+                  <span class="text-slate-400 text-[10px] mr-1">Total P&amp;L:</span>
+                  <span id="activePortTotalPnl" class="font-mono font-bold text-emerald-400">+฿0</span>
                 </div>
               </div>
             </div>
 
-            <!-- Responsive Ledger List -->
-            <div id="holdingsListContainer" class="space-y-3">
-              <!-- Populated dynamically by app.js -->
+            <!-- Filter Pills, Sort Dropdown & + Add Asset Button -->
+            <div class="flex items-center gap-2 flex-wrap">
+              <div id="holdingsFilterPills" class="flex items-center bg-[#060B13] p-0.5 rounded-lg border border-slate-800">
+                <button type="button" data-filter="ALL" class="mw-filter-pill active">All</button>
+                <button type="button" data-filter="WATCHLIST" class="mw-filter-pill">Watchlist</button>
+                <button type="button" data-filter="ALERTS" class="mw-filter-pill">Alerts</button>
+                <button type="button" data-filter="MEMO" class="mw-filter-pill">WebMemo</button>
+              </div>
+
+              <div class="flex items-center gap-1 bg-[#060B13] border border-slate-800 rounded-lg px-2 py-1">
+                <i class="ph-bold ph-ArrowsDownUp text-cyan-400 text-xs"></i>
+                <label for="sortHoldingsSelect" class="sr-only">Sort Holdings</label>
+                <select
+                  id="sortHoldingsSelect"
+                  class="bg-transparent text-[11px] font-mono font-semibold text-slate-200 focus:outline-none cursor-pointer"
+                >
+                  <option value="ASC" class="bg-slate-900">Sort: % Chg (Neg → Pos)</option>
+                  <option value="DESC" class="bg-slate-900">Sort: % Chg (Pos → Neg)</option>
+                  <option value="WEIGHT" class="bg-slate-900">Sort: Weight % (High → Low)</option>
+                  <option value="NONE" class="bg-slate-900">Sort: Manual Order</option>
+                </select>
+              </div>
+
+              <button
+                id="openAddHoldingModalBtn"
+                type="button"
+                class="px-3 py-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs transition flex items-center gap-1.5 shadow-md shadow-cyan-500/15"
+              >
+                <i class="ph-bold ph-plus-circle text-sm"></i>
+                <span>+ Add Asset</span>
+              </button>
             </div>
           </div>
         </div>
 
-      </div>
+        <!-- High-Density Holdings Table Card -->
+        <div class="mw-card overflow-hidden">
+          <div id="holdingsListContainer" class="mw-table-scroll">
+            <!-- Populated dynamically by public/app.js with high-density financial table -->
+          </div>
 
-      <!-- RIGHT 5 COLUMNS: STICKY 1:1 GARMIN WATCH HARDWARE BENCH -->
-      <div class="lg:col-span-5 lg:sticky lg:top-24 space-y-6 reveal-on-scroll">
-        <div class="double-bezel-shell">
-          <div class="double-bezel-core p-5 sm:p-7 flex flex-col items-center">
+          <!-- Table Footer Summary Bar -->
+          <div
+            id="holdingsTableFooter"
+            class="px-4 py-2.5 bg-[#070D17] border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400"
+          >
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <span id="tableShowingCount" class="font-mono text-slate-300">Showing 0 assets</span>
+              <span class="text-slate-600">·</span>
+              <button
+                id="toggleTableExpandBtn"
+                type="button"
+                class="font-mono text-[10px] px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-cyan-500/25 transition"
+                title="Toggle between compact scrollable viewport and full expanded height"
+              >
+                Expand All Rows
+              </button>
+              <span class="hidden sm:inline text-slate-600">·</span>
+              <span class="hidden sm:inline">Click any row or <i class="ph-bold ph-watch text-cyan-400"></i> to inspect on Garmin Watch</span>
+            </div>
+            <div class="flex items-center gap-3 font-mono">
+              <span id="tableAlertsSummary" class="text-cyan-300">0 Active Alerts</span>
+              <span class="text-slate-600">·</span>
+              <span id="tableMemosSummary" class="text-emerald-300">0 WebMemos</span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ====================================================================
+           RIGHT COLUMN: GARMIN CONNECT & INTERACTIVE WATCH TERMINAL DOCK
+           ==================================================================== -->
+      <aside id="section-garmin-dock" class="mw-workspace-right space-y-3" aria-label="Garmin Connect Live Watch Dock">
+        <div class="mw-card p-4">
+
+          <!-- Garmin Dock Header -->
+          <div class="flex items-center justify-between gap-2 pb-3 border-b border-slate-800/80">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-300">
+                <i class="ph-fill ph-watch text-lg"></i>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="text-sm font-extrabold text-white">Garmin Connect</h3>
+                  <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    Connected
+                  </span>
+                </div>
+                <p id="watchDeviceSpecsSubtitle" class="text-[10px] text-slate-400 font-mono">
+                  Venu 2 · 416×416 AMOLED · Connect IQ
+                </p>
+              </div>
+            </div>
+
+            <!-- Live Auto-Swipe Countdown Status Pill -->
+            <span
+              id="autoSwipeCountdownBadge"
+              class="font-mono text-[11px] px-2.5 py-1 rounded-full bg-cyan/15 text-cyan ring-1 ring-cyan/30"
+            >
+              Auto-Swipe: 5s
+            </span>
+          </div>
+
+          <!-- Internal Segmented Dock Tabs (Eliminates Vertical Dead Space) -->
+          <div class="mw-dock-tabs mt-3" role="tablist" aria-label="Garmin Dock Modes">
+            <button type="button" class="mw-dock-tab-btn active" data-dock-tab="preview">
+              <i class="ph-bold ph-watch mr-1"></i>Live Preview
+            </button>
+            <button type="button" class="mw-dock-tab-btn" data-dock-tab="alerts">
+              <i class="ph-bold ph-bell-ringing mr-1"></i>Alerts
+            </button>
+            <button type="button" class="mw-dock-tab-btn" data-dock-tab="memo">
+              <i class="ph-bold ph-note mr-1"></i>WebMemo
+            </button>
+            <button type="button" class="mw-dock-tab-btn" data-dock-tab="device">
+              <i class="ph-bold ph-gear-six mr-1"></i>Device &amp; Key
+            </button>
+          </div>
+
+          <!-- ================================================================
+               DOCK TAB 1: LIVE INTERACTIVE GARMIN WATCH PREVIEW (1:1 ORIGINAL)
+               ================================================================ -->
+          <div id="dockTabPreview" class="mt-3 flex flex-col items-center">
 
             <!-- Bench Header & Screen Mode Switcher -->
             <div class="w-full flex flex-wrap items-center justify-between gap-2 mb-3">
@@ -432,19 +667,39 @@
                   <span class="h-2 w-2 rounded-full bg-emerald"></span>
                   <h3 id="watchHardwareTitle" class="text-sm font-bold text-alabaster">Garmin Watch Hardware Preview</h3>
                 </div>
-                <p id="watchHardwareSpecLabel" class="text-[11px] text-slate-400 font-mono mt-0.5">416×416 Round AMOLED · Supports 20 Popular Garmin Models (2024–2026)</p>
+                <p id="watchHardwareSpecLabel" class="text-[11px] text-slate-400 font-mono mt-0.5">
+                  416×416 Round AMOLED · Supports 20 Popular Garmin Models (2024–2026)
+                </p>
               </div>
 
               <!-- Watch Screen Mode Pills -->
               <div class="flex items-center rounded-full bg-void ring-1 ring-white/10 p-0.5 text-[11px] font-mono">
-                <button data-watch-mode="glance" type="button" class="watch-mode-btn px-2.5 py-1 rounded-full text-slate-400 hover:text-alabaster spring-transition">Glance</button>
-                <button data-watch-mode="list" type="button" class="watch-mode-btn px-2.5 py-1 rounded-full bg-cyan/20 text-cyan font-semibold spring-transition">Portfolio</button>
-                <button data-watch-mode="detail" type="button" class="watch-mode-btn px-2.5 py-1 rounded-full text-slate-400 hover:text-alabaster spring-transition">Chart+Memo</button>
+                <button
+                  data-watch-mode="glance"
+                  type="button"
+                  class="watch-mode-btn px-2.5 py-1 rounded-full text-slate-400 hover:text-alabaster spring-transition"
+                >
+                  Glance
+                </button>
+                <button
+                  data-watch-mode="list"
+                  type="button"
+                  class="watch-mode-btn px-2.5 py-1 rounded-full bg-cyan/20 text-cyan font-semibold spring-transition"
+                >
+                  Portfolio
+                </button>
+                <button
+                  data-watch-mode="detail"
+                  type="button"
+                  class="watch-mode-btn px-2.5 py-1 rounded-full text-slate-400 hover:text-alabaster spring-transition"
+                >
+                  Chart+Memo
+                </button>
               </div>
             </div>
 
             <!-- 2024-2026 Compatible Garmin Watch Model Selector -->
-            <div class="w-full mb-4 rounded-2xl bg-void/70 ring-1 ring-white/[0.08] px-3.5 py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="w-full mb-2.5 rounded-2xl bg-void/70 ring-1 ring-white/[0.08] px-3.5 py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div class="flex items-center gap-2 text-xs">
                 <i class="ph-light ph-watch text-cyan text-base"></i>
                 <label for="watchModelSelect" class="font-semibold text-slate-200 whitespace-nowrap">Garmin Watch Model (20):</label>
@@ -477,8 +732,28 @@
               </select>
             </div>
 
+            <!-- 4 Hardware Spec Pills -->
+            <div class="w-full mb-2 grid grid-cols-4 gap-1.5 text-center font-mono text-[10px]">
+              <div class="rounded-xl bg-white/[0.025] ring-1 ring-white/[0.06] px-2 py-1.5">
+                <div class="text-[8.5px] text-slate-500 uppercase">Resolution</div>
+                <div id="watchSpecResolution" class="text-alabaster font-semibold mt-0.5">416×416 px</div>
+              </div>
+              <div class="rounded-xl bg-white/[0.025] ring-1 ring-white/[0.06] px-2 py-1.5">
+                <div class="text-[8.5px] text-slate-500 uppercase">Display</div>
+                <div id="watchSpecDisplay" class="text-cyan font-semibold mt-0.5">Round AMOLED</div>
+              </div>
+              <div class="rounded-xl bg-white/[0.025] ring-1 ring-white/[0.06] px-2 py-1.5">
+                <div class="text-[8.5px] text-slate-500 uppercase">Input</div>
+                <div id="watchSpecTouch" class="text-alabaster font-semibold mt-0.5">Touch + 2B/5B</div>
+              </div>
+              <div class="rounded-xl bg-white/[0.025] ring-1 ring-white/[0.06] px-2 py-1.5">
+                <div class="text-[8.5px] text-slate-500 uppercase">Footprint</div>
+                <div id="watchSpecMemory" class="text-emerald font-semibold mt-0.5">&lt; 64 KB CIQ</div>
+              </div>
+            </div>
+
             <!-- Physical Garmin Watch Chassis + Pushers -->
-            <div class="relative flex items-center justify-center my-2 select-none">
+            <div class="venu2-chassis-stage relative flex items-center justify-center my-8 select-none">
               <!-- Top Watch Strap Lug -->
               <div class="venu2-strap venu2-strap-top" aria-hidden="true"></div>
               <!-- Bottom Watch Strap Lug -->
@@ -507,7 +782,7 @@
               </button>
 
               <!-- Stainless Steel Bezel + Minute Chapter Ring + Round Watch Viewport -->
-              <div class="venu2-bezel">
+              <div id="watchSimulatorBezel" class="venu2-bezel">
                 <div class="venu2-chapter-ring">
                   <div id="venuScreenViewport" class="venu2-amoled-screen" role="region" aria-label="Virtual Garmin Watch Screen">
 
@@ -525,7 +800,11 @@
                       </div>
 
                       <!-- Active Focused MoatWatch Glance Bar (Tap to launch full app) -->
-                      <button id="glanceLaunchBtn" type="button" class="w-full rounded-3xl bg-gradient-to-r from-emerald/20 via-core to-cyan/15 ring-1 ring-emerald/40 px-4 py-3.5 text-left flex items-center justify-between shadow-lg spring-transition hover:scale-[1.02] active:scale-[0.98]">
+                      <button
+                        id="glanceLaunchBtn"
+                        type="button"
+                        class="w-full rounded-3xl bg-gradient-to-r from-emerald/20 via-core to-cyan/15 ring-1 ring-emerald/40 px-4 py-3.5 text-left flex items-center justify-between shadow-lg spring-transition hover:scale-[1.02] active:scale-[0.98]"
+                      >
                         <div class="flex items-center gap-3">
                           <div class="w-9 h-9 rounded-2xl bg-emerald/20 ring-1 ring-emerald/40 flex items-center justify-center text-emerald font-mono font-bold text-sm">
                             M
@@ -566,24 +845,46 @@
                           <span id="watchListSyncKey" class="text-cyan">GARMIN-88</span>
                           <span id="watchBadgeAutoSwipe" class="px-1.5 py-0.2 rounded-full bg-cyan/15 text-cyan text-[8px]">AUTO 5s</span>
                           <span id="watchBadgeAlwaysOn" class="hidden px-1.5 py-0.2 rounded-full bg-amber/20 text-amber text-[8px]">AON</span>
-                          <button id="watchBadgeSortOrder" type="button" class="px-1.5 py-0.2 rounded-full bg-crimson/20 text-crimson text-[8px] hover:opacity-80 transition" title="Click to toggle % Change Sort (Loss→Gain / Gain→Loss)">▲ -%→+%</button>
+                          <button
+                            id="watchBadgeSortOrder"
+                            type="button"
+                            class="px-1.5 py-0.2 rounded-full bg-crimson/20 text-crimson text-[8px] hover:opacity-80 transition"
+                            title="Click to toggle % Change Sort (Loss→Gain / Gain→Loss)"
+                          >
+                            ▲ -%→+%
+                          </button>
                         </div>
 
                         <!-- Portfolio Switcher Row -->
                         <div class="mt-0.5 flex items-center justify-center gap-2">
-                          <button id="watchPrevPortBtn" type="button" class="w-5 h-5 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300 text-[10px]" title="Previous Portfolio">
+                          <button
+                            id="watchPrevPortBtn"
+                            type="button"
+                            class="w-5 h-5 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300 text-[10px]"
+                            title="Previous Portfolio"
+                          >
                             <i class="ph-light ph-caret-left"></i>
                           </button>
                           <div id="watchPortShortName" class="font-sans text-[11px] font-extrabold tracking-wide text-cyan">
                             US MOAT
                           </div>
-                          <button id="watchNextPortBtn" type="button" class="w-5 h-5 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300 text-[10px]" title="Next Portfolio">
+                          <button
+                            id="watchNextPortBtn"
+                            type="button"
+                            class="w-5 h-5 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300 text-[10px]"
+                            title="Next Portfolio"
+                          >
                             <i class="ph-light ph-caret-right"></i>
                           </button>
                         </div>
 
                         <!-- Portfolio Net Value & Toggleable Delta -->
-                        <button id="watchTogglePnlModeBtn" type="button" class="mt-0.5 inline-flex flex-col items-center group" title="Click to toggle Day P&L vs Total Return">
+                        <button
+                          id="watchTogglePnlModeBtn"
+                          type="button"
+                          class="mt-0.5 inline-flex flex-col items-center group"
+                          title="Click to toggle Day P&L vs Total Return"
+                        >
                           <div id="watchPortTotalVal" class="font-mono text-base font-bold text-alabaster tabular-nums leading-tight">
                             ฿1,120,450
                           </div>
@@ -591,7 +892,13 @@
                             <span id="watchPortPnlModeLabel" class="text-slate-400 text-[9px]">DAY:</span>
                             <span id="watchPortDeltaText" class="font-semibold text-emerald tabular-nums">+฿14,200 (+1.28%)</span>
                             <span class="text-slate-600">·</span>
-                            <span id="watchPortFgBadge" class="font-bold text-emerald tabular-nums" title="Daily US Market Fear &amp; Greed Index (0-100)">FG:64G</span>
+                            <span
+                              id="watchPortFgBadge"
+                              class="font-bold text-emerald tabular-nums"
+                              title="Daily US Market Fear &amp; Greed Index (0-100)"
+                            >
+                              FG:64G
+                            </span>
                           </div>
                         </button>
                       </div>
@@ -616,12 +923,24 @@
                       <!-- Top Symbol Header -->
                       <div class="text-center">
                         <div class="flex items-center justify-center gap-1.5">
-                          <button id="watchBackToListBtn" type="button" class="w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-[10px] text-alabaster" title="Back to Portfolio List">
+                          <button
+                            id="watchBackToListBtn"
+                            type="button"
+                            class="w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-[10px] text-alabaster"
+                            title="Back to Portfolio List"
+                          >
                             <i class="ph-light ph-arrow-left"></i>
                           </button>
                           <span id="watchDetailSymbol" class="font-mono text-sm font-extrabold text-alabaster">NVDA</span>
-                          <span id="watchDetailEarningsBadge" class="hidden text-[9px] font-mono px-1.5 py-0.5 rounded-full bg-amber/20 text-amber font-semibold">e-17/11/26</span>
-                          <span id="watchDetailAlertBadge" class="text-[9px] font-mono px-1.5 py-0.5 rounded-full bg-emerald/20 text-emerald">ACTIVE</span>
+                          <span
+                            id="watchDetailEarningsBadge"
+                            class="hidden text-[9px] font-mono px-1.5 py-0.5 rounded-full bg-amber/20 text-amber font-semibold"
+                          >
+                            e-17/11/26
+                          </span>
+                          <span id="watchDetailAlertBadge" class="text-[9px] font-mono px-1.5 py-0.5 rounded-full bg-emerald/20 text-emerald">
+                            ACTIVE
+                          </span>
                         </div>
                         <div class="mt-0.5 flex items-baseline justify-center gap-1.5 font-mono">
                           <span class="text-[10px] text-slate-400">Now:</span>
@@ -634,7 +953,14 @@
                       <div class="relative my-1 rounded-2xl bg-white/[0.03] ring-1 ring-white/[0.08] p-2">
                         <div class="flex items-center justify-between text-[9px] font-mono text-slate-300 mb-1 px-1">
                           <span id="watchChartLowLabel" class="text-crimson/90">Day L: $135.10</span>
-                          <button id="watchToggleBbBtn" type="button" class="text-cyan font-semibold hover:underline" title="Click to toggle SMA20 + Bollinger Bands">SMA20: $134.20</button>
+                          <button
+                            id="watchToggleBbBtn"
+                            type="button"
+                            class="text-cyan font-semibold hover:underline"
+                            title="Click to toggle SMA20 + Bollinger Bands"
+                          >
+                            SMA20: $134.20
+                          </button>
                           <span id="watchChartHighLabel" class="text-emerald/90">Day H: $139.90</span>
                         </div>
                         <canvas id="watchSparklineCanvas" width="260" height="70" class="w-full h-[70px] block"></canvas>
@@ -670,7 +996,10 @@
                     </div>
 
                     <!-- VIEW 4: 14-DAY TRIAL EXPIRED / ACTIVATION REQUIRED LOCK SCREEN -->
-                    <div id="watchViewExpired" class="watch-view hidden w-full h-full flex flex-col justify-between items-center py-9 px-7 text-center bg-gradient-to-b from-crimson/15 via-void to-void">
+                    <div
+                      id="watchViewExpired"
+                      class="watch-view hidden w-full h-full flex flex-col justify-between items-center py-9 px-7 text-center bg-gradient-to-b from-crimson/15 via-void to-void"
+                    >
                       <div class="text-[10px] font-mono text-crimson tracking-widest uppercase">LICENSE LOCKED</div>
                       <div class="flex flex-col items-center">
                         <div class="w-11 h-11 rounded-full bg-crimson/20 ring-1 ring-crimson/50 flex items-center justify-center text-crimson mb-2">
@@ -686,7 +1015,11 @@
                           <div class="text-[9px] font-mono text-amber uppercase">Contact App Owner (Paid Version)</div>
                           <div id="watchExpiredOwnerEmail" class="font-mono text-[11px] font-bold text-alabaster mt-0.5">saharat.bun@icloud.com</div>
                         </div>
-                        <button id="watchExpiredOpenRequestBtn" type="button" class="mt-2 rounded-full bg-cyan/20 hover:bg-cyan/30 ring-1 ring-cyan/40 px-3 py-1 text-[9px] font-mono text-cyan font-semibold">
+                        <button
+                          id="watchExpiredOpenRequestBtn"
+                          type="button"
+                          class="mt-2 rounded-full bg-cyan/20 hover:bg-cyan/30 ring-1 ring-cyan/40 px-3 py-1 text-[9px] font-mono text-cyan font-semibold"
+                        >
                           Request Trial Extend / Purchase Pro
                         </button>
                       </div>
@@ -699,7 +1032,7 @@
             </div>
 
             <!-- Interactive Watch Controls Legend -->
-            <div class="w-full mt-4 pt-4 border-t border-white/[0.07] grid grid-cols-3 gap-2 text-center text-[11px] text-slate-400">
+            <div class="w-full mt-2 pt-3 border-t border-white/[0.07] grid grid-cols-3 gap-2 text-center text-[11px] text-slate-400">
               <div class="rounded-xl bg-white/[0.025] p-2">
                 <div class="font-mono text-alabaster font-semibold">Top-Right (A)</div>
                 <div class="mt-0.5">Toggle Day / Total P&amp;L</div>
@@ -714,591 +1047,910 @@
               </div>
             </div>
 
-          </div>
-        </div>
-
-        <!-- WATCH DISPLAY SETTINGS (AUTO-SWIPE & ALWAYS-ON) + DEVICE LICENSE ACTIVATION CARD -->
-        <div id="watchSettingsCard" class="double-bezel-shell">
-          <div class="double-bezel-core p-5 sm:p-6 space-y-5">
-            <div class="flex items-center justify-between">
-              <div>
-                <div class="flex items-center gap-2">
-                  <i class="ph-light ph-sliders-horizontal text-cyan text-base"></i>
-                  <h3 class="text-sm font-bold text-alabaster">Garmin Display &amp; License Settings</h3>
-                </div>
-                <p class="text-[11px] text-slate-400 mt-0.5">Configure Auto-Swipe rotation, Always-On display mode, and Garmin device license activation</p>
+            <!-- Watch Display Metric Checkboxes (Synced with Concept Target) -->
+            <div class="w-full mt-3 p-3 rounded-xl bg-[#070D17] border border-slate-800/90 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Watch Face Telemetry Layers</span>
+                <span class="text-[10px] font-mono text-cyan-400">Connect IQ v2.4</span>
               </div>
-              <span id="autoSwipeCountdownBadge" class="font-mono text-[11px] px-2.5 py-1 rounded-full bg-cyan/15 text-cyan ring-1 ring-cyan/30">Auto 5s</span>
-            </div>
-
-            <!-- 1. Auto-Swipe Screen Setting (Default 5s + Custom Seconds) -->
-            <div class="rounded-2xl bg-void/70 ring-1 ring-white/[0.07] p-4 space-y-3">
-              <div class="flex items-center justify-between gap-3">
-                <div>
-                  <div class="text-xs font-bold text-alabaster flex items-center gap-1.5">
-                    <span>Auto-Swipe Next Screen</span>
-                  </div>
-                  <p class="text-[11px] text-slate-400">Automatically cycle through holdings and portfolios on the watch (default: every 5 seconds)</p>
-                </div>
-                <label class="relative inline-flex items-center cursor-pointer">
-                  <input id="autoSwipeToggle" type="checkbox" checked class="sr-only peer" />
-                  <div class="w-10 h-5 bg-white/10 rounded-full peer peer-checked:bg-emerald/80 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-alabaster after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5"></div>
+              <div class="grid grid-cols-2 gap-2 text-xs text-slate-300">
+                <label class="flex items-center gap-2 cursor-pointer select-none">
+                  <input id="watchMetricDayPnl" type="checkbox" checked class="accent-cyan-400 rounded" />
+                  <span class="text-[11px]">Show Day P&amp;L &amp; F&amp;G</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer select-none">
+                  <input id="watchMetricTotalReturn" type="checkbox" checked class="accent-cyan-400 rounded" />
+                  <span class="text-[11px]">Show Total Return</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer select-none">
+                  <input id="watchMetricAlerts" type="checkbox" checked class="accent-cyan-400 rounded" />
+                  <span class="text-[11px]">Show Price/RSI Alerts</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer select-none">
+                  <input id="watchMetricMemo" type="checkbox" checked class="accent-cyan-400 rounded" />
+                  <span class="text-[11px]">Show WebMemo &amp; Earnings</span>
                 </label>
               </div>
+            </div>
 
-              <div class="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-white/[0.05]">
-                <div class="flex items-center gap-1.5">
-                  <span class="text-[11px] text-slate-400">Interval (sec):</span>
-                  <button type="button" data-swipe-preset="3" class="swipe-preset-btn px-2 py-0.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.1] text-[11px] font-mono text-slate-300">3s</button>
-                  <button type="button" data-swipe-preset="5" class="swipe-preset-btn px-2 py-0.5 rounded-lg bg-cyan/20 ring-1 ring-cyan/40 text-[11px] font-mono text-cyan font-semibold">5s (Default)</button>
-                  <button type="button" data-swipe-preset="10" class="swipe-preset-btn px-2 py-0.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.1] text-[11px] font-mono text-slate-300">10s</button>
-                  <button type="button" data-swipe-preset="15" class="swipe-preset-btn px-2 py-0.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.1] text-[11px] font-mono text-slate-300">15s</button>
-                </div>
-                <div class="flex items-center gap-1.5">
-                  <input id="autoSwipeSecInput" type="number" min="2" max="120" value="5" class="w-16 rounded-xl bg-core ring-1 ring-white/15 focus:ring-cyan px-2.5 py-1 text-xs font-mono text-alabaster text-center focus:outline-none" />
-                  <span class="text-[11px] font-mono text-slate-400">sec</span>
-                </div>
+            <!-- 3-Card Telemetry Footer Strip (Eliminates Empty Right-Column Space) -->
+            <div class="grid grid-cols-3 gap-2">
+              <div class="p-2.5 rounded-xl bg-[#070D17] border border-slate-800/90">
+                <span class="block text-[9px] font-bold uppercase tracking-wider text-slate-400">Sync Channel</span>
+                <span id="dockSyncKeyReadout" class="block font-mono text-xs font-bold text-cyan-300 mt-0.5 truncate">VENU2-88</span>
+                <span class="block text-[9px] font-mono text-emerald-400 mt-0.5">REST JSON · OK</span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-[#070D17] border border-slate-800/90">
+                <span class="block text-[9px] font-bold uppercase tracking-wider text-slate-400">Active Signals</span>
+                <span id="dockActiveAlertsReadout" class="block font-mono text-xs font-bold text-white mt-0.5">0 Alerts</span>
+                <span id="dockEarningsCountReadout" class="block text-[9px] font-mono text-amber-300 mt-0.5">0 Earnings</span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-[#070D17] border border-slate-800/90">
+                <span class="block text-[9px] font-bold uppercase tracking-wider text-slate-400">Watch Mode</span>
+                <span id="dockWatchModeReadout" class="block font-mono text-xs font-bold text-white mt-0.5">Auto 5s</span>
+                <button
+                  type="button"
+                  data-open-dock-tab="device"
+                  class="text-[9px] font-mono text-cyan-400 hover:underline mt-0.5 block"
+                >Configure →</button>
               </div>
             </div>
 
-            <!-- 2. Always-On Display Setting (Optional / Not Forced) -->
-            <div class="rounded-2xl bg-void/70 ring-1 ring-white/[0.07] p-4 flex items-center justify-between gap-3">
-              <div>
-                <div class="text-xs font-bold text-alabaster flex items-center gap-1.5">
-                  <span>Keep Screen Awake (Always-On Screen)</span>
-                  <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-white/[0.06] text-slate-400">Optional</span>
-                </div>
-                <p class="text-[11px] text-slate-400">Prevent the Garmin watch backlight from timing out while viewing your portfolio</p>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                <input id="alwaysOnToggle" type="checkbox" class="sr-only peer" />
-                <div class="w-10 h-5 bg-white/10 rounded-full peer peer-checked:bg-amber/80 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-alabaster after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5"></div>
-              </label>
+          </div>
+
+          <!-- ================================================================
+               DOCK TAB 2: QUICK WATCH ALERTS MONITOR
+               ================================================================ -->
+          <div id="dockTabAlerts" class="hidden mt-3 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-200">Wrist Price &amp; RSI Alert Feed</span>
+              <span class="text-[10px] font-mono text-cyan-300">Click to preview on watch</span>
             </div>
-
-            <!-- 2b. Auto-Sort % Change Setting (Negative -> Positive / Positive -> Negative Top-to-Bottom) -->
-            <div class="rounded-2xl bg-void/70 ring-1 ring-white/[0.07] p-4 space-y-3">
-              <div class="flex flex-wrap items-center justify-between gap-2">
-                <div>
-                  <div class="text-xs font-bold text-alabaster flex items-center gap-1.5">
-                    <i class="ph-light ph-arrows-down-up text-cyan text-sm"></i>
-                    <span>Auto-Sort Holdings by % Change (Top-to-Bottom)</span>
-                  </div>
-                  <p class="text-[11px] text-slate-400">Automatically rank assets from biggest losers to biggest gainers (or vice versa) on both web and watch</p>
-                </div>
-                <button
-                  id="flipSortDirectionBtn"
-                  type="button"
-                  class="rounded-xl bg-cyan/15 hover:bg-cyan/25 ring-1 ring-cyan/35 px-2.5 py-1 text-[11px] font-mono font-semibold text-cyan flex items-center gap-1 spring-transition active:scale-[0.98]"
-                  title="Flip Sort Direction (Loss→Gain / Gain→Loss)"
-                >
-                  <i class="ph-light ph-arrows-down-up text-xs"></i>
-                  <span>Flip Order</span>
-                </button>
-              </div>
-
-              <!-- Sort Direction Buttons -->
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                <button
-                  type="button"
-                  data-sort-order="ASC"
-                  class="sort-order-btn rounded-xl px-3 py-2 text-xs font-mono font-semibold flex items-center justify-center gap-1.5 spring-transition bg-crimson/20 text-crimson ring-1 ring-crimson/40"
-                >
-                  <span>▲ Loss → Gain</span>
-                </button>
-                <button
-                  type="button"
-                  data-sort-order="DESC"
-                  class="sort-order-btn rounded-xl px-3 py-2 text-xs font-mono font-semibold flex items-center justify-center gap-1.5 spring-transition bg-white/[0.04] hover:bg-white/[0.1] text-slate-300 ring-1 ring-white/10"
-                >
-                  <span>▼ Gain → Loss</span>
-                </button>
-                <button
-                  type="button"
-                  data-sort-order="NONE"
-                  class="sort-order-btn rounded-xl px-3 py-2 text-xs font-mono font-semibold flex items-center justify-center gap-1.5 spring-transition bg-white/[0.04] hover:bg-white/[0.1] text-slate-300 ring-1 ring-white/10"
-                >
-                  <span>Manual Order</span>
-                </button>
-              </div>
-
-              <!-- Metric Selector: Day % Change vs Total P&L % -->
-              <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/[0.05]">
-                <span class="text-[11px] text-slate-400">Sort Metric:</span>
-                <div class="inline-flex items-center rounded-xl bg-core ring-1 ring-white/10 p-0.5 text-[11px] font-mono">
-                  <button
-                    type="button"
-                    data-sort-metric="DAY"
-                    class="sort-metric-btn px-2.5 py-1 rounded-lg bg-cyan/20 text-cyan font-semibold spring-transition cursor-pointer"
-                  >
-                    Today's % (Day %)
-                  </button>
-                  <button
-                    type="button"
-                    data-sort-metric="TOTAL"
-                    class="sort-metric-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-alabaster spring-transition cursor-pointer"
-                  >
-                    Total Return % (Total P&amp;L %)
-                  </button>
-                </div>
-              </div>
-
-              <!-- Live Sort Order Status & Top/Bottom Preview -->
-              <div id="sortLivePreviewBox" class="rounded-xl bg-white/[0.03] ring-1 ring-white/[0.06] px-3 py-2 text-[11px] font-mono text-slate-300 flex flex-wrap items-center justify-between gap-2">
-                <span id="sortLiveModeBadge" class="text-crimson font-semibold">▲ Loss → Gain (Day %)</span>
-                <span id="sortLiveTopBottomText" class="text-slate-400">Sorting holdings...</span>
-              </div>
-            </div>
-
-            <!-- 3. Device ID & 14-Day Trial / Paid Activation System -->
-            <div class="rounded-2xl bg-void/70 ring-1 ring-white/[0.07] p-4 space-y-3">
-              <div class="flex flex-wrap items-center justify-between gap-2">
-                <div>
-                  <div class="text-[11px] font-mono text-slate-400">GARMIN DEVICE LICENSE (14-DAY TRIAL)</div>
-                  <div class="flex items-center gap-2 mt-0.5">
-                    <span class="text-xs text-slate-400">Device ID:</span>
-                    <input id="watchDeviceIdInput" type="text" value="V2-GARMIN88" class="w-32 rounded-lg bg-core ring-1 ring-white/10 px-2 py-0.5 font-mono text-xs font-bold text-cyan uppercase focus:outline-none focus:ring-cyan" title="Garmin Watch Device ID" />
-                  </div>
-                </div>
-                <span id="licenseStatusPill" class="font-mono text-[11px] px-2.5 py-1 rounded-full bg-emerald/15 text-emerald ring-1 ring-emerald/30 font-semibold">
-                  TRIAL · 14d left
-                </span>
-              </div>
-
-              <div id="licenseDetailBanner" class="rounded-xl bg-white/[0.03] ring-1 ring-white/[0.06] px-3 py-2 text-[11px] text-slate-300 flex flex-wrap items-center justify-between gap-2">
-                <span id="licenseExpiryText">14-Day Free Trial · For lifetime Pro activation contact <strong class="font-mono text-amber">saharat.bun@icloud.com</strong></span>
-              </div>
-
-              <!-- Activation Code Input Row -->
-              <div class="flex flex-col sm:flex-row gap-2">
-                <input
-                  id="activationKeyInput"
-                  type="text"
-                  placeholder="Enter Activation Key (MOAT-XXXX-XXXX-XXXX)"
-                  class="flex-1 rounded-xl bg-core ring-1 ring-white/15 focus:ring-emerald px-3 py-2 font-mono text-xs text-alabaster uppercase placeholder-slate-500 focus:outline-none"
-                />
-                <button
-                  id="activateDeviceBtn"
-                  type="button"
-                  class="rounded-xl bg-emerald text-void font-bold text-xs px-4 py-2 font-sans spring-transition active:scale-[0.98] whitespace-nowrap"
-                >
-                  Activate Device
-                </button>
-              </div>
-
-              <!-- Customer Self-Service Actions: Request Trial Key Extend & Purchase License Form -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-                <button
-                  id="openTrialExtendModalBtn"
-                  type="button"
-                  class="rounded-xl bg-amber/15 hover:bg-amber/25 ring-1 ring-amber/35 px-3 py-2 text-xs font-semibold text-amber flex items-center justify-center gap-1.5 spring-transition active:scale-[0.98]"
-                >
-                  <i class="ph-light ph-clock-clockwise text-sm"></i>
-                  <span>Request Trial Extend</span>
-                </button>
-                <button
-                  id="openPurchaseFormModalBtn"
-                  type="button"
-                  class="rounded-xl bg-cyan/15 hover:bg-cyan/25 ring-1 ring-cyan/35 px-3 py-2 text-xs font-semibold text-cyan flex items-center justify-center gap-1.5 spring-transition active:scale-[0.98]"
-                >
-                  <i class="ph-light ph-shopping-bag-open text-sm"></i>
-                  <span>Purchase Pro License</span>
-                </button>
-              </div>
-
-              <div class="flex items-center justify-between text-[11px] pt-1 border-t border-white/[0.05]">
-                <span class="text-slate-400">Admin Portal (<code class="font-mono text-amber">saharat.bun@icloud.com</code>):</span>
-                <a href="https://admin-moat.readybyte.top" target="_blank" rel="noopener" id="openAdminPortalBtn" class="font-mono text-cyan hover:underline flex items-center gap-1">
-                  <i class="ph-light ph-shield-star"></i>
-                  <span>admin-moat.readybyte.top</span>
-                </a>
-              </div>
+            <div id="dockAlertsQuickList" class="max-h-[420px] overflow-y-auto space-y-2 pr-1">
+              <!-- Populated by app.js -->
             </div>
           </div>
+
+          <!-- ================================================================
+               DOCK TAB 3: QUICK WATCH WEBMEMO & EARNINGS FEED
+               ================================================================ -->
+          <div id="dockTabMemo" class="hidden mt-3 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-200">Synced WebMemos &amp; Earnings</span>
+              <span class="text-[10px] font-mono text-cyan-300">Synced to Detail View</span>
+            </div>
+            <div id="dockMemoQuickList" class="max-h-[420px] overflow-y-auto space-y-2 pr-1">
+              <!-- Populated by app.js -->
+            </div>
+          </div>
+
+          <!-- ================================================================
+               DOCK TAB 4: DEVICE DISPLAY SETTINGS & LICENSE ACTIVATION
+               ================================================================ -->
+          <div id="dockTabDevice" class="hidden mt-3 space-y-3">
+
+            <!-- Watch Display & Auto-Swipe Settings Card -->
+            <div id="watchSettingsCard" class="p-3.5 rounded-xl bg-[#070D17] border border-slate-800 space-y-3">
+              <div class="flex items-center justify-between">
+                <h4 class="text-xs font-bold text-white flex items-center gap-1.5">
+                  <i class="ph-bold ph-sliders text-cyan-400"></i>
+                  <span>Garmin Watch Display Settings</span>
+                </h4>
+                <span id="watchSettingsStatus" class="text-[10px] font-mono text-emerald-400">Synced</span>
+              </div>
+
+              <div class="space-y-2.5 text-xs">
+                <div class="flex items-center justify-between gap-2">
+                  <label for="autoSwipeToggle" class="text-slate-300 font-medium cursor-pointer">
+                    Auto-Swipe Carousel
+                  </label>
+                  <div class="flex items-center gap-2">
+                    <input id="autoSwipeToggle" type="checkbox" checked class="accent-cyan-400 w-4 h-4 rounded cursor-pointer" />
+                    <input
+                      id="autoSwipeSecInput"
+                      type="number"
+                      min="3"
+                      max="60"
+                      value="5"
+                      class="w-14 bg-[#0A111C] border border-slate-700 rounded px-2 py-1 text-center font-mono text-xs text-white"
+                    />
+                    <span class="text-[10px] font-mono text-slate-400">sec</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between gap-2">
+                  <label for="alwaysOnToggle" class="text-slate-300 font-medium cursor-pointer">
+                    Keep Watch Screen Active (AOD)
+                  </label>
+                  <input id="alwaysOnToggle" type="checkbox" class="accent-cyan-400 w-4 h-4 rounded cursor-pointer" />
+                </div>
+
+                <div class="pt-2 border-t border-slate-800/80 space-y-1.5">
+                  <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Watch Holding Sort Order</span>
+                  <div class="grid grid-cols-3 gap-1.5 text-[11px]">
+                    <label class="flex items-center gap-1.5 p-1.5 rounded bg-[#0A111C] border border-slate-800 cursor-pointer">
+                      <input type="radio" name="sortByPctOrder" value="ASC" checked class="accent-cyan-400" />
+                      <span>Neg → Pos</span>
+                    </label>
+                    <label class="flex items-center gap-1.5 p-1.5 rounded bg-[#0A111C] border border-slate-800 cursor-pointer">
+                      <input type="radio" name="sortByPctOrder" value="DESC" class="accent-cyan-400" />
+                      <span>Pos → Neg</span>
+                    </label>
+                    <label class="flex items-center gap-1.5 p-1.5 rounded bg-[#0A111C] border border-slate-800 cursor-pointer">
+                      <input type="radio" name="sortByPctOrder" value="NONE" class="accent-cyan-400" />
+                      <span>Manual</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="space-y-1.5">
+                  <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Sort Metric</span>
+                  <div class="grid grid-cols-2 gap-1.5 text-[11px]">
+                    <label class="flex items-center gap-1.5 p-1.5 rounded bg-[#0A111C] border border-slate-800 cursor-pointer">
+                      <input type="radio" name="sortByPctMetric" value="DAY" checked class="accent-cyan-400" />
+                      <span>24h Day % Change</span>
+                    </label>
+                    <label class="flex items-center gap-1.5 p-1.5 rounded bg-[#0A111C] border border-slate-800 cursor-pointer">
+                      <input type="radio" name="sortByPctMetric" value="TOTAL" class="accent-cyan-400" />
+                      <span>Total Return %</span>
+                    </label>
+                  </div>
+                </div>
+
+                <button
+                  id="saveWatchSettingsBtn"
+                  type="button"
+                  class="w-full py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs transition"
+                >
+                  Save &amp; Push to Garmin Watch
+                </button>
+              </div>
+            </div>
+
+            <!-- Device License & 14-Day Trial Activation Panel -->
+            <div class="p-3.5 rounded-xl bg-[#070D17] border border-slate-800 space-y-3">
+              <div class="flex items-center justify-between gap-2">
+                <h4 class="text-xs font-bold text-white flex items-center gap-1.5">
+                  <i class="ph-bold ph-keyhole text-amber-400"></i>
+                  <span>Device License &amp; Trial</span>
+                </h4>
+                <span
+                  id="licenseStatusBadge"
+                  class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40"
+                >14-DAY FREE TRIAL</span>
+              </div>
+
+              <p id="licenseStatusText" class="text-[11px] text-slate-300 leading-relaxed">
+                Checking Garmin Device License status...
+              </p>
+
+              <div>
+                <div class="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                  <div id="licenseCountdownBar" class="h-full bg-amber-400 transition-all duration-500" style="width: 100%"></div>
+                </div>
+                <div class="flex items-center justify-between text-[10px] font-mono text-slate-400 mt-1">
+                  <span id="licenseDaysRemainingText">14 days remaining</span>
+                  <a href="/admin" class="text-cyan-400 hover:underline">Admin Portal →</a>
+                </div>
+              </div>
+
+              <div class="space-y-2 pt-1">
+                <div>
+                  <label for="watchDeviceIdInput" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                    Garmin Device ID
+                  </label>
+                  <div class="flex gap-1.5">
+                    <input
+                      id="watchDeviceIdInput"
+                      type="text"
+                      value="V2-88VENU20"
+                      class="flex-1 bg-[#0A111C] border border-slate-700 rounded-lg px-2.5 py-1.5 font-mono text-xs text-white"
+                    />
+                    <button
+                      id="copyDeviceIdBtn"
+                      type="button"
+                      class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-200 transition"
+                    >
+                      Copy ID
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label for="activationKeyInput" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                    Pro Activation Key
+                  </label>
+                  <div class="flex gap-1.5">
+                    <input
+                      id="activationKeyInput"
+                      type="text"
+                      placeholder="MOAT-XXXX-XXXX-XXXX"
+                      class="flex-1 bg-[#0A111C] border border-slate-700 rounded-lg px-2.5 py-1.5 font-mono text-xs text-white uppercase"
+                    />
+                    <button
+                      id="activateDeviceBtn"
+                      type="button"
+                      class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition"
+                    >
+                      Activate
+                    </button>
+                  </div>
+                </div>
+
+                <p id="licenseFeedbackMsg" class="hidden text-[11px] font-mono"></p>
+
+                <div class="grid grid-cols-2 gap-2 pt-1">
+                  <button
+                    id="openTrialExtendModalBtn"
+                    type="button"
+                    class="py-1.5 px-2 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 font-semibold text-[11px] transition"
+                  >
+                    + Request Trial Extend
+                  </button>
+                  <button
+                    id="openPurchaseFormModalBtn"
+                    type="button"
+                    class="py-1.5 px-2 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 font-semibold text-[11px] transition"
+                  >
+                    ★ Purchase Pro Key
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
         </div>
-      </div>
+      </aside>
+
+    </div>
+
+    <!-- ======================================================================
+         5. BOTTOM 3-COLUMN FINANCIAL INTELLIGENCE MODULES (100% REAL DATA)
+         ====================================================================== -->
+    <section class="mw-intelligence-grid" aria-label="WebMemo, Earnings Calendar, and Active Alerts">
+
+      <!-- Module 1: WebMemo & Investment Thesis Feed -->
+      <article id="section-intelligence-memo" class="mw-card mw-intel-card">
+        <div class="p-3.5 border-b border-slate-800/80 flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-300">
+              <i class="ph-bold ph-notebook text-sm"></i>
+            </div>
+            <div>
+              <h3 class="text-xs font-extrabold text-white uppercase tracking-wider">WebMemo &amp; Thesis Notes</h3>
+              <p class="text-[10px] text-slate-400">Synced directly to Garmin Watch Detail Screen</p>
+            </div>
+          </div>
+          <span
+            id="memoModuleCount"
+            class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30"
+          >0 Notes</span>
+        </div>
+        <div id="memoModuleList" class="mw-intel-list">
+          <!-- Populated dynamically from real portfolio holdings -->
+        </div>
+      </article>
+
+      <!-- Module 2: Earnings & Catalysts Calendar (e-dd/mm/yy) -->
+      <article id="section-intelligence-earnings" class="mw-card mw-intel-card">
+        <div class="p-3.5 border-b border-slate-800/80 flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-300">
+              <i class="ph-bold ph-calendar-check text-sm"></i>
+            </div>
+            <div>
+              <h3 class="text-xs font-extrabold text-white uppercase tracking-wider">Earnings &amp; Catalysts</h3>
+              <p class="text-[10px] text-slate-400">Upcoming <span class="font-mono text-cyan-300">e-dd/mm/yy</span> equity events</p>
+            </div>
+          </div>
+          <span
+            id="earningsModuleCount"
+            class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30"
+          >0 Upcoming</span>
+        </div>
+        <div id="earningsModuleList" class="mw-intel-list">
+          <!-- Populated dynamically from real portfolio holdings -->
+        </div>
+      </article>
+
+      <!-- Module 3: Active Price Alerts & RSI Signals -->
+      <article id="section-intelligence-alerts" class="mw-card mw-intel-card">
+        <div class="p-3.5 border-b border-slate-800/80 flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-300">
+              <i class="ph-bold ph-bell-ringing text-sm"></i>
+            </div>
+            <div>
+              <h3 class="text-xs font-extrabold text-white uppercase tracking-wider">Active Alerts &amp; RSI Signals</h3>
+              <p class="text-[10px] text-slate-400">Target ▲ / Stop ▼ / RSI-14 Extremes</p>
+            </div>
+          </div>
+          <span
+            id="alertsModuleCount"
+            class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
+          >0 Signals</span>
+        </div>
+        <div id="alertsModuleList" class="mw-intel-list">
+          <!-- Populated dynamically from real portfolio holdings -->
+        </div>
+      </article>
 
     </section>
 
-    <!-- Secondary Bento Section: Garmin Connect IQ Companion Architecture & Sideload Guide -->
-    <section class="mt-24 reveal-on-scroll">
-      <div class="mb-8">
-        <div class="inline-flex items-center gap-2 rounded-full bg-white/[0.04] ring-1 ring-white/10 px-3.5 py-1 mb-3">
-          <span class="h-1.5 w-1.5 rounded-full bg-emerald"></span>
-          <span class="text-xs font-medium text-slate-300">Connect IQ Monkey C Native App Included</span>
+    <!-- ======================================================================
+         6. SETTINGS, BACKUP, GARMIN ENDPOINT & USB SIDELOAD DECK
+         ====================================================================== -->
+    <section id="section-settings-tools" class="mw-utilities-grid" aria-label="Backup, API Endpoint, and USB Sideload Utilities">
+
+      <!-- Utility 1: Backup, Export & Import -->
+      <div class="mw-card p-4 flex flex-col justify-between space-y-3">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <i class="ph-bold ph-database text-cyan-400"></i>
+            <h3 class="text-xs font-extrabold text-white uppercase tracking-wider">Portfolio Backup &amp; Portability</h3>
+          </div>
+          <p class="text-[11px] text-slate-400">
+            Export your complete multi-portfolio configuration, WebMemos, and target/stop alerts to JSON or CSV, or restore from a backup file.
+          </p>
         </div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-alabaster tracking-tight">
-          Ready for Your Garmin Watch Hardware
-        </h2>
+
+        <div class="grid grid-cols-3 gap-2 pt-1">
+          <button
+            id="exportJsonBtn"
+            type="button"
+            class="py-2 px-2.5 rounded-lg bg-[#0E1826] hover:bg-[#16263D] border border-slate-700 text-xs font-semibold text-slate-200 flex items-center justify-center gap-1.5 transition"
+          >
+            <i class="ph-bold ph-file-js text-cyan-400"></i>
+            <span>Export JSON</span>
+          </button>
+          <button
+            id="exportCsvBtn"
+            type="button"
+            class="py-2 px-2.5 rounded-lg bg-[#0E1826] hover:bg-[#16263D] border border-slate-700 text-xs font-semibold text-slate-200 flex items-center justify-center gap-1.5 transition"
+          >
+            <i class="ph-bold ph-file-csv text-emerald-400"></i>
+            <span>Export CSV</span>
+          </button>
+          <label
+            class="py-2 px-2.5 rounded-lg bg-[#0E1826] hover:bg-[#16263D] border border-slate-700 text-xs font-semibold text-slate-200 flex items-center justify-center gap-1.5 transition cursor-pointer"
+          >
+            <i class="ph-bold ph-upload-simple text-amber-400"></i>
+            <span>Import JSON</span>
+            <input id="importJsonInput" type="file" accept=".json,application/json" class="hidden" />
+          </label>
+        </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-        <!-- Asymmetric Bento Col 8 -->
-        <div class="md:col-span-8 double-bezel-shell">
-          <div class="double-bezel-core p-6 sm:p-8 h-full flex flex-col justify-between">
-            <div>
-              <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
-                <span class="font-mono text-xs text-emerald">Connect IQ Monkey C · source/*.mc</span>
-                <span class="font-mono text-xs text-slate-400">20 Models: Venu · vívoactive · Forerunner · fēnix · Enduro · epix Pro · Approach</span>
-              </div>
-              <h3 class="text-xl font-bold text-alabaster mb-2">
-                MarketWatch + WebMemo Architecture Across 20 Popular Garmin Models (2024–2026)
-              </h3>
-              <p class="text-sm text-slate-400 leading-relaxed mb-6">
-                Built in native Monkey C with <strong class="text-alabaster">Proportional Responsive Scaling</strong> that automatically adapts fonts and circular geometry from MIP Solar displays (<code class="font-mono text-cyan">260×260 / 280×280</code> on fēnix 8 Solar, Enduro 3) to high-DPI AMOLED screens (<code class="font-mono text-cyan">360×360 / 390×390 / 416×416 / 454×454</code> on Venu, Forerunner, fēnix 8 AMOLED, epix Pro Gen 2, Approach S70) with full touch and 5-button navigation support.
-              </p>
+      <!-- Utility 2: Garmin Connect IQ Watch Endpoint & Payload Inspector -->
+      <div class="mw-card p-4 flex flex-col justify-between space-y-3">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-1">
+            <div class="flex items-center gap-2">
+              <i class="ph-bold ph-cloud-arrow-down text-cyan-400"></i>
+              <h3 class="text-xs font-extrabold text-white uppercase tracking-wider">Garmin Connect IQ JSON Endpoint</h3>
             </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 font-mono text-xs">
-              <div class="rounded-2xl bg-void/70 ring-1 ring-white/[0.07] p-4">
-                <div class="text-cyan font-semibold mb-1">1. Glance Widget</div>
-                <p class="text-slate-400 font-sans text-xs">View total net worth and daily P&amp;L directly in your Garmin watch widget carousel without opening the full app.</p>
-              </div>
-              <div class="rounded-2xl bg-void/70 ring-1 ring-white/[0.07] p-4">
-                <div class="text-emerald font-semibold mb-1">2. Multi-Portfolio</div>
-                <p class="text-slate-400 font-sans text-xs">Swipe left/right on touchscreens or press UP/DOWN on 5-button watches to cycle through US, Thai SET, and Crypto portfolios.</p>
-              </div>
-              <div class="rounded-2xl bg-void/70 ring-1 ring-white/[0.07] p-4">
-                <div class="text-amber font-semibold mb-1">3. Chart &amp; WebMemo</div>
-                <p class="text-slate-400 font-sans text-xs">Tap any holding to inspect its 20-day sparkline chart, SMA20 / Bollinger Bands, and personal WebMemo note.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Asymmetric Bento Col 4 -->
-        <div class="md:col-span-4 double-bezel-shell">
-          <div class="double-bezel-core p-6 sm:p-8 h-full flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-4">
-                <span class="font-mono text-xs text-cyan">1-CLICK USB SIDELOAD</span>
-                <i class="ph-light ph-usb text-xl text-cyan"></i>
-              </div>
-              <h3 class="text-lg font-bold text-alabaster mb-2">USB Sideload Guide (20 Models)</h3>
-              <ol class="space-y-2.5 text-xs text-slate-300 list-decimal list-inside leading-relaxed">
-                <li>Connect your Garmin watch to your computer via USB cable.</li>
-                <li>Run <code id="sideloadCommandHint" class="font-mono text-emerald">.\build-and-sideload.ps1</code> to compile <code class="font-mono text-alabaster">MoatWatch.prg</code>.</li>
-                <li>The script automatically copies the binary into <code class="font-mono text-alabaster">GARMIN\APPS</code> on your watch.</li>
-              </ol>
-            </div>
-
-            <button id="openPayloadModalFromBentoBtn" type="button" class="group mt-6 w-full rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 pl-5 pr-2 py-2 text-xs font-semibold text-alabaster flex items-center justify-between spring-transition active:scale-[0.98]">
-              <span>Inspect Garmin JSON Payload</span>
-              <span class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center spring-transition group-hover:translate-x-0.5 group-hover:-translate-y-[1px]">
-                <i class="ph-light ph-arrow-up-right text-sm text-cyan"></i>
-              </span>
+            <button
+              id="inspectPayloadBtn"
+              type="button"
+              class="text-[10px] font-mono text-cyan-400 hover:underline"
+            >
+              Inspect Raw Payload
             </button>
           </div>
+          <p class="text-[11px] text-slate-400">
+            Compact Monkey C REST endpoint consumed by the MoatWatch Garmin widget (<code class="text-cyan-300">/api/watch</code>).
+          </p>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <code
+            id="watchEndpointUrl"
+            class="flex-1 bg-[#060B13] border border-slate-800 rounded-lg px-2.5 py-1.5 font-mono text-[11px] text-cyan-300 truncate"
+          >https://moat.readybyte.top/api/watch?key=VENU2-88</code>
+          <button
+            id="copyEndpointBtn"
+            type="button"
+            class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-white transition"
+          >
+            Copy
+          </button>
+        </div>
+
+        <pre
+          id="rawPayloadPre"
+          class="hidden max-h-40 overflow-y-auto p-2.5 rounded-lg bg-[#050911] border border-slate-800 font-mono text-[10px] text-emerald-300"
+        ></pre>
+      </div>
+
+      <!-- Utility 3: Garmin USB Sideload & Connect IQ Setup Guide -->
+      <div class="mw-card p-4 flex flex-col justify-between space-y-2">
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <i class="ph-bold ph-usb text-emerald-400"></i>
+            <h3 class="text-xs font-extrabold text-white uppercase tracking-wider">Garmin Watch Setup &amp; Sideload</h3>
+          </div>
+          <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+            Venu2Moat.prg Ready
+          </span>
+        </div>
+        <div id="sideloadGuideContent" class="text-[11px] text-slate-300 space-y-1 leading-relaxed">
+          <p>1. Connect your Garmin watch via USB or install from Garmin Connect IQ Store.</p>
+          <p>2. Copy <code class="font-mono text-cyan-300">dist/Venu2Moat.prg</code> into <code class="font-mono text-amber-300">GARMIN/APPS/</code> on the watch drive.</p>
+          <p>3. In Garmin Connect Mobile → App Settings, set your Sync Key or leave blank for hardware Auto-ID.</p>
         </div>
       </div>
+
     </section>
 
   </main>
 
-  <!-- MODAL 1: ADD / EDIT HOLDING & WEBMEMO NOTE -->
-  <div id="holdingModal" class="fixed inset-0 z-50 bg-void/80 backdrop-blur-2xl hidden items-center justify-center p-4">
-    <div class="w-full max-w-lg double-bezel-shell">
-      <div class="double-bezel-core p-6 sm:p-7">
-        <div class="flex items-center justify-between mb-5">
+  <!-- ========================================================================
+       MODALS (HOLDING CRUD, PORTFOLIO CRUD, SYNC KEY, LICENSE REQUEST) & TOAST
+       ======================================================================== -->
+
+  <!-- Toast Notification Banner -->
+  <div
+    id="toastBanner"
+    class="fixed bottom-5 right-5 z-50 pointer-events-none opacity-0 translate-y-3 transition-all duration-300 bg-[#0A1322]/95 border border-cyan-500/40 rounded-xl px-4 py-2.5 shadow-2xl flex items-center gap-2.5 text-xs font-medium text-white backdrop-blur-md"
+    role="status"
+    aria-live="polite"
+  >
+    <i class="ph-fill ph-check-circle text-cyan-400 text-base"></i>
+    <span id="toastMessage">Saved</span>
+  </div>
+
+  <!-- 1. Add / Edit Holding Modal -->
+  <div
+    id="holdingModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="holdingModalTitle"
+  >
+    <div class="mw-card w-full max-w-lg p-5 space-y-4 border border-cyan-500/30 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <i class="ph-bold ph-chart-polar text-cyan-400 text-lg"></i>
+          <h3 id="holdingModalTitle" class="text-base font-extrabold text-white">Add / Edit Asset in Portfolio</h3>
+        </div>
+        <button id="closeHoldingModalBtn" type="button" class="text-slate-400 hover:text-white">
+          <i class="ph-bold ph-x text-lg"></i>
+        </button>
+      </div>
+
+      <form id="holdingForm" class="space-y-3 text-xs">
+        <input id="holdingEditIndex" type="hidden" value="-1" />
+        <input id="holdingEditOriginalSymbol" type="hidden" value="" />
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <h3 id="holdingModalTitle" class="text-lg font-bold text-alabaster">Edit Asset &amp; WebMemo</h3>
-            <p class="text-xs text-slate-400">Set Shares = 0 to track price only in Watchlist mode</p>
+            <label for="holdingSymbolInput" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+              Ticker Symbol (Yahoo Finance) *
+            </label>
+            <input
+              id="holdingSymbolInput"
+              type="text"
+              required
+              placeholder="e.g. NVDA, AAPL, PTT.BK, BTC-USD"
+              class="w-full bg-[#060B13] border border-slate-700 rounded-lg px-3 py-2 font-mono text-xs text-white uppercase focus:border-cyan-400 focus:outline-none"
+            />
           </div>
-          <button id="closeHoldingModalBtn" type="button" class="w-8 h-8 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300">
-            <i class="ph-light ph-x"></i>
-          </button>
+          <div>
+            <label for="holdingNameInput" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+              Company / Asset Name
+            </label>
+            <input
+              id="holdingNameInput"
+              type="text"
+              placeholder="Auto-detected if left blank"
+              class="w-full bg-[#060B13] border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:border-cyan-400 focus:outline-none"
+            />
+          </div>
         </div>
 
-        <form id="holdingForm" class="space-y-4">
-          <input type="hidden" id="holdingEditOriginalSymbol" value="" />
-
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label class="block text-xs text-slate-400 mb-1" for="holdingSymbolInput">Ticker Symbol</label>
-              <input id="holdingSymbolInput" type="text" required placeholder="e.g. NVDA, PTT.BK" class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3.5 py-2.5 text-sm font-mono text-alabaster uppercase focus:outline-none" />
-            </div>
-            <div class="sm:col-span-2">
-              <label class="block text-xs text-slate-400 mb-1" for="holdingNameInput">Company / Asset Name</label>
-              <input id="holdingNameInput" type="text" placeholder="Leave blank to auto-fetch from Yahoo Finance" class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3.5 py-2.5 text-sm text-alabaster focus:outline-none" />
-            </div>
-          </div>
-
-          <div class="grid grid-cols-3 gap-3">
-            <div>
-              <label class="block text-xs text-slate-400 mb-1" for="holdingCurrencySelect">Currency</label>
-              <select id="holdingCurrencySelect" class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3 py-2.5 text-sm font-mono text-alabaster focus:outline-none">
-                <option value="USD">USD ($)</option>
-                <option value="THB">THB (฿)</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs text-slate-400 mb-1" for="holdingSharesInput">Shares</label>
-              <input id="holdingSharesInput" type="number" step="any" min="0" value="0" class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3.5 py-2.5 text-sm font-mono text-alabaster focus:outline-none" />
-            </div>
-            <div>
-              <label class="block text-xs text-slate-400 mb-1" for="holdingAvgCostInput">Avg Cost</label>
-              <input id="holdingAvgCostInput" type="number" step="any" min="0" value="0" class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3.5 py-2.5 text-sm font-mono text-alabaster focus:outline-none" />
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label class="block text-xs text-emerald mb-1" for="holdingTargetInput">Target Price (Alert ▲)</label>
-              <input id="holdingTargetInput" type="number" step="any" min="0" placeholder="0 = disabled" class="w-full rounded-xl bg-void ring-1 ring-emerald/30 focus:ring-emerald px-3.5 py-2.5 text-sm font-mono text-alabaster focus:outline-none" />
-            </div>
-            <div>
-              <label class="block text-xs text-crimson mb-1" for="holdingStopInput">Stop Loss (Alert ▼)</label>
-              <input id="holdingStopInput" type="number" step="any" min="0" placeholder="0 = disabled" class="w-full rounded-xl bg-void ring-1 ring-crimson/30 focus:ring-crimson px-3.5 py-2.5 text-sm font-mono text-alabaster focus:outline-none" />
-            </div>
-            <div>
-              <label class="block text-xs text-amber mb-1" for="holdingEarningsDateInput">Next Earnings (dd/mm/yy)</label>
-              <input id="holdingEarningsDateInput" type="text" maxlength="12" placeholder="e.g. 17/11/26 (blank=auto)" class="w-full rounded-xl bg-void ring-1 ring-amber/30 focus:ring-amber px-3.5 py-2.5 text-sm font-mono text-alabaster focus:outline-none" />
-            </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          <div>
+            <label for="holdingAssetTypeInput" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+              Asset Class
+            </label>
+            <select
+              id="holdingAssetTypeInput"
+              class="w-full bg-[#060B13] border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:border-cyan-400 focus:outline-none"
+            >
+              <option value="US_STOCK">US Equity</option>
+              <option value="TH_STOCK">Thai Equity (.BK)</option>
+              <option value="ETF">ETF / Index</option>
+              <option value="CRYPTO">Crypto</option>
+            </select>
           </div>
 
           <div>
-            <div class="flex items-center justify-between mb-1">
-              <label class="text-xs text-cyan font-medium" for="holdingNoteInput">Garmin Watch Note (WebMemo)</label>
-              <span class="text-[11px] font-mono text-slate-500">Max 140 chars</span>
-            </div>
-            <textarea id="holdingNoteInput" rows="2" maxlength="140" placeholder="e.g. Trim 10 shares above $155 / Hold core position for Q4 dividend" class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2.5 text-sm text-alabaster focus:outline-none"></textarea>
+            <label for="holdingCurrencySelect" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+              Quote Currency
+            </label>
+            <select
+              id="holdingCurrencySelect"
+              class="w-full bg-[#060B13] border border-slate-700 rounded-lg px-2.5 py-2 font-mono text-xs text-white focus:border-cyan-400 focus:outline-none"
+            >
+              <option value="USD">USD ($)</option>
+              <option value="THB">THB (฿)</option>
+            </select>
           </div>
 
-          <div class="flex items-center justify-between pt-2">
-            <button id="deleteHoldingBtn" type="button" class="hidden rounded-full bg-crimson/15 hover:bg-crimson/25 text-crimson ring-1 ring-crimson/30 px-4 py-2 text-xs font-semibold spring-transition">
-              Delete Asset
+          <div>
+            <label for="holdingSharesInput" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+              Shares (0 = Watchlist)
+            </label>
+            <input
+              id="holdingSharesInput"
+              type="number"
+              step="any"
+              min="0"
+              value="0"
+              class="w-full bg-[#060B13] border border-slate-700 rounded-lg px-2.5 py-2 font-mono text-xs text-white focus:border-cyan-400 focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="holdingAvgCostInput" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+              Avg Cost / Share
+            </label>
+            <input
+              id="holdingAvgCostInput"
+              type="number"
+              step="any"
+              min="0"
+              value="0"
+              class="w-full bg-[#060B13] border border-slate-700 rounded-lg px-2.5 py-2 font-mono text-xs text-white focus:border-cyan-400 focus:outline-none"
+            />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+          <div>
+            <label for="holdingTargetInput" class="block text-[10px] font-bold uppercase tracking-wider text-emerald-400 mb-1">
+              ▲ Target Price Alert
+            </label>
+            <input
+              id="holdingTargetInput"
+              type="number"
+              step="any"
+              min="0"
+              placeholder="0 = Off"
+              class="w-full bg-[#060B13] border border-slate-700 rounded-lg px-2.5 py-2 font-mono text-xs text-white focus:border-emerald-400 focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="holdingStopInput" class="block text-[10px] font-bold uppercase tracking-wider text-rose-400 mb-1">
+              ▼ Stop Loss Alert
+            </label>
+            <input
+              id="holdingStopInput"
+              type="number"
+              step="any"
+              min="0"
+              placeholder="0 = Off"
+              class="w-full bg-[#060B13] border border-slate-700 rounded-lg px-2.5 py-2 font-mono text-xs text-white focus:border-rose-400 focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="holdingEarningsDateInput" class="block text-[10px] font-bold uppercase tracking-wider text-cyan-400 mb-1">
+              Earnings Date (e-dd/mm/yy)
+            </label>
+            <input
+              id="holdingEarningsDateInput"
+              type="text"
+              placeholder="dd/mm/yy or YYYY-MM-DD"
+              class="w-full bg-[#060B13] border border-slate-700 rounded-lg px-2.5 py-2 font-mono text-xs text-white focus:border-cyan-400 focus:outline-none"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="holdingNoteInput" class="block text-[10px] font-bold uppercase tracking-wider text-amber-300 mb-1">
+            WebMemo / Moat Thesis Note (Synced to Garmin Watch)
+          </label>
+          <input
+            id="holdingNoteInput"
+            type="text"
+            maxlength="80"
+            placeholder="e.g. Wide moat AI datacenter leader · Hold for Q4 earnings"
+            class="w-full bg-[#060B13] border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:border-amber-400 focus:outline-none"
+          />
+        </div>
+
+        <div class="flex items-center justify-between gap-2 pt-3 border-t border-slate-800">
+          <button
+            id="deleteHoldingBtn"
+            type="button"
+            class="hidden px-3 py-2 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-xs font-semibold text-rose-300"
+          >
+            Delete Asset
+          </button>
+          <div class="flex items-center gap-2 ml-auto">
+            <button
+              id="cancelHoldingModalBtn"
+              type="button"
+              class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300"
+            >
+              Cancel
             </button>
-            <div class="flex items-center gap-2 ml-auto">
-              <button id="cancelHoldingModalBtn" type="button" class="rounded-full bg-white/[0.06] hover:bg-white/[0.12] px-5 py-2.5 text-xs font-medium text-slate-300">
-                Cancel
-              </button>
-              <button type="submit" class="group rounded-full bg-emerald text-void font-bold text-xs pl-5 pr-2 py-2 flex items-center gap-2.5 spring-transition active:scale-[0.98]">
-                <span>Save &amp; Sync to Garmin</span>
-                <span class="w-6 h-6 rounded-full bg-void/15 flex items-center justify-center">
-                  <i class="ph-light ph-check text-xs font-bold"></i>
-                </span>
-              </button>
-            </div>
+            <button
+              type="submit"
+              class="px-5 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/20"
+            >
+              Save &amp; Sync to Watch
+            </button>
           </div>
-        </form>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Create / Rename Portfolio Modal -->
+  <div
+    id="portfolioModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="portfolioModalTitle"
+  >
+    <div class="mw-card w-full max-w-md p-5 space-y-4 border border-cyan-500/30 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 id="portfolioModalTitle" class="text-base font-extrabold text-white">Create New Portfolio</h3>
+        <button id="closePortfolioModalBtn" type="button" class="text-slate-400 hover:text-white">
+          <i class="ph-bold ph-x text-lg"></i>
+        </button>
+      </div>
+      <form id="portfolioForm" class="space-y-3 text-xs">
+        <input id="portfolioEditMode" type="hidden" value="create" />
+        <div>
+          <label for="portfolioNameInput" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+            Portfolio Name *
+          </label>
+          <input
+            id="portfolioNameInput"
+            type="text"
+            required
+            placeholder="e.g. Core US Compounders, Thai Dividend Moat"
+            class="w-full bg-[#060B13] border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:border-cyan-400 focus:outline-none"
+          />
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button
+            type="submit"
+            class="px-5 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs"
+          >
+            Save Portfolio
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. Garmin Sync Key & Multi-User Profile Modal -->
+  <div
+    id="syncModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div class="mw-card w-full max-w-lg p-5 space-y-4 border border-cyan-500/30 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <i class="ph-bold ph-key text-cyan-400 text-lg"></i>
+          <h3 class="text-base font-extrabold text-white">Garmin Watch Sync Key &amp; Payload Inspector</h3>
+        </div>
+        <button id="closeSyncModalBtn" type="button" class="text-slate-400 hover:text-white">
+          <i class="ph-bold ph-x text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <p class="text-slate-300 leading-relaxed">
+          Enter your personal Garmin Sync Key (or Hardware Watch Device ID such as <code class="font-mono text-cyan-300">V2-XXXXXX</code>) to load or isolate your multi-portfolio workspace.
+        </p>
+        <div>
+          <label for="syncKeyInput" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+            Sync Key / Watch Profile ID
+          </label>
+          <div class="flex gap-2">
+            <input
+              id="syncKeyInput"
+              type="text"
+              placeholder="VENU2-88"
+              class="flex-1 bg-[#060B13] border border-slate-700 rounded-lg px-3 py-2 font-mono text-sm text-white uppercase focus:border-cyan-400 focus:outline-none"
+            />
+            <button
+              id="applySyncKeyBtn"
+              type="button"
+              class="px-4 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs"
+            >
+              Switch Profile
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between gap-2 text-[11px] bg-[#060B13] p-2.5 rounded-lg border border-slate-800">
+          <div class="truncate">
+            <span class="text-slate-400 block text-[9px] uppercase font-bold">Personal Profile Link</span>
+            <code id="personalProfileUrlLabel" class="font-mono text-cyan-300">https://moat.readybyte.top/?key=VENU2-88</code>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button
+              id="copyProfileUrlBtn"
+              type="button"
+              class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-mono text-[10px]"
+            >
+              Copy URL
+            </button>
+            <button
+              id="createNewSyncKeyBtn"
+              type="button"
+              class="px-2.5 py-1 rounded bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 font-mono text-[10px]"
+            >
+              + New Key
+            </button>
+          </div>
+        </div>
+
+        <div class="space-y-1.5 pt-1">
+          <div class="flex items-center justify-between text-[10px] font-mono">
+            <span id="modalWatchEndpointLabel" class="text-cyan-400">/api/watch?key=VENU2-88</span>
+            <span id="payloadByteSizeLabel" class="text-emerald-400">Garmin CIQ Ready</span>
+          </div>
+          <pre
+            id="watchJsonPreview"
+            class="max-h-44 overflow-y-auto p-2.5 rounded-lg bg-[#050911] border border-slate-800 font-mono text-[10px] text-emerald-300"
+          >Loading watch payload...</pre>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- MODAL 2: SYNC KEY & WATCH PAYLOAD INSPECTOR -->
-  <div id="syncModal" class="fixed inset-0 z-50 bg-void/80 backdrop-blur-2xl hidden items-center justify-center p-4">
-    <div class="w-full max-w-2xl double-bezel-shell">
-      <div class="double-bezel-core p-6 sm:p-7">
-        <div class="flex items-center justify-between mb-4">
-          <div>
-            <h3 class="text-lg font-bold text-alabaster">Personal Sync Key &amp; Garmin Watch Connection (Multi-User Isolation)</h3>
-            <p class="text-xs text-slate-400">Enter the <code class="font-mono text-cyan">KEY: V2-XXXXXXXX</code> displayed on your Garmin watch or create a custom private Sync Key to isolate your portfolio.</p>
-          </div>
-          <button id="closeSyncModalBtn" type="button" class="w-8 h-8 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300">
-            <i class="ph-light ph-x"></i>
-          </button>
+  <!-- 4. Customer Self-Service License Request Modal (Trial Extend / Pro Purchase) -->
+  <div
+    id="licenseRequestModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div class="mw-card w-full max-w-md p-5 space-y-4 border border-cyan-500/30 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h3 id="licenseRequestModalTitle" class="text-base font-extrabold text-white">Request License / Trial Extension</h3>
+          <p class="text-[11px] text-slate-400">Instant notification dispatched to MoatWatch Admin</p>
         </div>
-
-        <div class="flex flex-col sm:flex-row gap-2.5 mb-3">
-          <input id="syncKeyInput" type="text" value="GARMIN-88" placeholder="e.g. V2-A1B2C3D4 or custom key" class="flex-1 rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-4 py-2.5 font-mono text-sm text-alabaster uppercase focus:outline-none" />
-          <button id="applySyncKeyBtn" type="button" class="rounded-full bg-cyan text-void font-bold text-xs px-5 py-2.5 spring-transition active:scale-[0.98]">
-            Load / Switch Sync Key
-          </button>
-          <button id="createNewSyncKeyBtn" type="button" class="rounded-full bg-emerald/15 hover:bg-emerald/25 text-emerald ring-1 ring-emerald/35 font-semibold text-xs px-4 py-2.5 spring-transition active:scale-[0.98]">
-            + New Sync Key
-          </button>
-        </div>
-
-        <div class="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-white/[0.03] ring-1 ring-white/10 px-3.5 py-2 mb-4 text-[11px]">
-          <span class="text-slate-400">Direct Personal Portfolio URL: <code id="personalProfileUrlLabel" class="font-mono text-cyan">/?key=GARMIN-88</code></span>
-          <button id="copyProfileUrlBtn" type="button" class="rounded-full bg-white/[0.08] hover:bg-white/[0.15] text-alabaster px-3 py-1 font-mono text-[11px] spring-transition">
-            Copy Personal Link
-          </button>
-        </div>
-
-        <div class="mb-2 flex items-center justify-between text-xs font-mono">
-          <span class="text-slate-400">Compact Payload (<code id="modalWatchEndpointLabel" class="text-emerald">/api/watch?key=GARMIN-88</code>)</span>
-          <span id="payloadByteSizeLabel" class="text-cyan">0 bytes</span>
-        </div>
-        <pre id="watchJsonPreview" class="rounded-2xl bg-void ring-1 ring-white/10 p-4 font-mono text-[11px] text-slate-300 max-h-72 overflow-auto"></pre>
+        <button id="closeLicenseRequestModalBtn" type="button" class="text-slate-400 hover:text-white">
+          <i class="ph-bold ph-x text-lg"></i>
+        </button>
       </div>
-    </div>
-  </div>
 
-  <!-- MODAL 3: REQUEST TRIAL KEY EXTEND & PURCHASE LICENSE FORM -->
-  <div id="licenseRequestModal" class="fixed inset-0 z-50 bg-void/80 backdrop-blur-2xl hidden items-center justify-center p-4 overflow-y-auto">
-    <div class="w-full max-w-lg double-bezel-shell my-auto">
-      <div class="double-bezel-core p-6 sm:p-7">
-        <div class="flex items-center justify-between mb-4">
-          <div>
-            <span id="licenseRequestBadge" class="inline-flex items-center gap-1.5 text-[11px] font-mono text-cyan bg-cyan/10 ring-1 ring-cyan/30 px-2.5 py-0.5 rounded-full mb-1.5">
-              <i class="ph-light ph-envelope-simple-open"></i>
-              <span>SMTP / SYSTEM MAIL → e24qdy2@gmail.com</span>
-            </span>
-            <h3 id="licenseRequestModalTitle" class="text-lg font-bold text-alabaster">
-              Purchase Lifetime Pro License / Request Trial Extension
-            </h3>
-            <p class="text-xs text-slate-400 mt-0.5">
-              Submit your contact details and request below. The system queues your request for the Admin (<code class="font-mono text-amber">saharat.bun@icloud.com</code>) and sends an instant email notification to <code class="font-mono text-emerald">e24qdy2@gmail.com</code>.
-            </p>
-          </div>
-          <button id="closeLicenseRequestModalBtn" type="button" class="w-8 h-8 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300 shrink-0">
-            <i class="ph-light ph-x"></i>
+      <form id="licenseRequestForm" class="space-y-3 text-xs">
+        <input id="requestTypeInput" type="hidden" value="TRIAL_EXTEND" />
+        <input id="requestSyncKeyInput" type="hidden" value="VENU2-88" />
+
+        <div class="grid grid-cols-2 gap-2">
+          <button
+            id="reqTypeTrialExtendBtn"
+            type="button"
+            class="req-type-btn rounded-xl bg-amber-500/20 border border-amber-500/40 px-3 py-2 text-xs font-bold text-amber-300 flex items-center justify-center gap-1.5"
+          >
+            <span>+14D Trial Extend</span>
+          </button>
+          <button
+            id="reqTypePurchaseBtn"
+            type="button"
+            class="req-type-btn rounded-xl bg-white/[0.04] border border-slate-700 px-3 py-2 text-xs font-semibold text-slate-300 flex items-center justify-center gap-1.5"
+          >
+            <span>★ Lifetime Pro Key</span>
           </button>
         </div>
 
-        <form id="licenseRequestForm" class="space-y-4">
-          <!-- Request Type Selector -->
+        <div class="grid grid-cols-2 gap-2.5">
           <div>
-            <label class="block text-xs text-slate-400 mb-1.5">Request Type</label>
-            <div class="grid grid-cols-2 gap-2.5">
-              <button
-                type="button"
-                id="reqTypePurchaseBtn"
-                data-req-type="PURCHASE_LICENSE"
-                class="req-type-btn rounded-xl bg-cyan/20 ring-1 ring-cyan/50 px-3 py-2.5 text-xs font-bold text-cyan flex items-center justify-center gap-1.5 spring-transition"
-              >
-                <i class="ph-light ph-shopping-bag-open text-sm"></i>
-                <span>Purchase Lifetime License (PRO)</span>
-              </button>
-              <button
-                type="button"
-                id="reqTypeTrialExtendBtn"
-                data-req-type="TRIAL_EXTEND"
-                class="req-type-btn rounded-xl bg-white/[0.04] ring-1 ring-white/10 px-3 py-2.5 text-xs font-semibold text-slate-300 flex items-center justify-center gap-1.5 spring-transition"
-              >
-                <i class="ph-light ph-clock-clockwise text-sm"></i>
-                <span>Request Trial Key Extension</span>
-              </button>
-            </div>
-            <input type="hidden" id="requestTypeInput" value="PURCHASE_LICENSE" />
+            <label for="requestDeviceIdInput" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+              Garmin Device ID
+            </label>
+            <input
+              id="requestDeviceIdInput"
+              type="text"
+              readonly
+              class="w-full bg-[#060B13] border border-slate-800 rounded-lg px-2.5 py-2 font-mono text-xs text-amber-300"
+            />
           </div>
-
-          <!-- Device ID & Sync Key Row -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label class="block text-xs text-slate-400 mb-1" for="requestDeviceIdInput">Watch Device ID</label>
-              <input
-                id="requestDeviceIdInput"
-                type="text"
-                required
-                value="V2-GARMIN88"
-                class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3 py-2 font-mono text-xs text-cyan font-bold uppercase focus:outline-none"
-              />
-            </div>
-            <div>
-              <label class="block text-xs text-slate-400 mb-1" for="requestSyncKeyInput">Portfolio Sync Key</label>
-              <input
-                id="requestSyncKeyInput"
-                type="text"
-                value="GARMIN-88"
-                class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3 py-2 font-mono text-xs text-alabaster uppercase focus:outline-none"
-              />
-            </div>
-            <div id="requestExtendDaysWrapper">
-              <label class="block text-xs text-amber mb-1" for="requestExtendDaysSelect">Trial Extension Days</label>
-              <select
-                id="requestExtendDaysSelect"
-                class="w-full rounded-xl bg-void ring-1 ring-amber/30 focus:ring-amber px-3 py-2 font-mono text-xs text-alabaster focus:outline-none"
-              >
-                <option value="14">+14 Days (Standard)</option>
-                <option value="7">+7 Days</option>
-                <option value="30">+30 Days</option>
-              </select>
-            </div>
+          <div id="requestExtendDaysWrapper">
+            <label for="requestExtendDaysSelect" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+              Extension Duration
+            </label>
+            <select
+              id="requestExtendDaysSelect"
+              class="w-full bg-[#060B13] border border-slate-700 rounded-lg px-2.5 py-2 font-mono text-xs text-white"
+            >
+              <option value="14">+14 Days Free Trial</option>
+              <option value="30">+30 Days Evaluation</option>
+            </select>
           </div>
+        </div>
 
-          <!-- Contact Information Fields -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs text-slate-300 mb-1" for="requestContactNameInput">
-                Contact Name <span class="text-crimson">*</span>
-              </label>
-              <input
-                id="requestContactNameInput"
-                type="text"
-                required
-                placeholder="e.g. Alex Mercer"
-                class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3.5 py-2.5 text-xs text-alabaster focus:outline-none"
-              />
-            </div>
-            <div>
-              <label class="block text-xs text-slate-300 mb-1" for="requestContactEmailInput">
-                Email Address <span class="text-crimson">*</span>
-              </label>
-              <input
-                id="requestContactEmailInput"
-                type="email"
-                required
-                placeholder="e.g. investor@example.com"
-                class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3.5 py-2.5 font-mono text-xs text-alabaster focus:outline-none"
-              />
-            </div>
-          </div>
+        <div>
+          <label for="requestContactNameInput" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+            Your Name *
+          </label>
+          <input
+            id="requestContactNameInput"
+            type="text"
+            required
+            placeholder="Investor Name"
+            class="w-full bg-[#060B13] border border-slate-700 rounded-lg px-3 py-2 text-xs text-white"
+          />
+        </div>
 
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <div>
-            <label class="block text-xs text-slate-300 mb-1" for="requestContactPhoneInput">
-              Phone Number or LINE / Telegram ID <span class="text-crimson">*</span>
+            <label for="requestContactEmailInput" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+              Email Address *
+            </label>
+            <input
+              id="requestContactEmailInput"
+              type="email"
+              required
+              placeholder="you@domain.com"
+              class="w-full bg-[#060B13] border border-slate-700 rounded-lg px-3 py-2 text-xs text-white"
+            />
+          </div>
+          <div>
+            <label for="requestContactPhoneInput" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+              Phone / LINE ID *
             </label>
             <input
               id="requestContactPhoneInput"
               type="text"
               required
-              placeholder="e.g. +66 81-234-5678 / LINE ID: @myline"
-              class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3.5 py-2.5 text-xs text-alabaster focus:outline-none"
+              placeholder="081-xxx-xxxx or LINE ID"
+              class="w-full bg-[#060B13] border border-slate-700 rounded-lg px-3 py-2 text-xs text-white"
             />
           </div>
+        </div>
 
-          <div>
-            <label class="block text-xs text-slate-300 mb-1" for="requestMessageInput">
-              Additional Message / Notes
-            </label>
-            <textarea
-              id="requestMessageInput"
-              rows="3"
-              placeholder="Let us know if you'd like to purchase a Lifetime Pro License or why you need a Trial extension..."
-              class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2.5 text-xs text-alabaster focus:outline-none"
-            ></textarea>
-          </div>
+        <div>
+          <label for="requestMessageInput" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+            Notes for Admin
+          </label>
+          <textarea
+            id="requestMessageInput"
+            rows="2"
+            class="w-full bg-[#060B13] border border-slate-700 rounded-lg px-3 py-2 text-xs text-white"
+          ></textarea>
+        </div>
 
-          <div id="licenseRequestFeedbackBox" class="hidden rounded-xl px-3.5 py-2.5 text-xs font-medium"></div>
+        <div id="licenseRequestFeedbackBox" class="hidden p-2.5 rounded-lg border text-xs"></div>
 
-          <div class="flex items-center justify-between pt-2">
-            <span class="text-[11px] font-mono text-slate-400">
-              Owner: <strong class="text-amber">saharat.bun@icloud.com</strong>
-            </span>
-            <div class="flex items-center gap-2">
-              <button
-                id="cancelLicenseRequestModalBtn"
-                type="button"
-                class="rounded-full bg-white/[0.06] hover:bg-white/[0.12] px-4 py-2 text-xs font-medium text-slate-300"
-              >
-                Close
-              </button>
-              <button
-                id="submitLicenseRequestBtn"
-                type="submit"
-                class="rounded-full bg-emerald text-void font-bold text-xs px-5 py-2.5 flex items-center gap-2 spring-transition active:scale-[0.98]"
-              >
-                <i class="ph-light ph-paper-plane-tilt text-sm font-bold"></i>
-                <span>Submit Request &amp; Notify Admin</span>
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
+        <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
+          <button
+            id="cancelLicenseRequestModalBtn"
+            type="button"
+            class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300"
+          >
+            Close
+          </button>
+          <button
+            id="submitLicenseRequestBtn"
+            type="submit"
+            class="px-5 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs"
+          >
+            Submit Request
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
-  <!-- Toast Notification -->
-  <div id="toastBanner" class="fixed bottom-6 right-6 z-50 translate-y-20 opacity-0 pointer-events-none spring-transition">
-    <div class="rounded-full bg-core/95 backdrop-blur-xl ring-1 ring-emerald/40 px-5 py-3 shadow-2xl flex items-center gap-3">
-      <span class="w-2 h-2 rounded-full bg-emerald"></span>
-      <span id="toastMessage" class="text-xs font-medium text-alabaster">Portfolio saved successfully</span>
-    </div>
-  </div>
-
-  <script src="/watchSimulator.js?v=20261029-en1"></script>
-  <script src="/app.js?v=20261029-en1"></script>
+  <!-- Scripts -->
+  <script src="/watchSimulator.js"></script>
+  <script src="/app.js"></script>
 </body>
 </html>
