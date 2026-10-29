@@ -70,6 +70,11 @@
       activationKey: ''
     },
     license: null,
+    researchFeed: null,
+    hermesViewMode: 'CARDS', // 'CARDS' | 'MATRIX' | 'DUAL'
+    hermesSrHorizon: 'ALL', // 'ALL' | 'SHORT' | 'MEDIUM' | 'LONG'
+    hermesActiveTag: 'ALL',
+    hermesSearchQuery: '',
     autoSwipeTimerId: null,
     autoSwipeCountdown: 5,
     quoteRefreshIntervalId: null
@@ -196,6 +201,11 @@
       state.watchSettings = { ...state.profile.watchSettings };
       state.watchPnlMode = state.watchSettings.sortByPctMetric === 'TOTAL' ? 'total' : 'day';
       state.license = state.profile.license;
+      if (raw.researchFeed) {
+        state.researchFeed = raw.researchFeed;
+      } else {
+        await loadResearchFeed(cleanKey, false);
+      }
       applyClientSideSort();
       if (state.activePortfolioIndex >= state.profile.portfolios.length) {
         state.activePortfolioIndex = 0;
@@ -204,6 +214,20 @@
       syncAutoSwipeLoop();
     } catch (err) {
       showToast(`Sync Error: ${err.message}`);
+    }
+  }
+
+  async function loadResearchFeed(syncKey = state.syncKey, shouldRender = true) {
+    try {
+      const res = await fetch(`/api/research-feed?key=${encodeURIComponent(syncKey || 'VENU2-88')}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data && data.ok) {
+        state.researchFeed = data;
+        if (shouldRender) renderHermesResearchSection();
+      }
+    } catch (_) {
+      // Ignore transient network errors
     }
   }
 
@@ -1412,10 +1436,457 @@
     el('dockTabDevice')?.classList.toggle('hidden', tabName !== 'device');
   }
 
+  function getBiasBadgeStyle(bias) {
+    const b = String(bias || 'NEUTRAL').toUpperCase();
+    if (b === 'BULLISH') {
+      return {
+        pill: 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/35',
+        dot: 'bg-emerald-400',
+        label: 'BULLISH'
+      };
+    }
+    if (b === 'ACCUMULATE') {
+      return {
+        pill: 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/35',
+        dot: 'bg-cyan-400',
+        label: 'ACCUMULATE'
+      };
+    }
+    if (b === 'DEFENSIVE' || b === 'BEARISH') {
+      return {
+        pill: 'bg-amber-500/15 text-amber-300 border border-amber-500/35',
+        dot: 'bg-amber-400',
+        label: b
+      };
+    }
+    return {
+      pill: 'bg-slate-500/15 text-slate-300 border border-slate-500/35',
+      dot: 'bg-slate-400',
+      label: 'NEUTRAL'
+    };
+  }
+
+  function formatSrPrice(val, currency = 'USD') {
+    const num = Number(val || 0);
+    if (!Number.isFinite(num) || num <= 0) return '—';
+    return rawFormatMoney(num, currency);
+  }
+
+  function formatRelativeAge(isoStr) {
+    if (!isoStr) return 'Just now';
+    const ms = Date.now() - Date.parse(isoStr);
+    if (!Number.isFinite(ms) || ms < 60_000) return 'Just now';
+    const mins = Math.floor(ms / 60_000);
+    if (mins < 60) return `${mins}m ago`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    return `${days}d ago`;
+  }
+
+  function computeSrChannelCursorPct(price, s3, r3) {
+    const p = Number(price || 0);
+    const low = Number(s3 || 0);
+    const high = Number(r3 || 0);
+    if (p <= 0 || low <= 0 || high <= low) return 50;
+    const raw = ((p - low) / (high - low)) * 100;
+    return Math.max(4, Math.min(96, Math.round(raw)));
+  }
+
+  function renderHermesResearchSection() {
+    const feed = state.researchFeed;
+    const cardsGrid = el('hermesResearchCardsGrid');
+    const matrixWrap = el('hermesWatchlistSrMatrixWrap');
+    const matrixBody = el('hermesWatchlistSrMatrixBody');
+    const tagPillsBox = el('hermesResearchTagPills');
+    if (!cardsGrid || !matrixBody) return;
+
+    const posts = Array.isArray(feed?.posts) ? feed.posts : [];
+    const matrix = Array.isArray(feed?.watchlistSrMatrix)
+      ? feed.watchlistSrMatrix
+      : Array.isArray(feed?.watchlistMatrix)
+      ? feed.watchlistMatrix
+      : [];
+    const tagCloud = Array.isArray(feed?.tagCloud) ? feed.tagCloud : [];
+    const policy = feed?.policy || { autoArchiveEnabled: true, autoArchiveDays: 21 };
+
+    if (el('hermesActivePostCountBadge')) {
+      el('hermesActivePostCountBadge').textContent = `${posts.length} Active Cards`;
+    }
+    if (el('hermesFeedActiveCount')) {
+      el('hermesFeedActiveCount').textContent = `${posts.length} Active`;
+    }
+    if (el('hermesWatchlistSrCountBadge')) {
+      el('hermesWatchlistSrCountBadge').textContent = `${matrix.length} S/R 1-2-3 Tickers`;
+    }
+    if (el('hermesMatrixCount')) {
+      el('hermesMatrixCount').textContent = `${matrix.length} Tickers`;
+    }
+    if (el('hermesAutoArchiveTtlBadge')) {
+      el('hermesAutoArchiveTtlBadge').textContent = policy.autoArchiveEnabled
+        ? `Auto-Archive: ${policy.autoArchiveDays}d TTL`
+        : 'Auto-Archive: Manual Only';
+    }
+
+    // View mode toggle state
+    const mode = state.hermesViewMode || 'CARDS';
+    ['hermesViewCardsBtn', 'hermesViewMatrixBtn', 'hermesViewDualBtn'].forEach(btnId => {
+      const b = el(btnId);
+      if (!b) return;
+      b.classList.toggle('active', b.getAttribute('data-hermes-view') === mode);
+    });
+    cardsGrid.classList.toggle('hidden', mode === 'MATRIX');
+    matrixWrap?.classList.toggle('hidden', mode === 'CARDS');
+
+    // Horizon buttons state
+    const activeHorizon = state.hermesSrHorizon || 'ALL';
+    document.querySelectorAll('#hermesHorizonFilterGroup [data-sr-horizon]').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-sr-horizon') === activeHorizon);
+    });
+
+    // Render #tag filter pills
+    if (tagPillsBox) {
+      const topTags = tagCloud.slice(0, 12);
+      tagPillsBox.innerHTML = [
+        `<button type="button" data-hermes-tag="ALL" class="mw-filter-pill text-[11px] py-1 px-2.5 ${state.hermesActiveTag === 'ALL' ? 'active' : ''}">All Topics (${posts.length})</button>`,
+        ...topTags.map(
+          t =>
+            `<button type="button" data-hermes-tag="${escapeHtml(t.tag)}" class="mw-filter-pill text-[11px] py-1 px-2.5 ${state.hermesActiveTag === t.tag ? 'active' : ''}">${escapeHtml(t.tag)} <span class="opacity-60 font-mono">${t.activeCount || t.count}</span></button>`
+        )
+      ].join('');
+
+      tagPillsBox.querySelectorAll('[data-hermes-tag]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.hermesActiveTag = btn.getAttribute('data-hermes-tag') || 'ALL';
+          renderHermesResearchSection();
+        });
+      });
+    }
+
+    // Collect user's own symbols to highlight "IN YOUR PORT"
+    const userSymbols = new Set();
+    for (const p of state.profile?.portfolios || []) {
+      for (const it of p.items || []) {
+        if (it.symbol) userSymbols.add(String(it.symbol).toUpperCase());
+      }
+    }
+
+    const q = (state.hermesSearchQuery || '').trim().toLowerCase();
+    const activeTag = state.hermesActiveTag || 'ALL';
+
+    const filteredPosts = posts.filter(post => {
+      if (activeTag !== 'ALL') {
+        const hasTag = (post.tags || []).some(t => String(t).toLowerCase() === activeTag.toLowerCase());
+        if (!hasTag) return false;
+      }
+      if (!q) return true;
+      const hay = `${post.symbol} ${post.name} ${post.title} ${post.summary} ${post.signalMemo} ${(post.tags || []).join(' ')}`.toLowerCase();
+      return hay.includes(q);
+    });
+
+    const filteredMatrix = matrix.filter(row => {
+      if (activeTag !== 'ALL') {
+        const hasTag = (row.tags || []).some(t => String(t).toLowerCase() === activeTag.toLowerCase());
+        if (!hasTag) return false;
+      }
+      if (!q) return true;
+      const hay = `${row.symbol} ${row.name} ${row.headline} ${row.signalMemo} ${(row.tags || []).join(' ')}`.toLowerCase();
+      return hay.includes(q);
+    });
+
+    if (el('hermesMatrixCountLabel')) {
+      el('hermesMatrixCountLabel').textContent = `${filteredMatrix.length} Watchlist & Shared Tickers`;
+    }
+
+    // Render Cards Grid
+    if (filteredPosts.length === 0) {
+      cardsGrid.innerHTML = `
+        <div class="col-span-full py-10 px-4 text-center rounded-2xl border border-white/[0.07] bg-white/[0.015] text-slate-400 text-xs">
+          No Hermes research cards match the current filter (${escapeHtml(activeTag)} ${q ? `/ "${escapeHtml(q)}"` : ''}).
+        </div>
+      `;
+    } else {
+      cardsGrid.innerHTML = filteredPosts
+        .map(post => {
+          const cur = post.currency || (String(post.symbol).endsWith('.BK') ? 'THB' : 'USD');
+          const price = Number(post.livePrice || post.referencePrice || 0);
+          const chg = Number(post.changePct || 0);
+          const biasStyle = getBiasBadgeStyle(post.bias);
+          const inMyPort = userSymbols.has(String(post.symbol).toUpperCase());
+          const sr = post.supportResistance || { support: [], resistance: [] };
+          const sList = Array.isArray(sr.support) ? sr.support : [];
+          const rList = Array.isArray(sr.resistance) ? sr.resistance : [];
+          const quant = post.quantMetrics || {};
+          const s3Val = sList[2]?.price || sList[0]?.price || price * 0.88;
+          const r3Val = rList[2]?.price || rList[0]?.price || price * 1.12;
+          const cursorPct = computeSrChannelCursorPct(price, s3Val, r3Val);
+
+          const filterLevelByHorizon = lvl => {
+            if (activeHorizon === 'ALL') return true;
+            if (activeHorizon === 'SHORT') return Number(lvl.level) === 1;
+            if (activeHorizon === 'MEDIUM') return Number(lvl.level) === 2;
+            if (activeHorizon === 'LONG') return Number(lvl.level) === 3;
+            return true;
+          };
+
+          const visibleSupports = sList.filter(filterLevelByHorizon);
+          const visibleResistances = rList.filter(filterLevelByHorizon);
+
+          const renderSrRow = (lvl, isSupport) => {
+            const lvlPrice = Number(lvl.price || 0);
+            const distPct = price > 0 && lvlPrice > 0 ? ((lvlPrice - price) / price) * 100 : 0;
+            const badgeColor = isSupport
+              ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+              : 'bg-amber-500/15 text-amber-300 border-amber-500/30';
+            const distColor = isSupport ? 'text-emerald-400' : 'text-amber-300';
+            const prefix = isSupport ? `S${lvl.level}` : `R${lvl.level}`;
+
+            return `
+              <div class="p-2 rounded-lg bg-slate-950/65 border border-white/[0.06] flex flex-col gap-0.5">
+                <div class="flex items-center justify-between gap-1.5">
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded border ${badgeColor}">${prefix}</span>
+                    <span class="text-[10px] text-slate-300 font-medium">${escapeHtml(lvl.horizonTh || lvl.horizon || '')}</span>
+                  </div>
+                  <div class="text-right">
+                    <span class="font-mono text-xs font-bold text-white">${formatSrPrice(lvlPrice, cur)}</span>
+                    <span class="font-mono text-[10px] ${distColor} ml-1">(${formatSignedPct(distPct, 1)})</span>
+                  </div>
+                </div>
+                <div class="text-[10px] text-slate-400 truncate" title="${escapeHtml(lvl.note || '')}">${escapeHtml(lvl.note || '')}</div>
+              </div>
+            `;
+          };
+
+          return `
+            <article class="mw-sr-research-card rounded-2xl border border-white/[0.08] bg-slate-950/55 hover:border-cyan-500/35 transition p-4 flex flex-col justify-between gap-3.5 relative overflow-hidden">
+              <!-- Top Ribbon: Symbol, Scope, Bias & Live Price -->
+              <div>
+                <div class="flex items-start justify-between gap-2">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="font-mono text-base font-extrabold tracking-tight text-white px-2.5 py-0.5 rounded-lg bg-white/[0.06] border border-white/10">${escapeHtml(post.symbol)}</span>
+                    ${
+                      post.pinned
+                        ? `<span class="text-[9px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30">★ PINNED</span>`
+                        : ''
+                    }
+                    ${
+                      inMyPort
+                        ? `<span class="text-[9px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">IN YOUR PORT</span>`
+                        : `<span class="text-[9px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded bg-white/[0.05] text-slate-400 border border-white/10">SHARED FEED</span>`
+                    }
+                    <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${biasStyle.pill}">${biasStyle.label} · ${Number(post.confidence || 80)}%</span>
+                  </div>
+                  <div class="text-right shrink-0">
+                    <div class="font-mono text-sm font-bold text-white">${formatSrPrice(price, cur)}</div>
+                    <div class="font-mono text-[10px] ${chg >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatSignedPct(chg, 2)}</div>
+                  </div>
+                </div>
+
+                <!-- Headline & Executive Summary -->
+                <h3 class="text-sm font-bold text-white mt-2.5 leading-snug">${escapeHtml(post.title)}</h3>
+                <p class="text-xs text-slate-300/90 mt-1 leading-relaxed line-clamp-3">${escapeHtml(post.summary || post.signalMemo || '')}</p>
+              </div>
+
+              <!-- Visual Price Positioning Channel Bar (S3 -> S2 -> S1 -> LIVE -> R1 -> R2 -> R3) -->
+              <div class="p-2.5 rounded-xl bg-white/[0.025] border border-white/[0.06]">
+                <div class="flex items-center justify-between text-[10px] font-mono mb-1.5">
+                  <span class="text-emerald-300">S3 ${formatSrPrice(sList[2]?.price, cur)}</span>
+                  <span class="px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/25 font-semibold">
+                    ${escapeHtml(quant.bandLabel || 'IN S1–R1 CHANNEL')} · R/R ${Number(quant.riskRewardRatio || 1.5).toFixed(2)}x
+                  </span>
+                  <span class="text-amber-300">R3 ${formatSrPrice(rList[2]?.price, cur)}</span>
+                </div>
+                <div class="relative h-2 rounded-full bg-gradient-to-r from-emerald-500/35 via-cyan-500/25 to-amber-500/35 border border-white/10">
+                  <div class="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white shadow-[0_0_10px_#22d3ee] border-2 border-cyan-400" style="left: calc(${cursorPct}% - 6px)" title="Live Price: ${formatSrPrice(price, cur)}"></div>
+                </div>
+                <div class="flex items-center justify-between text-[9px] font-mono text-slate-400 mt-1">
+                  <span>Buffer to S1: <strong class="text-emerald-300">${Number(quant.downsideToS1Pct || 0).toFixed(1)}%</strong></span>
+                  <span>Upside to R1: <strong class="text-cyan-300">+${Number(quant.upsideToR1Pct || 0).toFixed(1)}%</strong></span>
+                  <span>Upside to R2: <strong class="text-amber-300">+${Number(quant.upsideToR2Pct || 0).toFixed(1)}%</strong></span>
+                </div>
+              </div>
+
+              <!-- Support 1-2-3 & Resistance 1-2-3 Matrix Grid -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-emerald-300 px-0.5">
+                    <span>แนวรับ (Support 1–2–3)</span>
+                    <span>สั้น / กลาง / ยาว</span>
+                  </div>
+                  ${visibleSupports.map(lvl => renderSrRow(lvl, true)).join('')}
+                </div>
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-amber-300 px-0.5">
+                    <span>แนวต้าน (Resistance 1–2–3)</span>
+                    <span>สั้น / กลาง / ยาว</span>
+                  </div>
+                  ${visibleResistances.map(lvl => renderSrRow(lvl, false)).join('')}
+                </div>
+              </div>
+
+              <!-- Footer: Signal Memo, #Tags & 1-Click Apply to Watch Alert -->
+              <div class="pt-2.5 border-t border-white/[0.06] flex flex-col gap-2">
+                <div class="flex items-center justify-between gap-2 text-[11px] font-mono bg-cyan-500/[0.07] border border-cyan-500/20 rounded-lg px-2.5 py-1.5 text-cyan-200">
+                  <span class="truncate" title="${escapeHtml(post.signalMemo || '')}">⚡ ${escapeHtml(post.signalMemo || post.title)}</span>
+                  <span class="text-[9px] text-slate-400 shrink-0">${formatRelativeAge(post.updatedAt)}</span>
+                </div>
+                <div class="flex items-center justify-between gap-2 flex-wrap">
+                  <div class="flex items-center gap-1 flex-wrap">
+                    ${(post.tags || [])
+                      .map(
+                        tag =>
+                          `<button type="button" data-card-tag="${escapeHtml(tag)}" class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/[0.04] hover:bg-cyan-500/15 text-slate-300 hover:text-cyan-300 border border-white/10 transition">${escapeHtml(tag)}</button>`
+                      )
+                      .join('')}
+                  </div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-[10px] text-slate-500 font-mono">By ${escapeHtml(post.author || 'Hermes Agent')}</span>
+                    <button
+                      type="button"
+                      data-apply-sr-symbol="${escapeHtml(post.symbol)}"
+                      class="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 border border-cyan-500/30 transition"
+                      title="Open Holding Modal with S1 as Stop and R2 as Target">
+                      ${inMyPort ? 'Apply S1/R2 Alert' : '+ Track in My Port'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </article>
+          `;
+        })
+        .join('');
+
+      cardsGrid.querySelectorAll('[data-card-tag]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.hermesActiveTag = btn.getAttribute('data-card-tag') || 'ALL';
+          renderHermesResearchSection();
+        });
+      });
+
+      cardsGrid.querySelectorAll('[data-apply-sr-symbol]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const sym = (btn.getAttribute('data-apply-sr-symbol') || '').toUpperCase();
+          const post = posts.find(p => String(p.symbol).toUpperCase() === sym);
+          if (!post) return;
+          applyHermesSrPostToHoldingModal(post);
+        });
+      });
+    }
+
+    // Render Watchlist S/R 1-2-3 Matrix Table
+    if (filteredMatrix.length === 0) {
+      matrixBody.innerHTML = `
+        <tr>
+          <td colspan="10" class="py-8 text-center text-slate-500 text-xs">No Watchlist S/R 1-2-3 rows match the current filter.</td>
+        </tr>
+      `;
+    } else {
+      matrixBody.innerHTML = filteredMatrix
+        .map(row => {
+          const cur = row.currency || (String(row.symbol).endsWith('.BK') ? 'THB' : 'USD');
+          const sr = row.supportResistance || { support: [], resistance: [] };
+          const s1 = sr.support?.[0]?.price || 0;
+          const s2 = sr.support?.[1]?.price || 0;
+          const s3 = sr.support?.[2]?.price || 0;
+          const r1 = sr.resistance?.[0]?.price || 0;
+          const r2 = sr.resistance?.[1]?.price || 0;
+          const r3 = sr.resistance?.[2]?.price || 0;
+          const qm = row.quantMetrics || {};
+          const biasStyle = getBiasBadgeStyle(row.bias);
+          const inMyPort = userSymbols.has(String(row.symbol).toUpperCase());
+
+          return `
+            <tr class="hover:bg-white/[0.03] transition">
+              <td>
+                <div class="flex items-center gap-2">
+                  <span class="font-mono font-bold text-white">${escapeHtml(row.symbol)}</span>
+                  ${
+                    inMyPort
+                      ? `<span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">MY PORT</span>`
+                      : `<span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-white/[0.05] text-slate-400">SHARED</span>`
+                  }
+                </div>
+                <div class="text-[10px] text-slate-400 truncate max-w-[150px]">${escapeHtml(row.name || row.symbol)}</div>
+              </td>
+              <td class="text-right font-mono">
+                <div class="font-bold text-white">${formatSrPrice(row.livePrice, cur)}</div>
+                <div class="text-[10px] ${Number(row.changePct || 0) >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
+                  ${formatSignedPct(row.changePct || 0, 2)} · <span class="px-1 rounded ${biasStyle.pill}">${biasStyle.label}</span>
+                </div>
+              </td>
+              <td class="text-right font-mono bg-emerald-500/[0.03]">
+                <div class="text-emerald-300 font-semibold">${formatSrPrice(s1, cur)}</div>
+                <div class="text-[9px] text-slate-400">-${Number(qm.downsideToS1Pct || 0).toFixed(1)}%</div>
+              </td>
+              <td class="text-right font-mono bg-emerald-500/[0.05]">
+                <div class="text-emerald-300 font-semibold">${formatSrPrice(s2, cur)}</div>
+                <div class="text-[9px] text-slate-400">-${Number(qm.downsideToS2Pct || 0).toFixed(1)}%</div>
+              </td>
+              <td class="text-right font-mono bg-emerald-500/[0.07]">
+                <div class="text-emerald-200 font-bold">${formatSrPrice(s3, cur)}</div>
+                <div class="text-[9px] text-slate-400">-${Number(qm.downsideToS3Pct || 0).toFixed(1)}%</div>
+              </td>
+              <td class="text-right font-mono bg-amber-500/[0.03]">
+                <div class="text-amber-300 font-semibold">${formatSrPrice(r1, cur)}</div>
+                <div class="text-[9px] text-slate-400">+${Number(qm.upsideToR1Pct || 0).toFixed(1)}%</div>
+              </td>
+              <td class="text-right font-mono bg-amber-500/[0.05]">
+                <div class="text-amber-300 font-semibold">${formatSrPrice(r2, cur)}</div>
+                <div class="text-[9px] text-slate-400">+${Number(qm.upsideToR2Pct || 0).toFixed(1)}%</div>
+              </td>
+              <td class="text-right font-mono bg-amber-500/[0.07]">
+                <div class="text-amber-200 font-bold">${formatSrPrice(r3, cur)}</div>
+                <div class="text-[9px] text-slate-400">+${Number(qm.upsideToR3Pct || 0).toFixed(1)}%</div>
+              </td>
+              <td class="text-center font-mono">
+                <div class="text-xs font-bold text-cyan-300">${Number(qm.riskRewardRatio || 1.5).toFixed(2)}x</div>
+                <div class="text-[9px] text-slate-400">${escapeHtml(qm.bandLabel || 'CHANNEL')}</div>
+              </td>
+              <td>
+                <div class="text-[11px] text-slate-200 font-medium truncate max-w-[240px]" title="${escapeHtml(row.signalMemo || row.headline || '')}">
+                  ${escapeHtml(row.signalMemo || row.headline || '')}
+                </div>
+                <div class="flex items-center gap-1 mt-0.5 flex-wrap">
+                  ${(row.tags || [])
+                    .slice(0, 3)
+                    .map(t => `<span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-white/[0.05] text-cyan-300">${escapeHtml(t)}</span>`)
+                    .join('')}
+                </div>
+              </td>
+            </tr>
+          `;
+        })
+        .join('');
+    }
+  }
+
+  function applyHermesSrPostToHoldingModal(post) {
+    const active = getActivePortfolio();
+    const sym = String(post.symbol || '').toUpperCase();
+    const existing = (active?.items || []).find(it => String(it.symbol).toUpperCase() === sym) || null;
+    const s1 = Number(post.supportResistance?.support?.[0]?.price || 0);
+    const r2 = Number(post.supportResistance?.resistance?.[1]?.price || post.supportResistance?.resistance?.[0]?.price || 0);
+
+    openHoldingModal(existing);
+    if (!existing) {
+      if (el('holdingSymbolInput')) el('holdingSymbolInput').value = sym;
+      if (el('holdingNameInput')) el('holdingNameInput').value = post.name || sym;
+      if (el('holdingCurrencySelect')) el('holdingCurrencySelect').value = post.currency || (sym.endsWith('.BK') ? 'THB' : 'USD');
+      if (el('holdingSharesInput')) el('holdingSharesInput').value = 0; // Watchlist item by default
+      if (el('holdingAvgCostInput')) el('holdingAvgCostInput').value = Number(post.livePrice || post.referencePrice || 0);
+    }
+    if (s1 > 0 && el('holdingStopInput')) el('holdingStopInput').value = s1;
+    if (r2 > 0 && el('holdingTargetInput')) el('holdingTargetInput').value = r2;
+    if (post.signalMemo && el('holdingNoteInput')) el('holdingNoteInput').value = post.signalMemo;
+    showToast(`Pre-filled ${sym} with Hermes S1 (${s1}) & R2 (${r2})`);
+  }
+
   function renderAll() {
     renderHeaderAndKpiRow();
     renderPortfolioTabsAndRibbon();
     renderHoldingsTable();
+    renderHermesResearchSection();
     renderIntelligenceModulesAndDockLists();
     renderWatchSettingsAndLicense();
     renderGarminVenu2Watch();
@@ -1575,6 +2046,7 @@
           state.profile = normalizeServerPayload(raw);
           state.watchSettings = { ...state.profile.watchSettings };
           state.license = state.profile.license;
+          if (raw.researchFeed) state.researchFeed = raw.researchFeed;
           applyClientSideSort();
           renderAll();
           showToast('Live Yahoo Finance quotes & Fear/Greed refreshed');
@@ -1582,6 +2054,32 @@
       } finally {
         setTimeout(() => icon?.classList.remove('animate-spin'), 450);
       }
+    });
+
+    // 5b. Hermes Analyst Feed & Watchlist S/R 1-2-3 Controls
+    ['hermesViewCardsBtn', 'hermesViewMatrixBtn', 'hermesViewDualBtn'].forEach(btnId => {
+      el(btnId)?.addEventListener('click', () => {
+        const mode = el(btnId)?.getAttribute('data-hermes-view') || 'CARDS';
+        state.hermesViewMode = mode;
+        renderHermesResearchSection();
+      });
+    });
+
+    document.querySelectorAll('#hermesHorizonFilterGroup [data-sr-horizon]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.hermesSrHorizon = btn.getAttribute('data-sr-horizon') || 'ALL';
+        renderHermesResearchSection();
+      });
+    });
+
+    el('hermesResearchSearchInput')?.addEventListener('input', e => {
+      state.hermesSearchQuery = e.target.value || '';
+      renderHermesResearchSection();
+    });
+
+    el('refreshHermesFeedBtn')?.addEventListener('click', async () => {
+      await loadResearchFeed(state.syncKey, true);
+      showToast('Synced shared S/R 1-2-3 & Hermes Research Feed');
     });
 
     // Header Alert Bell & License Badge Shortcuts

@@ -31,8 +31,25 @@ const {
 const {
   reconcileWebPortfolioSave,
   createIntegrationStoreAdapter,
+  resolveIntegrationConfig,
+  verifyIntegrationAuth,
   handleIntegrationRequest
 } = require("./lib/webMemoIntegration");
+const {
+  buildInitialSeedStore,
+  buildPublicResearchFeedPayload,
+  buildAdminBiAnalytics,
+  mutateResearchStore
+} = require("./lib/researchFeedManager");
+const {
+  createDefaultHermesNodeState,
+  normalizeHermesNodeState,
+  buildHermesNodeStatusPayload,
+  recordHermesNodeHeartbeat,
+  enqueueHermesCommand,
+  recordHermesCommandResult,
+  runHermesFunctionalDiagnostics
+} = require("./lib/hermesNodeManager");
 
 // Ensure Connect IQ device definitions exist for all 2024-2026 supported watches
 try {
@@ -45,6 +62,8 @@ const PORT = process.env.PORT || 3880;
 const DATA_DIR = path.join(__dirname, "data");
 const DATA_FILE = path.join(DATA_DIR, "portfolios.json");
 const DRAFTS_FILE = path.join(DATA_DIR, "webmemo_drafts.json");
+const RESEARCH_FILE = path.join(DATA_DIR, "research_feed.json");
+const HERMES_NODE_FILE = path.join(DATA_DIR, "hermes_node_state.json");
 const PUBLIC_DIR = path.join(__dirname, "public");
 
 const licenseManager = new LicenseManager({
@@ -141,6 +160,48 @@ function readDraftsStore() {
 
 function writeDraftsStore(drafts) {
   fs.writeFileSync(DRAFTS_FILE, JSON.stringify(Array.isArray(drafts) ? drafts : [], null, 2), "utf8");
+}
+
+function readResearchStore() {
+  try {
+    if (!fs.existsSync(RESEARCH_FILE)) {
+      const seeded = buildInitialSeedStore();
+      fs.writeFileSync(RESEARCH_FILE, JSON.stringify(seeded, null, 2), "utf8");
+      return seeded;
+    }
+    const raw = fs.readFileSync(RESEARCH_FILE, "utf8");
+    const parsed = JSON.parse(raw);
+    if (parsed && Array.isArray(parsed.posts)) {
+      return parsed;
+    }
+    const seeded = buildInitialSeedStore();
+    fs.writeFileSync(RESEARCH_FILE, JSON.stringify(seeded, null, 2), "utf8");
+    return seeded;
+  } catch (_) {
+    return buildInitialSeedStore();
+  }
+}
+
+function writeResearchStore(researchStore) {
+  fs.writeFileSync(RESEARCH_FILE, JSON.stringify(researchStore, null, 2), "utf8");
+}
+
+function readHermesNodeState() {
+  try {
+    if (!fs.existsSync(HERMES_NODE_FILE)) {
+      const seeded = createDefaultHermesNodeState();
+      fs.writeFileSync(HERMES_NODE_FILE, JSON.stringify(seeded, null, 2), "utf8");
+      return seeded;
+    }
+    const raw = fs.readFileSync(HERMES_NODE_FILE, "utf8");
+    return normalizeHermesNodeState(JSON.parse(raw));
+  } catch (_) {
+    return createDefaultHermesNodeState();
+  }
+}
+
+function writeHermesNodeState(nodeState) {
+  fs.writeFileSync(HERMES_NODE_FILE, JSON.stringify(normalizeHermesNodeState(nodeState), null, 2), "utf8");
 }
 
 function buildNodeIntegrationStore() {
@@ -313,7 +374,7 @@ async function handleRequest(req, res) {
     });
   }
 
-  // 0b. SCOPED WEBMEMO INTEGRATION API (Hermes Agent + Discord Approval)
+  // 0b. SCOPED WEBMEMO & RESEARCH FEED INTEGRATION API (Hermes Agent + Discord Approval)
   if (pathname === "/api/integration" || pathname.startsWith("/api/integration/")) {
     let body = {};
     if (req.method === "POST" || req.method === "PUT" || req.method === "PATCH") {
@@ -323,6 +384,102 @@ async function handleRequest(req, res) {
         return sendJson(res, 400, { ok: false, error: err.message, code: "INVALID_JSON" });
       }
     }
+
+    if (pathname === "/api/integration/research-posts") {
+      const portfoliosStore = readStore();
+      const researchStore = readResearchStore();
+      const cfg = resolveIntegrationConfig(process.env);
+      const authCheck = verifyIntegrationAuth(req.headers || {}, cfg, portfoliosStore);
+      if (!authCheck.ok) {
+        return sendJson(res, authCheck.status, {
+          ok: false,
+          code: authCheck.code,
+          error: authCheck.error
+        });
+      }
+
+      const query = parsedUrl.query || {};
+      if (req.method === "GET") {
+        const feedPayload = buildPublicResearchFeedPayload({
+          researchStore,
+          portfoliosStore,
+          syncKey: "VENU2-88",
+          tagFilter: query.tag,
+          symbolFilter: query.symbol,
+          includeArchived: query.includeArchived === "1" || query.includeArchived === "true"
+        });
+        if (feedPayload.sweep && feedPayload.sweep.dirty) {
+          writeResearchStore(researchStore);
+        }
+        return sendJson(res, 200, feedPayload);
+      }
+
+      if (req.method === "POST" || req.method === "PUT" || req.method === "PATCH") {
+        const mutRes = mutateResearchStore(
+          researchStore,
+          {
+            ...body,
+            action: body.action || "UPSERT",
+            source: body.source || "HERMES_AGENT",
+            author: body.author || "Hermes Quant Research Agent"
+          },
+          { actor: "hermes-agent" }
+        );
+        if (!mutRes.ok) {
+          return sendJson(res, mutRes.status || 400, mutRes);
+        }
+        writeResearchStore(researchStore);
+        const feedPayload = buildPublicResearchFeedPayload({
+          researchStore,
+          portfoliosStore,
+          syncKey: "VENU2-88"
+        });
+        return sendJson(res, mutRes.status || 200, {
+          ...mutRes,
+          summary: feedPayload.summary,
+          policy: feedPayload.policy
+        });
+      }
+    }
+
+    if (pathname.startsWith("/api/integration/hermes-node")) {
+      const portfoliosStore = readStore();
+      const cfg = resolveIntegrationConfig(process.env);
+      const authCheck = verifyIntegrationAuth(req.headers || {}, cfg, portfoliosStore);
+      if (!authCheck.ok) {
+        return sendJson(res, authCheck.status, {
+          ok: false,
+          code: authCheck.code,
+          error: authCheck.error
+        });
+      }
+
+      const nodeState = readHermesNodeState();
+      if (pathname === "/api/integration/hermes-node/status" && req.method === "GET") {
+        return sendJson(res, 200, buildHermesNodeStatusPayload(nodeState));
+      }
+
+      if (pathname === "/api/integration/hermes-node/heartbeat" && req.method === "POST") {
+        const hbRes = recordHermesNodeHeartbeat(nodeState, body);
+        writeHermesNodeState(hbRes.state);
+        return sendJson(res, 200, {
+          ok: true,
+          nextCommand: hbRes.nextCommand,
+          nodeStatus: buildHermesNodeStatusPayload(hbRes.state)
+        });
+      }
+
+      if (pathname === "/api/integration/hermes-node/command-result" && req.method === "POST") {
+        const cmdRes = recordHermesCommandResult(nodeState, body);
+        writeHermesNodeState(cmdRes.state);
+        return sendJson(res, 200, {
+          ok: cmdRes.ok,
+          command: cmdRes.command,
+          nodeStatus: buildHermesNodeStatusPayload(cmdRes.state)
+        });
+      }
+    }
+
     const result = await handleIntegrationRequest({
       method: req.method,
       pathname,
@@ -337,6 +494,27 @@ async function handleRequest(req, res) {
     }
   }
 
+  // 0c. GET SHARED RESEARCH FEED & WATCHLIST SUPPORT/RESISTANCE 1-2-3 (Accessible by all SyncKeys)
+  if (pathname === "/api/research-feed" && req.method === "GET") {
+    const query = parsedUrl.query || {};
+    const syncKey = String(query.key || "VENU2-88").trim().toUpperCase();
+    getOrCreateProfile(syncKey);
+    const portfoliosStore = readStore();
+    const researchStore = readResearchStore();
+    const feedPayload = buildPublicResearchFeedPayload({
+      researchStore,
+      portfoliosStore,
+      syncKey,
+      tagFilter: query.tag,
+      symbolFilter: query.symbol,
+      includeArchived: query.includeArchived === "1" || query.includeArchived === "true"
+    });
+    if (feedPayload.sweep && feedPayload.sweep.dirty) {
+      writeResearchStore(researchStore);
+    }
+    return sendJson(res, 200, feedPayload);
+  }
+
   // 1. GET /api/portfolio?key=VENU2-88 (Full Web Companion + Watch Preview Payload)
   if (pathname === "/api/portfolio" && req.method === "GET") {
     const syncKey = parsedUrl.query.key || "VENU2-88";
@@ -346,6 +524,16 @@ async function handleRequest(req, res) {
       activationKey: parsedUrl.query.akey,
       watchModel: parsedUrl.query.model
     });
+    const researchStore = readResearchStore();
+    const researchFeed = buildPublicResearchFeedPayload({
+      researchStore,
+      portfoliosStore: readStore(),
+      syncKey
+    });
+    if (researchFeed.sweep && researchFeed.sweep.dirty) {
+      writeResearchStore(researchStore);
+    }
+    payload.researchFeed = researchFeed;
     return sendJson(res, 200, payload);
   }
 
@@ -712,13 +900,221 @@ async function handleRequest(req, res) {
 
     if (pathname === "/api/admin/devices" && req.method === "GET") {
       const meta = licenseManager.getAdminAuthMeta({ includeSensitive: true });
+      const portfoliosStore = readStore();
+      const researchStore = readResearchStore();
+      const nodeState = readHermesNodeState();
+      const licensesData = licenseManager.listDevices();
+      const draftsList = readDraftsStore();
+      const researchFeed = buildPublicResearchFeedPayload({
+        researchStore,
+        portfoliosStore,
+        syncKey: "VENU2-88",
+        includeArchived: true
+      });
+      const biAnalytics = buildAdminBiAnalytics({
+        portfoliosStore,
+        licensesData,
+        draftsList,
+        researchStore
+      });
+      if (researchFeed.sweep && researchFeed.sweep.dirty) {
+        writeResearchStore(researchStore);
+      }
       return sendAdminJson(req, res, 200, {
         ok: true,
         admin: { ...auth, ...meta },
-        ...licenseManager.listDevices(),
+        ...licensesData,
         compatibleDevices: COMPATIBLE_GARMIN_DEVICES,
-        smtpConfig: emailService.getSmtpConfig(false)
+        smtpConfig: emailService.getSmtpConfig(false),
+        researchFeed,
+        biAnalytics,
+        hermesNode: buildHermesNodeStatusPayload(nodeState)
       });
+    }
+
+    if (pathname === "/api/admin/bi-dashboard" && req.method === "GET") {
+      const portfoliosStore = readStore();
+      const researchStore = readResearchStore();
+      const nodeState = readHermesNodeState();
+      const licensesData = licenseManager.listDevices();
+      const draftsList = readDraftsStore();
+      const biAnalytics = buildAdminBiAnalytics({
+        portfoliosStore,
+        licensesData,
+        draftsList,
+        researchStore
+      });
+      const researchFeed = buildPublicResearchFeedPayload({
+        researchStore,
+        portfoliosStore,
+        syncKey: "VENU2-88",
+        includeArchived: true
+      });
+      if (researchFeed.sweep && researchFeed.sweep.dirty) {
+        writeResearchStore(researchStore);
+      }
+      return sendAdminJson(req, res, 200, {
+        ok: true,
+        biAnalytics,
+        researchFeed,
+        hermesNode: buildHermesNodeStatusPayload(nodeState)
+      });
+    }
+
+    if (pathname === "/api/admin/hermes-node/status" && req.method === "GET") {
+      const nodeState = readHermesNodeState();
+      return sendAdminJson(req, res, 200, buildHermesNodeStatusPayload(nodeState));
+    }
+
+    if (pathname === "/api/admin/hermes-node/diagnostics" && req.method === "POST") {
+      try {
+        const portfoliosStore = readStore();
+        const researchStore = readResearchStore();
+        const nodeState = readHermesNodeState();
+        const licensesData = licenseManager.listDevices();
+        const draftsList = readDraftsStore();
+        const integrationConfig = resolveIntegrationConfig(process.env);
+        const report = await runHermesFunctionalDiagnostics({
+          nodeState,
+          portfoliosStore,
+          researchStore,
+          licensesData,
+          draftsList,
+          integrationConfig,
+          buildPublicResearchFeedPayload,
+          buildAdminBiAnalytics
+        });
+        writeHermesNodeState(nodeState);
+        return sendAdminJson(req, res, 200, {
+          ok: true,
+          report,
+          nodeStatus: buildHermesNodeStatusPayload(nodeState)
+        });
+      } catch (err) {
+        return sendAdminJson(req, res, 400, { ok: false, error: err.message });
+      }
+    }
+
+    if (pathname === "/api/admin/hermes-node/command" && req.method === "POST") {
+      try {
+        const body = await parseBody(req);
+        const action = String(body.action || "").trim().toUpperCase();
+        const portfoliosStore = readStore();
+        const researchStore = readResearchStore();
+        let nodeState = readHermesNodeState();
+        let diagnosticReport = null;
+
+        if (action === "TEST_ALL_FUNCTIONS") {
+          const licensesData = licenseManager.listDevices();
+          const draftsList = readDraftsStore();
+          const integrationConfig = resolveIntegrationConfig(process.env);
+          diagnosticReport = await runHermesFunctionalDiagnostics({
+            nodeState,
+            portfoliosStore,
+            researchStore,
+            licensesData,
+            draftsList,
+            integrationConfig,
+            buildPublicResearchFeedPayload,
+            buildAdminBiAnalytics
+          });
+        }
+
+        const enq = enqueueHermesCommand(
+          nodeState,
+          { action, reason: body.reason || "" },
+          { actor: auth.email || OWNER_EMAIL }
+        );
+        if (!enq.ok) {
+          return sendAdminJson(req, res, enq.status || 400, enq);
+        }
+        nodeState = enq.state;
+        writeHermesNodeState(nodeState);
+        return sendAdminJson(req, res, 200, {
+          ok: true,
+          command: enq.command,
+          diagnosticReport,
+          nodeStatus: buildHermesNodeStatusPayload(nodeState)
+        });
+      } catch (err) {
+        return sendAdminJson(req, res, 400, { ok: false, error: err.message });
+      }
+    }
+
+    if (pathname === "/api/admin/research-posts" && req.method === "GET") {
+      const query = parsedUrl.query || {};
+      const portfoliosStore = readStore();
+      const researchStore = readResearchStore();
+      const researchFeed = buildPublicResearchFeedPayload({
+        researchStore,
+        portfoliosStore,
+        syncKey: "VENU2-88",
+        tagFilter: query.tag,
+        symbolFilter: query.symbol,
+        includeArchived: true
+      });
+      const licensesData = licenseManager.listDevices();
+      const draftsList = readDraftsStore();
+      const biAnalytics = buildAdminBiAnalytics({
+        portfoliosStore,
+        licensesData,
+        draftsList,
+        researchStore
+      });
+      if (researchFeed.sweep && researchFeed.sweep.dirty) {
+        writeResearchStore(researchStore);
+      }
+      return sendAdminJson(req, res, 200, {
+        ok: true,
+        researchFeed,
+        biAnalytics
+      });
+    }
+
+    if (
+      pathname === "/api/admin/research-posts" &&
+      (req.method === "POST" || req.method === "PUT" || req.method === "DELETE")
+    ) {
+      try {
+        const body = await parseBody(req);
+        const portfoliosStore = readStore();
+        const researchStore = readResearchStore();
+        const action =
+          req.method === "DELETE"
+            ? "DELETE"
+            : body.action || "UPSERT";
+        const mutRes = mutateResearchStore(
+          researchStore,
+          { ...body, action },
+          { actor: auth.email || OWNER_EMAIL }
+        );
+        if (!mutRes.ok) {
+          return sendAdminJson(req, res, mutRes.status || 400, mutRes);
+        }
+        writeResearchStore(researchStore);
+        const researchFeed = buildPublicResearchFeedPayload({
+          researchStore,
+          portfoliosStore,
+          syncKey: "VENU2-88",
+          includeArchived: true
+        });
+        const licensesData = licenseManager.listDevices();
+        const draftsList = readDraftsStore();
+        const biAnalytics = buildAdminBiAnalytics({
+          portfoliosStore,
+          licensesData,
+          draftsList,
+          researchStore
+        });
+        return sendAdminJson(req, res, mutRes.status || 200, {
+          ...mutRes,
+          posts: researchFeed.posts,
+          researchFeed,
+          biAnalytics
+        });
+      } catch (err) {
+        return sendAdminJson(req, res, 400, { ok: false, error: err.message });
+      }
     }
 
     if (pathname === "/api/admin/requests/resolve" && req.method === "POST") {

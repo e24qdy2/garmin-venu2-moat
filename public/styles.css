@@ -913,3 +913,30 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* ============================================================================
+   9. Hermes Research & Support/Resistance 1-2-3 Shared Section Cards
+   ============================================================================ */
+.mw-sr-research-card {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12px 30px -16px rgba(0, 0, 0, 0.78);
+}
+
+.mw-sr-research-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.35), rgba(34, 211, 238, 0.35), transparent);
+  pointer-events: none;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

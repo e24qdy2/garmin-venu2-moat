@@ -38,6 +38,10 @@ This skill connects Hermes Agent on Raspberry Pi 3B+ (`echo24`) to the owner's r
   Creates a 24h pending draft bound to the current `baseMemoRevision` and posts an interactive **Approve / Reject** card to Discord.
 - `moat_list_webmemo_drafts(status?, symbol?)`:
   Lists drafts (`PENDING`, `APPROVED`, `REJECTED`, `CONFLICT`, `EXPIRED`).
+- `moat_publish_research_post(symbol, headline, summary, signalMemo?, bias?, confidence?, referencePrice?, s1?, s2?, s3?, r1?, r2?, r3?, tags?, pinned?)`:
+  Publishes or updates a shared **Support / Resistance Level 1–2–3 (ระยะสั้น S1/R1, ระยะกลาง S2/R2, ระยะยาว S3/R3)** & `#tag` research card on the MoatWatch Web App frontpage (visible across all SyncKeys).
+- `moat_list_research_posts(symbol?, tag?, includeArchived?)`:
+  Lists active/archived shared research posts and the full Watchlist S/R 1-2-3 matrix.
 
 ## Workflow 1: On-Demand Stock Analysis & WebMemo Draft
 When the owner asks in Discord to analyze a stock (e.g. `NVDA`, `SPCX`, `AVGO`, `TSM`) or draft a WebMemo:

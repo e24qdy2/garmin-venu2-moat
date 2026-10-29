@@ -954,6 +954,10 @@ async function runTests() {
     process.env.WEBMEMO_ALLOWED_ACCOUNT_KEY = "VENU2-88";
     process.env.WEBMEMO_ALLOWED_DISCORD_USER_IDS = OWNER_DISCORD_ID;
 
+    const fs = require("fs");
+    const path = require("path");
+    const researchFeedPath = path.join(__dirname, "..", "data", "research_feed.json");
+    const origResearchFeed = fs.existsSync(researchFeedPath) ? fs.readFileSync(researchFeedPath, "utf8") : null;
     const { createAppServer } = require("../server");
     const appServer = createAppServer();
     await new Promise((resolve) => appServer.listen(0, "127.0.0.1", resolve));
@@ -967,9 +971,46 @@ async function runTests() {
       const statusJson = await statusRes.json();
       assert.strictEqual(statusJson.ok, true);
       assert.strictEqual(statusJson.accountMasked, "VE***88");
-      ok("Node server.js `/api/integration/status` parity verified");
+
+      // Verify Hermes integration can publish & list Support/Resistance 1-2-3 tagged posts
+      const unauthResearchRes = await fetch(`http://127.0.0.1:${port}/api/integration/research-posts`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ symbol: "NVDA" })
+      });
+      assert.strictEqual(unauthResearchRes.status, 401, "Unauthenticated research post must be rejected with 401");
+
+      const pubResearchRes = await fetch(`http://127.0.0.1:${port}/api/integration/research-posts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${TEST_TOKEN}`
+        },
+        body: JSON.stringify({
+          id: "hermes-int-test-sr",
+          symbol: "NVDA",
+          title: "Hermes Automated S/R 1-2-3 Update",
+          summary: "Automated Hermes daily S1/S2/S3 & R1/R2/R3 calibration.",
+          stance: "BULLISH",
+          tags: ["#hermes-daily", "#support-resistance", "#ai-moat"],
+          supports: [115, 108, 95],
+          resistances: [128, 140, 165]
+        })
+      });
+      assert.ok([200, 201].includes(pubResearchRes.status), `Expected 200 or 201, got ${pubResearchRes.status}`);
+      const pubResearchJson = await pubResearchRes.json();
+      assert.strictEqual(pubResearchJson.ok, true);
+      assert.ok(pubResearchJson.post && pubResearchJson.post.symbol === "NVDA");
+      assert.strictEqual(pubResearchJson.post.supports.length, 3);
+      assert.strictEqual(pubResearchJson.post.resistances.length, 3);
+      ok("Node server.js `/api/integration/status` and `/api/integration/research-posts` parity verified");
     } finally {
       await new Promise((resolve) => appServer.close(resolve));
+      if (origResearchFeed !== null) {
+        fs.writeFileSync(researchFeedPath, origResearchFeed, "utf8");
+      } else if (fs.existsSync(researchFeedPath)) {
+        fs.unlinkSync(researchFeedPath);
+      }
     }
   }
 

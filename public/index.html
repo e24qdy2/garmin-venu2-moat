@@ -76,6 +76,10 @@
           <i class="ph-bold ph-chart-line-up"></i>
           <span>Markets</span>
         </button>
+        <button type="button" class="mw-nav-btn" data-nav-target="section-hermes-research">
+          <i class="ph-bold ph-strategy"></i>
+          <span>S/R 1-2-3 &amp; Hermes</span>
+        </button>
         <button type="button" class="mw-nav-btn" data-nav-target="section-intelligence-memo">
           <i class="ph-bold ph-notebook"></i>
           <span>WebMemo</span>
@@ -1304,6 +1308,193 @@
       </aside>
 
     </div>
+
+    <!-- ======================================================================
+         4B. SHARED WATCHLIST SUPPORT/RESISTANCE 1-2-3 & HERMES ANALYST FEED
+             (Visible across ALL SyncKeys • Auto-Archive Old Cards Enabled)
+         ====================================================================== -->
+    <section
+      id="section-hermes-research"
+      class="mw-card mw-sr-hermes-section"
+      aria-label="Shared Support Resistance 1-2-3 and Hermes Analyst Research Feed"
+    >
+      <!-- Top Header Banner -->
+      <div class="mw-sr-section-header">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 via-emerald-500/15 to-amber-500/20 border border-cyan-500/35 flex items-center justify-center text-cyan-300 shadow-inner shrink-0">
+              <i class="ph-bold ph-strategy text-xl"></i>
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <h2 class="text-sm sm:text-base font-extrabold text-white tracking-tight">
+                  Watchlist Support / Resistance 1–2–3 &amp; Hermes Analyst Feed
+                </h2>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-cyan-500/15 text-cyan-300 border border-cyan-500/35">
+                  <i class="ph-fill ph-users-three mr-1"></i>Shared Across All SyncKeys
+                </span>
+                <span
+                  id="hermesFeedPolicyBadge"
+                  class="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-emerald-500/12 text-emerald-300 border border-emerald-500/30"
+                  title="Old cards are automatically archived/hidden so the board stays clean"
+                >
+                  Auto-Archive: &gt;21d Hidden
+                </span>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">
+                วิเคราะห์แนวรับ <strong class="text-emerald-300 font-semibold">S1–S2–S3</strong> และแนวต้าน <strong class="text-rose-300 font-semibold">R1–R2–R3</strong> ลำดับ 1–2–3 (<span class="text-slate-200">ระยะสั้น · ระยะกลาง · ระยะยาว</span>) จาก Watchlist และบทวิเคราะห์ประจำโดย <strong class="text-cyan-300 font-semibold">Hermes Agent</strong> — เปิดให้ทุก SyncKey ติดตามร่วมกันได้
+              </p>
+            </div>
+          </div>
+
+          <!-- Right KPI Counters & Actions -->
+          <div class="flex flex-wrap items-center gap-2">
+            <div class="px-2.5 py-1.5 rounded-lg bg-slate-900/90 border border-slate-800 flex items-center gap-2">
+              <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Hermes Posts</span>
+              <span id="hermesFeedActiveCount" class="text-xs font-mono font-extrabold text-cyan-300">8 Active</span>
+            </div>
+            <div class="px-2.5 py-1.5 rounded-lg bg-slate-900/90 border border-slate-800 flex items-center gap-2">
+              <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Watchlist S/R</span>
+              <span id="hermesMatrixCount" class="text-xs font-mono font-extrabold text-emerald-300">0 Tickers</span>
+            </div>
+            <button
+              id="refreshHermesFeedBtn"
+              type="button"
+              class="mw-btn mw-btn-ghost py-1.5 px-2.5 text-xs"
+              title="Refresh Hermes Analyst Feed & Support/Resistance Levels"
+            >
+              <i class="ph-bold ph-arrows-clockwise text-cyan-300"></i>
+              <span>Sync Feed</span>
+            </button>
+            <a
+              href="/admin.html#cms-research"
+              class="mw-btn mw-btn-ghost py-1.5 px-2.5 text-xs text-amber-300 border-amber-500/30 hover:border-amber-400/50"
+              title="Open Admin CMS & BI Dashboard to manage or archive posts"
+            >
+              <i class="ph-bold ph-sliders"></i>
+              <span class="hidden sm:inline">Admin CMS &amp; BI</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Interactive Filter & Horizon Bar -->
+        <div class="mw-sr-toolbar mt-3.5 pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2.5">
+          <!-- View Mode Switcher -->
+          <div class="flex flex-wrap items-center gap-1.5" role="group" aria-label="Research Display Mode">
+            <button
+              id="hermesViewCardsBtn"
+              type="button"
+              data-hermes-view="CARDS"
+              class="mw-sr-mode-btn active"
+            >
+              <i class="ph-bold ph-cards"></i>
+              <span>Hermes S/R Cards</span>
+            </button>
+            <button
+              id="hermesViewMatrixBtn"
+              type="button"
+              data-hermes-view="MATRIX"
+              class="mw-sr-mode-btn"
+            >
+              <i class="ph-bold ph-table"></i>
+              <span>Watchlist S/R 1–2–3 Matrix</span>
+            </button>
+            <button
+              id="hermesViewDualBtn"
+              type="button"
+              data-hermes-view="DUAL"
+              class="mw-sr-mode-btn"
+            >
+              <i class="ph-bold ph-columns"></i>
+              <span>Dual View (Cards + Matrix)</span>
+            </button>
+          </div>
+
+          <!-- Horizon Filter (1: ระยะสั้น / 2: ระยะกลาง / 3: ระยะยาว) -->
+          <div class="flex flex-wrap items-center gap-1.5" role="group" aria-label="Support and Resistance Horizon Filter">
+            <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 mr-1">Horizon:</span>
+            <button type="button" data-sr-horizon="ALL" class="mw-sr-horizon-btn active">
+              All 1–2–3
+            </button>
+            <button type="button" data-sr-horizon="SHORT" class="mw-sr-horizon-btn">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block mr-1"></span>L1 ระยะสั้น (S1/R1)
+            </button>
+            <button type="button" data-sr-horizon="MEDIUM" class="mw-sr-horizon-btn">
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 inline-block mr-1"></span>L2 ระยะกลาง (S2/R2)
+            </button>
+            <button type="button" data-sr-horizon="LONG" class="mw-sr-horizon-btn">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block mr-1"></span>L3 ระยะยาว (S3/R3)
+            </button>
+          </div>
+
+          <!-- Search Input -->
+          <div class="relative min-w-[210px] flex-1 sm:flex-initial">
+            <i class="ph-bold ph-magnifying-glass text-slate-400 text-xs absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            <input
+              id="hermesResearchSearchInput"
+              type="search"
+              placeholder="Filter ticker, S/R level, or #tag..."
+              class="w-full pl-7 pr-3 py-1.5 rounded-lg bg-slate-950/90 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/60"
+            />
+          </div>
+        </div>
+
+        <!-- Topic #Tag Filter Bar -->
+        <div
+          id="hermesResearchTagPills"
+          class="mt-2.5 flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar"
+          aria-label="Filter Hermes Posts by Topic Tag"
+        >
+          <button type="button" data-hermes-tag="ALL" class="mw-sr-tag-pill active">#all-topics</button>
+        </div>
+      </div>
+
+      <!-- Hermes Analyst S/R 1-2-3 Cards Grid -->
+      <div id="hermesResearchCardsWrap" class="p-4">
+        <div id="hermesResearchCardsGrid" class="mw-sr-cards-grid">
+          <!-- Populated dynamically by app.js -->
+        </div>
+      </div>
+
+      <!-- Full Watchlist Support/Resistance 1-2-3 Matrix Table -->
+      <div id="hermesWatchlistSrMatrixWrap" class="hidden px-4 pb-4">
+        <div class="rounded-xl border border-slate-800/90 bg-slate-950/70 overflow-hidden">
+          <div class="px-3.5 py-2.5 border-b border-slate-800/80 flex flex-wrap items-center justify-between gap-2 bg-slate-900/60">
+            <div class="flex items-center gap-2">
+              <i class="ph-bold ph-chart-polar text-cyan-400 text-sm"></i>
+              <span class="text-xs font-extrabold uppercase tracking-wider text-white">
+                Complete Watchlist Support &amp; Resistance Matrix (S1–S2–S3 / R1–R2–R3)
+              </span>
+            </div>
+            <span class="text-[11px] text-slate-400 font-mono">
+              S1/R1 = ระยะสั้น (1–2W) · S2/R2 = ระยะกลาง (1–3M) · S3/R3 = ระยะยาว (6–12M Structural Moat)
+            </span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-800/90 text-[10px] font-mono uppercase tracking-wider text-slate-400 bg-slate-900/40">
+                  <th class="py-2.5 px-3">Ticker / Role</th>
+                  <th class="py-2.5 px-2.5 text-right">Ref / Live</th>
+                  <th class="py-2.5 px-2.5 text-right text-emerald-300" data-col-horizon="SHORT">S1 (ระยะสั้น)</th>
+                  <th class="py-2.5 px-2.5 text-right text-emerald-400" data-col-horizon="MEDIUM">S2 (ระยะกลาง)</th>
+                  <th class="py-2.5 px-2.5 text-right text-teal-300" data-col-horizon="LONG">S3 (ระยะยาว)</th>
+                  <th class="py-2.5 px-2.5 text-right text-rose-300" data-col-horizon="SHORT">R1 (ระยะสั้น)</th>
+                  <th class="py-2.5 px-2.5 text-right text-amber-300" data-col-horizon="MEDIUM">R2 (ระยะกลาง)</th>
+                  <th class="py-2.5 px-2.5 text-right text-fuchsia-300" data-col-horizon="LONG">R3 (ระยะยาว)</th>
+                  <th class="py-2.5 px-3">S3 ↔ R3 Band Position</th>
+                  <th class="py-2.5 px-2.5 text-right">R/R Ratio</th>
+                  <th class="py-2.5 px-3">Hermes Signal &amp; #Tags</th>
+                </tr>
+              </thead>
+              <tbody id="hermesWatchlistSrMatrixBody" class="divide-y divide-slate-800/60 text-xs">
+                <!-- Populated dynamically by app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- ======================================================================
          5. BOTTOM 3-COLUMN FINANCIAL INTELLIGENCE MODULES (100% REAL DATA)

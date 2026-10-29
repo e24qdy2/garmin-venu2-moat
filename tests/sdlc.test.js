@@ -837,8 +837,308 @@ async function runSdlcSuite() {
   assert.ok(!remainingDeviceIds.includes(tempDevB), "Deleted device B must be removed from device list");
   console.log("[PASS] 17. Admin Non-Permanent Session (15m Idle / 30m Max TTL) & Individual/Multi-Select Key Removal verified");
 
+  // 18. Shared Support/Resistance 1-2-3 (S1/S2/S3 & R1/R2/R3), Hermes Tagged CMS, Auto-Archive & Admin BI Dashboard
+  const researchFeedJsonPath = path.join(__dirname, "..", "data", "research_feed.json");
+  const originalResearchFeedJson = fs.existsSync(researchFeedJsonPath)
+    ? fs.readFileSync(researchFeedJsonPath, "utf8")
+    : null;
+
+  try {
+    // 18a. Verify shared /api/research-feed is accessible across different SyncKeys
+    const feedOwnerRes = await httpRequest("GET", "/api/research-feed?key=VENU2-88");
+    const feedGuestRes = await httpRequest("GET", "/api/research-feed?key=V2-ANYUSER99");
+    assert.strictEqual(feedOwnerRes.status, 200);
+    assert.strictEqual(feedGuestRes.status, 200);
+    assert.strictEqual(feedOwnerRes.json.ok, true);
+    assert.strictEqual(feedGuestRes.json.ok, true);
+    assert.strictEqual(feedOwnerRes.json.sharedAcrossAllSyncKeys, true);
+    assert.strictEqual(feedGuestRes.json.sharedAcrossAllSyncKeys, true);
+    assert.ok(Array.isArray(feedOwnerRes.json.posts) && feedOwnerRes.json.posts.length >= 4);
+    assert.strictEqual(
+      feedOwnerRes.json.posts.length,
+      feedGuestRes.json.posts.length,
+      "All SyncKeys must see the same shared active Support/Resistance 1-2-3 analyst feed"
+    );
+
+    const sampleSrPost = feedOwnerRes.json.posts[0];
+    assert.strictEqual(sampleSrPost.supports.length, 3, "Each S/R post must contain 3 support levels (S1/S2/S3)");
+    assert.strictEqual(sampleSrPost.resistances.length, 3, "Each S/R post must contain 3 resistance levels (R1/R2/R3)");
+    assert.strictEqual(sampleSrPost.supports[0].horizon, "SHORT");
+    assert.strictEqual(sampleSrPost.supports[1].horizon, "MEDIUM");
+    assert.strictEqual(sampleSrPost.supports[2].horizon, "LONG");
+    assert.ok(sampleSrPost.metrics && typeof sampleSrPost.metrics.livePrice === "number");
+
+    // 18b. Admin CMS Create (UPSERT) a new tagged Hermes S/R 1-2-3 card
+    const createPostRes = await httpRequest(
+      "POST",
+      "/api/admin/research-posts",
+      {
+        action: "UPSERT",
+        post: {
+          id: "hermes-sr-tsmc-test",
+          symbol: "TSM",
+          title: "TSMC CoWoS Packaging Moat — S1/S2/S3 & R1/R2/R3 Ladder",
+          summary: "AI foundry monopoly with expanding gross margins; accumulate on S1/S2 pullbacks.",
+          stance: "BULLISH",
+          horizonFocus: "ALL",
+          currency: "USD",
+          tags: ["#hermes-daily", "#support-resistance", "#semiconductor", "#moat"],
+          supports: [
+            { rank: 1, horizon: "SHORT", price: 178.5, note: "S1 20D EMA support" },
+            { rank: 2, horizon: "MEDIUM", price: 165.0, note: "S2 50D institutional base" },
+            { rank: 3, horizon: "LONG", price: 148.0, note: "S3 200D structural floor" }
+          ],
+          resistances: [
+            { rank: 1, horizon: "SHORT", price: 195.0, note: "R1 swing high supply" },
+            { rank: 2, horizon: "MEDIUM", price: 212.0, note: "R2 quarterly target" },
+            { rank: 3, horizon: "LONG", price: 240.0, note: "R3 long-term valuation target" }
+          ]
+        }
+      },
+      { "X-Admin-Token": adminToken }
+    );
+    assert.ok([200, 201].includes(createPostRes.status), `Expected 200 or 201, got ${createPostRes.status}`);
+    assert.strictEqual(createPostRes.json.ok, true);
+    assert.ok(
+      createPostRes.json.posts.some((p) => p.id === "hermes-sr-tsmc-test" && p.symbol === "TSM"),
+      "Newly created TSM S/R post must appear in admin posts list"
+    );
+
+    // Verify new post is immediately visible to all SyncKeys on the frontpage feed
+    const feedAfterCreate = await httpRequest("GET", "/api/research-feed?key=V2-OTHER-SYNC");
+    assert.ok(
+      feedAfterCreate.json.posts.some((p) => p.id === "hermes-sr-tsmc-test"),
+      "Shared frontpage research feed must immediately include newly published TSM S/R card for every SyncKey"
+    );
+
+    // 18c. Admin CMS Archive/Hide (ซ่อน/เก็บเข้ากรุ) and verify hidden from public feed
+    const archivePostRes = await httpRequest(
+      "POST",
+      "/api/admin/research-posts",
+      {
+        action: "ARCHIVE",
+        postId: "hermes-sr-tsmc-test",
+        reason: "MANUAL_ADMIN_ARCHIVE_TEST"
+      },
+      { "X-Admin-Token": adminToken }
+    );
+    assert.strictEqual(archivePostRes.status, 200);
+    const feedAfterArchive = await httpRequest("GET", "/api/research-feed?key=VENU2-88");
+    assert.ok(
+      !feedAfterArchive.json.posts.some((p) => p.id === "hermes-sr-tsmc-test"),
+      "Archived/hidden card must NOT appear on public frontpage feed"
+    );
+
+    // 18d. Restore card & test Auto-Archive Sweep on old unpinned cards
+    await httpRequest(
+      "POST",
+      "/api/admin/research-posts",
+      { action: "RESTORE", postId: "hermes-sr-tsmc-test" },
+      { "X-Admin-Token": adminToken }
+    );
+
+    // Create an expired card (45 days old) and verify RUN_AUTO_ARCHIVE_SWEEP archives it automatically
+    const fortyFiveDaysAgoIso = new Date(Date.now() - 45 * 86400000).toISOString();
+    await httpRequest(
+      "POST",
+      "/api/admin/research-posts",
+      {
+        action: "UPSERT",
+        post: {
+          id: "hermes-sr-old-expired",
+          symbol: "INTC",
+          title: "Old Stale Analysis Card",
+          summary: "Should be auto-archived by TTL sweep.",
+          publishedAt: fortyFiveDaysAgoIso,
+          updatedAt: fortyFiveDaysAgoIso,
+          pinned: false,
+          autoArchiveExempt: false,
+          tags: ["#hermes-daily"],
+          supports: [19, 17, 15],
+          resistances: [23, 26, 30]
+        }
+      },
+      { "X-Admin-Token": adminToken }
+    );
+
+    const sweepRes = await httpRequest(
+      "POST",
+      "/api/admin/research-posts",
+      {
+        action: "RUN_AUTO_ARCHIVE_SWEEP",
+        autoArchiveDays: 21,
+        forceSweep: true
+      },
+      { "X-Admin-Token": adminToken }
+    );
+    assert.strictEqual(sweepRes.status, 200);
+    const expiredCardInAdmin = sweepRes.json.posts.find((p) => p.id === "hermes-sr-old-expired");
+    assert.ok(expiredCardInAdmin, "Expired card must still be retained in Admin CMS archive");
+    assert.strictEqual(expiredCardInAdmin.status, "ARCHIVED", "Expired card must be transitioned to ARCHIVED status");
+
+    // Clean up test posts via DELETE
+    const cleanupDelRes = await httpRequest(
+      "POST",
+      "/api/admin/research-posts",
+      {
+        action: "DELETE",
+        postIds: ["hermes-sr-tsmc-test", "hermes-sr-old-expired"]
+      },
+      { "X-Admin-Token": adminToken }
+    );
+    assert.strictEqual(cleanupDelRes.status, 200);
+
+    // 18e. Verify Admin BI & Quantitative Virtualized Dashboard (/api/admin/bi-dashboard)
+    const biRes = await httpRequest("GET", "/api/admin/bi-dashboard", null, {
+      "X-Admin-Token": adminToken
+    });
+    assert.strictEqual(biRes.status, 200);
+    assert.strictEqual(biRes.json.ok, true);
+    const bi = biRes.json.biAnalytics;
+    assert.ok(bi && bi.kpis, "BI response must include kpis summary");
+    assert.ok(bi.stackedCharts && bi.stackedCharts.userPortfolioStack, "BI must include userPortfolioStack chart series");
+    assert.ok(bi.stackedCharts.srQuantitativeStack, "BI must include srQuantitativeStack chart series");
+    assert.ok(bi.stackedCharts.topicTagStack, "BI must include topicTagStack chart series");
+    assert.ok(bi.stackedCharts.memoCoverageStack, "BI must include memoCoverageStack chart series");
+    assert.ok(bi.pieCharts && Array.isArray(bi.pieCharts.topicDistribution), "BI must include topicDistribution pie data");
+    assert.ok(Array.isArray(bi.pieCharts.srZoneDistribution), "BI must include srZoneDistribution pie data");
+    assert.ok(Array.isArray(bi.pieCharts.userLicenseTier), "BI must include userLicenseTier pie data");
+    assert.ok(Array.isArray(bi.srQuantitativeTable) && bi.srQuantitativeTable.length >= 1, "BI must include srQuantitativeTable");
+
+    // 18f. Verify Redesigned HTML templates contain required BI, CMS, and Shared S/R DOM IDs
+    const indexHtmlRes = await httpRequest("GET", "/");
+    assert.strictEqual(indexHtmlRes.status, 200);
+    assert.ok(indexHtmlRes.raw.includes("section-hermes-research"), "index.html must include #section-hermes-research");
+    assert.ok(indexHtmlRes.raw.includes("hermesResearchCardsGrid"), "index.html must include #hermesResearchCardsGrid");
+    assert.ok(indexHtmlRes.raw.includes("hermesWatchlistSrMatrixBody"), "index.html must include #hermesWatchlistSrMatrixBody");
+
+    const adminHtmlRes = await httpRequest("GET", "/admin.html");
+    assert.strictEqual(adminHtmlRes.status, 200);
+    assert.ok(adminHtmlRes.raw.includes("section-admin-hermes-control"), "admin.html must include #section-admin-hermes-control");
+    assert.ok(adminHtmlRes.raw.includes("btnHermesRestartGw"), "admin.html must include #btnHermesRestartGw");
+    assert.ok(adminHtmlRes.raw.includes("btnHermesPauseStop"), "admin.html must include #btnHermesPauseStop");
+    assert.ok(adminHtmlRes.raw.includes("btnHermesStartService"), "admin.html must include #btnHermesStartService");
+    assert.ok(adminHtmlRes.raw.includes("btnHermesRebootPi"), "admin.html must include #btnHermesRebootPi");
+    assert.ok(adminHtmlRes.raw.includes("btnHermesTestAllFuncs"), "admin.html must include #btnHermesTestAllFuncs");
+    assert.ok(adminHtmlRes.raw.includes("section-admin-bi"), "admin.html must include #section-admin-bi");
+    assert.ok(adminHtmlRes.raw.includes("biStackedBarCanvas"), "admin.html must include #biStackedBarCanvas");
+    assert.ok(adminHtmlRes.raw.includes("section-admin-hermes-cms"), "admin.html must include #section-admin-hermes-cms");
+    assert.ok(adminHtmlRes.raw.includes("cmsPostForm"), "admin.html must include #cmsPostForm");
+
+    console.log("[PASS] 18. Shared S/R 1-2-3 Feed, Hermes Tagged CMS, Auto-Archive & Admin BI Dashboard verified");
+
+    // -----------------------------------------------------------------------
+    // 19. HERMES NODE HEARTBEAT, REMOTE SERVICE CONTROL & 8-STEP DIAGNOSTICS
+    // -----------------------------------------------------------------------
+    const nodeStateFile = path.join(__dirname, "..", "data", "hermes_node_state.json");
+    const origNodeStateJson = fs.existsSync(nodeStateFile) ? fs.readFileSync(nodeStateFile, "utf8") : null;
+    const prevIntEnabled = process.env.WEBMEMO_INTEGRATION_ENABLED;
+    const prevIntToken = process.env.WEBMEMO_INTEGRATION_TOKEN;
+    const prevIntKey = process.env.WEBMEMO_ALLOWED_ACCOUNT_KEY;
+    const hermesToken = "hermes-sdlc-test-token-2026";
+    process.env.WEBMEMO_INTEGRATION_ENABLED = "true";
+    process.env.WEBMEMO_INTEGRATION_TOKEN = hermesToken;
+    process.env.WEBMEMO_ALLOWED_ACCOUNT_KEY = "VENU2-88";
+    try {
+      // 19a. Admin queues RESTART_GW command
+      const cmdRes = await httpRequest(
+        "POST",
+        "/api/admin/hermes-node/command",
+        { action: "RESTART_GW", reason: "SDLC test restart" },
+        { "X-Admin-Token": adminToken }
+      );
+      assert.strictEqual(cmdRes.status, 200);
+      assert.strictEqual(cmdRes.json.ok, true);
+      assert.strictEqual(cmdRes.json.command.action, "RESTART_GW");
+      assert.strictEqual(cmdRes.json.command.status, "PENDING");
+      const cmdId = cmdRes.json.command.commandId;
+
+      // 19b. Raspberry Pi (echo24) sends heartbeat and picks up the pending command
+      const hbRes = await httpRequest(
+        "POST",
+        "/api/integration/hermes-node/heartbeat",
+        {
+          host: "echo24",
+          lanIp: "192.168.1.100",
+          tailscaleIp: "100.113.60.19",
+          gatewayStatus: "RUNNING (PID 24801)",
+          gatewayServiceActive: true,
+          gatewayPid: 24801,
+          cpuTempC: 49.4,
+          memUsedMb: 412,
+          memTotalMb: 924,
+          loadAvg1m: 0.28,
+          uptimeHuman: "5 days, 4 hours"
+        },
+        { Authorization: `Bearer ${hermesToken}` }
+      );
+      assert.strictEqual(hbRes.status, 200);
+      assert.strictEqual(hbRes.json.ok, true);
+      assert.ok(hbRes.json.nextCommand, "Heartbeat must return the queued RESTART_GW command");
+      assert.strictEqual(hbRes.json.nextCommand.commandId, cmdId);
+      assert.strictEqual(hbRes.json.nextCommand.status, "DISPATCHED");
+
+      // 19c. Pi reports command execution completion
+      const repRes = await httpRequest(
+        "POST",
+        "/api/integration/hermes-node/command-result",
+        {
+          commandId: cmdId,
+          status: "SUCCEEDED",
+          output: "Restarted hermes-gateway.service -> state=active (PID 24990)"
+        },
+        { Authorization: `Bearer ${hermesToken}` }
+      );
+      assert.strictEqual(repRes.status, 200);
+      assert.strictEqual(repRes.json.ok, true);
+      assert.strictEqual(repRes.json.command.status, "SUCCEEDED");
+
+      // 19d. Admin executes TEST_ALL_FUNCTIONS (8-step diagnostic suite)
+      const diagCmdRes = await httpRequest(
+        "POST",
+        "/api/admin/hermes-node/command",
+        { action: "TEST_ALL_FUNCTIONS", reason: "SDLC full diagnostic test" },
+        { "X-Admin-Token": adminToken }
+      );
+      assert.strictEqual(diagCmdRes.status, 200);
+      assert.strictEqual(diagCmdRes.json.ok, true);
+      assert.ok(diagCmdRes.json.diagnosticReport, "TEST_ALL_FUNCTIONS must return diagnosticReport");
+      assert.strictEqual(diagCmdRes.json.diagnosticReport.steps.length, 8);
+      assert.strictEqual(diagCmdRes.json.diagnosticReport.summary.failed, 0);
+
+      // 19e. Admin checks live status
+      const statusRes = await httpRequest("GET", "/api/admin/hermes-node/status", null, {
+        "X-Admin-Token": adminToken
+      });
+      assert.strictEqual(statusRes.status, 200);
+      assert.strictEqual(statusRes.json.connectionState, "ONLINE");
+      assert.strictEqual(statusRes.json.host, "echo24");
+
+      console.log("[PASS] 19. Hermes Live Connection Status, 5 Remote Commands & 8-Step Functional Diagnostics verified");
+    } finally {
+      if (prevIntEnabled === undefined) delete process.env.WEBMEMO_INTEGRATION_ENABLED;
+      else process.env.WEBMEMO_INTEGRATION_ENABLED = prevIntEnabled;
+      if (prevIntToken === undefined) delete process.env.WEBMEMO_INTEGRATION_TOKEN;
+      else process.env.WEBMEMO_INTEGRATION_TOKEN = prevIntToken;
+      if (prevIntKey === undefined) delete process.env.WEBMEMO_ALLOWED_ACCOUNT_KEY;
+      else process.env.WEBMEMO_ALLOWED_ACCOUNT_KEY = prevIntKey;
+
+      if (origNodeStateJson !== null) {
+        fs.writeFileSync(nodeStateFile, origNodeStateJson, "utf8");
+      } else if (fs.existsSync(nodeStateFile)) {
+        fs.unlinkSync(nodeStateFile);
+      }
+    }
+  } finally {
+    if (originalResearchFeedJson !== null) {
+      fs.writeFileSync(researchFeedJsonPath, originalResearchFeedJson, "utf8");
+    } else if (fs.existsSync(researchFeedJsonPath)) {
+      fs.unlinkSync(researchFeedJsonPath);
+    }
+  }
+
   console.log("\n==================================================================");
-  console.log("  ALL 17 SDLC + MULTI-USER + ADMIN SECURITY SUITES PASSED (100%)");
+  console.log("  ALL 19 SDLC + MULTI-USER + BI & HERMES CMS SUITES PASSED (100%)");
   console.log("==================================================================");
   if (ephemeralServer) {
     ephemeralServer.close();

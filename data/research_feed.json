@@ -1,0 +1,930 @@
+{
+  "version": 1,
+  "updatedAt": "2026-10-29T19:37:12.619Z",
+  "policy": {
+    "autoArchiveEnabled": true,
+    "autoArchiveDays": 21,
+    "maxVisibleFrontpageCards": 24,
+    "sharedAcrossAllSyncKeys": true,
+    "lastSweepAt": "2026-10-29T19:37:12.619Z"
+  },
+  "posts": [
+    {
+      "id": "hrp_nvda_blackwell_sr",
+      "symbol": "NVDA",
+      "name": "NVIDIA Corp.",
+      "currency": "USD",
+      "portfolioId": "us-moat",
+      "author": "Hermes Agent",
+      "source": "HERMES_ANALYST",
+      "topic": "Blackwell Rack Scale-Up & Hyperscaler CapEx Cycle",
+      "tags": [
+        "#AI-Moat",
+        "#Semiconductors",
+        "#SupportResistance",
+        "#WideMoat"
+      ],
+      "bias": "BULLISH",
+      "referencePrice": 138.6,
+      "supportLevels": {
+        "s1": {
+          "level": 1,
+          "code": "S1",
+          "horizon": "SHORT",
+          "horizonLabelTh": "ระยะสั้น (1–2 สัปดาห์)",
+          "horizonLabelEn": "Short-Term (EMA20 / Demand Pivot)",
+          "price": 133.5,
+          "note": "EMA-20 ระยะสั้น / แนวรับย่อตัวในกรอบขาขึ้น"
+        },
+        "s2": {
+          "level": 2,
+          "code": "S2",
+          "horizon": "MEDIUM",
+          "horizonLabelTh": "ระยะกลาง (1–3 เดือน)",
+          "horizonLabelEn": "Medium-Term (SMA50 / Institutional Base)",
+          "price": 124.8,
+          "note": "SMA-50 ระยะกลาง / โซนสะสมของสถาบันก่อนงบ"
+        },
+        "s3": {
+          "level": 3,
+          "code": "S3",
+          "horizon": "LONG",
+          "horizonLabelTh": "ระยะยาว (3–12 เดือน)",
+          "horizonLabelEn": "Long-Term (SMA200 / Deep Value Moat)",
+          "price": 112,
+          "note": "SMA-200 ระยะยาว / โซน Margin of Safety หลัก"
+        }
+      },
+      "resistanceLevels": {
+        "r1": {
+          "level": 1,
+          "code": "R1",
+          "horizon": "SHORT",
+          "horizonLabelTh": "ระยะสั้น (1–2 สัปดาห์)",
+          "horizonLabelEn": "Short-Term (Swing High / Upper BB)",
+          "price": 144,
+          "note": "แนวต้านระยะสั้น All-Time High ทดสอบแรงขาย"
+        },
+        "r2": {
+          "level": 2,
+          "code": "R2",
+          "horizon": "MEDIUM",
+          "horizonLabelTh": "ระยะกลาง (1–3 เดือน)",
+          "horizonLabelEn": "Medium-Term (Breakout Target / Channel Top)",
+          "price": 155,
+          "note": "เป้าหมายระยะกลาง โซน Trim บางส่วนตามแผน WebMemo"
+        },
+        "r3": {
+          "level": 3,
+          "code": "R3",
+          "horizon": "LONG",
+          "horizonLabelTh": "ระยะยาว (3–12 เดือน)",
+          "horizonLabelEn": "Long-Term (Fibonacci Extension / Valuation Ceiling)",
+          "price": 172,
+          "note": "เป้าหมายระยะยาวปีหน้าจาก Blackwell + Rubin Ramp"
+        }
+      },
+      "summary": "Hermes Daily Quant: โมเมนตัมคำสั่งซื้อ Blackwell GB200 จากกลุ่ม Cloud Hyperscaler ยังแข็งแกร่ง แนะนำถือ Core Moat และใช้ S1 ($133.5) / S2 ($124.8) เป็นจุดตั้งรับ ส่วน R2 ($155.0) เป็นจุดพิจารณาแบ่งทำกำไรบางส่วน",
+      "signals": [
+        "RSI-14 ยืนโซนแข็งแกร่งเหนือ 58 โดยยังไม่เกิด Bearish Divergence",
+        "สถาบันตั้ง Bid หนาแน่นที่โซน S2 ($124.8–$126.0)",
+        "WebMemo ซิงก์ตรงกับเป้าหมาย $155 บนหน้าปัด Garmin"
+      ],
+      "pinned": true,
+      "status": "PUBLISHED",
+      "archivedReason": null,
+      "autoArchiveDays": 21,
+      "createdAt": "2026-10-29T13:37:12.619Z",
+      "updatedAt": "2026-10-29T19:37:12.619Z",
+      "archivedAt": null,
+      "expiresAt": "2026-11-19T13:37:12.619Z",
+      "quant": {
+        "currentPrice": 138.6,
+        "distToS1Pct": 3.68,
+        "distToS2Pct": 9.96,
+        "distToS3Pct": 19.19,
+        "upsideToR1Pct": 3.9,
+        "upsideToR2Pct": 11.83,
+        "upsideToR3Pct": 24.1,
+        "riskRewardRatio": 3.22,
+        "rangePositionPct": 44,
+        "tacticalZone": "MID_CHANNEL",
+        "tacticalZoneLabel": "แกว่งตัวในกรอบกลาง (S1 ↔ R1)"
+      }
+    },
+    {
+      "id": "hrp_msft_azure_sr",
+      "symbol": "MSFT",
+      "name": "Microsoft Corp.",
+      "currency": "USD",
+      "portfolioId": "us-moat",
+      "author": "Hermes Agent",
+      "source": "HERMES_ANALYST",
+      "topic": "Azure AI Capacity Unlock & Enterprise Copilot Monetization",
+      "tags": [
+        "#CloudInfra",
+        "#AI-Moat",
+        "#AccumulateZone",
+        "#SupportResistance"
+      ],
+      "bias": "ACCUMULATE",
+      "referencePrice": 428.5,
+      "supportLevels": {
+        "s1": {
+          "level": 1,
+          "code": "S1",
+          "horizon": "SHORT",
+          "horizonLabelTh": "ระยะสั้น (1–2 สัปดาห์)",
+          "horizonLabelEn": "Short-Term (EMA20 / Demand Pivot)",
+          "price": 416,
+          "note": "แนวรับระยะสั้น โซนสะสมไม้แรกตาม WebMemo (<$418)"
+        },
+        "s2": {
+          "level": 2,
+          "code": "S2",
+          "horizon": "MEDIUM",
+          "horizonLabelTh": "ระยะกลาง (1–3 เดือน)",
+          "horizonLabelEn": "Medium-Term (SMA50 / Institutional Base)",
+          "price": 402.5,
+          "note": "แนวรับระยะกลาง โซนฐานราคาไตรมาสก่อน"
+        },
+        "s3": {
+          "level": 3,
+          "code": "S3",
+          "horizon": "LONG",
+          "horizonLabelTh": "ระยะยาว (3–12 เดือน)",
+          "horizonLabelEn": "Long-Term (SMA200 / Deep Value Moat)",
+          "price": 385,
+          "note": "แนวรับระยะยาว SMA-200 / โซน Deep Value ของหุ้น Wide Moat"
+        }
+      },
+      "resistanceLevels": {
+        "r1": {
+          "level": 1,
+          "code": "R1",
+          "horizon": "SHORT",
+          "horizonLabelTh": "ระยะสั้น (1–2 สัปดาห์)",
+          "horizonLabelEn": "Short-Term (Swing High / Upper BB)",
+          "price": 438,
+          "note": "แนวต้านระยะสั้น กรอบบน Bollinger Band"
+        },
+        "r2": {
+          "level": 2,
+          "code": "R2",
+          "horizon": "MEDIUM",
+          "horizonLabelTh": "ระยะกลาง (1–3 เดือน)",
+          "horizonLabelEn": "Medium-Term (Breakout Target / Channel Top)",
+          "price": 465,
+          "note": "แนวต้านระยะกลาง เป้าหมายหลักของรอบรายได้ Azure"
+        },
+        "r3": {
+          "level": 3,
+          "code": "R3",
+          "horizon": "LONG",
+          "horizonLabelTh": "ระยะยาว (3–12 เดือน)",
+          "horizonLabelEn": "Long-Term (Fibonacci Extension / Valuation Ceiling)",
+          "price": 495,
+          "note": "แนวต้านระยะยาวจาก Operating Leverage ของ Copilot"
+        }
+      },
+      "summary": "Hermes Analyst Note: MSFT พักฐานสร้างกรอบสะสมที่แข็งแกร่ง ดาวน์ไซด์จำกัดบริเวณ S1 ($416) – S2 ($402.5) เหมาะสำหรับทยอยสะสมเพื่อถือยาวรอการเร่งตัวของ Azure AI ในครึ่งปีหลัง",
+      "signals": [
+        "ราคาอยู่ใกล้โซนสะสม S1 ให้ Risk/Reward Ratio คุ้มค่า (>2.5x)",
+        "กระแสเงินสดอิสระ (FCF) รองรับงบลงทุน AI Data Center ได้เต็มที่"
+      ],
+      "pinned": true,
+      "status": "PUBLISHED",
+      "archivedReason": null,
+      "autoArchiveDays": 21,
+      "createdAt": "2026-10-29T07:37:12.619Z",
+      "updatedAt": "2026-10-29T19:37:12.619Z",
+      "archivedAt": null,
+      "expiresAt": "2026-11-19T07:37:12.619Z",
+      "quant": {
+        "currentPrice": 428.5,
+        "distToS1Pct": 2.92,
+        "distToS2Pct": 6.07,
+        "distToS3Pct": 10.15,
+        "upsideToR1Pct": 2.22,
+        "upsideToR2Pct": 8.52,
+        "upsideToR3Pct": 15.52,
+        "riskRewardRatio": 2.92,
+        "rangePositionPct": 40,
+        "tacticalZone": "MID_CHANNEL",
+        "tacticalZoneLabel": "แกว่งตัวในกรอบกลาง (S1 ↔ R1)"
+      }
+    },
+    {
+      "id": "hrp_avgo_custom_asic",
+      "symbol": "AVGO",
+      "name": "Broadcom Inc.",
+      "currency": "USD",
+      "portfolioId": "us-moat",
+      "author": "Hermes Agent",
+      "source": "HERMES_ANALYST",
+      "topic": "Custom AI XPUs & Networking Switching Cycle",
+      "tags": [
+        "#Semiconductors",
+        "#AI-Moat",
+        "#Breakout",
+        "#SupportResistance"
+      ],
+      "bias": "BULLISH",
+      "referencePrice": 179.4,
+      "supportLevels": {
+        "s1": {
+          "level": 1,
+          "code": "S1",
+          "horizon": "SHORT",
+          "horizonLabelTh": "ระยะสั้น (1–2 สัปดาห์)",
+          "horizonLabelEn": "Short-Term (EMA20 / Demand Pivot)",
+          "price": 172,
+          "note": "แนวรับระยะสั้น EMA-20 หลังการพักตัวระยะสั้น"
+        },
+        "s2": {
+          "level": 2,
+          "code": "S2",
+          "horizon": "MEDIUM",
+          "horizonLabelTh": "ระยะกลาง (1–3 เดือน)",
+          "horizonLabelEn": "Medium-Term (SMA50 / Institutional Base)",
+          "price": 161.5,
+          "note": "แนวรับระยะกลาง ฐาน Breakout เดิม"
+        },
+        "s3": {
+          "level": 3,
+          "code": "S3",
+          "horizon": "LONG",
+          "horizonLabelTh": "ระยะยาว (3–12 เดือน)",
+          "horizonLabelEn": "Long-Term (SMA200 / Deep Value Moat)",
+          "price": 146,
+          "note": "แนวรับระยะยาว SMA-200 / โซนรับหลักหากตลาดปรับฐาน"
+        }
+      },
+      "resistanceLevels": {
+        "r1": {
+          "level": 1,
+          "code": "R1",
+          "horizon": "SHORT",
+          "horizonLabelTh": "ระยะสั้น (1–2 สัปดาห์)",
+          "horizonLabelEn": "Short-Term (Swing High / Upper BB)",
+          "price": 186.5,
+          "note": "แนวต้านระยะสั้น ทดสอบ High เดิม"
+        },
+        "r2": {
+          "level": 2,
+          "code": "R2",
+          "horizon": "MEDIUM",
+          "horizonLabelTh": "ระยะกลาง (1–3 เดือน)",
+          "horizonLabelEn": "Medium-Term (Breakout Target / Channel Top)",
+          "price": 202,
+          "note": "แนวต้านระยะกลาง เป้าหมาย Channel ขาขึ้น"
+        },
+        "r3": {
+          "level": 3,
+          "code": "R3",
+          "horizon": "LONG",
+          "horizonLabelTh": "ระยะยาว (3–12 เดือน)",
+          "horizonLabelEn": "Long-Term (Fibonacci Extension / Valuation Ceiling)",
+          "price": 225,
+          "note": "แนวต้านระยะยาวจากดีล Custom Silicon 3 รายใหญ่"
+        }
+      },
+      "summary": "Hermes Sector Watch: AVGO ได้อานิสงส์โดยตรงจาก Custom AI Accelerator (XPU) และ VMware Software Margin ที่ขยายตัวเร็วเกินคาด แนวรับ S1 ($172) แข็งแรงมาก",
+      "signals": [
+        "รายได้ AI Networking เติบโตระดับ +40% YoY",
+        "โครงสร้างราคาทำ Higher Low ต่อเนื่องเหนือ S2 ($161.5)"
+      ],
+      "pinned": false,
+      "status": "PUBLISHED",
+      "archivedReason": null,
+      "autoArchiveDays": 21,
+      "createdAt": "2026-10-29T01:37:12.619Z",
+      "updatedAt": "2026-10-29T19:37:12.619Z",
+      "archivedAt": null,
+      "expiresAt": "2026-11-19T01:37:12.619Z",
+      "quant": {
+        "currentPrice": 179.4,
+        "distToS1Pct": 4.12,
+        "distToS2Pct": 9.98,
+        "distToS3Pct": 18.62,
+        "upsideToR1Pct": 3.96,
+        "upsideToR2Pct": 12.6,
+        "upsideToR3Pct": 25.42,
+        "riskRewardRatio": 3.05,
+        "rangePositionPct": 42,
+        "tacticalZone": "MID_CHANNEL",
+        "tacticalZoneLabel": "แกว่งตัวในกรอบกลาง (S1 ↔ R1)"
+      }
+    },
+    {
+      "id": "hrp_tsm_cowos_moat",
+      "symbol": "TSM",
+      "name": "Taiwan Semiconductor",
+      "currency": "USD",
+      "portfolioId": "us-moat",
+      "author": "Hermes Agent",
+      "source": "HERMES_ANALYST",
+      "topic": "2nm (N2) & CoWoS Packaging Monopoly Pricing Power",
+      "tags": [
+        "#Semiconductors",
+        "#WideMoat",
+        "#Earnings",
+        "#SupportResistance"
+      ],
+      "bias": "BULLISH",
+      "referencePrice": 191.2,
+      "supportLevels": {
+        "s1": {
+          "level": 1,
+          "code": "S1",
+          "horizon": "SHORT",
+          "horizonLabelTh": "ระยะสั้น (1–2 สัปดาห์)",
+          "horizonLabelEn": "Short-Term (EMA20 / Demand Pivot)",
+          "price": 184,
+          "note": "แนวรับระยะสั้น โซน Gap Support หลังประกาศงบ"
+        },
+        "s2": {
+          "level": 2,
+          "code": "S2",
+          "horizon": "MEDIUM",
+          "horizonLabelTh": "ระยะกลาง (1–3 เดือน)",
+          "horizonLabelEn": "Medium-Term (SMA50 / Institutional Base)",
+          "price": 173.5,
+          "note": "แนวรับระยะกลาง SMA-50"
+        },
+        "s3": {
+          "level": 3,
+          "code": "S3",
+          "horizon": "LONG",
+          "horizonLabelTh": "ระยะยาว (3–12 เดือน)",
+          "horizonLabelEn": "Long-Term (SMA200 / Deep Value Moat)",
+          "price": 158,
+          "note": "แนวรับระยะยาว โซน Valuation P/E < 20x"
+        }
+      },
+      "resistanceLevels": {
+        "r1": {
+          "level": 1,
+          "code": "R1",
+          "horizon": "SHORT",
+          "horizonLabelTh": "ระยะสั้น (1–2 สัปดาห์)",
+          "horizonLabelEn": "Short-Term (Swing High / Upper BB)",
+          "price": 198.5,
+          "note": "แนวต้านระยะสั้น จิตวิทยา $200"
+        },
+        "r2": {
+          "level": 2,
+          "code": "R2",
+          "horizon": "MEDIUM",
+          "horizonLabelTh": "ระยะกลาง (1–3 เดือน)",
+          "horizonLabelEn": "Medium-Term (Breakout Target / Channel Top)",
+          "price": 214,
+          "note": "แนวต้านระยะกลางจากการปรับเพิ่มคาดการณ์ Gross Margin"
+        },
+        "r3": {
+          "level": 3,
+          "code": "R3",
+          "horizon": "LONG",
+          "horizonLabelTh": "ระยะยาว (3–12 เดือน)",
+          "horizonLabelEn": "Long-Term (Fibonacci Extension / Valuation Ceiling)",
+          "price": 235,
+          "note": "เป้าหมายระยะยาวจากกำลังการผลิต CoWoS ที่เพิ่มขึ้นเท่าตัว"
+        }
+      },
+      "summary": "Hermes Foundry Check: TSM มีอำนาจตั้งราคา (Pricing Power) สูงสุดในห่วงโซ่อุปทานชิปโลก การปรับขึ้นราคา N3/N5 และ CoWoS ช่วยหนุน Gross Margin ยืนเหนือ 57%",
+      "signals": [
+        "ผูกขาดการผลิตชิป AI ชั้นนำทั้ง NVDA, AMD, AVGO และ AAPL",
+        "แนวรับระยะสั้น S1 ($184) มีแรงซื้อกลับทุกครั้งที่ย่อทดสอบ"
+      ],
+      "pinned": false,
+      "status": "PUBLISHED",
+      "archivedReason": null,
+      "autoArchiveDays": 21,
+      "createdAt": "2026-10-28T15:37:12.619Z",
+      "updatedAt": "2026-10-29T19:37:12.619Z",
+      "archivedAt": null,
+      "expiresAt": "2026-11-18T15:37:12.619Z",
+      "quant": {
+        "currentPrice": 191.2,
+        "distToS1Pct": 3.77,
+        "distToS2Pct": 9.26,
+        "distToS3Pct": 17.36,
+        "upsideToR1Pct": 3.82,
+        "upsideToR2Pct": 11.92,
+        "upsideToR3Pct": 22.91,
+        "riskRewardRatio": 3.17,
+        "rangePositionPct": 43,
+        "tacticalZone": "MID_CHANNEL",
+        "tacticalZoneLabel": "แกว่งตัวในกรอบกลาง (S1 ↔ R1)"
+      }
+    },
+    {
+      "id": "hrp_asml_euv_cycle",
+      "symbol": "ASML",
+      "name": "ASML Holding",
+      "currency": "USD",
+      "portfolioId": "us-moat",
+      "author": "Hermes Agent",
+      "source": "HERMES_ANALYST",
+      "topic": "High-NA EUV Lithography Floor & Valuation Reset",
+      "tags": [
+        "#Semiconductors",
+        "#AccumulateZone",
+        "#WideMoat",
+        "#SupportResistance"
+      ],
+      "bias": "ACCUMULATE",
+      "referencePrice": 728,
+      "supportLevels": {
+        "s1": {
+          "level": 1,
+          "code": "S1",
+          "horizon": "SHORT",
+          "horizonLabelTh": "ระยะสั้น (1–2 สัปดาห์)",
+          "horizonLabelEn": "Short-Term (EMA20 / Demand Pivot)",
+          "price": 705,
+          "note": "แนวรับระยะสั้น โซนสร้างฐานหลังข่าว Guidance"
+        },
+        "s2": {
+          "level": 2,
+          "code": "S2",
+          "horizon": "MEDIUM",
+          "horizonLabelTh": "ระยะกลาง (1–3 เดือน)",
+          "horizonLabelEn": "Medium-Term (SMA50 / Institutional Base)",
+          "price": 672,
+          "note": "แนวรับระยะกลาง ฐานราคาสำคัญรอบปี 2024"
+        },
+        "s3": {
+          "level": 3,
+          "code": "S3",
+          "horizon": "LONG",
+          "horizonLabelTh": "ระยะยาว (3–12 เดือน)",
+          "horizonLabelEn": "Long-Term (SMA200 / Deep Value Moat)",
+          "price": 625,
+          "note": "แนวรับระยะยาว Deep Contrarian Value Zone"
+        }
+      },
+      "resistanceLevels": {
+        "r1": {
+          "level": 1,
+          "code": "R1",
+          "horizon": "SHORT",
+          "horizonLabelTh": "ระยะสั้น (1–2 สัปดาห์)",
+          "horizonLabelEn": "Short-Term (Swing High / Upper BB)",
+          "price": 758,
+          "note": "แนวต้านระยะสั้น โซน Gap Down เดิม"
+        },
+        "r2": {
+          "level": 2,
+          "code": "R2",
+          "horizon": "MEDIUM",
+          "horizonLabelTh": "ระยะกลาง (1–3 เดือน)",
+          "horizonLabelEn": "Medium-Term (Breakout Target / Channel Top)",
+          "price": 815,
+          "note": "แนวต้านระยะกลาง SMA-50 / จุด Re-rating"
+        },
+        "r3": {
+          "level": 3,
+          "code": "R3",
+          "horizon": "LONG",
+          "horizonLabelTh": "ระยะยาว (3–12 เดือน)",
+          "horizonLabelEn": "Long-Term (Fibonacci Extension / Valuation Ceiling)",
+          "price": 895,
+          "note": "เป้าหมายระยะยาวเมื่อคำสั่งซื้อ EUV รอบปี 2026 ฟื้นตัว"
+        }
+      },
+      "summary": "Hermes Contrarian Signal: ราคาหุ้น ASML ซึมซับปัจจัยลบด้านการเลื่อนรับมอบเครื่องของลูกค้าบางรายไปแล้ว โซน S1 ($705) – S2 ($672) เป็นจุดทยอยสะสมหุ้นผูกขาด EUV 100% ของโลก",
+      "signals": [
+        "RSI ฟื้นตัวจากภาวะ Oversold (<32) พร้อม Volume สะสม",
+        "ผูกขาดเทคโนโลยี High-NA EUV ไม่มีคู่แข่งทดแทนได้ในทศวรรษนี้"
+      ],
+      "pinned": false,
+      "status": "PUBLISHED",
+      "archivedReason": null,
+      "autoArchiveDays": 21,
+      "createdAt": "2026-10-28T07:37:12.619Z",
+      "updatedAt": "2026-10-29T19:37:12.619Z",
+      "archivedAt": null,
+      "expiresAt": "2026-11-18T07:37:12.619Z",
+      "quant": {
+        "currentPrice": 728,
+        "distToS1Pct": 3.16,
+        "distToS2Pct": 7.69,
+        "distToS3Pct": 14.15,
+        "upsideToR1Pct": 4.12,
+        "upsideToR2Pct": 11.95,
+        "upsideToR3Pct": 22.94,
+        "riskRewardRatio": 3.78,
+        "rangePositionPct": 38,
+        "tacticalZone": "MID_CHANNEL",
+        "tacticalZoneLabel": "แกว่งตัวในกรอบกลาง (S1 ↔ R1)"
+      }
+    },
+    {
+      "id": "hrp_meta_llama_ads",
+      "symbol": "META",
+      "name": "Meta Platforms",
+      "currency": "USD",
+      "portfolioId": "us-moat",
+      "author": "Hermes Agent",
+      "source": "HERMES_ANALYST",
+      "topic": "AI-Driven Ad Conversion & WhatsApp Business Monetization",
+      "tags": [
+        "#AI-Moat",
+        "#WideMoat",
+        "#SupportResistance",
+        "#Earnings"
+      ],
+      "bias": "BULLISH",
+      "referencePrice": 588,
+      "supportLevels": {
+        "s1": {
+          "level": 1,
+          "code": "S1",
+          "horizon": "SHORT",
+          "horizonLabelTh": "ระยะสั้น (1–2 สัปดาห์)",
+          "horizonLabelEn": "Short-Term (EMA20 / Demand Pivot)",
+          "price": 571,
+          "note": "แนวรับระยะสั้น EMA-20"
+        },
+        "s2": {
+          "level": 2,
+          "code": "S2",
+          "horizon": "MEDIUM",
+          "horizonLabelTh": "ระยะกลาง (1–3 เดือน)",
+          "horizonLabelEn": "Medium-Term (SMA50 / Institutional Base)",
+          "price": 542,
+          "note": "แนวรับระยะกลาง SMA-50 / โซนรับหลัก"
+        },
+        "s3": {
+          "level": 3,
+          "code": "S3",
+          "horizon": "LONG",
+          "horizonLabelTh": "ระยะยาว (3–12 เดือน)",
+          "horizonLabelEn": "Long-Term (SMA200 / Deep Value Moat)",
+          "price": 498,
+          "note": "แนวรับระยะยาว โซนฐานใหญ่ก่อนวิ่งรอบล่าสุด"
+        }
+      },
+      "resistanceLevels": {
+        "r1": {
+          "level": 1,
+          "code": "R1",
+          "horizon": "SHORT",
+          "horizonLabelTh": "ระยะสั้น (1–2 สัปดาห์)",
+          "horizonLabelEn": "Short-Term (Swing High / Upper BB)",
+          "price": 605,
+          "note": "แนวต้านระยะสั้น จิตวิทยา $600+"
+        },
+        "r2": {
+          "level": 2,
+          "code": "R2",
+          "horizon": "MEDIUM",
+          "horizonLabelTh": "ระยะกลาง (1–3 เดือน)",
+          "horizonLabelEn": "Medium-Term (Breakout Target / Channel Top)",
+          "price": 640,
+          "note": "แนวต้านระยะกลาง เป้าหมายรอบงบไตรมาส"
+        },
+        "r3": {
+          "level": 3,
+          "code": "R3",
+          "horizon": "LONG",
+          "horizonLabelTh": "ระยะยาว (3–12 เดือน)",
+          "horizonLabelEn": "Long-Term (Fibonacci Extension / Valuation Ceiling)",
+          "price": 690,
+          "note": "เป้าหมายระยะยาวจาก AI Agent บน WhatsApp/Instagram"
+        }
+      },
+      "summary": "Hermes AdTech Tracker: อัลกอริทึม AI แนะนำคอนเทนต์และโฆษณาของ META ช่วยดันทั้ง Engagement และราคาโฆษณาต่อหน่วย (Ad Price) แนวโน้มยังเป็น Uptrend ชัดเจนเหนือ S1 ($571)",
+      "signals": [
+        "ROIC สูงกว่าค่าเฉลี่ยกลุ่ม Big Tech ต่อเนื่อง 4 ไตรมาส",
+        "โซนรับ S1 ($571) ยืนได้อย่างแข็งแกร่ง"
+      ],
+      "pinned": false,
+      "status": "PUBLISHED",
+      "archivedReason": null,
+      "autoArchiveDays": 21,
+      "createdAt": "2026-10-27T19:37:12.619Z",
+      "updatedAt": "2026-10-29T19:37:12.619Z",
+      "archivedAt": null,
+      "expiresAt": "2026-11-17T19:37:12.619Z",
+      "quant": {
+        "currentPrice": 588,
+        "distToS1Pct": 2.89,
+        "distToS2Pct": 7.82,
+        "distToS3Pct": 15.31,
+        "upsideToR1Pct": 2.89,
+        "upsideToR2Pct": 8.84,
+        "upsideToR3Pct": 17.35,
+        "riskRewardRatio": 3.06,
+        "rangePositionPct": 47,
+        "tacticalZone": "MID_CHANNEL",
+        "tacticalZoneLabel": "แกว่งตัวในกรอบกลาง (S1 ↔ R1)"
+      }
+    },
+    {
+      "id": "hrp_pltr_aip_commercial",
+      "symbol": "PLTR",
+      "name": "Palantir Technologies",
+      "currency": "USD",
+      "portfolioId": "us-moat",
+      "author": "Hermes Agent",
+      "source": "HERMES_ANALYST",
+      "topic": "US Commercial AIP Bootcamps & Defense Operating System",
+      "tags": [
+        "#AI-Moat",
+        "#Breakout",
+        "#HighBeta",
+        "#SupportResistance"
+      ],
+      "bias": "NEUTRAL",
+      "referencePrice": 43.2,
+      "supportLevels": {
+        "s1": {
+          "level": 1,
+          "code": "S1",
+          "horizon": "SHORT",
+          "horizonLabelTh": "ระยะสั้น (1–2 สัปดาห์)",
+          "horizonLabelEn": "Short-Term (EMA20 / Demand Pivot)",
+          "price": 40.5,
+          "note": "แนวรับระยะสั้น EMA-20 สำหรับสาย Momentum"
+        },
+        "s2": {
+          "level": 2,
+          "code": "S2",
+          "horizon": "MEDIUM",
+          "horizonLabelTh": "ระยะกลาง (1–3 เดือน)",
+          "horizonLabelEn": "Medium-Term (SMA50 / Institutional Base)",
+          "price": 36.8,
+          "note": "แนวรับระยะกลาง SMA-50 (จุดปลอดภัยกว่าในการรับ)"
+        },
+        "s3": {
+          "level": 3,
+          "code": "S3",
+          "horizon": "LONG",
+          "horizonLabelTh": "ระยะยาว (3–12 เดือน)",
+          "horizonLabelEn": "Long-Term (SMA200 / Deep Value Moat)",
+          "price": 31.2,
+          "note": "แนวรับระยะยาว ฐานราคาหลังเข้าคำนวณ S&P 500"
+        }
+      },
+      "resistanceLevels": {
+        "r1": {
+          "level": 1,
+          "code": "R1",
+          "horizon": "SHORT",
+          "horizonLabelTh": "ระยะสั้น (1–2 สัปดาห์)",
+          "horizonLabelEn": "Short-Term (Swing High / Upper BB)",
+          "price": 45.5,
+          "note": "แนวต้านระยะสั้น ทดสอบจุดสูงสุดใหม่"
+        },
+        "r2": {
+          "level": 2,
+          "code": "R2",
+          "horizon": "MEDIUM",
+          "horizonLabelTh": "ระยะกลาง (1–3 เดือน)",
+          "horizonLabelEn": "Medium-Term (Breakout Target / Channel Top)",
+          "price": 50,
+          "note": "แนวต้านระยะกลาง จิตวิทยา $50"
+        },
+        "r3": {
+          "level": 3,
+          "code": "R3",
+          "horizon": "LONG",
+          "horizonLabelTh": "ระยะยาว (3–12 เดือน)",
+          "horizonLabelEn": "Long-Term (Fibonacci Extension / Valuation Ceiling)",
+          "price": 58,
+          "note": "แนวต้านระยะยาวหาก US Commercial โตเกิน +55% YoY"
+        }
+      },
+      "summary": "Hermes Valuation Alert: พื้นฐานด้าน AI Ontology และสัญญาภาครัฐแข็งแกร่งมาก แต่ Valuation ตึงตัวในระยะสั้น แนะนำไม่ไล่ราคาที่ R1 ($45.5) และรอจังหวะย่อหาแนวรับ S1 ($40.5) หรือ S2 ($36.8)",
+      "signals": [
+        "Rule of 40 สูงถึงระดับ 64% สูงสุดในกลุ่ม Enterprise SaaS",
+        "ระวังความผันผวนสูงก่อนประกาศงบ — ใช้ S1/S2 คุมความเสี่ยง"
+      ],
+      "pinned": false,
+      "status": "PUBLISHED",
+      "archivedReason": null,
+      "autoArchiveDays": 14,
+      "createdAt": "2026-10-27T07:37:12.619Z",
+      "updatedAt": "2026-10-29T19:37:12.619Z",
+      "archivedAt": null,
+      "expiresAt": "2026-11-10T07:37:12.619Z",
+      "quant": {
+        "currentPrice": 43.2,
+        "distToS1Pct": 6.25,
+        "distToS2Pct": 14.81,
+        "distToS3Pct": 27.78,
+        "upsideToR1Pct": 5.32,
+        "upsideToR2Pct": 15.74,
+        "upsideToR3Pct": 34.26,
+        "riskRewardRatio": 2.52,
+        "rangePositionPct": 45,
+        "tacticalZone": "MID_CHANNEL",
+        "tacticalZoneLabel": "แกว่งตัวในกรอบกลาง (S1 ↔ R1)"
+      }
+    },
+    {
+      "id": "hrp_amzn_aws_margin",
+      "symbol": "AMZN",
+      "name": "Amazon.com Inc.",
+      "currency": "USD",
+      "portfolioId": "us-moat",
+      "author": "Hermes Agent",
+      "source": "HERMES_ANALYST",
+      "topic": "AWS Re-Acceleration & North America Retail Robotics Margin",
+      "tags": [
+        "#CloudInfra",
+        "#WideMoat",
+        "#AccumulateZone",
+        "#SupportResistance"
+      ],
+      "bias": "ACCUMULATE",
+      "referencePrice": 189.5,
+      "supportLevels": {
+        "s1": {
+          "level": 1,
+          "code": "S1",
+          "horizon": "SHORT",
+          "horizonLabelTh": "ระยะสั้น (1–2 สัปดาห์)",
+          "horizonLabelEn": "Short-Term (EMA20 / Demand Pivot)",
+          "price": 183.5,
+          "note": "แนวรับระยะสั้น โซนสะสมในกรอบ Sideway Up"
+        },
+        "s2": {
+          "level": 2,
+          "code": "S2",
+          "horizon": "MEDIUM",
+          "horizonLabelTh": "ระยะกลาง (1–3 เดือน)",
+          "horizonLabelEn": "Medium-Term (SMA50 / Institutional Base)",
+          "price": 175,
+          "note": "แนวรับระยะกลาง SMA-100 / โซนรับไม้ใหญ่"
+        },
+        "s3": {
+          "level": 3,
+          "code": "S3",
+          "horizon": "LONG",
+          "horizonLabelTh": "ระยะยาว (3–12 เดือน)",
+          "horizonLabelEn": "Long-Term (SMA200 / Deep Value Moat)",
+          "price": 162,
+          "note": "แนวรับระยะยาว โซนฐานใหญ่ของรอบปี"
+        }
+      },
+      "resistanceLevels": {
+        "r1": {
+          "level": 1,
+          "code": "R1",
+          "horizon": "SHORT",
+          "horizonLabelTh": "ระยะสั้น (1–2 สัปดาห์)",
+          "horizonLabelEn": "Short-Term (Swing High / Upper BB)",
+          "price": 196,
+          "note": "แนวต้านระยะสั้น ทดสอบ High เดิมก่อนหน้า"
+        },
+        "r2": {
+          "level": 2,
+          "code": "R2",
+          "horizon": "MEDIUM",
+          "horizonLabelTh": "ระยะกลาง (1–3 เดือน)",
+          "horizonLabelEn": "Medium-Term (Breakout Target / Channel Top)",
+          "price": 212,
+          "note": "แนวต้านระยะกลาง เป้าหมาย Breakout รอบใหม่"
+        },
+        "r3": {
+          "level": 3,
+          "code": "R3",
+          "horizon": "LONG",
+          "horizonLabelTh": "ระยะยาว (3–12 เดือน)",
+          "horizonLabelEn": "Long-Term (Fibonacci Extension / Valuation Ceiling)",
+          "price": 235,
+          "note": "เป้าหมายระยะยาวจาก AWS + Prime Ad Revenue"
+        }
+      },
+      "summary": "Hermes Fundamental View: AMZN กำลังเก็บเกี่ยวผลตอบแทนจากการจัดคลังสินค้าแบบ Regionalization และ AWS Custom Trainium2 ชิป โซน S1 ($183.5) ให้แต้มต่อ Risk/Reward สูงมาก",
+      "signals": [
+        "Operating Margin ของธุรกิจ Retail และ AWS ขยายตัวพร้อมกัน",
+        "Upside ไปหา R2 ($212) คิดเป็น +11.8% เทียบกับระยะห่าง S1 เพียง 3.1%"
+      ],
+      "pinned": false,
+      "status": "PUBLISHED",
+      "archivedReason": null,
+      "autoArchiveDays": 21,
+      "createdAt": "2026-10-26T19:37:12.619Z",
+      "updatedAt": "2026-10-29T19:37:12.619Z",
+      "archivedAt": null,
+      "expiresAt": "2026-11-16T19:37:12.619Z",
+      "quant": {
+        "currentPrice": 189.5,
+        "distToS1Pct": 3.17,
+        "distToS2Pct": 7.65,
+        "distToS3Pct": 14.51,
+        "upsideToR1Pct": 3.43,
+        "upsideToR2Pct": 11.87,
+        "upsideToR3Pct": 24.01,
+        "riskRewardRatio": 3.75,
+        "rangePositionPct": 38,
+        "tacticalZone": "MID_CHANNEL",
+        "tacticalZoneLabel": "แกว่งตัวในกรอบกลาง (S1 ↔ R1)"
+      }
+    },
+    {
+      "id": "hrp_legacy_archived_sample",
+      "symbol": "NFLX",
+      "name": "Netflix Inc.",
+      "currency": "USD",
+      "portfolioId": "us-moat",
+      "author": "Hermes Agent",
+      "source": "HERMES_ANALYST",
+      "topic": "Pre-Q3 Ad-Tier Subscriber Preview (Archived Sample)",
+      "tags": [
+        "#Earnings",
+        "#SupportResistance",
+        "#ArchivedCycle"
+      ],
+      "bias": "BULLISH",
+      "referencePrice": 695,
+      "supportLevels": {
+        "s1": {
+          "level": 1,
+          "code": "S1",
+          "horizon": "SHORT",
+          "horizonLabelTh": "ระยะสั้น (1–2 สัปดาห์)",
+          "horizonLabelEn": "Short-Term (EMA20 / Demand Pivot)",
+          "price": 675,
+          "note": "แนวรับระยะสั้นก่อนประกาศงบ Q3"
+        },
+        "s2": {
+          "level": 2,
+          "code": "S2",
+          "horizon": "MEDIUM",
+          "horizonLabelTh": "ระยะกลาง (1–3 เดือน)",
+          "horizonLabelEn": "Medium-Term (SMA50 / Institutional Base)",
+          "price": 645,
+          "note": "แนวรับระยะกลาง SMA-50"
+        },
+        "s3": {
+          "level": 3,
+          "code": "S3",
+          "horizon": "LONG",
+          "horizonLabelTh": "ระยะยาว (3–12 เดือน)",
+          "horizonLabelEn": "Long-Term (SMA200 / Deep Value Moat)",
+          "price": 600,
+          "note": "แนวรับระยะยาว"
+        }
+      },
+      "resistanceLevels": {
+        "r1": {
+          "level": 1,
+          "code": "R1",
+          "horizon": "SHORT",
+          "horizonLabelTh": "ระยะสั้น (1–2 สัปดาห์)",
+          "horizonLabelEn": "Short-Term (Swing High / Upper BB)",
+          "price": 720,
+          "note": "แนวต้านระยะสั้น"
+        },
+        "r2": {
+          "level": 2,
+          "code": "R2",
+          "horizon": "MEDIUM",
+          "horizonLabelTh": "ระยะกลาง (1–3 เดือน)",
+          "horizonLabelEn": "Medium-Term (Breakout Target / Channel Top)",
+          "price": 760,
+          "note": "แนวต้านระยะกลาง"
+        },
+        "r3": {
+          "level": 3,
+          "code": "R3",
+          "horizon": "LONG",
+          "horizonLabelTh": "ระยะยาว (3–12 เดือน)",
+          "horizonLabelEn": "Long-Term (Fibonacci Extension / Valuation Ceiling)",
+          "price": 800,
+          "note": "แนวต้านระยะยาว"
+        }
+      },
+      "summary": "บทวิเคราะห์รอบก่อนหน้าที่ครบกำหนดอายุ (Auto-Archived) และถูกเก็บเข้ากรุอัตโนมัติเพื่อไม่ให้หน้าแรกของ Web App รก ผู้ดูแลระบบสามารถเรียกดูหรือกดนำกลับมาแสดงได้จากหน้า Admin",
+      "signals": [
+        "ผ่านพ้นรอบเหตุการณ์งบไตรมาสแล้ว (Auto-Archived)"
+      ],
+      "pinned": false,
+      "status": "ARCHIVED",
+      "archivedReason": "AUTO_ARCHIVE_TTL",
+      "autoArchiveDays": 14,
+      "createdAt": "2026-10-04T19:37:12.619Z",
+      "updatedAt": "2026-10-29T19:37:12.619Z",
+      "archivedAt": "2026-10-26T19:37:12.619Z",
+      "expiresAt": "2026-10-18T19:37:12.619Z",
+      "quant": {
+        "currentPrice": 695,
+        "distToS1Pct": 2.88,
+        "distToS2Pct": 7.19,
+        "distToS3Pct": 13.67,
+        "upsideToR1Pct": 3.6,
+        "upsideToR2Pct": 9.35,
+        "upsideToR3Pct": 15.11,
+        "riskRewardRatio": 3.25,
+        "rangePositionPct": 48,
+        "tacticalZone": "MID_CHANNEL",
+        "tacticalZoneLabel": "แกว่งตัวในกรอบกลาง (S1 ↔ R1)"
+      }
+    }
+  ]
+}

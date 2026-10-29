@@ -110,6 +110,107 @@ TOOLS = [
             },
         },
     },
+    {
+        "name": "moat_publish_research_post",
+        "description": (
+            "Publish or update a shared Support/Resistance Level 1-2-3 (Short/Medium/Long-term: ระยะสั้น-กลาง-ยาว) "
+            "and #tagged research post to the MoatWatch Web App section card (shared across all SyncKeys)."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "symbol": {
+                    "type": "string",
+                    "description": "Ticker symbol (e.g. 'NVDA', 'TSM', 'AVGO').",
+                },
+                "companyName": {
+                    "type": "string",
+                    "description": "Optional company name.",
+                },
+                "headline": {
+                    "type": "string",
+                    "description": "Headline of the research & support/resistance analysis post.",
+                },
+                "summary": {
+                    "type": "string",
+                    "description": "Detailed quantitative/fundamental research commentary.",
+                },
+                "signalMemo": {
+                    "type": "string",
+                    "description": "Compact actionable signal memo (<=160 chars).",
+                },
+                "bias": {
+                    "type": "string",
+                    "description": "Tactical bias: BULLISH, ACCUMULATE, NEUTRAL, or CAUTIOUS.",
+                },
+                "confidence": {
+                    "type": "number",
+                    "description": "Conviction score 50-99.",
+                },
+                "referencePrice": {
+                    "type": "number",
+                    "description": "Current/reference stock price used for S1-S3 / R1-R3 calculation.",
+                },
+                "s1": {
+                    "type": "number",
+                    "description": "Support 1 (ระยะสั้น / Short-term support price).",
+                },
+                "s2": {
+                    "type": "number",
+                    "description": "Support 2 (ระยะกลาง / Medium-term support price).",
+                },
+                "s3": {
+                    "type": "number",
+                    "description": "Support 3 (ระยะยาว / Long-term structural moat support price).",
+                },
+                "r1": {
+                    "type": "number",
+                    "description": "Resistance 1 (ระยะสั้น / Short-term resistance price).",
+                },
+                "r2": {
+                    "type": "number",
+                    "description": "Resistance 2 (ระยะกลาง / Medium-term resistance price).",
+                },
+                "r3": {
+                    "type": "number",
+                    "description": "Resistance 3 (ระยะยาว / Long-term structural target price).",
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "Topic #tags (e.g. ['#hermes-daily', '#ai-infra', '#support-resistance']).",
+                },
+                "pinned": {
+                    "type": "boolean",
+                    "description": "Whether to pin this card at the top of the research feed.",
+                },
+            },
+            "required": ["symbol", "headline", "summary"],
+        },
+    },
+    {
+        "name": "moat_list_research_posts",
+        "description": (
+            "List active shared Support/Resistance 1-2-3 research posts and the full Watchlist S/R 1-2-3 matrix."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "symbol": {
+                    "type": "string",
+                    "description": "Optional ticker symbol filter.",
+                },
+                "tag": {
+                    "type": "string",
+                    "description": "Optional #tag filter (e.g. '#ai-infra').",
+                },
+                "includeArchived": {
+                    "type": "boolean",
+                    "description": "Include archived/hidden posts.",
+                },
+            },
+        },
+    },
 ]
 
 
@@ -295,6 +396,42 @@ def call_tool(name: str, args: Dict[str, Any]) -> Dict[str, Any]:
             query={
                 "status": args.get("status"),
                 "symbol": args.get("symbol"),
+            },
+        )
+    if name == "moat_publish_research_post":
+        return _api_request(
+            "POST",
+            "/api/integration/research-posts",
+            body={
+                "action": "UPSERT",
+                "symbol": args.get("symbol"),
+                "companyName": args.get("companyName"),
+                "headline": args.get("headline"),
+                "summary": args.get("summary"),
+                "signalMemo": args.get("signalMemo"),
+                "bias": args.get("bias") or "BULLISH",
+                "confidence": args.get("confidence"),
+                "referencePrice": args.get("referencePrice"),
+                "s1": args.get("s1"),
+                "s2": args.get("s2"),
+                "s3": args.get("s3"),
+                "r1": args.get("r1"),
+                "r2": args.get("r2"),
+                "r3": args.get("r3"),
+                "tags": args.get("tags") or ["#hermes-daily", "#support-resistance", "#watchlist"],
+                "pinned": bool(args.get("pinned", False)),
+                "source": "HERMES_AGENT",
+                "author": "Hermes Quant Research Agent",
+            },
+        )
+    if name == "moat_list_research_posts":
+        return _api_request(
+            "GET",
+            "/api/integration/research-posts",
+            query={
+                "symbol": args.get("symbol"),
+                "tag": args.get("tag"),
+                "includeArchived": "1" if args.get("includeArchived") else None,
             },
         )
     return {"ok": False, "error": f"Unknown tool: {name}"}

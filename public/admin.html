@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MoatWatch Admin — Device Activation &amp; 14-Day Trial Licensing Portal</title>
+  <title>MoatWatch Admin — BI Analytics, Hermes S/R 1-2-3 CMS &amp; Device Licensing</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -25,6 +25,7 @@
             amber: '#F59E0B'
           },
           fontFamily: {
+            display: ['"Space Grotesk"', '"Plus Jakarta Sans"', 'sans-serif'],
             sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'monospace']
           }
@@ -32,7 +33,7 @@
       }
     };
   </script>
-  <link rel="stylesheet" href="/styles.css?v=20261029-en1" />
+  <link rel="stylesheet" href="/styles.css?v=20261030-adm2" />
 </head>
 <body class="bg-void text-alabaster font-sans antialiased min-h-screen selection:bg-cyan/30 selection:text-alabaster">
 
@@ -42,21 +43,47 @@
     <div class="ambient-orb ambient-orb-cyan"></div>
   </div>
 
-  <!-- Top Floating Admin Bar -->
-  <header class="sticky top-5 z-40 px-4 sm:px-8 flex justify-center">
-    <nav class="w-full max-w-6xl rounded-full bg-core/80 backdrop-blur-2xl ring-1 ring-white/10 px-5 py-2.5 flex items-center justify-between shadow-2xl">
-      <div class="flex items-center gap-3">
-        <span class="relative flex h-2.5 w-2.5">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber"></span>
-        </span>
-        <span class="font-bold tracking-tight text-sm sm:text-base text-alabaster">MoatWatch Admin</span>
-        <span class="hidden sm:inline-block text-[11px] font-mono text-amber bg-amber/10 ring-1 ring-amber/30 px-2.5 py-0.5 rounded-full">
-          admin-moat.readybyte.top · Password Auth
-        </span>
+  <!-- =====================================================================
+       STICKY TOP COMMAND HEADER (Obsidian Quantitative Atelier Redesign)
+       ===================================================================== -->
+  <header class="mw-topbar sticky top-0 z-40">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+      <!-- Left: Brand Identity & Workspace Section Tabs -->
+      <div class="flex items-center gap-4">
+        <a href="/admin" class="flex items-center gap-2.5 group">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500/25 to-cyan-500/20 border border-amber-400/35 flex items-center justify-center shadow-lg">
+            <span class="relative flex h-2.5 w-2.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber"></span>
+            </span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-display font-bold text-base tracking-tight text-white">MoatWatch Admin</span>
+              <span class="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                Atelier Command
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400 hidden sm:block">BI Quant Dashboard · Hermes S/R 1-2-3 CMS · Garmin Licensing</p>
+          </div>
+        </a>
+
+        <!-- Admin Workspace Section Navigation -->
+        <nav id="adminTopWorkspaceNav" class="hidden xl:flex items-center gap-1 bg-white/[0.03] border border-white/[0.07] rounded-xl p-1">
+          <button type="button" data-admin-nav="section-admin-hermes-control" class="mw-nav-btn active">Hermes Live &amp; Pi Control</button>
+          <button type="button" data-admin-nav="section-admin-bi" class="mw-nav-btn">BI &amp; Quant Dashboard</button>
+          <button type="button" data-admin-nav="section-admin-hermes-cms" class="mw-nav-btn">Hermes Posts &amp; S/R CMS</button>
+          <button type="button" data-admin-nav="section-admin-devices" class="mw-nav-btn">Devices &amp; Requests</button>
+          <button type="button" data-admin-nav="section-admin-security" class="mw-nav-btn">Security, SMTP &amp; Audit</button>
+        </nav>
       </div>
 
-      <div class="flex items-center gap-2.5">
+      <!-- Right: Hermes Live Pill, Session Watchdog, Auth Pill, Main Portal Link & Sign Out -->
+      <div class="flex items-center gap-2">
+        <span id="adminHermesStatusHeaderBadge" class="hidden sm:inline-flex items-center gap-1.5 font-mono text-[11px] px-2.5 py-1 rounded-full bg-emerald-500/15 ring-1 ring-emerald-500/35 text-emerald-300" title="Hermes Agent (echo24) Live Connection Status">
+          <span id="adminHermesHeaderDot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="adminHermesHeaderText">Hermes: Checking...</span>
+        </span>
         <span id="adminSessionTimerBadge" class="hidden font-mono text-[11px] px-2.5 py-1 rounded-full bg-amber/15 ring-1 ring-amber/35 text-amber items-center gap-1.5" title="Automatic session timeout on inactivity (Auto-Logout Protection against forgotten sessions)">
           <i class="ph-light ph-timer"></i>
           <span id="adminSessionTimerText">Auto-Logout: 15:00</span>
@@ -64,182 +91,825 @@
         <span id="adminAuthStatusPill" class="font-mono text-xs px-3 py-1 rounded-full bg-white/[0.05] ring-1 ring-white/10 text-slate-300">
           Checking Auth...
         </span>
-        <a href="https://moat.readybyte.top" class="rounded-full bg-white/[0.05] hover:bg-white/[0.1] ring-1 ring-white/10 px-3.5 py-1.5 text-xs font-medium text-cyan flex items-center gap-1.5">
+        <a href="/" class="mw-btn mw-btn-ghost text-xs py-1.5 px-3 text-cyan-300 border-cyan-500/30" title="Open Main Portfolio & Watch Terminal">
           <i class="ph-light ph-watch"></i>
-          <span class="hidden sm:inline">Main Portal (moat.readybyte.top)</span>
+          <span class="hidden sm:inline">Main Portal</span>
         </a>
-        <button id="adminLogoutBtn" type="button" class="hidden rounded-full bg-crimson/15 hover:bg-crimson/25 ring-1 ring-crimson/30 px-3 py-1.5 text-xs font-mono text-crimson">
+        <button id="adminLogoutBtn" type="button" class="hidden rounded-xl bg-crimson/15 hover:bg-crimson/25 ring-1 ring-crimson/30 px-3 py-1.5 text-xs font-mono text-crimson transition">
           Sign Out
         </button>
       </div>
-    </nav>
+    </div>
   </header>
 
-  <main class="relative z-10 max-w-6xl mx-auto px-4 sm:px-8 pt-10 pb-24">
+  <main class="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 pt-8 pb-24">
 
     <!-- =====================================================================
          SECTION A: ADMIN PASSWORD LOGIN GATE (saharat.bun@icloud.com)
          ===================================================================== -->
     <section id="adminLoginGate" class="max-w-md mx-auto mt-10">
-      <div class="double-bezel-shell">
-        <div class="double-bezel-core p-7 sm:p-8 space-y-6">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-mono text-amber flex items-center gap-1.5">
-              <i class="ph-light ph-lock-key text-base"></i>
-              <span>ADMIN PASSWORD AUTHENTICATION</span>
-            </span>
-            <span class="text-[11px] font-mono text-slate-400">Scrypt Protected</span>
+      <div class="mw-glass-card p-7 sm:p-8 space-y-6 border border-white/10 shadow-2xl">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-mono text-amber flex items-center gap-1.5">
+            <i class="ph-light ph-lock-key text-base"></i>
+            <span>ADMIN PASSWORD AUTHENTICATION</span>
+          </span>
+          <span class="text-[11px] font-mono text-slate-400">Scrypt Protected</span>
+        </div>
+
+        <div>
+          <h1 class="font-display text-2xl font-extrabold text-alabaster tracking-tight">
+            Administrator Sign In
+          </h1>
+          <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">
+            Manage Quantitative BI Analytics, Hermes S/R 1-2-3 Tagged Posts, per-device activation keys (<code class="font-mono text-cyan">deviceId</code>), trial extension &amp; purchase requests, and email notifications to <code class="font-mono text-emerald">e24qdy2@gmail.com</code>. Restricted to app owner <strong class="font-mono text-alabaster">saharat.bun@icloud.com</strong>.
+          </p>
+        </div>
+
+        <!-- Security Hardening Notice (Zero plaintext hints in DOM) -->
+        <div class="rounded-2xl bg-emerald/10 ring-1 ring-emerald/25 p-3.5 text-xs space-y-1">
+          <div class="flex items-center justify-between text-emerald font-mono">
+            <span>VA HARDENED · AUTO-EXPIRING SESSION</span>
+            <span class="text-[10px]">15m Idle / 30m Max</span>
+          </div>
+          <p class="text-slate-300 text-[11px] leading-relaxed">
+            Protected by automated brute-force lockout and non-persistent session timeout after 15 minutes of inactivity or when the browser tab closes.
+          </p>
+        </div>
+
+        <form id="adminPasswordLoginForm" class="space-y-4">
+          <div>
+            <label class="block text-xs text-slate-400 mb-1.5 font-mono" for="adminEmailInput">Admin Owner Email</label>
+            <input
+              id="adminEmailInput"
+              type="email"
+              value="saharat.bun@icloud.com"
+              readonly
+              class="w-full rounded-xl bg-void ring-1 ring-white/15 px-4 py-2.5 font-mono text-sm text-emerald focus:outline-none"
+            />
           </div>
 
           <div>
-            <h1 class="text-2xl font-extrabold text-alabaster tracking-tight">
-              Administrator Sign In
-            </h1>
-            <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">
-              Manage per-device activation keys (<code class="font-mono text-cyan">deviceId</code>), trial extension &amp; purchase requests, and email notifications to <code class="font-mono text-emerald">e24qdy2@gmail.com</code>. Restricted to app owner <strong class="font-mono text-alabaster">saharat.bun@icloud.com</strong>.
-            </p>
-          </div>
-
-          <!-- Security Hardening Notice (Zero plaintext hints in DOM) -->
-          <div class="rounded-2xl bg-emerald/10 ring-1 ring-emerald/25 p-3.5 text-xs space-y-1">
-            <div class="flex items-center justify-between text-emerald font-mono">
-              <span>VA HARDENED · AUTO-EXPIRING SESSION</span>
-              <span class="text-[10px]">15m Idle / 30m Max</span>
-            </div>
-            <p class="text-slate-300 text-[11px] leading-relaxed">
-              Protected by automated brute-force lockout and non-persistent session timeout after 15 minutes of inactivity or when the browser tab closes (prevents forgotten persistent logins).
-            </p>
-          </div>
-
-          <form id="adminPasswordLoginForm" class="space-y-4">
-            <div>
-              <label class="block text-xs text-slate-400 mb-1.5 font-mono" for="adminEmailInput">Admin Owner Email</label>
+            <label class="block text-xs text-slate-400 mb-1.5" for="adminPasswordInput">Administrator Password</label>
+            <div class="relative">
               <input
-                id="adminEmailInput"
-                type="email"
-                value="saharat.bun@icloud.com"
-                readonly
-                class="w-full rounded-xl bg-void ring-1 ring-white/15 px-4 py-2.5 font-mono text-sm text-emerald focus:outline-none"
+                id="adminPasswordInput"
+                type="password"
+                required
+                autocomplete="current-password"
+                placeholder="Enter administrator password"
+                class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-amber pl-4 pr-11 py-2.5 font-mono text-sm text-alabaster tracking-wider focus:outline-none"
               />
+              <button
+                id="toggleLoginPwdBtn"
+                type="button"
+                title="Show/Hide Password"
+                class="absolute inset-y-0 right-0 px-3.5 flex items-center text-slate-400 hover:text-alabaster"
+              >
+                <i class="ph-light ph-eye text-base"></i>
+              </button>
             </div>
+          </div>
 
-            <div>
-              <label class="block text-xs text-slate-400 mb-1.5" for="adminPasswordInput">Administrator Password</label>
-              <div class="relative">
-                <input
-                  id="adminPasswordInput"
-                  type="password"
-                  required
-                  autocomplete="current-password"
-                  placeholder="Enter administrator password"
-                  class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-amber pl-4 pr-11 py-2.5 font-mono text-sm text-alabaster tracking-wider focus:outline-none"
-                />
-                <button
-                  id="toggleLoginPwdBtn"
-                  type="button"
-                  title="Show/Hide Password"
-                  class="absolute inset-y-0 right-0 px-3.5 flex items-center text-slate-400 hover:text-alabaster"
-                >
-                  <i class="ph-light ph-eye text-base"></i>
-                </button>
-              </div>
-            </div>
+          <div id="loginErrorBox" class="hidden rounded-xl bg-crimson/15 ring-1 ring-crimson/35 px-3.5 py-2.5 text-xs text-crimson font-medium"></div>
 
-            <div id="loginErrorBox" class="hidden rounded-xl bg-crimson/15 ring-1 ring-crimson/35 px-3.5 py-2.5 text-xs text-crimson font-medium"></div>
-
-            <button
-              type="submit"
-              class="w-full rounded-full bg-emerald text-void font-bold text-xs py-3 px-5 flex items-center justify-center gap-2 shadow-lg shadow-emerald/15 spring-transition active:scale-[0.98]"
-            >
-              <i class="ph-light ph-lock-key-open text-sm font-bold"></i>
-              <span>Sign In with Password</span>
-            </button>
-          </form>
-        </div>
+          <button
+            type="submit"
+            class="w-full rounded-xl bg-gradient-to-r from-emerald-400 to-cyan-400 text-slate-950 font-bold text-xs py-3 px-5 flex items-center justify-center gap-2 shadow-lg shadow-emerald/15 transition active:scale-[0.98]"
+          >
+            <i class="ph-light ph-lock-key-open text-sm font-bold"></i>
+            <span>Sign In with Password</span>
+          </button>
+        </form>
       </div>
     </section>
 
     <!-- =====================================================================
          SECTION B: AUTHENTICATED ADMIN DASHBOARD (HIDDEN UNTIL VERIFIED)
          ===================================================================== -->
-    <section id="adminDashboardContent" class="hidden space-y-8">
+    <section id="adminDashboardContent" class="hidden space-y-7">
 
-      <!-- Top Header & Quick Actions -->
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <!-- Top Executive Banner & Quick Action Controls -->
+      <div class="mw-glass-card p-5 sm:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
-          <div class="inline-flex items-center gap-2 rounded-full bg-amber/10 ring-1 ring-amber/30 px-3 py-1 mb-3 text-xs font-mono text-amber">
+          <div class="inline-flex items-center gap-2 rounded-full bg-amber/10 ring-1 ring-amber/30 px-3 py-1 mb-2 text-xs font-mono text-amber">
             <i class="ph-light ph-crown"></i>
-            <span>Owner: saharat.bun@icloud.com · Mail Notify: e24qdy2@gmail.com</span>
+            <span>Owner: saharat.bun@icloud.com · Mail Notify: e24qdy2@gmail.com · Shared Hermes Feed Active</span>
           </div>
-          <h1 class="text-2xl sm:text-4xl font-extrabold text-alabaster tracking-tight">
-            Per-Device Activation Key &amp; Customer Request Management
+          <h1 class="font-display text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            MoatWatch Executive BI, Hermes S/R 1–2–3 CMS &amp; Licensing Command
           </h1>
+          <p class="text-xs text-slate-400 mt-1">
+            Unified quantitative oversight across all user SyncKeys, Hermes tagged analyst posts, Support/Resistance 1–2–3 levels, and Garmin Connect IQ device licenses.
+          </p>
         </div>
-        <div class="flex flex-wrap items-center gap-2.5 self-start md:self-auto">
-          <button id="scrollToEmailSettingsBtn" type="button" class="rounded-full bg-cyan/15 hover:bg-cyan/25 ring-1 ring-cyan/35 px-4 py-2 text-xs font-mono text-cyan flex items-center gap-2">
+        <div class="flex flex-wrap items-center gap-2 self-start lg:self-center">
+          <button id="openNewHermesPostBtn" type="button" class="mw-btn mw-btn-primary text-xs py-2 px-3.5">
+            <i class="ph-light ph-plus-circle text-sm"></i>
+            <span>+ Publish S/R 1-2-3 Card</span>
+          </button>
+          <button id="scrollToEmailSettingsBtn" type="button" class="mw-btn mw-btn-ghost text-xs py-2 px-3 text-cyan-300 border-cyan-500/30">
             <i class="ph-light ph-envelope-simple-open"></i>
-            <span>SMTP Settings / Test Email</span>
+            <span>SMTP / Email</span>
           </button>
-          <button id="scrollToChangePwdBtn" type="button" class="rounded-full bg-amber/15 hover:bg-amber/25 ring-1 ring-amber/35 px-4 py-2 text-xs font-mono text-amber flex items-center gap-2">
+          <button id="scrollToChangePwdBtn" type="button" class="mw-btn mw-btn-ghost text-xs py-2 px-3 text-amber-300 border-amber-500/30">
             <i class="ph-light ph-keyhole"></i>
-            <span>Change Admin Password</span>
+            <span>Change Password</span>
           </button>
-          <button id="refreshAdminBtn" type="button" class="rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 px-4 py-2 text-xs font-mono text-alabaster flex items-center gap-2">
-            <i class="ph-light ph-arrows-clockwise text-emerald"></i>
-            <span>Refresh Data</span>
+          <button id="refreshAdminBtn" type="button" class="mw-btn mw-btn-ghost text-xs py-2 px-3.5">
+            <i class="ph-light ph-arrows-clockwise text-emerald-400"></i>
+            <span>Refresh All</span>
           </button>
         </div>
       </div>
 
-      <!-- KPI Grid (5 Cards) -->
-      <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
-        <div class="double-bezel-shell">
-          <div class="double-bezel-core p-5">
-            <div class="text-xs text-slate-400">Total Devices</div>
-            <div id="kpiTotalDevices" class="font-mono text-3xl font-bold text-alabaster mt-1 tabular-nums">0</div>
-            <div class="text-[11px] font-mono text-slate-400 mt-1">Registered Garmin Watches</div>
+      <!-- Primary Device & Licensing KPI Strip (Preserves all 5 SDLC KPI IDs) -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
+        <div class="mw-glass-card p-4">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Total Devices</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.05] text-slate-300">CIQ Fleet</span>
+          </div>
+          <div id="kpiTotalDevices" class="font-display font-mono text-2xl sm:text-3xl font-bold text-white mt-1.5 tabular-nums">0</div>
+          <div class="text-[11px] font-mono text-slate-400 mt-1">Registered Garmin Watches</div>
+        </div>
+        <div class="mw-glass-card p-4">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">PRO Active</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-300">Permanent</span>
+          </div>
+          <div id="kpiActivePaid" class="font-display font-mono text-2xl sm:text-3xl font-bold text-cyan-400 mt-1.5 tabular-nums">0</div>
+          <div class="text-[11px] font-mono text-cyan/80 mt-1">Activated via HMAC Key</div>
+        </div>
+        <div class="mw-glass-card p-4">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">14D Free Trial</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300">Active</span>
+          </div>
+          <div id="kpiActiveTrial" class="font-display font-mono text-2xl sm:text-3xl font-bold text-emerald-400 mt-1.5 tabular-nums">0</div>
+          <div class="text-[11px] font-mono text-emerald/80 mt-1">Within 14-day window</div>
+        </div>
+        <div class="mw-glass-card p-4">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Trial Expired</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-500/15 text-rose-300">Locked</span>
+          </div>
+          <div id="kpiExpiredTrial" class="font-display font-mono text-2xl sm:text-3xl font-bold text-rose-400 mt-1.5 tabular-nums">0</div>
+          <div class="text-[11px] font-mono text-rose-300/80 mt-1">Gate → saharat.bun@icloud.com</div>
+        </div>
+        <div class="mw-glass-card p-4 col-span-2 sm:col-span-1">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold uppercase tracking-wider text-amber-300">Pending Queue</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300">Action</span>
+          </div>
+          <div id="kpiPendingRequests" class="font-display font-mono text-2xl sm:text-3xl font-bold text-amber-400 mt-1.5 tabular-nums">0</div>
+          <div class="text-[11px] font-mono text-amber/80 mt-1">Sent to e24qdy2@gmail.com</div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           NEW SECTION 0: HERMES AGENT (ECHO24) LIVE CONNECTION MONITOR,
+           REMOTE SERVICE CONTROL & FUNCTIONAL DIAGNOSTIC CENTER
+           =================================================================== -->
+      <div id="section-admin-hermes-control" class="mw-glass-card p-5 sm:p-6 space-y-5 border border-emerald-500/25">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/[0.07]">
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <span id="hermesLiveStatusBadge" class="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/35">
+                <span id="hermesLiveStatusDot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span id="hermesLiveStatusText">HERMES NODE: CHECKING...</span>
+              </span>
+              <span id="hermesGatewayStateBadge" class="text-[11px] font-mono px-2.5 py-1 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+                GW: hermes-gateway.service
+              </span>
+              <span id="hermesHeartbeatAgeText" class="text-[11px] font-mono px-2.5 py-1 rounded-md bg-white/[0.05] text-slate-300">
+                Auto-check every 8s
+              </span>
+            </div>
+            <h2 class="font-display text-lg sm:text-xl font-bold text-white mt-2">
+              Hermes Agent (<code class="font-mono text-cyan-300">echo24</code> · Raspberry Pi 3B+) Live Status, Remote Control &amp; API Self-Test
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Periodic heartbeat telemetry from <code class="font-mono text-emerald-300">echo24 (192.168.1.100 / 100.113.60.19)</code>, remote service control (<code class="font-mono text-slate-300">Restart GW</code>, <code class="font-mono text-slate-300">Pause/Stop</code>, <code class="font-mono text-slate-300">Start Service</code>, <code class="font-mono text-slate-300">Reboot Pi</code>), and end-to-end API function diagnostics.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2 self-start lg:self-center">
+            <label class="inline-flex items-center gap-1.5 text-xs font-mono text-slate-300 bg-slate-950/80 border border-white/10 rounded-xl px-3 py-1.5 cursor-pointer">
+              <input id="hermesAutoPollToggle" type="checkbox" checked class="rounded border-white/20 text-emerald-400 focus:ring-0" />
+              <span>Auto-Check (8s)</span>
+            </label>
+            <button id="btnPollHermesNow" type="button" class="mw-btn mw-btn-ghost text-xs py-1.5 px-3 text-cyan-300 border-cyan-500/30">
+              <i class="ph-light ph-heartbeat"></i>
+              <span>Check Now</span>
+            </button>
           </div>
         </div>
-        <div class="double-bezel-shell">
-          <div class="double-bezel-core p-5">
-            <div class="text-xs text-slate-400">PRO Active (Permanent)</div>
-            <div id="kpiActivePaid" class="font-mono text-3xl font-bold text-cyan mt-1 tabular-nums">0</div>
-            <div class="text-[11px] font-mono text-cyan/80 mt-1">Activated via Key</div>
+
+        <!-- Live Node Telemetry Strip (4 Cards) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+          <div class="p-3.5 rounded-xl bg-slate-950/70 border border-white/[0.07]">
+            <div class="flex items-center justify-between text-[10px] font-mono uppercase text-slate-400">
+              <span>Node &amp; Network Host</span>
+              <span id="hermesNodeHostPill" class="text-emerald-300">echo24</span>
+            </div>
+            <div id="hermesNodeIpText" class="font-mono text-sm font-bold text-white mt-1">192.168.1.100 · TS 100.113.60.19</div>
+            <div id="hermesNodeUptimeText" class="text-[11px] font-mono text-slate-400 mt-0.5">Uptime: —</div>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-slate-950/70 border border-white/[0.07]">
+            <div class="flex items-center justify-between text-[10px] font-mono uppercase text-slate-400">
+              <span>Hermes Gateway Service</span>
+              <span id="hermesGwPidPill" class="text-cyan-300">systemd --user</span>
+            </div>
+            <div id="hermesGwServiceText" class="font-mono text-sm font-bold text-emerald-400 mt-1">RUNNING</div>
+            <div id="hermesPluginMcpText" class="text-[11px] font-mono text-slate-400 mt-0.5">Plugin: ACTIVE · MCP: READY</div>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-slate-950/70 border border-white/[0.07]">
+            <div class="flex items-center justify-between text-[10px] font-mono uppercase text-slate-400">
+              <span>Discord Bot &amp; Owner Auth</span>
+              <span class="text-amber-300">Allowlist Verified</span>
+            </div>
+            <div id="hermesDiscordBotText" class="font-mono text-sm font-bold text-white mt-1">Hermesself#6138</div>
+            <div class="text-[11px] font-mono text-emerald-300/90 mt-0.5">Owner ID: 932083816485519411</div>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-slate-950/70 border border-white/[0.07]">
+            <div class="flex items-center justify-between text-[10px] font-mono uppercase text-slate-400">
+              <span>Pi 3B+ Hardware Telemetry</span>
+              <span id="hermesLastBeatIso" class="text-slate-400">—</span>
+            </div>
+            <div id="hermesPiMetricsText" class="font-mono text-sm font-bold text-cyan-300 mt-1">Temp: —°C · RAM: — MB</div>
+            <div id="hermesPiLoadText" class="text-[11px] font-mono text-slate-400 mt-0.5">Load 1m: — · Queue: 0 pending</div>
           </div>
         </div>
-        <div class="double-bezel-shell">
-          <div class="double-bezel-core p-5">
-            <div class="text-xs text-slate-400">Active 14D Free Trial</div>
-            <div id="kpiActiveTrial" class="font-mono text-3xl font-bold text-emerald mt-1 tabular-nums">0</div>
-            <div class="text-[11px] font-mono text-emerald/80 mt-1">Within 14-day window</div>
+
+        <!-- 5 Remote Control & Diagnostic Action Buttons -->
+        <div class="p-4 rounded-2xl bg-slate-950/80 border border-white/10 space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-amber-300">
+                Remote Command &amp; Functional Test Controls (Direct to <code class="text-white">echo24</code>)
+              </h3>
+              <p class="text-[11px] text-slate-400">
+                Commands are picked up by <code class="font-mono text-cyan-300">moat-hermes-node.service</code> on <code class="font-mono text-emerald-300">echo24</code> within 1–3 seconds. Even when Hermes is paused/stopped, the node agent stays online to accept <strong class="text-emerald-300">Start Hermes Service</strong>.
+              </p>
+            </div>
+            <span id="hermesCommandStateBadge" class="text-[11px] font-mono px-2.5 py-1 rounded-lg bg-white/[0.05] text-slate-300 self-start sm:self-center">
+              Ready for command
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
+            <!-- 1. Restart GW Hermes -->
+            <button
+              id="btnHermesRestartGw"
+              type="button"
+              data-hermes-cmd="RESTART_GW"
+              class="rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/35 px-3.5 py-3 text-left transition flex flex-col justify-between gap-1.5 group"
+            >
+              <div class="flex items-center justify-between w-full">
+                <span class="font-mono text-xs font-bold text-cyan-300 group-hover:text-white">Restart GW Hermes</span>
+                <i class="ph-light ph-arrows-clockwise text-cyan-300 text-base"></i>
+              </div>
+              <span class="text-[10px] font-mono text-slate-400">systemctl --user restart hermes-gateway</span>
+            </button>
+
+            <!-- 2. Pause / Stop Hermes -->
+            <button
+              id="btnHermesPauseStop"
+              type="button"
+              data-hermes-cmd="PAUSE_STOP_HERMES"
+              class="rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/35 px-3.5 py-3 text-left transition flex flex-col justify-between gap-1.5 group"
+            >
+              <div class="flex items-center justify-between w-full">
+                <span class="font-mono text-xs font-bold text-amber-300 group-hover:text-white">Pause / Stop Hermes</span>
+                <i class="ph-light ph-pause-circle text-amber-300 text-base"></i>
+              </div>
+              <span class="text-[10px] font-mono text-slate-400">Stop GW service (keeps Pi agent ready)</span>
+            </button>
+
+            <!-- 3. Start Hermes Service -->
+            <button
+              id="btnHermesStartService"
+              type="button"
+              data-hermes-cmd="START_HERMES"
+              class="rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/35 px-3.5 py-3 text-left transition flex flex-col justify-between gap-1.5 group"
+            >
+              <div class="flex items-center justify-between w-full">
+                <span class="font-mono text-xs font-bold text-emerald-300 group-hover:text-white">Start Hermes Service</span>
+                <i class="ph-light ph-play-circle text-emerald-300 text-base"></i>
+              </div>
+              <span class="text-[10px] font-mono text-slate-400">systemctl --user start hermes-gateway</span>
+            </button>
+
+            <!-- 4. Reboot Pi -->
+            <button
+              id="btnHermesRebootPi"
+              type="button"
+              data-hermes-cmd="REBOOT_PI"
+              class="rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/35 px-3.5 py-3 text-left transition flex flex-col justify-between gap-1.5 group"
+            >
+              <div class="flex items-center justify-between w-full">
+                <span class="font-mono text-xs font-bold text-rose-300 group-hover:text-white">Reboot Pi (echo24)</span>
+                <i class="ph-light ph-power text-rose-300 text-base"></i>
+              </div>
+              <span class="text-[10px] font-mono text-slate-400">Graceful hardware reboot of Raspberry Pi</span>
+            </button>
+
+            <!-- 5. Test All Functions (Hermes + API Self-Test) -->
+            <button
+              id="btnHermesTestAllFuncs"
+              type="button"
+              data-hermes-cmd="TEST_ALL_FUNCTIONS"
+              class="rounded-xl bg-gradient-to-br from-emerald-500/25 to-cyan-500/25 hover:from-emerald-500/35 hover:to-cyan-500/35 border border-emerald-400/45 px-3.5 py-3 text-left transition flex flex-col justify-between gap-1.5 group shadow-lg"
+            >
+              <div class="flex items-center justify-between w-full">
+                <span class="font-mono text-xs font-bold text-white">Test All Functions</span>
+                <i class="ph-light ph-check-square-offset text-emerald-300 text-base"></i>
+              </div>
+              <span class="text-[10px] font-mono text-emerald-200/90">Verify 8 API &amp; Hermes Node functions</span>
+            </button>
           </div>
         </div>
-        <div class="double-bezel-shell">
-          <div class="double-bezel-core p-5">
-            <div class="text-xs text-slate-400">Trial Expired</div>
-            <div id="kpiExpiredTrial" class="font-mono text-3xl font-bold text-crimson mt-1 tabular-nums">0</div>
-            <div class="text-[11px] font-mono text-crimson/80 mt-1">Locked → saharat.bun@icloud.com</div>
+
+        <!-- Command Console Output + 8-Step Functional Diagnostic Report Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          <!-- Left 5 Cols: Live Pi Command Execution Console & Queue History -->
+          <div class="lg:col-span-5 p-4 rounded-2xl bg-slate-950/75 border border-white/[0.07] flex flex-col justify-between space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono font-bold uppercase tracking-wider text-cyan-300">
+                Pi Remote Command Output Console
+              </span>
+              <span id="hermesLastCmdMeta" class="text-[10px] font-mono text-slate-400">No recent command</span>
+            </div>
+            <pre id="hermesCommandConsoleOutput" class="font-mono text-[11px] text-slate-300 bg-void/90 border border-white/10 rounded-xl p-3 overflow-x-auto whitespace-pre-wrap leading-relaxed min-h-[135px] max-h-[240px] overflow-y-auto">Waiting for command or heartbeat telemetry from echo24...</pre>
           </div>
-        </div>
-        <div class="double-bezel-shell col-span-2 lg:col-span-1">
-          <div class="double-bezel-core p-5">
-            <div class="text-xs text-amber font-semibold">Pending Requests</div>
-            <div id="kpiPendingRequests" class="font-mono text-3xl font-bold text-amber mt-1 tabular-nums">0</div>
-            <div class="text-[11px] font-mono text-amber/80 mt-1">Sent to e24qdy2@gmail.com</div>
+
+          <!-- Right 7 Cols: 8-Step Functional Self-Test Matrix -->
+          <div class="lg:col-span-7 p-4 rounded-2xl bg-slate-950/75 border border-white/[0.07] space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <span class="text-xs font-mono font-bold uppercase tracking-wider text-emerald-300">
+                  Hermes &amp; MoatWatch API Functional Verification Matrix (8 Checks)
+                </span>
+                <p id="hermesDiagSummaryText" class="text-[11px] font-mono text-slate-400 mt-0.5">
+                  Click &ldquo;Test All Functions&rdquo; to verify Account Summary, WebMemo Drafts, Discord Owner Allowlist, S/R 1-2-3 Feed, BI Engine, and Pi Heartbeat.
+                </p>
+              </div>
+              <span id="hermesDiagOverallBadge" class="text-[10px] font-mono px-2.5 py-1 rounded-full bg-white/[0.06] text-slate-300">
+                NOT RUN YET
+              </span>
+            </div>
+
+            <div class="overflow-x-auto max-h-[240px] overflow-y-auto">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="border-b border-white/10 text-[10px] font-mono uppercase text-slate-400">
+                    <th class="py-1.5 pr-2">Function / Endpoint</th>
+                    <th class="py-1.5 px-2">Status</th>
+                    <th class="py-1.5 px-2">Latency</th>
+                    <th class="py-1.5 pl-2">Diagnostic Detail</th>
+                  </tr>
+                </thead>
+                <tbody id="hermesDiagStepsBody" class="divide-y divide-white/[0.05] font-mono text-[11px]">
+                  <tr>
+                    <td colspan="4" class="py-6 text-center text-slate-500">
+                      Click <strong class="text-emerald-300">Test All Functions</strong> above to execute full API &amp; Hermes diagnostic suite.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- ===================================================================
-           CUSTOMER REQUESTS APPROVAL QUEUE (Trial Extend & Purchase Requests)
+           NEW SECTION 1: EXECUTIVE BI & VIRTUALIZED QUANTITATIVE DASHBOARD
+           (Users, #Tag Topics, Analysis/WebMemos, S/R 1-2-3 Multi-Bar & Pie)
            =================================================================== -->
-      <div class="double-bezel-shell">
-        <div class="double-bezel-core p-6">
+      <div id="section-admin-bi" class="mw-glass-card p-5 sm:p-6 space-y-6 border border-cyan-500/20">
+        <!-- BI Header & Perspective Controls -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/[0.07]">
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/35">
+                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                BI &amp; QUANTITATIVE INTELLIGENCE BOARD
+              </span>
+              <span id="biLastGeneratedBadge" class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/[0.05] text-slate-400">
+                Real-Time Telemetry
+              </span>
+            </div>
+            <h2 class="font-display text-lg sm:text-xl font-bold text-white mt-1.5">
+              Multi-Angle Quantitative BI: Users, #Tag Topics, WebMemos &amp; Support/Resistance 1–2–3
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Interactive stacked bar charts, grouped multi-bar comparisons, and donut/pie breakdowns across all SyncKey profiles and Hermes research cards.
+            </p>
+          </div>
+
+          <!-- Chart Layout Mode Switcher -->
+          <div class="flex flex-wrap items-center gap-2">
+            <div id="biChartLayoutGroup" class="inline-flex items-center bg-slate-950/80 border border-white/10 rounded-xl p-1">
+              <button type="button" data-bi-chart-layout="STACKED_V" class="mw-filter-pill active text-xs py-1 px-2.5">Stacked Columns</button>
+              <button type="button" data-bi-chart-layout="STACKED_H" class="mw-filter-pill text-xs py-1 px-2.5">Stacked Horizontal</button>
+              <button type="button" data-bi-chart-layout="GROUPED" class="mw-filter-pill text-xs py-1 px-2.5">Grouped Multi-Bar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quantitative BI KPI Sub-Strip (6 Cards) -->
+        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
+          <div class="p-3.5 rounded-xl bg-slate-950/65 border border-white/[0.07]">
+            <div class="text-[10px] font-mono uppercase text-slate-400">User SyncKey Profiles</div>
+            <div id="biKpiTotalUsers" class="font-mono text-xl font-bold text-white mt-1">0</div>
+            <div id="biKpiTotalUsersSub" class="text-[10px] font-mono text-cyan-300 mt-0.5">0 Portfolios · 0 Assets</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-950/65 border border-white/[0.07]">
+            <div class="text-[10px] font-mono uppercase text-slate-400">Holdings vs Watchlist</div>
+            <div id="biKpiHoldingsWatchlist" class="font-mono text-xl font-bold text-emerald-400 mt-1">0 / 0</div>
+            <div id="biKpiHoldingsWatchlistSub" class="text-[10px] font-mono text-slate-400 mt-0.5">Core vs Watchlist</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-950/65 border border-white/[0.07]">
+            <div class="text-[10px] font-mono uppercase text-slate-400">WebMemo &amp; Drafts</div>
+            <div id="biKpiMemoCoverage" class="font-mono text-xl font-bold text-cyan-300 mt-1">0%</div>
+            <div id="biKpiMemoCoverageSub" class="text-[10px] font-mono text-slate-400 mt-0.5">0 Memos · 0 Drafts</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-950/65 border border-white/[0.07]">
+            <div class="text-[10px] font-mono uppercase text-slate-400">Hermes S/R Posts</div>
+            <div id="biKpiHermesPosts" class="font-mono text-xl font-bold text-amber-300 mt-1">0 Active</div>
+            <div id="biKpiHermesPostsSub" class="text-[10px] font-mono text-slate-400 mt-0.5">0 Archived · 0 #Tags</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-950/65 border border-white/[0.07]">
+            <div class="text-[10px] font-mono uppercase text-slate-400">Avg R2 Upside / S1 Buffer</div>
+            <div id="biKpiAvgUpsideR2" class="font-mono text-xl font-bold text-emerald-300 mt-1">+0.0%</div>
+            <div id="biKpiAvgUpsideR2Sub" class="text-[10px] font-mono text-amber-300 mt-0.5">S1 Buffer: -0.0%</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-950/65 border border-white/[0.07]">
+            <div class="text-[10px] font-mono uppercase text-slate-400">Quant R/R Ratio</div>
+            <div id="biKpiRiskReward" class="font-mono text-xl font-bold text-white mt-1">0.00x</div>
+            <div id="biKpiRiskRewardSub" class="text-[10px] font-mono text-emerald-400 mt-0.5">R2 Upside ÷ S1 Risk</div>
+          </div>
+        </div>
+
+        <!-- Multi-Angle Stacked / Grouped Bar Chart Workbench -->
+        <div class="rounded-2xl bg-slate-950/70 border border-white/[0.08] p-4 sm:p-5 space-y-4">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div>
+              <div class="text-[11px] font-mono uppercase tracking-wider text-cyan-300">Interactive Multi-Angle Stacked &amp; Grouped Bar Explorer</div>
+              <h3 id="biActiveStackTitle" class="text-sm sm:text-base font-bold text-white mt-0.5">
+                1. Hermes Research Posts by #Tag Topic &amp; Tactical Bias (Stacked)
+              </h3>
+            </div>
+            <!-- 4 Perspective Tabs -->
+            <div id="biStackPerspectiveGroup" class="flex flex-wrap items-center gap-1.5">
+              <button type="button" data-bi-stack-mode="TAG_BY_BIAS" class="mw-filter-pill active text-xs py-1 px-3">
+                1. #Tag Topic × Bias
+              </button>
+              <button type="button" data-bi-stack-mode="SR_BY_TICKER" class="mw-filter-pill text-xs py-1 px-3">
+                2. S1-S2-S3 vs R1-R2-R3 (%)
+              </button>
+              <button type="button" data-bi-stack-mode="USER_ASSETS" class="mw-filter-pill text-xs py-1 px-3">
+                3. Users × Holdings/Watch/Memo
+              </button>
+              <button type="button" data-bi-stack-mode="PORTFOLIO_MIX" class="mw-filter-pill text-xs py-1 px-3">
+                4. Portfolio Categories
+              </button>
+            </div>
+          </div>
+
+          <!-- Legend Row -->
+          <div id="biStackedBarLegend" class="flex flex-wrap items-center gap-4 text-xs font-mono">
+            <!-- Populated by admin.js -->
+          </div>
+
+          <!-- High-DPI Canvas + Interactive Virtualized Bar Breakdown -->
+          <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 items-center">
+            <div class="xl:col-span-8 bg-void/80 rounded-xl border border-white/[0.06] p-3">
+              <canvas id="biStackedBarCanvas" width="860" height="300" class="w-full h-[270px] sm:h-[300px] block"></canvas>
+            </div>
+            <div id="biStackedBarTableSummary" class="xl:col-span-4 max-h-[300px] overflow-y-auto space-y-2 pr-1">
+              <!-- Virtualized interactive breakdown rows populated by admin.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Donut / Pie Charts Grid (Users & Licenses, #Tag Share, S/R Positioning Zones) -->
+        <div id="biPieChartsGrid" class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <!-- Pie 1: User & Device License Distribution -->
+          <div class="rounded-2xl bg-slate-950/70 border border-white/[0.08] p-4 flex flex-col justify-between gap-3">
+            <div>
+              <span class="text-[10px] font-mono uppercase tracking-wider text-emerald-300">DONUT / PIE · USER &amp; DEVICE TIERS</span>
+              <h4 class="text-sm font-bold text-white mt-0.5">User &amp; Device License Distribution</h4>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="relative w-32 h-32 shrink-0">
+                <canvas id="biPieUsersCanvas" width="160" height="160" class="w-32 h-32"></canvas>
+                <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                  <span id="biPieUsersCenterValue" class="font-mono text-base font-extrabold text-white">0</span>
+                  <span class="text-[9px] font-mono text-slate-400 uppercase">Accounts</span>
+                </div>
+              </div>
+              <div id="biPieUsersLegend" class="flex-1 space-y-1.5 text-xs">
+                <!-- Populated by admin.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Pie 2: Hermes Topic #Tag Share -->
+          <div class="rounded-2xl bg-slate-950/70 border border-white/[0.08] p-4 flex flex-col justify-between gap-3">
+            <div>
+              <span class="text-[10px] font-mono uppercase tracking-wider text-cyan-300">DONUT / PIE · HERMES #TAG TOPICS</span>
+              <h4 class="text-sm font-bold text-white mt-0.5">Research Topic (#Tag) Share</h4>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="relative w-32 h-32 shrink-0">
+                <canvas id="biPieTopicsCanvas" width="160" height="160" class="w-32 h-32"></canvas>
+                <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                  <span id="biPieTopicsCenterValue" class="font-mono text-base font-extrabold text-cyan-300">0</span>
+                  <span class="text-[9px] font-mono text-slate-400 uppercase">#Tags</span>
+                </div>
+              </div>
+              <div id="biPieTopicsLegend" class="flex-1 space-y-1.5 text-xs">
+                <!-- Populated by admin.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Pie 3: Support / Resistance Positioning Zones -->
+          <div class="rounded-2xl bg-slate-950/70 border border-white/[0.08] p-4 flex flex-col justify-between gap-3">
+            <div>
+              <span class="text-[10px] font-mono uppercase tracking-wider text-amber-300">DONUT / PIE · S/R POSITIONING BANDS</span>
+              <h4 class="text-sm font-bold text-white mt-0.5">Watchlist S3–R3 Channel Positioning</h4>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="relative w-32 h-32 shrink-0">
+                <canvas id="biPieSrZonesCanvas" width="160" height="160" class="w-32 h-32"></canvas>
+                <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                  <span id="biPieSrZonesCenterValue" class="font-mono text-base font-extrabold text-amber-300">0</span>
+                  <span class="text-[9px] font-mono text-slate-400 uppercase">Tickers</span>
+                </div>
+              </div>
+              <div id="biPieSrZonesLegend" class="flex-1 space-y-1.5 text-xs">
+                <!-- Populated by admin.js -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           NEW SECTION 2: HERMES TAGGED POSTS & S/R 1-2-3 CMS
+           (Create, Edit, Archive/Hide (ซ่อน), Restore, Delete & Auto-Archive TTL)
+           =================================================================== -->
+      <div id="section-admin-hermes-cms" class="mw-glass-card p-5 sm:p-6 space-y-6 border border-emerald-500/20">
+        <!-- CMS Header & Auto-Archive Policy Controls -->
+        <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4 pb-4 border-b border-white/[0.07]">
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/35">
+                HERMES #TAG POSTS &amp; S/R 1-2-3 CMS
+              </span>
+              <span id="cmsTotalCountBadge" class="text-[10px] font-mono px-2.5 py-0.5 rounded-md bg-white/[0.05] text-slate-300">
+                0 Active · 0 Archived
+              </span>
+            </div>
+            <h2 class="font-display text-lg sm:text-xl font-bold text-white mt-1.5">
+              Manage Shared Support/Resistance 1–2–3 Cards &amp; Hermes Tagged Posts
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Edit, pin, archive/hide (<span class="text-amber-300">ซ่อนการ์ดเก่า</span>), restore, or delete posts published by Hermes Agent (`#tags`) and configure automatic TTL archiving so the frontpage stays clean across all SyncKeys.
+            </p>
+          </div>
+
+          <!-- Auto-Archive Policy Bar -->
+          <div class="flex flex-wrap items-center gap-2.5 bg-slate-950/75 border border-white/10 rounded-2xl p-3">
+            <label class="inline-flex items-center gap-2 text-xs text-slate-200 cursor-pointer">
+              <input id="cmsAutoArchiveEnabledToggle" type="checkbox" checked class="rounded bg-void text-emerald focus:ring-0" />
+              <span class="font-medium">Auto-Archive Old Cards</span>
+            </label>
+            <div class="flex items-center gap-1.5 text-xs font-mono">
+              <span class="text-slate-400">Age &gt;</span>
+              <input
+                id="cmsAutoArchiveDaysInput"
+                type="number"
+                min="1"
+                max="365"
+                value="21"
+                class="w-16 rounded-lg bg-void ring-1 ring-white/15 px-2 py-1 text-center font-mono text-xs text-emerald-300 focus:outline-none"
+              />
+              <span class="text-slate-400">days</span>
+            </div>
+            <button id="cmsSavePolicyBtn" type="button" class="mw-btn mw-btn-ghost text-xs py-1.5 px-3 text-cyan-300 border-cyan-500/30">
+              Save Policy
+            </button>
+            <button id="cmsRunAutoArchiveSweepBtn" type="button" class="mw-btn mw-btn-ghost text-xs py-1.5 px-3 text-amber-300 border-amber-500/30" title="Immediately archive unpinned cards older than TTL days">
+              Run Auto-Archive Sweep
+            </button>
+          </div>
+        </div>
+
+        <!-- Create / Edit Hermes S/R 1-2-3 Post Form -->
+        <div id="cmsPostFormCard" class="rounded-2xl bg-slate-950/70 border border-white/[0.08] p-4 sm:p-5 space-y-4">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+              <h3 id="cmsFormHeading" class="text-sm font-bold text-white">Create or Update Shared Support/Resistance 1–2–3 &amp; Hermes Tagged Card</h3>
+            </div>
+            <button id="cmsResetFormBtn" type="button" class="text-xs font-mono text-slate-400 hover:text-white transition">
+              Reset / Clear Form
+            </button>
+          </div>
+
+          <form id="cmsPostForm" class="space-y-4">
+            <input id="cmsPostIdInput" type="hidden" value="" />
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+              <div class="col-span-1">
+                <label class="block text-[11px] font-mono text-slate-400 mb-1" for="cmsSymbolInput">Symbol *</label>
+                <input id="cmsSymbolInput" type="text" required placeholder="NVDA / PTT.BK" class="w-full rounded-xl bg-void ring-1 ring-white/15 px-3 py-2 font-mono text-xs text-white uppercase focus:outline-none focus:ring-cyan" />
+              </div>
+              <div class="col-span-1 sm:col-span-2">
+                <label class="block text-[11px] font-mono text-slate-400 mb-1" for="cmsNameInput">Company Name</label>
+                <input id="cmsNameInput" type="text" placeholder="NVIDIA Corp" class="w-full rounded-xl bg-void ring-1 ring-white/15 px-3 py-2 text-xs text-white focus:outline-none focus:ring-cyan" />
+              </div>
+              <div class="col-span-1">
+                <label class="block text-[11px] font-mono text-slate-400 mb-1" for="cmsCurrencySelect">Currency</label>
+                <select id="cmsCurrencySelect" class="w-full rounded-xl bg-void ring-1 ring-white/15 px-2.5 py-2 font-mono text-xs text-white focus:outline-none">
+                  <option value="USD">USD ($)</option>
+                  <option value="THB">THB (฿)</option>
+                </select>
+              </div>
+              <div class="col-span-1">
+                <label class="block text-[11px] font-mono text-slate-400 mb-1" for="cmsRefPriceInput">Ref Price</label>
+                <input id="cmsRefPriceInput" type="number" step="any" placeholder="138.50" class="w-full rounded-xl bg-void ring-1 ring-white/15 px-3 py-2 font-mono text-xs text-white focus:outline-none focus:ring-cyan" />
+              </div>
+              <div class="col-span-1">
+                <label class="block text-[11px] font-mono text-slate-400 mb-1" for="cmsBiasSelect">Tactical Bias</label>
+                <select id="cmsBiasSelect" class="w-full rounded-xl bg-void ring-1 ring-white/15 px-2.5 py-2 font-mono text-xs text-emerald-300 focus:outline-none">
+                  <option value="BULLISH">BULLISH</option>
+                  <option value="ACCUMULATE">ACCUMULATE</option>
+                  <option value="NEUTRAL">NEUTRAL</option>
+                  <option value="DEFENSIVE">DEFENSIVE</option>
+                  <option value="BEARISH">BEARISH</option>
+                </select>
+              </div>
+              <div class="col-span-1">
+                <label class="block text-[11px] font-mono text-slate-400 mb-1" for="cmsConfidenceInput">Confidence %</label>
+                <input id="cmsConfidenceInput" type="number" min="1" max="100" value="84" class="w-full rounded-xl bg-void ring-1 ring-white/15 px-3 py-2 font-mono text-xs text-cyan-300 focus:outline-none" />
+              </div>
+              <div class="col-span-1">
+                <label class="block text-[11px] font-mono text-slate-400 mb-1" for="cmsAuthorInput">Author</label>
+                <input id="cmsAuthorInput" type="text" value="Hermes Agent" class="w-full rounded-xl bg-void ring-1 ring-white/15 px-3 py-2 font-mono text-xs text-slate-200 focus:outline-none" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+              <div class="md:col-span-6">
+                <label class="block text-[11px] font-mono text-slate-400 mb-1" for="cmsTitleInput">Headline / Research Title *</label>
+                <input id="cmsTitleInput" type="text" required placeholder="e.g. NVDA — AI Datacenter Demand Holds Above S1 ($132.50)" class="w-full rounded-xl bg-void ring-1 ring-white/15 px-3.5 py-2 text-xs text-white focus:outline-none focus:ring-cyan" />
+              </div>
+              <div class="md:col-span-4">
+                <label class="block text-[11px] font-mono text-slate-400 mb-1" for="cmsTagsInput">Hermes #Tags (comma or space separated)</label>
+                <input id="cmsTagsInput" type="text" value="#Hermes-Daily, #Wide-Moat, #Support-Resistance" placeholder="#AI-Moat, #Thai-Value, #Breakout-Watch" class="w-full rounded-xl bg-void ring-1 ring-white/15 px-3.5 py-2 font-mono text-xs text-cyan-300 focus:outline-none focus:ring-cyan" />
+              </div>
+              <div class="md:col-span-2 flex items-end pb-1">
+                <label class="inline-flex items-center gap-2 text-xs text-amber-300 cursor-pointer font-mono">
+                  <input id="cmsPinnedCheck" type="checkbox" class="rounded bg-void text-amber focus:ring-0" />
+                  <span>★ Pin Card (No Auto-Archive)</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Support 1-2-3 & Resistance 1-2-3 Inputs -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <!-- Support S1, S2, S3 -->
+              <div class="p-3.5 rounded-xl bg-emerald-500/[0.04] border border-emerald-500/20 space-y-2.5">
+                <div class="text-xs font-mono font-bold text-emerald-300 flex items-center justify-between">
+                  <span>แนวรับ (SUPPORT LEVELS 1–2–3)</span>
+                  <span class="text-[10px] text-slate-400">ระยะสั้น · ระยะกลาง · ระยะยาว</span>
+                </div>
+                <div class="grid grid-cols-12 gap-2 items-center">
+                  <span class="col-span-3 font-mono text-[11px] text-emerald-300 font-semibold">S1 (ระยะสั้น)</span>
+                  <input id="cmsS1PriceInput" type="number" step="any" placeholder="Price S1" class="col-span-3 rounded-lg bg-void ring-1 ring-white/15 px-2.5 py-1.5 font-mono text-xs text-white focus:outline-none" />
+                  <input id="cmsS1NoteInput" type="text" placeholder="20D EMA / Intraday demand" class="col-span-6 rounded-lg bg-void ring-1 ring-white/15 px-2.5 py-1.5 text-xs text-slate-300 focus:outline-none" />
+                </div>
+                <div class="grid grid-cols-12 gap-2 items-center">
+                  <span class="col-span-3 font-mono text-[11px] text-emerald-300 font-semibold">S2 (ระยะกลาง)</span>
+                  <input id="cmsS2PriceInput" type="number" step="any" placeholder="Price S2" class="col-span-3 rounded-lg bg-void ring-1 ring-white/15 px-2.5 py-1.5 font-mono text-xs text-white focus:outline-none" />
+                  <input id="cmsS2NoteInput" type="text" placeholder="50D SMA / Institutional shelf" class="col-span-6 rounded-lg bg-void ring-1 ring-white/15 px-2.5 py-1.5 text-xs text-slate-300 focus:outline-none" />
+                </div>
+                <div class="grid grid-cols-12 gap-2 items-center">
+                  <span class="col-span-3 font-mono text-[11px] text-emerald-300 font-semibold">S3 (ระยะยาว)</span>
+                  <input id="cmsS3PriceInput" type="number" step="any" placeholder="Price S3" class="col-span-3 rounded-lg bg-void ring-1 ring-white/15 px-2.5 py-1.5 font-mono text-xs text-white focus:outline-none" />
+                  <input id="cmsS3NoteInput" type="text" placeholder="200D SMA / Structural moat floor" class="col-span-6 rounded-lg bg-void ring-1 ring-white/15 px-2.5 py-1.5 text-xs text-slate-300 focus:outline-none" />
+                </div>
+              </div>
+
+              <!-- Resistance R1, R2, R3 -->
+              <div class="p-3.5 rounded-xl bg-amber-500/[0.04] border border-amber-500/20 space-y-2.5">
+                <div class="text-xs font-mono font-bold text-amber-300 flex items-center justify-between">
+                  <span>แนวต้าน (RESISTANCE LEVELS 1–2–3)</span>
+                  <span class="text-[10px] text-slate-400">ระยะสั้น · ระยะกลาง · ระยะยาว</span>
+                </div>
+                <div class="grid grid-cols-12 gap-2 items-center">
+                  <span class="col-span-3 font-mono text-[11px] text-amber-300 font-semibold">R1 (ระยะสั้น)</span>
+                  <input id="cmsR1PriceInput" type="number" step="any" placeholder="Price R1" class="col-span-3 rounded-lg bg-void ring-1 ring-white/15 px-2.5 py-1.5 font-mono text-xs text-white focus:outline-none" />
+                  <input id="cmsR1NoteInput" type="text" placeholder="Upper Bollinger / Swing supply" class="col-span-6 rounded-lg bg-void ring-1 ring-white/15 px-2.5 py-1.5 text-xs text-slate-300 focus:outline-none" />
+                </div>
+                <div class="grid grid-cols-12 gap-2 items-center">
+                  <span class="col-span-3 font-mono text-[11px] text-amber-300 font-semibold">R2 (ระยะกลาง)</span>
+                  <input id="cmsR2PriceInput" type="number" step="any" placeholder="Price R2" class="col-span-3 rounded-lg bg-void ring-1 ring-white/15 px-2.5 py-1.5 font-mono text-xs text-white focus:outline-none" />
+                  <input id="cmsR2NoteInput" type="text" placeholder="Quarterly breakout target" class="col-span-6 rounded-lg bg-void ring-1 ring-white/15 px-2.5 py-1.5 text-xs text-slate-300 focus:outline-none" />
+                </div>
+                <div class="grid grid-cols-12 gap-2 items-center">
+                  <span class="col-span-3 font-mono text-[11px] text-amber-300 font-semibold">R3 (ระยะยาว)</span>
+                  <input id="cmsR3PriceInput" type="number" step="any" placeholder="Price R3" class="col-span-3 rounded-lg bg-void ring-1 ring-white/15 px-2.5 py-1.5 font-mono text-xs text-white focus:outline-none" />
+                  <input id="cmsR3NoteInput" type="text" placeholder="Full cycle valuation target" class="col-span-6 rounded-lg bg-void ring-1 ring-white/15 px-2.5 py-1.5 text-xs text-slate-300 focus:outline-none" />
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+              <div class="md:col-span-5">
+                <label class="block text-[11px] font-mono text-slate-400 mb-1" for="cmsSignalMemoInput">Tactical Signal Memo (Compact Garmin/Card Callout)</label>
+                <input id="cmsSignalMemoInput" type="text" placeholder="e.g. Accumulate S1 $132.5 / S2 $124.8 · Target R2 $152" class="w-full rounded-xl bg-void ring-1 ring-white/15 px-3.5 py-2 font-mono text-xs text-cyan-200 focus:outline-none focus:ring-cyan" />
+              </div>
+              <div class="md:col-span-5">
+                <label class="block text-[11px] font-mono text-slate-400 mb-1" for="cmsSummaryInput">Executive Thesis &amp; Quantitative Commentary</label>
+                <input id="cmsSummaryInput" type="text" placeholder="Detailed moat, catalyst, and volume profile commentary..." class="w-full rounded-xl bg-void ring-1 ring-white/15 px-3.5 py-2 text-xs text-slate-200 focus:outline-none focus:ring-cyan" />
+              </div>
+              <div class="md:col-span-2 flex items-end">
+                <button id="cmsSubmitPostBtn" type="submit" class="w-full mw-btn mw-btn-primary text-xs py-2.5 px-3 justify-center">
+                  Save &amp; Publish Card
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- CMS Filter & Bulk Action Toolbar -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 bg-slate-950/60 border border-white/[0.07] rounded-2xl p-3.5">
+          <div class="flex flex-wrap items-center gap-2">
+            <label class="inline-flex items-center gap-2 cursor-pointer select-none text-xs font-mono text-white mr-2">
+              <input id="cmsSelectAllPostsCheck" type="checkbox" class="h-4 w-4 rounded border-white/25 bg-void text-cyan focus:ring-cyan cursor-pointer" />
+              <span>Select All</span>
+            </label>
+            <span id="cmsSelectedPostsCountBadge" class="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-white/[0.06] text-slate-300">
+              0 Selected
+            </span>
+
+            <div id="cmsStatusFilterGroup" class="inline-flex items-center bg-void/90 border border-white/10 rounded-xl p-1 ml-1">
+              <button type="button" data-cms-status="ALL" class="mw-filter-pill active text-[11px] py-1 px-2.5">All Cards</button>
+              <button type="button" data-cms-status="ACTIVE" class="mw-filter-pill text-[11px] py-1 px-2.5">Active Only</button>
+              <button type="button" data-cms-status="ARCHIVED" class="mw-filter-pill text-[11px] py-1 px-2.5">Archived / Hidden (ซ่อน)</button>
+            </div>
+
+            <select id="cmsTagFilterSelect" class="rounded-xl bg-void border border-white/10 px-3 py-1.5 font-mono text-xs text-cyan-300 focus:outline-none">
+              <option value="ALL">All #Tags</option>
+            </select>
+
+            <input
+              id="cmsSearchInput"
+              type="text"
+              placeholder="Filter symbol, #tag, headline..."
+              class="rounded-xl bg-void border border-white/10 px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
+            />
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <button id="cmsBulkArchiveBtn" type="button" disabled class="rounded-xl bg-amber/20 hover:bg-amber/30 disabled:opacity-40 disabled:pointer-events-none ring-1 ring-amber/40 px-3 py-1.5 text-xs font-mono font-semibold text-amber">
+              Archive / Hide Selected (ซ่อน)
+            </button>
+            <button id="cmsBulkRestoreBtn" type="button" disabled class="rounded-xl bg-emerald/20 hover:bg-emerald/30 disabled:opacity-40 disabled:pointer-events-none ring-1 ring-emerald/40 px-3 py-1.5 text-xs font-mono font-semibold text-emerald">
+              Restore Selected
+            </button>
+            <button id="cmsBulkDeleteBtn" type="button" disabled class="rounded-xl bg-crimson/20 hover:bg-crimson/30 disabled:opacity-40 disabled:pointer-events-none ring-1 ring-crimson/40 px-3 py-1.5 text-xs font-mono font-semibold text-crimson">
+              Delete Selected
+            </button>
+          </div>
+        </div>
+
+        <!-- CMS Posts List -->
+        <div id="cmsPostsListContainer" class="space-y-3">
+          <!-- Populated by admin.js -->
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           SECTION 3: CUSTOMER REQUESTS QUEUE & REGISTERED GARMIN WATCH DEVICES
+           =================================================================== -->
+      <div id="section-admin-devices" class="space-y-6">
+        <!-- Customer Requests Approval Queue -->
+        <div class="mw-glass-card p-6">
           <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
             <div>
               <div class="flex items-center gap-2">
                 <i class="ph-light ph-tray-arrow-down text-amber text-lg"></i>
-                <h2 class="text-lg font-bold text-alabaster">
+                <h2 class="font-display text-lg font-bold text-alabaster">
                   Customer Requests Queue: Trial Extensions &amp; Permanent License Purchases
                 </h2>
               </div>
@@ -256,21 +926,19 @@
             <!-- Populated by admin.js -->
           </div>
         </div>
-      </div>
 
-      <!-- Generator & Device Table Split -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Generator & Device Table Split -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-        <!-- Left 4 Cols: Per-Device Activation Key Generator + Change Admin Password -->
-        <div class="lg:col-span-4 space-y-6">
-          <!-- Card 1: Per-Device Activation Key Generator -->
-          <div class="double-bezel-shell">
-            <div class="double-bezel-core p-6 space-y-4">
+          <!-- Left 4 Cols: Per-Device Activation Key Generator + Change Admin Password -->
+          <div class="lg:col-span-4 space-y-6">
+            <!-- Card 1: Per-Device Activation Key Generator -->
+            <div class="mw-glass-card p-6 space-y-4">
               <div class="flex items-center justify-between">
                 <span class="text-xs font-mono text-cyan">KEY GENERATOR (HMAC-SHA256)</span>
                 <i class="ph-light ph-key text-lg text-cyan"></i>
               </div>
-              <h2 class="text-lg font-bold text-alabaster">Issue Per-Device Activation Key</h2>
+              <h2 class="font-display text-lg font-bold text-alabaster">Issue Per-Device Activation Key</h2>
               <p class="text-xs text-slate-400 leading-relaxed">
                 Enter the <code class="font-mono text-alabaster">Device ID</code> displayed on the user's Garmin watch screen to generate a hardware-bound activation key.
               </p>
@@ -316,7 +984,7 @@
 
                 <button
                   type="submit"
-                  class="w-full rounded-full bg-cyan text-void font-bold text-xs py-3 px-4 flex items-center justify-center gap-2 spring-transition active:scale-[0.98]"
+                  class="w-full mw-btn mw-btn-primary text-xs py-3 px-4 justify-center"
                 >
                   <i class="ph-light ph-magic-wand text-sm font-bold"></i>
                   <span>Generate Activation Code</span>
@@ -339,17 +1007,15 @@
                 </button>
               </div>
             </div>
-          </div>
 
-          <!-- Card 2: Change Admin Password (with Current Password Verification) -->
-          <div id="changePasswordCard" class="double-bezel-shell">
-            <div class="double-bezel-core p-6 space-y-4">
+            <!-- Card 2: Change Admin Password (with Current Password Verification) -->
+            <div id="changePasswordCard" class="mw-glass-card p-6 space-y-4">
               <div class="flex items-center justify-between">
                 <span class="text-xs font-mono text-amber">ADMIN SECURITY · CHANGE PASSWORD</span>
                 <i class="ph-light ph-shield-check text-lg text-amber"></i>
               </div>
               <div>
-                <h2 class="text-lg font-bold text-alabaster">Change Administrator Password</h2>
+                <h2 class="font-display text-lg font-bold text-alabaster">Change Administrator Password</h2>
                 <p class="text-xs text-slate-400 mt-1 leading-relaxed">
                   Update the Admin Portal password. Verification of your <code class="font-mono text-amber">Current Password</code> is required every time.
                 </p>
@@ -434,7 +1100,7 @@
 
                 <button
                   type="submit"
-                  class="w-full rounded-full bg-amber text-void font-bold text-xs py-3 px-4 flex items-center justify-center gap-2 spring-transition active:scale-[0.98]"
+                  class="w-full rounded-xl bg-amber text-void font-bold text-xs py-3 px-4 flex items-center justify-center gap-2 transition active:scale-[0.98]"
                 >
                   <i class="ph-light ph-lock-key text-sm font-bold"></i>
                   <span>Verify Current &amp; Update Password</span>
@@ -442,14 +1108,12 @@
               </form>
             </div>
           </div>
-        </div>
 
-        <!-- Right 8 Cols: Registered Devices & Trial Management Table -->
-        <div class="lg:col-span-8 double-bezel-shell">
-          <div class="double-bezel-core p-6">
+          <!-- Right 8 Cols: Registered Devices & Trial Management Table -->
+          <div class="lg:col-span-8 mw-glass-card p-6">
             <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
               <div>
-                <h2 class="text-lg font-bold text-alabaster">Registered Garmin Watch Devices</h2>
+                <h2 class="font-display text-lg font-bold text-alabaster">Registered Garmin Watch Devices</h2>
                 <p class="text-xs text-slate-400">Select individual or multiple devices to revoke keys (Remove Key), activate PRO immediately, or extend the 14-day trial.</p>
               </div>
             </div>
@@ -502,15 +1166,15 @@
       </div>
 
       <!-- ===================================================================
-           SMTP / SYSTEM MAIL CONFIGURATION & EMAIL OUTBOX (e24qdy2@gmail.com)
+           SECTION 4: SMTP / SYSTEM MAIL CONFIGURATION & AUDIT TRAIL
            =================================================================== -->
-      <div id="emailServiceCard" class="double-bezel-shell">
-        <div class="double-bezel-core p-6 space-y-6">
+      <div id="section-admin-security" class="space-y-6">
+        <div id="emailServiceCard" class="mw-glass-card p-6 space-y-6">
           <div class="flex flex-wrap items-center justify-between gap-3">
             <div>
               <div class="flex items-center gap-2">
                 <i class="ph-light ph-paper-plane-tilt text-cyan text-lg"></i>
-                <h2 class="text-lg font-bold text-alabaster">
+                <h2 class="font-display text-lg font-bold text-alabaster">
                   Email Notification Configuration (SMTP / System Mail → e24qdy2@gmail.com)
                 </h2>
               </div>
@@ -521,7 +1185,7 @@
             <button
               id="testSendEmailBtn"
               type="button"
-              class="rounded-full bg-emerald text-void font-bold text-xs px-4 py-2.5 flex items-center gap-2 spring-transition active:scale-[0.98]"
+              class="rounded-xl bg-emerald text-void font-bold text-xs px-4 py-2.5 flex items-center gap-2 transition active:scale-[0.98]"
             >
               <i class="ph-light ph-envelope-simple-open text-sm font-bold"></i>
               <span>Send Test Email to e24qdy2@gmail.com</span>
@@ -594,7 +1258,7 @@
                 />
                 <button
                   type="submit"
-                  class="rounded-xl bg-cyan text-void font-bold text-xs px-4 py-2 whitespace-nowrap spring-transition active:scale-[0.98]"
+                  class="rounded-xl bg-cyan text-void font-bold text-xs px-4 py-2 whitespace-nowrap transition active:scale-[0.98]"
                 >
                   Save SMTP
                 </button>
@@ -628,15 +1292,13 @@
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Security & Licensing Audit Log -->
-      <div class="double-bezel-shell">
-        <div class="double-bezel-core p-6">
+        <!-- Security & Licensing Audit Log -->
+        <div class="mw-glass-card p-6">
           <div class="flex items-center justify-between mb-4">
             <div>
-              <h3 class="text-base font-bold text-alabaster">Security &amp; Licensing Audit Trail (SDLC)</h3>
-              <p class="text-xs text-slate-400">Track administrator sign-ins, password updates, activation key issuance, customer request approvals, and device state changes.</p>
+              <h3 class="font-display text-base font-bold text-alabaster">Security, CMS &amp; Licensing Audit Trail (SDLC)</h3>
+              <p class="text-xs text-slate-400">Track administrator sign-ins, Hermes post edits/archives, password updates, activation key issuance, and device state changes.</p>
             </div>
             <span class="font-mono text-xs text-slate-400">Owner: saharat.bun@icloud.com</span>
           </div>
@@ -647,7 +1309,7 @@
                   <th class="py-2.5 pr-4">Timestamp</th>
                   <th class="py-2.5 pr-4">Actor</th>
                   <th class="py-2.5 pr-4">Action</th>
-                  <th class="py-2.5 pr-4">Device ID</th>
+                  <th class="py-2.5 pr-4">Device / Target ID</th>
                   <th class="py-2.5">Detail</th>
                 </tr>
               </thead>
@@ -663,13 +1325,13 @@
   </main>
 
   <!-- Toast Banner -->
-  <div id="adminToastBanner" class="fixed bottom-6 right-6 z-50 translate-y-20 opacity-0 pointer-events-none spring-transition">
+  <div id="adminToastBanner" class="fixed bottom-6 right-6 z-50 translate-y-20 opacity-0 pointer-events-none transition-all duration-300">
     <div class="rounded-full bg-core/95 backdrop-blur-xl ring-1 ring-cyan/40 px-5 py-3 shadow-2xl flex items-center gap-3">
       <span class="w-2 h-2 rounded-full bg-cyan"></span>
       <span id="adminToastMessage" class="text-xs font-medium text-alabaster">Action completed</span>
     </div>
   </div>
 
-  <script src="/admin.js?v=20261029-en1"></script>
+  <script src="/admin.js?v=20261030-adm3"></script>
 </body>
 </html>

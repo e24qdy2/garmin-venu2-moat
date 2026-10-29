@@ -1,0 +1,15 @@
+[Unit]
+Description=MoatWatch Hermes Node Heartbeat & Remote Control Agent (echo24)
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/root/garmin-venu2-moat/.worktrees/hermes-webmemo-live
+EnvironmentFile=/root/.hermes/.env
+Environment="PYTHONUNBUFFERED=1"
+ExecStart=/usr/bin/python3 /root/garmin-venu2-moat/.worktrees/hermes-webmemo-live/integrations/hermes_pi/moat_node_agent.py
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target

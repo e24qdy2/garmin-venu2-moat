@@ -3,6 +3,8 @@ import emailMod from "../lib/emailService.js";
 import garminMod from "../lib/garminDevices.js";
 import moatEngineMod from "../lib/moatEngine.js";
 import webMemoIntegrationMod from "../lib/webMemoIntegration.js";
+import researchFeedMod from "../lib/researchFeedManager.js";
+import hermesNodeMod from "../lib/hermesNodeManager.js";
 import seedMod from "./seedData.js";
 
 const { LicenseManager, OWNER_EMAIL, NOTIFY_EMAIL, TRIAL_DAYS } = licenseMod;
@@ -26,13 +28,32 @@ const {
 const {
   reconcileWebPortfolioSave,
   createIntegrationStoreAdapter,
+  resolveIntegrationConfig,
+  verifyIntegrationAuth,
   handleIntegrationRequest
 } = webMemoIntegrationMod;
+const {
+  buildInitialSeedStore,
+  buildPublicResearchFeedPayload,
+  buildAdminBiAnalytics,
+  mutateResearchStore
+} = researchFeedMod;
+const {
+  createDefaultHermesNodeState,
+  normalizeHermesNodeState,
+  buildHermesNodeStatusPayload,
+  recordHermesNodeHeartbeat,
+  enqueueHermesCommand,
+  recordHermesCommandResult,
+  runHermesFunctionalDiagnostics
+} = hermesNodeMod;
 const { INITIAL_PORTFOLIOS_STORE, INITIAL_LICENSES_STORE } = seedMod;
 
 // In-memory state per Worker isolate, hydrated from D1 or KV if bound, or seeded from INITIAL_*_STORE
 let runtimePortfoliosStore = null;
 let runtimeLicensesStore = null;
+let runtimeResearchStore = null;
+let runtimeHermesNodeState = null;
 let runtimeDraftsStore = [];
 let runtimePortfoliosDirty = false;
 let runtimeHydrated = false;
@@ -44,12 +65,13 @@ function deepClone(obj) {
 }
 
 async function ensureStoreHydrated(env) {
-  if (runtimeHydrated && runtimePortfoliosStore && runtimeLicensesStore && licenseManagerInstance && emailServiceInstance) {
+  if (runtimeHydrated && runtimePortfoliosStore && runtimeLicensesStore && runtimeResearchStore && licenseManagerInstance && emailServiceInstance) {
     return;
   }
 
   let loadedPortfolios = null;
   let loadedLicenses = null;
+  let loadedResearch = null;
 
   // 1. Try Cloudflare D1 binding (`env.DB`)
   if (env && env.DB && typeof env.DB.prepare === "function") {
@@ -59,15 +81,17 @@ async function ensureStoreHydrated(env) {
       ).run();
       const pRow = await env.DB.prepare("SELECT value FROM kv_store WHERE key = ?").bind("portfolios").first();
       const lRow = await env.DB.prepare("SELECT value FROM kv_store WHERE key = ?").bind("licenses").first();
+      const rRow = await env.DB.prepare("SELECT value FROM kv_store WHERE key = ?").bind("research_feed").first();
       if (pRow && pRow.value) loadedPortfolios = JSON.parse(pRow.value);
       if (lRow && lRow.value) loadedLicenses = JSON.parse(lRow.value);
+      if (rRow && rRow.value) loadedResearch = JSON.parse(rRow.value);
     } catch (_) {
       // Fallback to KV or seed data
     }
   }
 
   // 2. Try Cloudflare KV binding (`env.MOAT_KV`)
-  if ((!loadedPortfolios || !loadedLicenses) && env && env.MOAT_KV && typeof env.MOAT_KV.get === "function") {
+  if ((!loadedPortfolios || !loadedLicenses || !loadedResearch) && env && env.MOAT_KV && typeof env.MOAT_KV.get === "function") {
     try {
       if (!loadedPortfolios) {
         const pRaw = await env.MOAT_KV.get("portfolios");
@@ -77,6 +101,10 @@ async function ensureStoreHydrated(env) {
         const lRaw = await env.MOAT_KV.get("licenses");
         if (lRaw) loadedLicenses = JSON.parse(lRaw);
       }
+      if (!loadedResearch) {
+        const rRaw = await env.MOAT_KV.get("research_feed");
+        if (rRaw) loadedResearch = JSON.parse(rRaw);
+      }
     } catch (_) {
       // Fallback to seed data
     }
@@ -84,6 +112,10 @@ async function ensureStoreHydrated(env) {
 
   runtimePortfoliosStore = loadedPortfolios || deepClone(INITIAL_PORTFOLIOS_STORE);
   runtimeLicensesStore = loadedLicenses || deepClone(INITIAL_LICENSES_STORE);
+  runtimeResearchStore = loadedResearch && Array.isArray(loadedResearch.posts) ? loadedResearch : buildInitialSeedStore();
+  if (!runtimeHermesNodeState) {
+    runtimeHermesNodeState = createDefaultHermesNodeState();
+  }
 
   // Repair default adminAuth if a previous cold start without explicit ADMIN_INITIAL_PASSWORD overwrote the seed hash
   if (
@@ -104,6 +136,9 @@ async function ensureStoreHydrated(env) {
   }
   if (!loadedLicenses) {
     await persistKey(env, "licenses", runtimeLicensesStore);
+  }
+  if (!loadedResearch) {
+    await persistKey(env, "research_feed", runtimeResearchStore);
   }
 
   const secret =
@@ -152,6 +187,45 @@ async function refreshPortfoliosFromD1(env) {
   }
 }
 
+async function refreshResearchStoreFromD1(env) {
+  if (env && env.DB && typeof env.DB.prepare === "function") {
+    try {
+      const rRow = await env.DB.prepare("SELECT value FROM kv_store WHERE key = ?").bind("research_feed").first();
+      if (rRow && rRow.value) {
+        const parsed = JSON.parse(rRow.value);
+        if (parsed && Array.isArray(parsed.posts)) {
+          runtimeResearchStore = parsed;
+        }
+      }
+    } catch (_) {
+      // Keep existing runtimeResearchStore on transient read error
+    }
+  }
+  if (!runtimeResearchStore || !Array.isArray(runtimeResearchStore.posts)) {
+    runtimeResearchStore = buildInitialSeedStore();
+  }
+}
+
+async function refreshHermesNodeStateFromD1(env) {
+  if (env && env.DB && typeof env.DB.prepare === "function") {
+    try {
+      const hRow = await env.DB.prepare("SELECT value FROM kv_store WHERE key = ?").bind("hermes_node_state_v1").first();
+      if (hRow && hRow.value) {
+        runtimeHermesNodeState = normalizeHermesNodeState(JSON.parse(hRow.value));
+        return runtimeHermesNodeState;
+      }
+    } catch (_) {
+      // Keep existing runtimeHermesNodeState on transient read error
+    }
+  }
+  if (!runtimeHermesNodeState) {
+    runtimeHermesNodeState = createDefaultHermesNodeState();
+  } else {
+    runtimeHermesNodeState = normalizeHermesNodeState(runtimeHermesNodeState);
+  }
+  return runtimeHermesNodeState;
+}
+
 function buildIntegrationStore(env) {
   return createIntegrationStoreAdapter({
     env,
@@ -189,12 +263,15 @@ async function persistKey(env, key, valueObj) {
   }
 }
 
-async function flushStores(env, ctx, { includePortfolios = true } = {}) {
+async function flushStores(env, ctx, { includePortfolios = true, includeResearch = false } = {}) {
   const tasks = [
     persistKey(env, "licenses", licenseManagerInstance ? licenseManagerInstance.readDb() : runtimeLicensesStore)
   ];
   if (includePortfolios) {
     tasks.unshift(persistKey(env, "portfolios", runtimePortfoliosStore));
+  }
+  if (includeResearch && runtimeResearchStore) {
+    tasks.push(persistKey(env, "research_feed", runtimeResearchStore));
   }
   runtimePortfoliosDirty = false;
   const promise = Promise.all(tasks);
@@ -389,7 +466,7 @@ export default {
       });
     }
 
-    // 1B. SCOPED WEBMEMO INTEGRATION API (Hermes Agent + Discord Approval)
+    // 1B. SCOPED WEBMEMO & RESEARCH FEED INTEGRATION API (Hermes Agent + Discord Approval)
     if (pathname === "/api/integration" || pathname.startsWith("/api/integration/")) {
       let body = {};
       if (request.method === "POST" || request.method === "PUT" || request.method === "PATCH") {
@@ -399,6 +476,105 @@ export default {
           return jsonResponse(400, { ok: false, error: err.message, code: "INVALID_JSON" });
         }
       }
+
+      // Hermes Agent Research Posts & Support/Resistance 1-2-3 Publishing Endpoint
+      if (pathname === "/api/integration/research-posts") {
+        await refreshPortfoliosFromD1(env);
+        await refreshResearchStoreFromD1(env);
+        const cfg = resolveIntegrationConfig(env);
+        const authCheck = verifyIntegrationAuth(reqHeaders, cfg, runtimePortfoliosStore);
+        if (!authCheck.ok) {
+          return jsonResponse(authCheck.status, {
+            ok: false,
+            code: authCheck.code,
+            error: authCheck.error
+          });
+        }
+
+        if (request.method === "GET") {
+          const feedPayload = buildPublicResearchFeedPayload({
+            researchStore: runtimeResearchStore,
+            portfoliosStore: runtimePortfoliosStore,
+            syncKey: "VENU2-88",
+            tagFilter: query.tag,
+            symbolFilter: query.symbol,
+            includeArchived: query.includeArchived === "1" || query.includeArchived === "true"
+          });
+          if (feedPayload.sweep && feedPayload.sweep.dirty) {
+            await persistKey(env, "research_feed", runtimeResearchStore);
+          }
+          return jsonResponse(200, feedPayload);
+        }
+
+        if (request.method === "POST" || request.method === "PUT" || request.method === "PATCH") {
+          const mutRes = mutateResearchStore(
+            runtimeResearchStore,
+            {
+              ...body,
+              action: body.action || "UPSERT",
+              source: body.source || "HERMES_AGENT",
+              author: body.author || "Hermes Quant Research Agent"
+            },
+            { actor: "hermes-agent" }
+          );
+          if (!mutRes.ok) {
+            return jsonResponse(mutRes.status || 400, mutRes);
+          }
+          await persistKey(env, "research_feed", runtimeResearchStore);
+          const feedPayload = buildPublicResearchFeedPayload({
+            researchStore: runtimeResearchStore,
+            portfoliosStore: runtimePortfoliosStore,
+            syncKey: "VENU2-88"
+          });
+          return jsonResponse(mutRes.status || 200, {
+            ...mutRes,
+            summary: feedPayload.summary,
+            policy: feedPayload.policy
+          });
+        }
+      }
+
+      // Hermes Pi Node Live Heartbeat & Remote Control Agent Endpoints
+      if (pathname.startsWith("/api/integration/hermes-node")) {
+        await refreshPortfoliosFromD1(env);
+        await refreshHermesNodeStateFromD1(env);
+        const cfg = resolveIntegrationConfig(env);
+        const authCheck = verifyIntegrationAuth(reqHeaders, cfg, runtimePortfoliosStore);
+        if (!authCheck.ok) {
+          return jsonResponse(authCheck.status, {
+            ok: false,
+            code: authCheck.code,
+            error: authCheck.error
+          });
+        }
+
+        if (pathname === "/api/integration/hermes-node/status" && request.method === "GET") {
+          return jsonResponse(200, buildHermesNodeStatusPayload(runtimeHermesNodeState));
+        }
+
+        if (pathname === "/api/integration/hermes-node/heartbeat" && request.method === "POST") {
+          const hbRes = recordHermesNodeHeartbeat(runtimeHermesNodeState, body);
+          runtimeHermesNodeState = hbRes.state;
+          await persistKey(env, "hermes_node_state_v1", runtimeHermesNodeState);
+          return jsonResponse(200, {
+            ok: true,
+            nextCommand: hbRes.nextCommand,
+            nodeStatus: buildHermesNodeStatusPayload(runtimeHermesNodeState)
+          });
+        }
+
+        if (pathname === "/api/integration/hermes-node/command-result" && request.method === "POST") {
+          const cmdRes = recordHermesCommandResult(runtimeHermesNodeState, body);
+          runtimeHermesNodeState = cmdRes.state;
+          await persistKey(env, "hermes_node_state_v1", runtimeHermesNodeState);
+          return jsonResponse(200, {
+            ok: cmdRes.ok,
+            command: cmdRes.command,
+            nodeStatus: buildHermesNodeStatusPayload(runtimeHermesNodeState)
+          });
+        }
+      }
+
       const integrationStore = buildIntegrationStore(env);
       const result = await handleIntegrationRequest({
         method: request.method,
@@ -414,9 +590,32 @@ export default {
       }
     }
 
+    // 1C. GET SHARED RESEARCH FEED & WATCHLIST SUPPORT/RESISTANCE 1-2-3 (Accessible by all SyncKeys)
+    if (pathname === "/api/research-feed" && request.method === "GET") {
+      await refreshPortfoliosFromD1(env);
+      await refreshResearchStoreFromD1(env);
+      runtimePortfoliosDirty = false;
+      const syncKey = String(query.key || "VENU2-88").trim().toUpperCase();
+      getOrCreateProfile(syncKey);
+      const feedPayload = buildPublicResearchFeedPayload({
+        researchStore: runtimeResearchStore,
+        portfoliosStore: runtimePortfoliosStore,
+        syncKey,
+        tagFilter: query.tag,
+        symbolFilter: query.symbol,
+        includeArchived: query.includeArchived === "1" || query.includeArchived === "true"
+      });
+      await flushStores(env, ctx, {
+        includePortfolios: runtimePortfoliosDirty,
+        includeResearch: Boolean(feedPayload.sweep && feedPayload.sweep.dirty)
+      });
+      return jsonResponse(200, feedPayload);
+    }
+
     // 2. GET FULL ENRICHED PORTFOLIO (For Web App + Simulator)
     if (pathname === "/api/portfolio" && request.method === "GET") {
       await refreshPortfoliosFromD1(env);
+      await refreshResearchStoreFromD1(env);
       runtimePortfoliosDirty = false;
       const syncKey = query.key || "VENU2-88";
       const profile = getOrCreateProfile(syncKey);
@@ -425,20 +624,39 @@ export default {
         activationKey: query.akey || query.licenseKey,
         watchModel: query.model || query.watchModel
       });
-      await flushStores(env, ctx, { includePortfolios: runtimePortfoliosDirty });
+      const researchFeed = buildPublicResearchFeedPayload({
+        researchStore: runtimeResearchStore,
+        portfoliosStore: runtimePortfoliosStore,
+        syncKey
+      });
+      payload.researchFeed = researchFeed;
+      await flushStores(env, ctx, {
+        includePortfolios: runtimePortfoliosDirty,
+        includeResearch: Boolean(researchFeed.sweep && researchFeed.sweep.dirty)
+      });
       return jsonResponse(200, payload);
     }
 
     // 2B. POST /api/refresh (Clear cache and return fresh quotes)
     if (pathname === "/api/refresh" && request.method === "POST") {
       await refreshPortfoliosFromD1(env);
+      await refreshResearchStoreFromD1(env);
       runtimePortfoliosDirty = false;
       const body = await parseRequestBody(request).catch(() => ({}));
       const syncKey = (body.syncKey || query.key || "VENU2-88").trim().toUpperCase();
       clearMarketCache();
       const profile = getOrCreateProfile(syncKey);
       const payload = await buildEnrichedPayload(profile);
-      await flushStores(env, ctx, { includePortfolios: runtimePortfoliosDirty });
+      const researchFeed = buildPublicResearchFeedPayload({
+        researchStore: runtimeResearchStore,
+        portfoliosStore: runtimePortfoliosStore,
+        syncKey
+      });
+      payload.researchFeed = researchFeed;
+      await flushStores(env, ctx, {
+        includePortfolios: runtimePortfoliosDirty,
+        includeResearch: Boolean(researchFeed.sweep && researchFeed.sweep.dirty)
+      });
       return jsonResponse(200, payload);
     }
 
@@ -834,14 +1052,221 @@ export default {
       }
 
       if (pathname === "/api/admin/devices" && request.method === "GET") {
+        await refreshPortfoliosFromD1(env);
+        await refreshResearchStoreFromD1(env);
+        await refreshHermesNodeStateFromD1(env);
         const meta = licenseManagerInstance.getAdminAuthMeta({ includeSensitive: true });
+        const licensesData = licenseManagerInstance.listDevices();
+        const draftsList = await buildIntegrationStore(env).listDrafts({ accountId: "owner", limit: 200 }).catch(() => []);
+        const researchFeed = buildPublicResearchFeedPayload({
+          researchStore: runtimeResearchStore,
+          portfoliosStore: runtimePortfoliosStore,
+          syncKey: "VENU2-88",
+          includeArchived: true
+        });
+        const biAnalytics = buildAdminBiAnalytics({
+          portfoliosStore: runtimePortfoliosStore,
+          licensesData,
+          draftsList,
+          researchStore: runtimeResearchStore
+        });
+        if (researchFeed.sweep && researchFeed.sweep.dirty) {
+          await persistKey(env, "research_feed", runtimeResearchStore);
+        }
         return adminJsonResponse(reqHeaders, 200, {
           ok: true,
           admin: { ...auth, ...meta },
-          ...licenseManagerInstance.listDevices(),
+          ...licensesData,
           compatibleDevices: COMPATIBLE_GARMIN_DEVICES,
-          smtpConfig: emailServiceInstance.getSmtpConfig(false)
+          smtpConfig: emailServiceInstance.getSmtpConfig(false),
+          researchFeed,
+          biAnalytics,
+          hermesNode: buildHermesNodeStatusPayload(runtimeHermesNodeState)
         });
+      }
+
+      if (pathname === "/api/admin/bi-dashboard" && request.method === "GET") {
+        await refreshPortfoliosFromD1(env);
+        await refreshResearchStoreFromD1(env);
+        await refreshHermesNodeStateFromD1(env);
+        const licensesData = licenseManagerInstance.listDevices();
+        const draftsList = await buildIntegrationStore(env).listDrafts({ accountId: "owner", limit: 200 }).catch(() => []);
+        const biAnalytics = buildAdminBiAnalytics({
+          portfoliosStore: runtimePortfoliosStore,
+          licensesData,
+          draftsList,
+          researchStore: runtimeResearchStore
+        });
+        const researchFeed = buildPublicResearchFeedPayload({
+          researchStore: runtimeResearchStore,
+          portfoliosStore: runtimePortfoliosStore,
+          syncKey: "VENU2-88",
+          includeArchived: true
+        });
+        if (researchFeed.sweep && researchFeed.sweep.dirty) {
+          await persistKey(env, "research_feed", runtimeResearchStore);
+        }
+        return adminJsonResponse(reqHeaders, 200, {
+          ok: true,
+          biAnalytics,
+          researchFeed,
+          hermesNode: buildHermesNodeStatusPayload(runtimeHermesNodeState)
+        });
+      }
+
+      if (pathname === "/api/admin/hermes-node/status" && request.method === "GET") {
+        await refreshHermesNodeStateFromD1(env);
+        return adminJsonResponse(reqHeaders, 200, buildHermesNodeStatusPayload(runtimeHermesNodeState));
+      }
+
+      if (pathname === "/api/admin/hermes-node/diagnostics" && request.method === "POST") {
+        try {
+          await refreshPortfoliosFromD1(env);
+          await refreshResearchStoreFromD1(env);
+          await refreshHermesNodeStateFromD1(env);
+          const licensesData = licenseManagerInstance.listDevices();
+          const draftsList = await buildIntegrationStore(env).listDrafts({ accountId: "owner", limit: 200 }).catch(() => []);
+          const integrationConfig = resolveIntegrationConfig(env);
+          const report = await runHermesFunctionalDiagnostics({
+            nodeState: runtimeHermesNodeState,
+            portfoliosStore: runtimePortfoliosStore,
+            researchStore: runtimeResearchStore,
+            licensesData,
+            draftsList,
+            integrationConfig,
+            buildPublicResearchFeedPayload,
+            buildAdminBiAnalytics
+          });
+          await persistKey(env, "hermes_node_state_v1", runtimeHermesNodeState);
+          return adminJsonResponse(reqHeaders, 200, {
+            ok: true,
+            report,
+            nodeStatus: buildHermesNodeStatusPayload(runtimeHermesNodeState)
+          });
+        } catch (err) {
+          return adminJsonResponse(reqHeaders, 400, { ok: false, error: err.message });
+        }
+      }
+
+      if (pathname === "/api/admin/hermes-node/command" && request.method === "POST") {
+        try {
+          await refreshPortfoliosFromD1(env);
+          await refreshResearchStoreFromD1(env);
+          await refreshHermesNodeStateFromD1(env);
+          const body = await parseRequestBody(request);
+          const action = String(body.action || "").trim().toUpperCase();
+          let diagnosticReport = null;
+
+          if (action === "TEST_ALL_FUNCTIONS") {
+            const licensesData = licenseManagerInstance.listDevices();
+            const draftsList = await buildIntegrationStore(env).listDrafts({ accountId: "owner", limit: 200 }).catch(() => []);
+            const integrationConfig = resolveIntegrationConfig(env);
+            diagnosticReport = await runHermesFunctionalDiagnostics({
+              nodeState: runtimeHermesNodeState,
+              portfoliosStore: runtimePortfoliosStore,
+              researchStore: runtimeResearchStore,
+              licensesData,
+              draftsList,
+              integrationConfig,
+              buildPublicResearchFeedPayload,
+              buildAdminBiAnalytics
+            });
+          }
+
+          const enq = enqueueHermesCommand(
+            runtimeHermesNodeState,
+            { action, reason: body.reason || "" },
+            { actor: auth.email || OWNER_EMAIL }
+          );
+          if (!enq.ok) {
+            return adminJsonResponse(reqHeaders, enq.status || 400, enq);
+          }
+          runtimeHermesNodeState = enq.state;
+          await persistKey(env, "hermes_node_state_v1", runtimeHermesNodeState);
+          return adminJsonResponse(reqHeaders, 200, {
+            ok: true,
+            command: enq.command,
+            diagnosticReport,
+            nodeStatus: buildHermesNodeStatusPayload(runtimeHermesNodeState)
+          });
+        } catch (err) {
+          return adminJsonResponse(reqHeaders, 400, { ok: false, error: err.message });
+        }
+      }
+
+      if (pathname === "/api/admin/research-posts" && request.method === "GET") {
+        await refreshPortfoliosFromD1(env);
+        await refreshResearchStoreFromD1(env);
+        const researchFeed = buildPublicResearchFeedPayload({
+          researchStore: runtimeResearchStore,
+          portfoliosStore: runtimePortfoliosStore,
+          syncKey: "VENU2-88",
+          tagFilter: query.tag,
+          symbolFilter: query.symbol,
+          includeArchived: true
+        });
+        const licensesData = licenseManagerInstance.listDevices();
+        const draftsList = await buildIntegrationStore(env).listDrafts({ accountId: "owner", limit: 200 }).catch(() => []);
+        const biAnalytics = buildAdminBiAnalytics({
+          portfoliosStore: runtimePortfoliosStore,
+          licensesData,
+          draftsList,
+          researchStore: runtimeResearchStore
+        });
+        if (researchFeed.sweep && researchFeed.sweep.dirty) {
+          await persistKey(env, "research_feed", runtimeResearchStore);
+        }
+        return adminJsonResponse(reqHeaders, 200, {
+          ok: true,
+          researchFeed,
+          biAnalytics
+        });
+      }
+
+      if (
+        pathname === "/api/admin/research-posts" &&
+        (request.method === "POST" || request.method === "PUT" || request.method === "DELETE")
+      ) {
+        try {
+          await refreshPortfoliosFromD1(env);
+          await refreshResearchStoreFromD1(env);
+          const body = await parseRequestBody(request);
+          const action =
+            request.method === "DELETE"
+              ? "DELETE"
+              : body.action || "UPSERT";
+          const mutRes = mutateResearchStore(
+            runtimeResearchStore,
+            { ...body, action },
+            { actor: auth.email || OWNER_EMAIL }
+          );
+          if (!mutRes.ok) {
+            return adminJsonResponse(reqHeaders, mutRes.status || 400, mutRes);
+          }
+          await persistKey(env, "research_feed", runtimeResearchStore);
+          const researchFeed = buildPublicResearchFeedPayload({
+            researchStore: runtimeResearchStore,
+            portfoliosStore: runtimePortfoliosStore,
+            syncKey: "VENU2-88",
+            includeArchived: true
+          });
+          const licensesData = licenseManagerInstance.listDevices();
+          const draftsList = await buildIntegrationStore(env).listDrafts({ accountId: "owner", limit: 200 }).catch(() => []);
+          const biAnalytics = buildAdminBiAnalytics({
+            portfoliosStore: runtimePortfoliosStore,
+            licensesData,
+            draftsList,
+            researchStore: runtimeResearchStore
+          });
+          return adminJsonResponse(reqHeaders, mutRes.status || 200, {
+            ...mutRes,
+            posts: researchFeed.posts,
+            researchFeed,
+            biAnalytics
+          });
+        } catch (err) {
+          return adminJsonResponse(reqHeaders, 400, { ok: false, error: err.message });
+        }
       }
 
       if (pathname === "/api/admin/requests/resolve" && request.method === "POST") {
