@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th" class="dark">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -32,7 +32,7 @@
       }
     };
   </script>
-  <link rel="stylesheet" href="/styles.css?v=20261021-sortfix" />
+  <link rel="stylesheet" href="/styles.css?v=20261029-en1" />
 </head>
 <body class="bg-void text-alabaster font-sans antialiased selection:bg-emerald/30 selection:text-alabaster min-h-[100dvh] overflow-x-hidden">
 
@@ -58,20 +58,20 @@
       </a>
 
       <!-- Sync Key Pill -->
-      <button id="openSyncModalBtn" type="button" class="group flex items-center gap-2 rounded-full bg-white/[0.04] hover:bg-white/[0.08] ring-1 ring-white/10 px-3.5 py-1.5 text-xs spring-transition active:scale-[0.98]" title="เปลี่ยนรหัส Sync Key ของนาฬิกา Garmin">
+      <button id="openSyncModalBtn" type="button" class="group flex items-center gap-2 rounded-full bg-white/[0.04] hover:bg-white/[0.08] ring-1 ring-white/10 px-3.5 py-1.5 text-xs spring-transition active:scale-[0.98]" title="Switch Garmin Watch Sync Key">
         <i class="ph-light ph-watch text-cyan text-sm"></i>
         <span class="text-slate-400 hidden sm:inline">Sync Key:</span>
         <span id="navSyncKeyDisplay" class="font-mono font-semibold text-alabaster">GARMIN-88</span>
       </button>
 
       <!-- License Status Badge -->
-      <a href="#watchSettingsCard" id="navLicenseBadge" class="hidden md:flex items-center gap-1.5 rounded-full bg-emerald/15 ring-1 ring-emerald/30 px-3 py-1 text-[11px] font-mono text-emerald spring-transition hover:bg-emerald/25" title="สถานะสิทธิ์การใช้งานนาฬิกา Garmin (14-Day Trial / Pro)">
+      <a href="#watchSettingsCard" id="navLicenseBadge" class="hidden md:flex items-center gap-1.5 rounded-full bg-emerald/15 ring-1 ring-emerald/30 px-3 py-1 text-[11px] font-mono text-emerald spring-transition hover:bg-emerald/25" title="Garmin Watch License Status (14-Day Trial / Pro)">
         <i class="ph-light ph-shield-check text-xs"></i>
         <span id="navLicenseText">TRIAL 14D</span>
       </a>
 
       <!-- Admin Subdomain Link -->
-      <a href="https://admin-moat.readybyte.top" target="_blank" rel="noopener" id="navAdminPortalLink" class="hidden lg:flex items-center gap-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] ring-1 ring-white/10 px-3 py-1.5 text-[11px] font-mono text-slate-300 spring-transition" title="เปิดหน้า Web Admin (Cloudflare OTP Protected)">
+      <a href="https://admin-moat.readybyte.top" target="_blank" rel="noopener" id="navAdminPortalLink" class="hidden lg:flex items-center gap-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] ring-1 ring-white/10 px-3 py-1.5 text-[11px] font-mono text-slate-300 spring-transition" title="Open Web Admin Portal (Cloudflare OTP Protected)">
         <i class="ph-light ph-key text-amber text-xs"></i>
         <span>Admin</span>
       </a>
@@ -83,13 +83,13 @@
       </div>
 
       <!-- Refresh Quotes Button -->
-      <button id="refreshQuotesBtn" type="button" class="flex items-center gap-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] ring-1 ring-white/10 px-3 py-1.5 text-xs text-slate-300 spring-transition active:scale-[0.98]" title="ดึงราคาตลาดล่าสุดจาก Yahoo Finance">
+      <button id="refreshQuotesBtn" type="button" class="flex items-center gap-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] ring-1 ring-white/10 px-3 py-1.5 text-xs text-slate-300 spring-transition active:scale-[0.98]" title="Fetch Latest Market Quotes from Yahoo Finance">
         <i id="refreshSpinnerIcon" class="ph-light ph-arrows-clockwise text-sm text-emerald"></i>
-        <span class="hidden sm:inline">อัปเดตราคา</span>
+        <span class="hidden sm:inline">Refresh Quotes</span>
       </button>
 
       <!-- Morphing 2-Line Hamburger Button -->
-      <button id="menuToggleBtn" type="button" aria-label="เปิดเมนูเครื่องมือและคู่มือการซิงก์นาฬิกา Garmin" aria-expanded="false" class="relative w-9 h-9 rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 flex items-center justify-center spring-transition active:scale-[0.96]">
+      <button id="menuToggleBtn" type="button" aria-label="Open Tools Menu and Garmin Sync Guide" aria-expanded="false" class="relative w-9 h-9 rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 flex items-center justify-center spring-transition active:scale-[0.96]">
         <span class="hamburger-line hamburger-line-top"></span>
         <span class="hamburger-line hamburger-line-bottom"></span>
       </button>
@@ -109,7 +109,7 @@
             </div>
             <h3 class="text-lg font-bold text-alabaster mb-2">Watch JSON Endpoint</h3>
             <p class="text-xs text-slate-400 leading-relaxed mb-4">
-              URL ที่แอปบนนาฬิกา Garmin ใช้ดึงข้อมูลพอร์ตและกราฟราคาผ่าน <code class="font-mono text-alabaster">makeWebRequest</code>
+              Endpoint URL used by the Garmin Watch app to fetch live portfolios and sparklines via <code class="font-mono text-alabaster">makeWebRequest</code>
             </p>
             <div class="rounded-2xl bg-void/80 ring-1 ring-white/10 p-3 font-mono text-[11px] text-emerald break-all" id="watchEndpointUrlBox">
               /api/watch?key=GARMIN-88
@@ -117,7 +117,7 @@
           </div>
           <button id="copyWatchApiBtn" type="button" class="mt-5 w-full rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 py-2.5 px-4 text-xs font-medium flex items-center justify-center gap-2 spring-transition active:scale-[0.98]">
             <i class="ph-light ph-copy text-sm"></i>
-            <span>คัดลอก Watch API URL</span>
+            <span>Copy Watch API URL</span>
           </button>
         </div>
       </div>
@@ -130,23 +130,23 @@
               <span class="text-xs font-mono text-emerald">PORTFOLIO BACKUP</span>
               <i class="ph-light ph-file-arrow-down text-xl text-emerald"></i>
             </div>
-            <h3 class="text-lg font-bold text-alabaster mb-2">Import &amp; Export พอร์ต</h3>
+            <h3 class="text-lg font-bold text-alabaster mb-2">Import &amp; Export Portfolio</h3>
             <p class="text-xs text-slate-400 leading-relaxed mb-4">
-              สำรองข้อมูลพอร์ตและบันทึก WebMemo ทั้งหมดเป็นไฟล์ JSON/CSV หรือนำเข้าพอร์ตจากไฟล์ที่มีอยู่
+              Back up all portfolios and WebMemo notes as JSON/CSV files, or restore from an existing backup file.
             </p>
           </div>
           <div class="space-y-2.5">
             <button id="exportJsonBtn" type="button" class="w-full rounded-full bg-emerald/15 hover:bg-emerald/25 ring-1 ring-emerald/30 text-emerald py-2.5 px-4 text-xs font-semibold flex items-center justify-center gap-2 spring-transition active:scale-[0.98]">
               <i class="ph-light ph-download-simple text-sm"></i>
-              <span>ดาวน์โหลดพอร์ต (JSON)</span>
+              <span>Download Portfolio (JSON)</span>
             </button>
             <button id="exportCsvBtn" type="button" class="w-full rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 text-alabaster py-2.5 px-4 text-xs font-medium flex items-center justify-center gap-2 spring-transition active:scale-[0.98]">
               <i class="ph-light ph-table text-sm"></i>
-              <span>ส่งออกตารางหุ้น (CSV)</span>
+              <span>Export Holdings (CSV)</span>
             </button>
             <label class="w-full rounded-full bg-white/[0.04] hover:bg-white/[0.09] ring-1 ring-white/10 text-slate-300 py-2.5 px-4 text-xs font-medium flex items-center justify-center gap-2 cursor-pointer spring-transition active:scale-[0.98]">
               <i class="ph-light ph-upload-simple text-sm"></i>
-              <span>นำเข้าไฟล์พอร์ต (JSON)</span>
+              <span>Import Portfolio File (JSON)</span>
               <input id="importJsonInput" type="file" accept=".json" class="hidden" />
             </label>
           </div>
@@ -161,9 +161,9 @@
               <span class="text-xs font-mono text-amber">GARMIN HARDWARE</span>
               <i class="ph-light ph-cpu text-xl text-amber"></i>
             </div>
-            <h3 class="text-lg font-bold text-alabaster mb-2">ติดตั้งลงนาฬิกา Garmin</h3>
+            <h3 class="text-lg font-bold text-alabaster mb-2">Install on Garmin Watch</h3>
             <p class="text-xs text-slate-400 leading-relaxed mb-3">
-              ซอร์สโค้ด Monkey C สำหรับนาฬิกา Garmin พร้อมสคริปต์ Build &amp; Sideload ลงนาฬิกาผ่านสาย USB
+              Complete Monkey C source code for Garmin watches with a 1-click USB Build &amp; Sideload script.
             </p>
             <div class="rounded-2xl bg-void/80 ring-1 ring-white/10 p-3 font-mono text-[11px] text-slate-300">
               .\build-and-sideload.ps1
@@ -171,7 +171,7 @@
           </div>
           <button id="inspectPayloadBtn" type="button" class="mt-5 w-full rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 py-2.5 px-4 text-xs font-medium flex items-center justify-center gap-2 spring-transition active:scale-[0.98]">
             <i class="ph-light ph-code text-sm"></i>
-            <span>ดูข้อมูลดิบที่ส่งเข้า Garmin</span>
+            <span>Inspect Raw Garmin Payload</span>
           </button>
         </div>
       </div>
@@ -190,11 +190,11 @@
             <span class="text-xs font-medium text-slate-300">Garmin Watch Portfolio &amp; WebMemo Companion</span>
           </div>
           <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-alabaster leading-[1.12]">
-            พอร์ตหุ้นและบันทึกช่วยจำ<br class="hidden sm:inline" />บนข้อมือนาฬิกา Garmin ของคุณ
+            Stock Portfolio &amp; WebMemo<br class="hidden sm:inline" />Right on Your Garmin Watch
           </h1>
         </div>
         <p class="text-sm text-slate-400 max-w-md leading-relaxed">
-          จัดการหลายพอร์ตการลงทุน คำนวณกำไร-ขาดทุนจริงตั้งแต่วันที่ซื้อ ตั้งเตือนราคาเป้าหมาย ดัชนี Fear &amp; Greed รายวัน และซิงก์โน้ตย่อเข้าหน้าจอนาฬิกา Garmin ของคุณทันที
+          Manage multiple investment portfolios, track real-time unrealized P&amp;L, set target &amp; stop price alerts, monitor the daily US Fear &amp; Greed Index, and sync WebMemo notes directly to your Garmin watch.
         </p>
       </div>
 
@@ -205,14 +205,14 @@
             <!-- Net Worth Readout (5 cols) -->
             <div class="md:col-span-5 md:border-r md:border-white/[0.07] md:pr-6">
               <div class="flex items-center justify-between mb-1.5">
-                <span class="text-xs text-slate-400 font-medium">มูลค่าพอร์ตรวมสุทธิ (Net Worth)</span>
-                <span id="lastUpdatedBadge" class="font-mono text-[11px] text-slate-400">ซิงก์ล่าสุด --:--</span>
+                <span class="text-xs text-slate-400 font-medium">Total Portfolio Value (Net Worth)</span>
+                <span id="lastUpdatedBadge" class="font-mono text-[11px] text-slate-400">Last synced --:--</span>
               </div>
               <div id="grandTotalValue" class="font-mono text-3xl sm:text-4xl font-bold tracking-tight text-alabaster tabular-nums">
                 ฿0.00
               </div>
               <div class="mt-2 flex flex-wrap items-center gap-3 text-xs font-mono">
-                <span class="text-slate-400">ต้นทุนรวม: <strong id="grandTotalCost" class="text-slate-200 font-medium">฿0.00</strong></span>
+                <span class="text-slate-400">Total Cost: <strong id="grandTotalCost" class="text-slate-200 font-medium">฿0.00</strong></span>
                 <span class="text-slate-600">|</span>
                 <span class="text-slate-400">USD/THB: <strong id="fxRateReadout" class="text-cyan font-medium">33.85</strong></span>
               </div>
@@ -222,7 +222,7 @@
                   <div class="flex items-center gap-2">
                     <span class="text-slate-400">US Fear &amp; Greed:</span>
                     <span id="fearGreedBadge" class="px-2 py-0.5 rounded-full bg-emerald/15 text-emerald ring-1 ring-emerald/35 font-bold tabular-nums">FG:64G</span>
-                    <span id="fearGreedLabel" class="text-emerald font-semibold">Greed (โลภ)</span>
+                    <span id="fearGreedLabel" class="text-emerald font-semibold">Greed</span>
                   </div>
                   <span id="fearGreedPrevText" class="text-[10px] text-slate-400 tabular-nums">Prev: 61 (+3)</span>
                 </div>
@@ -236,14 +236,14 @@
             <div class="md:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-4">
               <!-- Daily P&L -->
               <div class="rounded-2xl bg-white/[0.025] ring-1 ring-white/[0.06] p-4">
-                <div class="text-xs text-slate-400 mb-1">เปลี่ยนแปลงวันนี้ (Day P&amp;L)</div>
+                <div class="text-xs text-slate-400 mb-1">Today's Change (Day P&amp;L)</div>
                 <div id="grandDayPnl" class="font-mono text-lg font-bold tabular-nums text-emerald">+฿0.00</div>
                 <div id="grandDayPct" class="font-mono text-xs tabular-nums text-emerald/80 mt-0.5">+0.00%</div>
               </div>
 
               <!-- Total Unrealized Return -->
               <div class="rounded-2xl bg-white/[0.025] ring-1 ring-white/[0.06] p-4">
-                <div class="text-xs text-slate-400 mb-1">กำไร/ขาดทุนสะสม (Total Return)</div>
+                <div class="text-xs text-slate-400 mb-1">Unrealized P&amp;L (Total Return)</div>
                 <div id="grandTotalPnl" class="font-mono text-lg font-bold tabular-nums text-emerald">+฿0.00</div>
                 <div id="grandTotalPct" class="font-mono text-xs tabular-nums text-emerald/80 mt-0.5">+0.00%</div>
               </div>
@@ -251,14 +251,14 @@
               <!-- Active Target Alerts -->
               <div class="rounded-2xl bg-white/[0.025] ring-1 ring-white/[0.06] p-4 flex flex-col justify-between">
                 <div class="flex items-center justify-between">
-                  <span class="text-xs text-slate-400">สัญญาณเตือนบนนาฬิกา</span>
+                  <span class="text-xs text-slate-400">Active Watch Alerts</span>
                   <i class="ph-light ph-bell-ringing text-amber text-base"></i>
                 </div>
                 <div class="mt-1 flex items-baseline gap-2">
                   <span id="activeAlertCount" class="font-mono text-xl font-bold text-alabaster tabular-nums">0</span>
-                  <span class="text-xs text-slate-400">รายการถึงเป้า/จุดเฝ้าระวัง</span>
+                  <span class="text-xs text-slate-400">Target / Stop Signals</span>
                 </div>
-                <div id="portfolioCountSummary" class="text-[11px] font-mono text-slate-400 mt-0.5">3 พอร์ต · 13 สินทรัพย์</div>
+                <div id="portfolioCountSummary" class="text-[11px] font-mono text-slate-400 mt-0.5">3 Portfolios · 13 Assets</div>
               </div>
             </div>
           </div>
@@ -266,7 +266,7 @@
       </div>
     </section>
 
-    <!-- Primary Editorial Split: Left 7 Cols (Portfolio Ledger) | Right 5 Cols (Interactive Venu 2 Watch Bench) -->
+    <!-- Primary Editorial Split: Left 7 Cols (Portfolio Ledger) | Right 5 Cols (Interactive Garmin Watch Bench) -->
     <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
       <!-- LEFT 7 COLUMNS: MULTI-PORTFOLIO WORKSPACE & WEBMEMO LEDGER -->
@@ -283,9 +283,9 @@
               <div class="flex items-center gap-2">
                 <button id="addPortfolioBtn" type="button" class="rounded-full bg-white/[0.05] hover:bg-white/[0.1] ring-1 ring-white/10 px-3.5 py-1.5 text-xs font-medium text-alabaster flex items-center gap-1.5 spring-transition active:scale-[0.97]">
                   <i class="ph-light ph-folder-plus text-sm text-cyan"></i>
-                  <span>สร้างพอร์ตใหม่</span>
+                  <span>New Portfolio</span>
                 </button>
-                <button id="deletePortfolioBtn" type="button" class="rounded-full bg-white/[0.03] hover:bg-crimson/20 ring-1 ring-white/10 hover:ring-crimson/40 p-2 text-xs text-slate-400 hover:text-crimson spring-transition" title="ลบพอร์ตนี้">
+                <button id="deletePortfolioBtn" type="button" class="rounded-full bg-white/[0.03] hover:bg-crimson/20 ring-1 ring-white/10 hover:ring-crimson/40 p-2 text-xs text-slate-400 hover:text-crimson spring-transition" title="Delete Portfolio">
                   <i class="ph-light ph-trash text-sm"></i>
                 </button>
               </div>
@@ -296,24 +296,24 @@
               <div>
                 <div class="flex items-center gap-2">
                   <h2 id="activePortfolioTitle" class="text-base font-bold text-alabaster">US Core &amp; AI Moat</h2>
-                  <button id="renamePortfolioBtn" type="button" class="text-slate-400 hover:text-alabaster text-xs p-1 rounded-lg" title="เปลี่ยนชื่อพอร์ต">
+                  <button id="renamePortfolioBtn" type="button" class="text-slate-400 hover:text-alabaster text-xs p-1 rounded-lg" title="Rename Portfolio">
                     <i class="ph-light ph-pencil-simple"></i>
                   </button>
                 </div>
-                <p class="text-xs text-slate-400 font-mono" id="activePortfolioMeta">รหัสบนนาฬิกา: US MOAT</p>
+                <p class="text-xs text-slate-400 font-mono" id="activePortfolioMeta">Watch Label: US MOAT</p>
               </div>
 
               <div class="flex items-center gap-6 font-mono text-right">
                 <div>
-                  <div class="text-[11px] text-slate-400">มูลค่าพอร์ตนี้</div>
+                  <div class="text-[11px] text-slate-400">Portfolio Value</div>
                   <div id="activePortValue" class="text-sm font-bold text-alabaster tabular-nums">฿0.00</div>
                 </div>
                 <div>
-                  <div class="text-[11px] text-slate-400">วันนี้ (Day)</div>
+                  <div class="text-[11px] text-slate-400">Day P&amp;L</div>
                   <div id="activePortDayPnl" class="text-sm font-semibold text-emerald tabular-nums">+0.00%</div>
                 </div>
                 <div>
-                  <div class="text-[11px] text-slate-400">กำไรรวม (Return)</div>
+                  <div class="text-[11px] text-slate-400">Total Return</div>
                   <div id="activePortTotalPnl" class="text-sm font-semibold text-emerald tabular-nums">+0.00%</div>
                 </div>
               </div>
@@ -328,15 +328,15 @@
               <div>
                 <h3 class="text-base font-bold text-alabaster flex items-center gap-2">
                   <i class="ph-light ph-magnifying-glass text-emerald"></i>
-                  <span>เพิ่มสินทรัพย์หรือโน้ตเข้าพอร์ต</span>
+                  <span>Add Asset or WebMemo Note</span>
                 </h3>
                 <p class="text-xs text-slate-400 mt-0.5">
-                  พิมพ์ชื่อย่อหุ้นสหรัฐฯ (<code class="font-mono text-slate-200">NVDA</code>), หุ้นไทย (<code class="font-mono text-slate-200">ADVANC.BK</code>), คริปโต (<code class="font-mono text-slate-200">BTC-USD</code>) หรือทองคำ (<code class="font-mono text-slate-200">GC=F</code>)
+                  Search US stocks (<code class="font-mono text-slate-200">NVDA</code>), Thai SET stocks (<code class="font-mono text-slate-200">ADVANC.BK</code>), Crypto (<code class="font-mono text-slate-200">BTC-USD</code>), or Gold (<code class="font-mono text-slate-200">GC=F</code>)
                 </p>
               </div>
               <!-- Primary CTA with Button-in-Button Architecture -->
               <button id="openAddModalBtn" type="button" class="group rounded-full bg-emerald text-void font-bold text-xs pl-5 pr-1.5 py-1.5 flex items-center gap-3 self-start sm:self-auto spring-transition active:scale-[0.98] shadow-lg shadow-emerald/15">
-                <span>เพิ่มรายการใหม่</span>
+                <span>Add Asset</span>
                 <span class="w-7 h-7 rounded-full bg-void/15 flex items-center justify-center spring-transition group-hover:translate-x-0.5 group-hover:-translate-y-[1px] group-hover:scale-105">
                   <i class="ph-light ph-plus text-sm text-void font-bold"></i>
                 </span>
@@ -350,7 +350,7 @@
                 <input
                   id="quickSearchInput"
                   type="text"
-                  placeholder="ค้นหาด่วน เช่น AAPL, TSLA, SCB.BK, AOT.BK, SOL-USD แล้วคลิกเพื่อเพิ่มลงพอร์ต..."
+                  placeholder="Quick search e.g. AAPL, TSLA, SCB.BK, AOT.BK, SOL-USD and click to add..."
                   autocomplete="off"
                   class="w-full bg-transparent text-xs sm:text-sm text-alabaster placeholder-slate-500 focus:outline-none font-mono"
                 />
@@ -370,43 +370,43 @@
           <div class="double-bezel-core p-4 sm:p-6">
             <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
               <div>
-                <h3 class="text-base font-bold text-alabaster">รายการสินทรัพย์และ WebMemo</h3>
-                <p class="text-xs text-slate-400">คลิกที่แถวหุ้นเพื่อจำลองหน้าจอกราฟและโน้ตบนนาฬิกา Garmin ทางขวา</p>
+                <h3 class="text-base font-bold text-alabaster">Holdings &amp; WebMemo Ledger</h3>
+                <p class="text-xs text-slate-400">Click any asset row to preview its sparkline chart and WebMemo on the Garmin watch simulator</p>
               </div>
               <div class="flex flex-wrap items-center gap-3">
                 <!-- Quick 1-Click Auto-Sort % Change Toggle Bar -->
                 <div class="inline-flex items-center gap-1 rounded-full bg-void ring-1 ring-white/10 p-1 text-[11px] font-mono">
-                  <span class="px-2 text-slate-400 hidden sm:inline">เรียง %:</span>
+                  <span class="px-2 text-slate-400 hidden sm:inline">Sort %:</span>
                   <button
                     type="button"
                     data-sort-order="ASC"
                     class="sort-order-btn px-2.5 py-1 rounded-full bg-crimson/20 text-crimson ring-1 ring-crimson/40 font-semibold spring-transition"
-                    title="เรียง % Change จากติดลบมากสุด ไปหากำไรมากสุด (บนลงล่าง)"
+                    title="Sort % Change from Most Negative to Most Positive (Top-to-Bottom)"
                   >
-                    ▲ ติดลบ → กำไร
+                    ▲ Loss → Gain
                   </button>
                   <button
                     type="button"
                     data-sort-order="DESC"
                     class="sort-order-btn px-2.5 py-1 rounded-full text-slate-400 hover:text-alabaster spring-transition"
-                    title="เรียง % Change จากกำไรมากสุด ไปหาติดลบมากสุด (บนลงล่าง)"
+                    title="Sort % Change from Most Positive to Most Negative (Top-to-Bottom)"
                   >
-                    ▼ กำไร → ติดลบ
+                    ▼ Gain → Loss
                   </button>
                   <button
                     type="button"
                     data-sort-order="NONE"
                     class="sort-order-btn px-2 py-1 rounded-full text-slate-400 hover:text-alabaster spring-transition"
-                    title="เรียงตามลำดับที่เพิ่มเข้าพอร์ต (Manual)"
+                    title="Manual Order (As Added)"
                   >
-                    ปกติ
+                    Manual
                   </button>
                 </div>
 
                 <div class="flex items-center gap-2 text-xs font-mono text-slate-400">
-                  <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald"></span>ถึงเป้า</span>
-                  <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber"></span>ใกล้เป้า</span>
-                  <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-crimson"></span>หลุดแนวรับ</span>
+                  <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald"></span>Target Hit</span>
+                  <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber"></span>Near Target</span>
+                  <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-crimson"></span>Stop Breach</span>
                 </div>
               </div>
             </div>
@@ -432,7 +432,7 @@
                   <span class="h-2 w-2 rounded-full bg-emerald"></span>
                   <h3 id="watchHardwareTitle" class="text-sm font-bold text-alabaster">Garmin Watch Hardware Preview</h3>
                 </div>
-                <p id="watchHardwareSpecLabel" class="text-[11px] text-slate-400 font-mono mt-0.5">416×416 Round AMOLED · รองรับ 20 รุ่นยอดนิยม (2024–2026)</p>
+                <p id="watchHardwareSpecLabel" class="text-[11px] text-slate-400 font-mono mt-0.5">416×416 Round AMOLED · Supports 20 Popular Garmin Models (2024–2026)</p>
               </div>
 
               <!-- Watch Screen Mode Pills -->
@@ -447,13 +447,13 @@
             <div class="w-full mb-4 rounded-2xl bg-void/70 ring-1 ring-white/[0.08] px-3.5 py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div class="flex items-center gap-2 text-xs">
                 <i class="ph-light ph-watch text-cyan text-base"></i>
-                <label for="watchModelSelect" class="font-semibold text-slate-200 whitespace-nowrap">รุ่นนาฬิกา Garmin (20 รุ่น):</label>
+                <label for="watchModelSelect" class="font-semibold text-slate-200 whitespace-nowrap">Garmin Watch Model (20):</label>
               </div>
               <select
                 id="watchModelSelect"
                 class="w-full sm:w-auto flex-1 min-w-0 max-w-full truncate rounded-xl bg-core ring-1 ring-white/15 focus:ring-cyan px-3 py-1.5 text-xs font-mono text-alabaster focus:outline-none"
               >
-                <option value="garmin" selected>Garmin Watch · อัตโนมัติทุกรุ่น (20 รุ่น 2024–2026)</option>
+                <option value="garmin" selected>Garmin Watch · Auto-Scale All Models (20 Models 2024–2026)</option>
                 <option value="venu2">Garmin Venu 2 (416×416 AMOLED)</option>
                 <option value="venu3">Garmin Venu 3 (454×454 AMOLED)</option>
                 <option value="venu3s">Garmin Venu 3S (390×390 AMOLED)</option>
@@ -477,7 +477,7 @@
               </select>
             </div>
 
-            <!-- Physical Garmin Venu 2 Watch Chassis + Pushers -->
+            <!-- Physical Garmin Watch Chassis + Pushers -->
             <div class="relative flex items-center justify-center my-2 select-none">
               <!-- Top Watch Strap Lug -->
               <div class="venu2-strap venu2-strap-top" aria-hidden="true"></div>
@@ -489,7 +489,7 @@
                 id="venuBtnTop"
                 type="button"
                 class="venu2-pusher venu2-pusher-top group"
-                title="ปุ่มบนขวา (Select / สลับโหมดดู Day P&L กับ Total Return / เปิด-ปิด Bollinger Bands)"
+                title="Top-Right Button (Select / Toggle Day P&L vs Total Return / Toggle Bollinger Bands)"
               >
                 <span class="venu2-pusher-cap"></span>
                 <span class="venu2-pusher-label">A · SELECT</span>
@@ -500,7 +500,7 @@
                 id="venuBtnBottom"
                 type="button"
                 class="venu2-pusher venu2-pusher-bottom group"
-                title="ปุ่มล่างขวา (Back ย้อนกลับ / สลับไปหน้า Glance Widget)"
+                title="Bottom-Right Button (Back / Switch to Glance Widget)"
               >
                 <span class="venu2-pusher-cap"></span>
                 <span class="venu2-pusher-label">B · BACK</span>
@@ -509,7 +509,7 @@
               <!-- Stainless Steel Bezel + Minute Chapter Ring + Round Watch Viewport -->
               <div class="venu2-bezel">
                 <div class="venu2-chapter-ring">
-                  <div id="venuScreenViewport" class="venu2-amoled-screen" role="region" aria-label="หน้าจอจำลองนาฬิกา Garmin">
+                  <div id="venuScreenViewport" class="venu2-amoled-screen" role="region" aria-label="Virtual Garmin Watch Screen">
 
                     <!-- VIEW 1: GLANCE WIDGET CAROUSEL MODE -->
                     <div id="watchViewGlance" class="watch-view hidden w-full h-full flex flex-col justify-between py-9 px-8 text-center">
@@ -553,7 +553,7 @@
                         <span class="font-mono text-xs text-slate-300">84 / 100</span>
                       </div>
 
-                      <div class="text-[10px] font-mono text-slate-400">แตะการ์ดกลางจอเพื่อเปิดแอปเต็ม</div>
+                      <div class="text-[10px] font-mono text-slate-400">Tap center glance card to open full app</div>
                     </div>
 
                     <!-- VIEW 2: MAIN PORTFOLIO & HOLDINGS LIST MODE -->
@@ -566,24 +566,24 @@
                           <span id="watchListSyncKey" class="text-cyan">GARMIN-88</span>
                           <span id="watchBadgeAutoSwipe" class="px-1.5 py-0.2 rounded-full bg-cyan/15 text-cyan text-[8px]">AUTO 5s</span>
                           <span id="watchBadgeAlwaysOn" class="hidden px-1.5 py-0.2 rounded-full bg-amber/20 text-amber text-[8px]">AON</span>
-                          <button id="watchBadgeSortOrder" type="button" class="px-1.5 py-0.2 rounded-full bg-crimson/20 text-crimson text-[8px] hover:opacity-80 transition" title="คลิกเพื่อสลับเรียงลำดับ % Change (ติดลบ→กำไร / กำไร→ติดลบ)">▲ -%→+%</button>
+                          <button id="watchBadgeSortOrder" type="button" class="px-1.5 py-0.2 rounded-full bg-crimson/20 text-crimson text-[8px] hover:opacity-80 transition" title="Click to toggle % Change Sort (Loss→Gain / Gain→Loss)">▲ -%→+%</button>
                         </div>
 
                         <!-- Portfolio Switcher Row -->
                         <div class="mt-0.5 flex items-center justify-center gap-2">
-                          <button id="watchPrevPortBtn" type="button" class="w-5 h-5 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300 text-[10px]" title="พอร์ตก่อนหน้า">
+                          <button id="watchPrevPortBtn" type="button" class="w-5 h-5 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300 text-[10px]" title="Previous Portfolio">
                             <i class="ph-light ph-caret-left"></i>
                           </button>
                           <div id="watchPortShortName" class="font-sans text-[11px] font-extrabold tracking-wide text-cyan">
                             US MOAT
                           </div>
-                          <button id="watchNextPortBtn" type="button" class="w-5 h-5 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300 text-[10px]" title="พอร์ตถัดไป">
+                          <button id="watchNextPortBtn" type="button" class="w-5 h-5 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300 text-[10px]" title="Next Portfolio">
                             <i class="ph-light ph-caret-right"></i>
                           </button>
                         </div>
 
                         <!-- Portfolio Net Value & Toggleable Delta -->
-                        <button id="watchTogglePnlModeBtn" type="button" class="mt-0.5 inline-flex flex-col items-center group" title="คลิกเพื่อสลับดู Day P&L หรือ Total Return">
+                        <button id="watchTogglePnlModeBtn" type="button" class="mt-0.5 inline-flex flex-col items-center group" title="Click to toggle Day P&L vs Total Return">
                           <div id="watchPortTotalVal" class="font-mono text-base font-bold text-alabaster tabular-nums leading-tight">
                             ฿1,120,450
                           </div>
@@ -607,7 +607,7 @@
                       <!-- Bottom Circular Footer Dots -->
                       <div class="pt-0.5 flex flex-col items-center">
                         <div id="watchPortDots" class="flex items-center gap-1.5"></div>
-                        <div class="text-[8px] font-mono text-slate-500 mt-0.5">แตะชื่อหุ้นเพื่อดูกราฟ &amp; โน้ต</div>
+                        <div class="text-[8px] font-mono text-slate-500 mt-0.5">Tap any ticker for Sparkline &amp; WebMemo</div>
                       </div>
                     </div>
 
@@ -616,7 +616,7 @@
                       <!-- Top Symbol Header -->
                       <div class="text-center">
                         <div class="flex items-center justify-center gap-1.5">
-                          <button id="watchBackToListBtn" type="button" class="w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-[10px] text-alabaster" title="กลับหน้ารายการ">
+                          <button id="watchBackToListBtn" type="button" class="w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-[10px] text-alabaster" title="Back to Portfolio List">
                             <i class="ph-light ph-arrow-left"></i>
                           </button>
                           <span id="watchDetailSymbol" class="font-mono text-sm font-extrabold text-alabaster">NVDA</span>
@@ -634,7 +634,7 @@
                       <div class="relative my-1 rounded-2xl bg-white/[0.03] ring-1 ring-white/[0.08] p-2">
                         <div class="flex items-center justify-between text-[9px] font-mono text-slate-300 mb-1 px-1">
                           <span id="watchChartLowLabel" class="text-crimson/90">Day L: $135.10</span>
-                          <button id="watchToggleBbBtn" type="button" class="text-cyan font-semibold hover:underline" title="คลิกเพื่อเปิด/ปิดเส้น SMA20 + Bollinger Bands">SMA20: $134.20</button>
+                          <button id="watchToggleBbBtn" type="button" class="text-cyan font-semibold hover:underline" title="Click to toggle SMA20 + Bollinger Bands">SMA20: $134.20</button>
                           <span id="watchChartHighLabel" class="text-emerald/90">Day H: $139.90</span>
                         </div>
                         <canvas id="watchSparklineCanvas" width="260" height="70" class="w-full h-[70px] block"></canvas>
@@ -643,19 +643,19 @@
                       <!-- Position & Target Summary Strip -->
                       <div class="grid grid-cols-2 gap-1.5 font-mono text-[10px] bg-white/[0.03] rounded-xl px-2.5 py-1.5 ring-1 ring-white/[0.06]">
                         <div>
-                          <span class="text-slate-400">ทุน/หุ้น:</span>
+                          <span class="text-slate-400">Pos:</span>
                           <span id="watchDetailPos" class="text-alabaster font-semibold ml-1">45 @ $98.5</span>
                         </div>
                         <div class="text-right">
-                          <span class="text-slate-400">กำไร:</span>
+                          <span class="text-slate-400">P&amp;L:</span>
                           <span id="watchDetailPnl" class="text-emerald font-semibold ml-1">+40.7%</span>
                         </div>
                         <div>
-                          <span class="text-slate-400">เป้า ▲:</span>
+                          <span class="text-slate-400">Target ▲:</span>
                           <span id="watchDetailTarget" class="text-emerald ml-1">$155.0</span>
                         </div>
                         <div class="text-right">
-                          <span class="text-slate-400">รับ ▼:</span>
+                          <span class="text-slate-400">Stop ▼:</span>
                           <span id="watchDetailStop" class="text-crimson ml-1">$112.0</span>
                         </div>
                       </div>
@@ -677,7 +677,7 @@
                           <i class="ph-light ph-lock-key text-xl"></i>
                         </div>
                         <div class="font-sans text-sm font-extrabold text-alabaster">TRIAL 14D EXPIRED</div>
-                        <div class="text-[10px] text-slate-400 mt-0.5">หมดเวลาทดลองใช้ฟรี 14 วัน</div>
+                        <div class="text-[10px] text-slate-400 mt-0.5">14-Day Free Trial Has Ended</div>
                         <div class="mt-2.5 rounded-xl bg-white/[0.04] ring-1 ring-white/10 px-3 py-1.5 font-mono text-[10px]">
                           <span class="text-slate-400">DEVICE ID:</span>
                           <span id="watchExpiredDeviceId" class="text-cyan font-bold ml-1">V2-GARMIN88</span>
@@ -687,10 +687,10 @@
                           <div id="watchExpiredOwnerEmail" class="font-mono text-[11px] font-bold text-alabaster mt-0.5">saharat.bun@icloud.com</div>
                         </div>
                         <button id="watchExpiredOpenRequestBtn" type="button" class="mt-2 rounded-full bg-cyan/20 hover:bg-cyan/30 ring-1 ring-cyan/40 px-3 py-1 text-[9px] font-mono text-cyan font-semibold">
-                          ขอต่ออายุ Trial / สั่งซื้อ License
+                          Request Trial Extend / Purchase Pro
                         </button>
                       </div>
-                      <div class="text-[9px] font-mono text-slate-400">กรอกรหัส Activate บนหน้าเว็บเพื่อปลดล็อก</div>
+                      <div class="text-[9px] font-mono text-slate-400">Enter Activation Key on Web Dashboard to Unlock</div>
                     </div>
 
                   </div>
@@ -701,16 +701,16 @@
             <!-- Interactive Watch Controls Legend -->
             <div class="w-full mt-4 pt-4 border-t border-white/[0.07] grid grid-cols-3 gap-2 text-center text-[11px] text-slate-400">
               <div class="rounded-xl bg-white/[0.025] p-2">
-                <div class="font-mono text-alabaster font-semibold">ปุ่มบนขวา (A)</div>
-                <div class="mt-0.5">สลับ Day / Total P&amp;L</div>
+                <div class="font-mono text-alabaster font-semibold">Top-Right (A)</div>
+                <div class="mt-0.5">Toggle Day / Total P&amp;L</div>
               </div>
               <div class="rounded-xl bg-white/[0.025] p-2">
-                <div class="font-mono text-alabaster font-semibold">แตะแถวหุ้น</div>
-                <div class="mt-0.5">เปิดกราฟ + อ่าน Note</div>
+                <div class="font-mono text-alabaster font-semibold">Tap Ticker Row</div>
+                <div class="mt-0.5">Open Chart + WebMemo</div>
               </div>
               <div class="rounded-xl bg-white/[0.025] p-2">
-                <div class="font-mono text-alabaster font-semibold">ปุ่มล่างขวา (B)</div>
-                <div class="mt-0.5">ย้อนกลับ / Glance</div>
+                <div class="font-mono text-alabaster font-semibold">Bottom-Right (B)</div>
+                <div class="mt-0.5">Back / Glance Mode</div>
               </div>
             </div>
 
@@ -724,9 +724,9 @@
               <div>
                 <div class="flex items-center gap-2">
                   <i class="ph-light ph-sliders-horizontal text-cyan text-base"></i>
-                  <h3 class="text-sm font-bold text-alabaster">ตั้งค่าหน้าจอนาฬิกา &amp; สิทธิ์การใช้งาน (Garmin Settings)</h3>
+                  <h3 class="text-sm font-bold text-alabaster">Garmin Display &amp; License Settings</h3>
                 </div>
-                <p class="text-[11px] text-slate-400 mt-0.5">ซิงก์การเลื่อนหน้าจออัตโนมัติ (Auto-Swipe), โหมดจอไม่ดับ (Always-On) และสถานะ License เข้าสู่นาฬิกา</p>
+                <p class="text-[11px] text-slate-400 mt-0.5">Configure Auto-Swipe rotation, Always-On display mode, and Garmin device license activation</p>
               </div>
               <span id="autoSwipeCountdownBadge" class="font-mono text-[11px] px-2.5 py-1 rounded-full bg-cyan/15 text-cyan ring-1 ring-cyan/30">Auto 5s</span>
             </div>
@@ -736,9 +736,9 @@
               <div class="flex items-center justify-between gap-3">
                 <div>
                   <div class="text-xs font-bold text-alabaster flex items-center gap-1.5">
-                    <span>เลื่อนหน้าจอหุ้นอัตโนมัติ (Auto-Swipe Next Screen)</span>
+                    <span>Auto-Swipe Next Screen</span>
                   </div>
-                  <p class="text-[11px] text-slate-400">สลับหน้าดูหุ้นทุกตัวและทุกพอร์ตจนครบอัตโนมัติ (ค่าเริ่มต้นทุก 5 วินาที)</p>
+                  <p class="text-[11px] text-slate-400">Automatically cycle through holdings and portfolios on the watch (default: every 5 seconds)</p>
                 </div>
                 <label class="relative inline-flex items-center cursor-pointer">
                   <input id="autoSwipeToggle" type="checkbox" checked class="sr-only peer" />
@@ -748,7 +748,7 @@
 
               <div class="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-white/[0.05]">
                 <div class="flex items-center gap-1.5">
-                  <span class="text-[11px] text-slate-400">ความเร็ว (วินาที):</span>
+                  <span class="text-[11px] text-slate-400">Interval (sec):</span>
                   <button type="button" data-swipe-preset="3" class="swipe-preset-btn px-2 py-0.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.1] text-[11px] font-mono text-slate-300">3s</button>
                   <button type="button" data-swipe-preset="5" class="swipe-preset-btn px-2 py-0.5 rounded-lg bg-cyan/20 ring-1 ring-cyan/40 text-[11px] font-mono text-cyan font-semibold">5s (Default)</button>
                   <button type="button" data-swipe-preset="10" class="swipe-preset-btn px-2 py-0.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.1] text-[11px] font-mono text-slate-300">10s</button>
@@ -765,10 +765,10 @@
             <div class="rounded-2xl bg-void/70 ring-1 ring-white/[0.07] p-4 flex items-center justify-between gap-3">
               <div>
                 <div class="text-xs font-bold text-alabaster flex items-center gap-1.5">
-                  <span>เปิดหน้าจอค้างไว้เมื่อเปิดแอป (Always-On Screen)</span>
+                  <span>Keep Screen Awake (Always-On Screen)</span>
                   <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-white/[0.06] text-slate-400">Optional</span>
                 </div>
-                <p class="text-[11px] text-slate-400">ป้องกันไม่ให้หน้าจอนาฬิกา Garmin ดับขณะเปิดดูพอร์ต (ไม่บังคับเปิด เลือกเปิด/ปิดได้ตลอดเวลา)</p>
+                <p class="text-[11px] text-slate-400">Prevent the Garmin watch backlight from timing out while viewing your portfolio</p>
               </div>
               <label class="relative inline-flex items-center cursor-pointer shrink-0">
                 <input id="alwaysOnToggle" type="checkbox" class="sr-only peer" />
@@ -782,18 +782,18 @@
                 <div>
                   <div class="text-xs font-bold text-alabaster flex items-center gap-1.5">
                     <i class="ph-light ph-arrows-down-up text-cyan text-sm"></i>
-                    <span>เรียงลำดับหุ้นอัตโนมัติตาม % Change (Auto-Sort บนลงล่าง)</span>
+                    <span>Auto-Sort Holdings by % Change (Top-to-Bottom)</span>
                   </div>
-                  <p class="text-[11px] text-slate-400">จัดเรียงหุ้นจากติดลบไปหากำไร หรือสลับจากกำไรไปหาติดลบ เรียงจากบนลงล่างทั้งบนเว็บและนาฬิกา</p>
+                  <p class="text-[11px] text-slate-400">Automatically rank assets from biggest losers to biggest gainers (or vice versa) on both web and watch</p>
                 </div>
                 <button
                   id="flipSortDirectionBtn"
                   type="button"
                   class="rounded-xl bg-cyan/15 hover:bg-cyan/25 ring-1 ring-cyan/35 px-2.5 py-1 text-[11px] font-mono font-semibold text-cyan flex items-center gap-1 spring-transition active:scale-[0.98]"
-                  title="สลับทิศทางการเรียงลำดับ (ติดลบ→กำไร / กำไร→ติดลบ)"
+                  title="Flip Sort Direction (Loss→Gain / Gain→Loss)"
                 >
                   <i class="ph-light ph-arrows-down-up text-xs"></i>
-                  <span>สลับทิศทาง</span>
+                  <span>Flip Order</span>
                 </button>
               </div>
 
@@ -804,49 +804,49 @@
                   data-sort-order="ASC"
                   class="sort-order-btn rounded-xl px-3 py-2 text-xs font-mono font-semibold flex items-center justify-center gap-1.5 spring-transition bg-crimson/20 text-crimson ring-1 ring-crimson/40"
                 >
-                  <span>▲ ติดลบ → กำไร</span>
+                  <span>▲ Loss → Gain</span>
                 </button>
                 <button
                   type="button"
                   data-sort-order="DESC"
                   class="sort-order-btn rounded-xl px-3 py-2 text-xs font-mono font-semibold flex items-center justify-center gap-1.5 spring-transition bg-white/[0.04] hover:bg-white/[0.1] text-slate-300 ring-1 ring-white/10"
                 >
-                  <span>▼ กำไร → ติดลบ</span>
+                  <span>▼ Gain → Loss</span>
                 </button>
                 <button
                   type="button"
                   data-sort-order="NONE"
                   class="sort-order-btn rounded-xl px-3 py-2 text-xs font-mono font-semibold flex items-center justify-center gap-1.5 spring-transition bg-white/[0.04] hover:bg-white/[0.1] text-slate-300 ring-1 ring-white/10"
                 >
-                  <span>ลำดับปกติ (Manual)</span>
+                  <span>Manual Order</span>
                 </button>
               </div>
 
               <!-- Metric Selector: Day % Change vs Total P&L % -->
               <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/[0.05]">
-                <span class="text-[11px] text-slate-400">เกณฑ์ % ที่ใช้จัดเรียง:</span>
+                <span class="text-[11px] text-slate-400">Sort Metric:</span>
                 <div class="inline-flex items-center rounded-xl bg-core ring-1 ring-white/10 p-0.5 text-[11px] font-mono">
                   <button
                     type="button"
                     data-sort-metric="DAY"
                     class="sort-metric-btn px-2.5 py-1 rounded-lg bg-cyan/20 text-cyan font-semibold spring-transition cursor-pointer"
                   >
-                    % Change วันนี้ (Day %)
+                    Today's % (Day %)
                   </button>
                   <button
                     type="button"
                     data-sort-metric="TOTAL"
                     class="sort-metric-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-alabaster spring-transition cursor-pointer"
                   >
-                    % กำไรรวม (Total P&amp;L %)
+                    Total Return % (Total P&amp;L %)
                   </button>
                 </div>
               </div>
 
               <!-- Live Sort Order Status & Top/Bottom Preview -->
               <div id="sortLivePreviewBox" class="rounded-xl bg-white/[0.03] ring-1 ring-white/[0.06] px-3 py-2 text-[11px] font-mono text-slate-300 flex flex-wrap items-center justify-between gap-2">
-                <span id="sortLiveModeBadge" class="text-crimson font-semibold">▲ ติดลบ → กำไร (Day %)</span>
-                <span id="sortLiveTopBottomText" class="text-slate-400">กำลังจัดเรียงรายการ...</span>
+                <span id="sortLiveModeBadge" class="text-crimson font-semibold">▲ Loss → Gain (Day %)</span>
+                <span id="sortLiveTopBottomText" class="text-slate-400">Sorting holdings...</span>
               </div>
             </div>
 
@@ -857,7 +857,7 @@
                   <div class="text-[11px] font-mono text-slate-400">GARMIN DEVICE LICENSE (14-DAY TRIAL)</div>
                   <div class="flex items-center gap-2 mt-0.5">
                     <span class="text-xs text-slate-400">Device ID:</span>
-                    <input id="watchDeviceIdInput" type="text" value="V2-GARMIN88" class="w-32 rounded-lg bg-core ring-1 ring-white/10 px-2 py-0.5 font-mono text-xs font-bold text-cyan uppercase focus:outline-none focus:ring-cyan" title="รหัสประจำเครื่องนาฬิกา Garmin" />
+                    <input id="watchDeviceIdInput" type="text" value="V2-GARMIN88" class="w-32 rounded-lg bg-core ring-1 ring-white/10 px-2 py-0.5 font-mono text-xs font-bold text-cyan uppercase focus:outline-none focus:ring-cyan" title="Garmin Watch Device ID" />
                   </div>
                 </div>
                 <span id="licenseStatusPill" class="font-mono text-[11px] px-2.5 py-1 rounded-full bg-emerald/15 text-emerald ring-1 ring-emerald/30 font-semibold">
@@ -866,7 +866,7 @@
               </div>
 
               <div id="licenseDetailBanner" class="rounded-xl bg-white/[0.03] ring-1 ring-white/[0.06] px-3 py-2 text-[11px] text-slate-300 flex flex-wrap items-center justify-between gap-2">
-                <span id="licenseExpiryText">ทดลองใช้ฟรี 14 วัน · หากหมดเวลาติดต่อเวอร์ชันเต็มที่ <strong class="font-mono text-amber">saharat.bun@icloud.com</strong></span>
+                <span id="licenseExpiryText">14-Day Free Trial · For lifetime Pro activation contact <strong class="font-mono text-amber">saharat.bun@icloud.com</strong></span>
               </div>
 
               <!-- Activation Code Input Row -->
@@ -874,7 +874,7 @@
                 <input
                   id="activationKeyInput"
                   type="text"
-                  placeholder="กรอกรหัส Activate (MOAT-XXXX-XXXX-XXXX)"
+                  placeholder="Enter Activation Key (MOAT-XXXX-XXXX-XXXX)"
                   class="flex-1 rounded-xl bg-core ring-1 ring-white/15 focus:ring-emerald px-3 py-2 font-mono text-xs text-alabaster uppercase placeholder-slate-500 focus:outline-none"
                 />
                 <button
@@ -882,7 +882,7 @@
                   type="button"
                   class="rounded-xl bg-emerald text-void font-bold text-xs px-4 py-2 font-sans spring-transition active:scale-[0.98] whitespace-nowrap"
                 >
-                  Activate เครื่องนี้
+                  Activate Device
                 </button>
               </div>
 
@@ -894,7 +894,7 @@
                   class="rounded-xl bg-amber/15 hover:bg-amber/25 ring-1 ring-amber/35 px-3 py-2 text-xs font-semibold text-amber flex items-center justify-center gap-1.5 spring-transition active:scale-[0.98]"
                 >
                   <i class="ph-light ph-clock-clockwise text-sm"></i>
-                  <span>ขอต่ออายุทดลองใช้ (Request Trial Extend)</span>
+                  <span>Request Trial Extend</span>
                 </button>
                 <button
                   id="openPurchaseFormModalBtn"
@@ -902,12 +902,12 @@
                   class="rounded-xl bg-cyan/15 hover:bg-cyan/25 ring-1 ring-cyan/35 px-3 py-2 text-xs font-semibold text-cyan flex items-center justify-center gap-1.5 spring-transition active:scale-[0.98]"
                 >
                   <i class="ph-light ph-shopping-bag-open text-sm"></i>
-                  <span>ขอซื้อ License ถาวร (Purchase Form)</span>
+                  <span>Purchase Pro License</span>
                 </button>
               </div>
 
               <div class="flex items-center justify-between text-[11px] pt-1 border-t border-white/[0.05]">
-                <span class="text-slate-400">สำหรับผู้ดูแลระบบ (<code class="font-mono text-amber">saharat.bun@icloud.com</code>):</span>
+                <span class="text-slate-400">Admin Portal (<code class="font-mono text-amber">saharat.bun@icloud.com</code>):</span>
                 <a href="https://admin-moat.readybyte.top" target="_blank" rel="noopener" id="openAdminPortalBtn" class="font-mono text-cyan hover:underline flex items-center gap-1">
                   <i class="ph-light ph-shield-star"></i>
                   <span>admin-moat.readybyte.top</span>
@@ -928,7 +928,7 @@
           <span class="text-xs font-medium text-slate-300">Connect IQ Monkey C Native App Included</span>
         </div>
         <h2 class="text-2xl sm:text-3xl font-extrabold text-alabaster tracking-tight">
-          พร้อมติดตั้งลงนาฬิกา Garmin จริงของคุณ
+          Ready for Your Garmin Watch Hardware
         </h2>
       </div>
 
@@ -939,28 +939,28 @@
             <div>
               <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
                 <span class="font-mono text-xs text-emerald">Connect IQ Monkey C · source/*.mc</span>
-                <span class="font-mono text-xs text-slate-400">20 รุ่น: Venu · vívoactive · Forerunner · fēnix · Enduro · epix Pro · Approach</span>
+                <span class="font-mono text-xs text-slate-400">20 Models: Venu · vívoactive · Forerunner · fēnix · Enduro · epix Pro · Approach</span>
               </div>
               <h3 class="text-xl font-bold text-alabaster mb-2">
-                สถาปัตยกรรมแบบเดียวกับ Easymoat MarketWatch + WebMemo รองรับ Garmin 20 รุ่นยอดนิยม (2024–2026)
+                MarketWatch + WebMemo Architecture Across 20 Popular Garmin Models (2024–2026)
               </h3>
               <p class="text-sm text-slate-400 leading-relaxed mb-6">
-                ตัวแอปภาษา Monkey C ถูกออกแบบด้วยระบบ <strong class="text-alabaster">Proportional Responsive Scaling</strong> ปรับขนาดฟอนต์และเลย์เอาต์อัตโนมัติตั้งแต่จอ MIP Solar ขนาด <code class="font-mono text-cyan">260×260 / 280×280</code> (fēnix 8 Solar, Enduro 3) ไปจนถึงจอ AMOLED ความละเอียดสูง <code class="font-mono text-cyan">360×360 / 390×390 / 416×416 / 454×454</code> (Venu Series, Forerunner Series, fēnix 8 AMOLED, epix Pro Gen 2, Approach S70) พร้อมรองรับทั้งหน้าจอสัมผัสและปุ่มกด 5 ปุ่ม (UP/DOWN)
+                Built in native Monkey C with <strong class="text-alabaster">Proportional Responsive Scaling</strong> that automatically adapts fonts and circular geometry from MIP Solar displays (<code class="font-mono text-cyan">260×260 / 280×280</code> on fēnix 8 Solar, Enduro 3) to high-DPI AMOLED screens (<code class="font-mono text-cyan">360×360 / 390×390 / 416×416 / 454×454</code> on Venu, Forerunner, fēnix 8 AMOLED, epix Pro Gen 2, Approach S70) with full touch and 5-button navigation support.
               </p>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 font-mono text-xs">
               <div class="rounded-2xl bg-void/70 ring-1 ring-white/[0.07] p-4">
                 <div class="text-cyan font-semibold mb-1">1. Glance Widget</div>
-                <p class="text-slate-400 font-sans text-xs">แสดงมูลค่าพอร์ตรวมและกำไรรายวันบนหน้ารวมวิจิตของนาฬิกาโดยไม่ต้องกดเข้าแอป</p>
+                <p class="text-slate-400 font-sans text-xs">View total net worth and daily P&amp;L directly in your Garmin watch widget carousel without opening the full app.</p>
               </div>
               <div class="rounded-2xl bg-void/70 ring-1 ring-white/[0.07] p-4">
                 <div class="text-emerald font-semibold mb-1">2. Multi-Portfolio</div>
-                <p class="text-slate-400 font-sans text-xs">ปัดซ้าย-ขวาบนหน้าจอสัมผัส หรือกดปุ่ม UP/DOWN บนรุ่น 5 ปุ่ม เพื่อสลับพอร์ตหุ้นสหรัฐฯ หุ้นไทย และคริปโต</p>
+                <p class="text-slate-400 font-sans text-xs">Swipe left/right on touchscreens or press UP/DOWN on 5-button watches to cycle through US, Thai SET, and Crypto portfolios.</p>
               </div>
               <div class="rounded-2xl bg-void/70 ring-1 ring-white/[0.07] p-4">
                 <div class="text-amber font-semibold mb-1">3. Chart &amp; WebMemo</div>
-                <p class="text-slate-400 font-sans text-xs">แตะรายชื่อหุ้นเพื่อดูกราฟ Sparkline + เส้น SMA20 / Bollinger และโน้ตช่วยจำของคุณ</p>
+                <p class="text-slate-400 font-sans text-xs">Tap any holding to inspect its 20-day sparkline chart, SMA20 / Bollinger Bands, and personal WebMemo note.</p>
               </div>
             </div>
           </div>
@@ -974,16 +974,16 @@
                 <span class="font-mono text-xs text-cyan">1-CLICK USB SIDELOAD</span>
                 <i class="ph-light ph-usb text-xl text-cyan"></i>
               </div>
-              <h3 class="text-lg font-bold text-alabaster mb-2">วิธีนำเข้าสู่นาฬิกา Garmin (20 รุ่น)</h3>
+              <h3 class="text-lg font-bold text-alabaster mb-2">USB Sideload Guide (20 Models)</h3>
               <ol class="space-y-2.5 text-xs text-slate-300 list-decimal list-inside leading-relaxed">
-                <li>เสียบสายชาร์จนาฬิกา Garmin เข้ากับคอมพิวเตอร์</li>
-                <li>รันคำสั่ง <code id="sideloadCommandHint" class="font-mono text-emerald">.\build-and-sideload.ps1</code> เพื่อคอมไพล์ไฟล์ <code class="font-mono text-alabaster">MoatWatch.prg</code></li>
-                <li>สคริปต์จะคัดลอกไฟล์เข้าโฟลเดอร์ <code class="font-mono text-alabaster">GARMIN\APPS</code> บนนาฬิกาโดยอัตโนมัติ</li>
+                <li>Connect your Garmin watch to your computer via USB cable.</li>
+                <li>Run <code id="sideloadCommandHint" class="font-mono text-emerald">.\build-and-sideload.ps1</code> to compile <code class="font-mono text-alabaster">MoatWatch.prg</code>.</li>
+                <li>The script automatically copies the binary into <code class="font-mono text-alabaster">GARMIN\APPS</code> on your watch.</li>
               </ol>
             </div>
 
             <button id="openPayloadModalFromBentoBtn" type="button" class="group mt-6 w-full rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 pl-5 pr-2 py-2 text-xs font-semibold text-alabaster flex items-center justify-between spring-transition active:scale-[0.98]">
-              <span>ตรวจสอบ JSON สำหรับ Garmin</span>
+              <span>Inspect Garmin JSON Payload</span>
               <span class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center spring-transition group-hover:translate-x-0.5 group-hover:-translate-y-[1px]">
                 <i class="ph-light ph-arrow-up-right text-sm text-cyan"></i>
               </span>
@@ -1001,8 +1001,8 @@
       <div class="double-bezel-core p-6 sm:p-7">
         <div class="flex items-center justify-between mb-5">
           <div>
-            <h3 id="holdingModalTitle" class="text-lg font-bold text-alabaster">แก้ไขรายการสินทรัพย์ &amp; WebMemo</h3>
-            <p class="text-xs text-slate-400">ใส่จำนวนหุ้น = 0 หากต้องการติดตามราคาอย่างเดียวในโหมด Watchlist</p>
+            <h3 id="holdingModalTitle" class="text-lg font-bold text-alabaster">Edit Asset &amp; WebMemo</h3>
+            <p class="text-xs text-slate-400">Set Shares = 0 to track price only in Watchlist mode</p>
           </div>
           <button id="closeHoldingModalBtn" type="button" class="w-8 h-8 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300">
             <i class="ph-light ph-x"></i>
@@ -1014,66 +1014,66 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label class="block text-xs text-slate-400 mb-1" for="holdingSymbolInput">ชื่อย่อ (Symbol)</label>
-              <input id="holdingSymbolInput" type="text" required placeholder="เช่น NVDA, PTT.BK" class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3.5 py-2.5 text-sm font-mono text-alabaster uppercase focus:outline-none" />
+              <label class="block text-xs text-slate-400 mb-1" for="holdingSymbolInput">Ticker Symbol</label>
+              <input id="holdingSymbolInput" type="text" required placeholder="e.g. NVDA, PTT.BK" class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3.5 py-2.5 text-sm font-mono text-alabaster uppercase focus:outline-none" />
             </div>
             <div class="sm:col-span-2">
-              <label class="block text-xs text-slate-400 mb-1" for="holdingNameInput">ชื่อบริษัท / สินทรัพย์</label>
-              <input id="holdingNameInput" type="text" placeholder="เว้นว่างเพื่อให้ดึงจาก Yahoo อัตโนมัติ" class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3.5 py-2.5 text-sm text-alabaster focus:outline-none" />
+              <label class="block text-xs text-slate-400 mb-1" for="holdingNameInput">Company / Asset Name</label>
+              <input id="holdingNameInput" type="text" placeholder="Leave blank to auto-fetch from Yahoo Finance" class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3.5 py-2.5 text-sm text-alabaster focus:outline-none" />
             </div>
           </div>
 
           <div class="grid grid-cols-3 gap-3">
             <div>
-              <label class="block text-xs text-slate-400 mb-1" for="holdingCurrencySelect">สกุลเงิน</label>
+              <label class="block text-xs text-slate-400 mb-1" for="holdingCurrencySelect">Currency</label>
               <select id="holdingCurrencySelect" class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3 py-2.5 text-sm font-mono text-alabaster focus:outline-none">
                 <option value="USD">USD ($)</option>
                 <option value="THB">THB (฿)</option>
               </select>
             </div>
             <div>
-              <label class="block text-xs text-slate-400 mb-1" for="holdingSharesInput">จำนวนหุ้น (Shares)</label>
+              <label class="block text-xs text-slate-400 mb-1" for="holdingSharesInput">Shares</label>
               <input id="holdingSharesInput" type="number" step="any" min="0" value="0" class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3.5 py-2.5 text-sm font-mono text-alabaster focus:outline-none" />
             </div>
             <div>
-              <label class="block text-xs text-slate-400 mb-1" for="holdingAvgCostInput">ราคาทุนเฉลี่ย (Avg Cost)</label>
+              <label class="block text-xs text-slate-400 mb-1" for="holdingAvgCostInput">Avg Cost</label>
               <input id="holdingAvgCostInput" type="number" step="any" min="0" value="0" class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3.5 py-2.5 text-sm font-mono text-alabaster focus:outline-none" />
             </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label class="block text-xs text-emerald mb-1" for="holdingTargetInput">ราคาเป้าหมาย (Target Alert ▲)</label>
-              <input id="holdingTargetInput" type="number" step="any" min="0" placeholder="0 = ไม่ตั้งเตือน" class="w-full rounded-xl bg-void ring-1 ring-emerald/30 focus:ring-emerald px-3.5 py-2.5 text-sm font-mono text-alabaster focus:outline-none" />
+              <label class="block text-xs text-emerald mb-1" for="holdingTargetInput">Target Price (Alert ▲)</label>
+              <input id="holdingTargetInput" type="number" step="any" min="0" placeholder="0 = disabled" class="w-full rounded-xl bg-void ring-1 ring-emerald/30 focus:ring-emerald px-3.5 py-2.5 text-sm font-mono text-alabaster focus:outline-none" />
             </div>
             <div>
-              <label class="block text-xs text-crimson mb-1" for="holdingStopInput">จุดเฝ้าระวัง/คัทลอส (Stop Alert ▼)</label>
-              <input id="holdingStopInput" type="number" step="any" min="0" placeholder="0 = ไม่ตั้งเตือน" class="w-full rounded-xl bg-void ring-1 ring-crimson/30 focus:ring-crimson px-3.5 py-2.5 text-sm font-mono text-alabaster focus:outline-none" />
+              <label class="block text-xs text-crimson mb-1" for="holdingStopInput">Stop Loss (Alert ▼)</label>
+              <input id="holdingStopInput" type="number" step="any" min="0" placeholder="0 = disabled" class="w-full rounded-xl bg-void ring-1 ring-crimson/30 focus:ring-crimson px-3.5 py-2.5 text-sm font-mono text-alabaster focus:outline-none" />
             </div>
             <div>
-              <label class="block text-xs text-amber mb-1" for="holdingEarningsDateInput">งบถัดไป (Next Earnings: dd/mm/yy)</label>
-              <input id="holdingEarningsDateInput" type="text" maxlength="12" placeholder="เช่น 17/11/26 (ว่าง=อัตโนมัติ)" class="w-full rounded-xl bg-void ring-1 ring-amber/30 focus:ring-amber px-3.5 py-2.5 text-sm font-mono text-alabaster focus:outline-none" />
+              <label class="block text-xs text-amber mb-1" for="holdingEarningsDateInput">Next Earnings (dd/mm/yy)</label>
+              <input id="holdingEarningsDateInput" type="text" maxlength="12" placeholder="e.g. 17/11/26 (blank=auto)" class="w-full rounded-xl bg-void ring-1 ring-amber/30 focus:ring-amber px-3.5 py-2.5 text-sm font-mono text-alabaster focus:outline-none" />
             </div>
           </div>
 
           <div>
             <div class="flex items-center justify-between mb-1">
-              <label class="text-xs text-cyan font-medium" for="holdingNoteInput">บันทึกช่วยจำบนนาฬิกา (WebMemo Note)</label>
-              <span class="text-[11px] font-mono text-slate-500">สูงสุด 140 ตัวอักษร</span>
+              <label class="text-xs text-cyan font-medium" for="holdingNoteInput">Garmin Watch Note (WebMemo)</label>
+              <span class="text-[11px] font-mono text-slate-500">Max 140 chars</span>
             </div>
-            <textarea id="holdingNoteInput" rows="2" maxlength="140" placeholder="เช่น รอขายทำกำไรบางส่วนที่ $155 / ถือรับปันผล XD เดือนเม.ย." class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2.5 text-sm text-alabaster focus:outline-none"></textarea>
+            <textarea id="holdingNoteInput" rows="2" maxlength="140" placeholder="e.g. Trim 10 shares above $155 / Hold core position for Q4 dividend" class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2.5 text-sm text-alabaster focus:outline-none"></textarea>
           </div>
 
           <div class="flex items-center justify-between pt-2">
             <button id="deleteHoldingBtn" type="button" class="hidden rounded-full bg-crimson/15 hover:bg-crimson/25 text-crimson ring-1 ring-crimson/30 px-4 py-2 text-xs font-semibold spring-transition">
-              ลบรายการนี้
+              Delete Asset
             </button>
             <div class="flex items-center gap-2 ml-auto">
               <button id="cancelHoldingModalBtn" type="button" class="rounded-full bg-white/[0.06] hover:bg-white/[0.12] px-5 py-2.5 text-xs font-medium text-slate-300">
-                ยกเลิก
+                Cancel
               </button>
               <button type="submit" class="group rounded-full bg-emerald text-void font-bold text-xs pl-5 pr-2 py-2 flex items-center gap-2.5 spring-transition active:scale-[0.98]">
-                <span>บันทึกและซิงก์เข้า Garmin</span>
+                <span>Save &amp; Sync to Garmin</span>
                 <span class="w-6 h-6 rounded-full bg-void/15 flex items-center justify-center">
                   <i class="ph-light ph-check text-xs font-bold"></i>
                 </span>
@@ -1091,8 +1091,8 @@
       <div class="double-bezel-core p-6 sm:p-7">
         <div class="flex items-center justify-between mb-4">
           <div>
-            <h3 class="text-lg font-bold text-alabaster">ตั้งค่า Sync Key ส่วนตัว &amp; เชื่อมต่อนาฬิกา Garmin (Multi-User Isolation)</h3>
-            <p class="text-xs text-slate-400">กรอกรหัส <code class="font-mono text-cyan">KEY: V2-XXXXXXXX</code> ที่แสดงบนหน้าจอนาฬิกาของคุณ หรือตั้งรหัส Sync Key ส่วนตัวเพื่อแยกพอร์ตไม่ให้ปะปนกับผู้ใช้อื่น</p>
+            <h3 class="text-lg font-bold text-alabaster">Personal Sync Key &amp; Garmin Watch Connection (Multi-User Isolation)</h3>
+            <p class="text-xs text-slate-400">Enter the <code class="font-mono text-cyan">KEY: V2-XXXXXXXX</code> displayed on your Garmin watch or create a custom private Sync Key to isolate your portfolio.</p>
           </div>
           <button id="closeSyncModalBtn" type="button" class="w-8 h-8 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300">
             <i class="ph-light ph-x"></i>
@@ -1100,19 +1100,19 @@
         </div>
 
         <div class="flex flex-col sm:flex-row gap-2.5 mb-3">
-          <input id="syncKeyInput" type="text" value="GARMIN-88" placeholder="เช่น V2-A1B2C3D4 หรือตั้งรหัสส่วนตัว" class="flex-1 rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-4 py-2.5 font-mono text-sm text-alabaster uppercase focus:outline-none" />
+          <input id="syncKeyInput" type="text" value="GARMIN-88" placeholder="e.g. V2-A1B2C3D4 or custom key" class="flex-1 rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-4 py-2.5 font-mono text-sm text-alabaster uppercase focus:outline-none" />
           <button id="applySyncKeyBtn" type="button" class="rounded-full bg-cyan text-void font-bold text-xs px-5 py-2.5 spring-transition active:scale-[0.98]">
-            โหลด / สลับ Sync Key
+            Load / Switch Sync Key
           </button>
           <button id="createNewSyncKeyBtn" type="button" class="rounded-full bg-emerald/15 hover:bg-emerald/25 text-emerald ring-1 ring-emerald/35 font-semibold text-xs px-4 py-2.5 spring-transition active:scale-[0.98]">
-            + สร้างพอร์ตใหม่
+            + New Sync Key
           </button>
         </div>
 
         <div class="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-white/[0.03] ring-1 ring-white/10 px-3.5 py-2 mb-4 text-[11px]">
-          <span class="text-slate-400">ลิงก์เข้าพอร์ตส่วนตัวของคุณโดยตรง: <code id="personalProfileUrlLabel" class="font-mono text-cyan">/?key=GARMIN-88</code></span>
+          <span class="text-slate-400">Direct Personal Portfolio URL: <code id="personalProfileUrlLabel" class="font-mono text-cyan">/?key=GARMIN-88</code></span>
           <button id="copyProfileUrlBtn" type="button" class="rounded-full bg-white/[0.08] hover:bg-white/[0.15] text-alabaster px-3 py-1 font-mono text-[11px] spring-transition">
-            คัดลอกลิงก์ส่วนตัว
+            Copy Personal Link
           </button>
         </div>
 
@@ -1136,10 +1136,10 @@
               <span>SMTP / SYSTEM MAIL → e24qdy2@gmail.com</span>
             </span>
             <h3 id="licenseRequestModalTitle" class="text-lg font-bold text-alabaster">
-              แบบฟอร์มขอซื้อ License ถาวร / ขอต่ออายุทดลองใช้ (Trial Extend)
+              Purchase Lifetime Pro License / Request Trial Extension
             </h3>
             <p class="text-xs text-slate-400 mt-0.5">
-              กรอกข้อมูลติดต่อและความประสงค์ ระบบจะส่งคำขอเข้าคิวผู้ดูแล (<code class="font-mono text-amber">saharat.bun@icloud.com</code>) และแจ้งเตือนทางอีเมลไปที่ <code class="font-mono text-emerald">e24qdy2@gmail.com</code> ทันที
+              Submit your contact details and request below. The system queues your request for the Admin (<code class="font-mono text-amber">saharat.bun@icloud.com</code>) and sends an instant email notification to <code class="font-mono text-emerald">e24qdy2@gmail.com</code>.
             </p>
           </div>
           <button id="closeLicenseRequestModalBtn" type="button" class="w-8 h-8 rounded-full bg-white/[0.06] hover:bg-white/[0.14] flex items-center justify-center text-slate-300 shrink-0">
@@ -1150,7 +1150,7 @@
         <form id="licenseRequestForm" class="space-y-4">
           <!-- Request Type Selector -->
           <div>
-            <label class="block text-xs text-slate-400 mb-1.5">ประเภทความประสงค์ (Request Type)</label>
+            <label class="block text-xs text-slate-400 mb-1.5">Request Type</label>
             <div class="grid grid-cols-2 gap-2.5">
               <button
                 type="button"
@@ -1159,7 +1159,7 @@
                 class="req-type-btn rounded-xl bg-cyan/20 ring-1 ring-cyan/50 px-3 py-2.5 text-xs font-bold text-cyan flex items-center justify-center gap-1.5 spring-transition"
               >
                 <i class="ph-light ph-shopping-bag-open text-sm"></i>
-                <span>ขอซื้อ License ถาวร (PRO)</span>
+                <span>Purchase Lifetime License (PRO)</span>
               </button>
               <button
                 type="button"
@@ -1168,7 +1168,7 @@
                 class="req-type-btn rounded-xl bg-white/[0.04] ring-1 ring-white/10 px-3 py-2.5 text-xs font-semibold text-slate-300 flex items-center justify-center gap-1.5 spring-transition"
               >
                 <i class="ph-light ph-clock-clockwise text-sm"></i>
-                <span>ขอต่ออายุ Trial Key Extend</span>
+                <span>Request Trial Key Extension</span>
               </button>
             </div>
             <input type="hidden" id="requestTypeInput" value="PURCHASE_LICENSE" />
@@ -1177,7 +1177,7 @@
           <!-- Device ID & Sync Key Row -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label class="block text-xs text-slate-400 mb-1" for="requestDeviceIdInput">Device ID นาฬิกา</label>
+              <label class="block text-xs text-slate-400 mb-1" for="requestDeviceIdInput">Watch Device ID</label>
               <input
                 id="requestDeviceIdInput"
                 type="text"
@@ -1187,7 +1187,7 @@
               />
             </div>
             <div>
-              <label class="block text-xs text-slate-400 mb-1" for="requestSyncKeyInput">Sync Key พอร์ต</label>
+              <label class="block text-xs text-slate-400 mb-1" for="requestSyncKeyInput">Portfolio Sync Key</label>
               <input
                 id="requestSyncKeyInput"
                 type="text"
@@ -1196,14 +1196,14 @@
               />
             </div>
             <div id="requestExtendDaysWrapper">
-              <label class="block text-xs text-amber mb-1" for="requestExtendDaysSelect">จำนวนวันที่ขอต่อ Trial</label>
+              <label class="block text-xs text-amber mb-1" for="requestExtendDaysSelect">Trial Extension Days</label>
               <select
                 id="requestExtendDaysSelect"
                 class="w-full rounded-xl bg-void ring-1 ring-amber/30 focus:ring-amber px-3 py-2 font-mono text-xs text-alabaster focus:outline-none"
               >
-                <option value="14">+14 วัน (มาตรฐาน)</option>
-                <option value="7">+7 วัน</option>
-                <option value="30">+30 วัน</option>
+                <option value="14">+14 Days (Standard)</option>
+                <option value="7">+7 Days</option>
+                <option value="30">+30 Days</option>
               </select>
             </div>
           </div>
@@ -1212,25 +1212,25 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label class="block text-xs text-slate-300 mb-1" for="requestContactNameInput">
-                ชื่อผู้ติดต่อ (Contact Name) <span class="text-crimson">*</span>
+                Contact Name <span class="text-crimson">*</span>
               </label>
               <input
                 id="requestContactNameInput"
                 type="text"
                 required
-                placeholder="เช่น คุณสมชาย นักลงทุน"
+                placeholder="e.g. Alex Mercer"
                 class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3.5 py-2.5 text-xs text-alabaster focus:outline-none"
               />
             </div>
             <div>
               <label class="block text-xs text-slate-300 mb-1" for="requestContactEmailInput">
-                อีเมลติดต่อกลับ (Email) <span class="text-crimson">*</span>
+                Email Address <span class="text-crimson">*</span>
               </label>
               <input
                 id="requestContactEmailInput"
                 type="email"
                 required
-                placeholder="เช่น investor@example.com"
+                placeholder="e.g. investor@example.com"
                 class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3.5 py-2.5 font-mono text-xs text-alabaster focus:outline-none"
               />
             </div>
@@ -1238,25 +1238,25 @@
 
           <div>
             <label class="block text-xs text-slate-300 mb-1" for="requestContactPhoneInput">
-              เบอร์โทรศัพท์ หรือ LINE ID สำหรับให้ติดต่อกลับ <span class="text-crimson">*</span>
+              Phone Number or LINE / Telegram ID <span class="text-crimson">*</span>
             </label>
             <input
               id="requestContactPhoneInput"
               type="text"
               required
-              placeholder="เช่น 081-234-5678 / LINE ID: @myline"
+              placeholder="e.g. +66 81-234-5678 / LINE ID: @myline"
               class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald px-3.5 py-2.5 text-xs text-alabaster focus:outline-none"
             />
           </div>
 
           <div>
             <label class="block text-xs text-slate-300 mb-1" for="requestMessageInput">
-              ความประสงค์ / รายละเอียดเพิ่มเติม (Message)
+              Additional Message / Notes
             </label>
             <textarea
               id="requestMessageInput"
               rows="3"
-              placeholder="ระบุความประสงค์ต้องการซื้อ License ถาวร หรือเหตุผลที่ขอต่ออายุทดลองใช้ เพื่อให้เจ้าของระบบติดต่อกลับ"
+              placeholder="Let us know if you'd like to purchase a Lifetime Pro License or why you need a Trial extension..."
               class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2.5 text-xs text-alabaster focus:outline-none"
             ></textarea>
           </div>
@@ -1273,7 +1273,7 @@
                 type="button"
                 class="rounded-full bg-white/[0.06] hover:bg-white/[0.12] px-4 py-2 text-xs font-medium text-slate-300"
               >
-                ปิดหน้าต่าง
+                Close
               </button>
               <button
                 id="submitLicenseRequestBtn"
@@ -1281,7 +1281,7 @@
                 class="rounded-full bg-emerald text-void font-bold text-xs px-5 py-2.5 flex items-center gap-2 spring-transition active:scale-[0.98]"
               >
                 <i class="ph-light ph-paper-plane-tilt text-sm font-bold"></i>
-                <span>ส่งคำขอ &amp; แจ้งเตือนทางอีเมล</span>
+                <span>Submit Request &amp; Notify Admin</span>
               </button>
             </div>
           </div>
@@ -1294,11 +1294,11 @@
   <div id="toastBanner" class="fixed bottom-6 right-6 z-50 translate-y-20 opacity-0 pointer-events-none spring-transition">
     <div class="rounded-full bg-core/95 backdrop-blur-xl ring-1 ring-emerald/40 px-5 py-3 shadow-2xl flex items-center gap-3">
       <span class="w-2 h-2 rounded-full bg-emerald"></span>
-      <span id="toastMessage" class="text-xs font-medium text-alabaster">บันทึกข้อมูลพอร์ตเรียบร้อยแล้ว</span>
+      <span id="toastMessage" class="text-xs font-medium text-alabaster">Portfolio saved successfully</span>
     </div>
   </div>
 
-  <script src="/watchSimulator.js?v=20261029-garmin3"></script>
-  <script src="/app.js?v=20261029-garmin3"></script>
+  <script src="/watchSimulator.js?v=20261029-en1"></script>
+  <script src="/app.js?v=20261029-en1"></script>
 </body>
 </html>

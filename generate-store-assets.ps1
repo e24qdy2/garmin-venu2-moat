@@ -95,7 +95,7 @@ function Draw-PortfolioScreenContent([System.Drawing.Graphics]$g, [float]$cx, [f
     $sfRight = New-Object System.Drawing.StringFormat
     $sfRight.Alignment = [System.Drawing.StringAlignment]::Far
 
-    $fontMicro = New-Object System.Drawing.Font "Consolas", ($r * 0.055), ([System.Drawing.FontStyle]::Bold)
+    $fontMicro = New-Object System.Drawing.Font "Consolas", ($r * 0.054), ([System.Drawing.FontStyle]::Bold)
     $fontRow   = New-Object System.Drawing.Font "Segoe UI", ($r * 0.068), ([System.Drawing.FontStyle]::Bold)
     $fontVal   = New-Object System.Drawing.Font "Segoe UI", ($r * 0.115), ([System.Drawing.FontStyle]::Bold)
 
@@ -109,14 +109,32 @@ function Draw-PortfolioScreenContent([System.Drawing.Graphics]$g, [float]$cx, [f
     $bAmber   = New-Object System.Drawing.SolidBrush (New-Color 251 191 36)
     $bMuted   = New-Object System.Drawing.SolidBrush (New-Color 100 116 139)
     $bCard    = New-Object System.Drawing.SolidBrush (New-Color 13 19 28)
+    $bFgiBg   = New-Object System.Drawing.SolidBrush (New-Color 16 185 129 38)
+    $pFgiPen  = New-Object System.Drawing.Pen (New-Color 16 185 129 160), 1.2
 
     $top = $cy - $r
     $h = $r * 2
     $w = $r * 2
     $left = $cx - $r
 
-    # Header Clock & Mode Flags
-    $g.DrawString("09:41" + $DotSep + "A:5s" + $DotSep + "AO" + $DotSep + "PRO", $fontMicro, $bSlate, $cx, $top + $h * 0.055, $sfCenter)
+    # Header Clock + NEW Daily Fear & Greed Index (S:68 G) + Mode Flags
+    $hdrY = $top + $h * 0.052
+    $leftTxt = "09:41" + $DotSep
+    $fgiTxt  = "S:68 G"
+    $rightTxt = $DotSep + "A:5s" + $DotSep + "PRO"
+
+    $wLeft  = $g.MeasureString($leftTxt, $fontMicro).Width
+    $wFgi   = $g.MeasureString($fgiTxt, $fontMicro).Width
+    $wRight = $g.MeasureString($rightTxt, $fontMicro).Width
+    $totalHdrW = $wLeft + $wFgi + $wRight + 8
+    $hdrStartX = $cx - ($totalHdrW / 2)
+
+    $g.DrawString($leftTxt, $fontMicro, $bSlate, $hdrStartX, $hdrY, $sfLeft)
+    Fill-RoundedRect $g $bFgiBg ($hdrStartX + $wLeft - 1) ($hdrY - 1) ($wFgi + 6) ($r * 0.082) 5
+    Draw-RoundedRect $g $pFgiPen ($hdrStartX + $wLeft - 1) ($hdrY - 1) ($wFgi + 6) ($r * 0.082) 5
+    $g.DrawString($fgiTxt, $fontMicro, $bEmerald, ($hdrStartX + $wLeft + 2), $hdrY, $sfLeft)
+    $g.DrawString($rightTxt, $fontMicro, $bSlate, ($hdrStartX + $wLeft + $wFgi + 5), $hdrY, $sfLeft)
+
     $g.DrawString("< US Moat Core 1/2 >", $fontRow, $bCyan, $cx, $top + $h * 0.105, $sfCenter)
     $g.DrawString("`$148,920", $fontVal, $bWhite, $cx, $top + $h * 0.15, $sfCenter)
     $g.DrawString("DAY: +`$2,840 (+1.94%)", $fontMicro, $bEmerald, $cx, $top + $h * 0.23, $sfCenter)
@@ -179,8 +197,8 @@ function Draw-PortfolioScreenContent([System.Drawing.Graphics]$g, [float]$cx, [f
         $g.DrawString($item.loHi, $fontMicro, $bSlate, $rightX, $subY, $sfRight)
     }
 
-    # Bottom Sync Key & Dots
-    $g.DrawString("KEY: V2-88VENU20", $fontMicro, $bMuted, $cx, $top + $h * 0.855, $sfCenter)
+    # Bottom Sync Key & Dots (Device-neutral GARMIN88)
+    $g.DrawString("KEY: V2-GARMIN88", $fontMicro, $bMuted, $cx, $top + $h * 0.855, $sfCenter)
     $g.FillEllipse($bCyan, $cx - 14, $top + $h * 0.925, 8, 8)
     $g.FillEllipse($bMuted, $cx + 2, $top + $h * 0.928, 6, 6)
     $g.FillEllipse($bMuted, $cx + 16, $top + $h * 0.928, 6, 6)
@@ -258,7 +276,7 @@ function Save-JpgWithMaxKb([System.Drawing.Bitmap]$bmp, [string]$filePath, [int]
 }
 
 # ==============================================================================
-# 1. SCREEN IMAGE 1: Portfolio Overview (500x500 PNG & JPG < 150 KB)
+# 1. SCREEN IMAGE 1: Portfolio Overview + FGI Header Badge (500x500 < 150 KB)
 # ==============================================================================
 $bmp1 = New-Object System.Drawing.Bitmap 500, 500
 $g1 = [System.Drawing.Graphics]::FromImage($bmp1)
@@ -274,7 +292,7 @@ Save-JpgWithMaxKb $bmp1 $screen1Jpg 140 92
 $g1.Dispose(); $bmp1.Dispose()
 
 # ==============================================================================
-# 2. SCREEN IMAGE 2: Symbol Detail & 20D Sparkline + BB (500x500 PNG & JPG < 150 KB)
+# 2. SCREEN IMAGE 2: Symbol Detail & 20D Sparkline + BB (500x500 < 150 KB)
 # ==============================================================================
 $bmp2 = New-Object System.Drawing.Bitmap 500, 500
 $g2 = [System.Drawing.Graphics]::FromImage($bmp2)
@@ -290,7 +308,7 @@ Save-JpgWithMaxKb $bmp2 $screen2Jpg 140 92
 $g2.Dispose(); $bmp2.Dispose()
 
 # ==============================================================================
-# 3. SCREEN IMAGE 3: Glance Widget + Multi-Portfolio Sync (500x500 PNG & JPG < 150 KB)
+# 3. SCREEN IMAGE 3: Glance Widget + FGI Sentiment (500x500 < 150 KB)
 # ==============================================================================
 $bmp3 = New-Object System.Drawing.Bitmap 500, 500
 $g3 = [System.Drawing.Graphics]::FromImage($bmp3)
@@ -312,30 +330,33 @@ $fSmall = New-Object System.Drawing.Font "Segoe UI", 9.5, ([System.Drawing.FontS
 $bCyan    = New-Object System.Drawing.SolidBrush (New-Color 6 182 212)
 $bWhite   = New-Object System.Drawing.SolidBrush (New-Color 255 255 255)
 $bEmerald = New-Object System.Drawing.SolidBrush (New-Color 16 185 129)
+$bAmber   = New-Object System.Drawing.SolidBrush (New-Color 251 191 36)
+$bRose    = New-Object System.Drawing.SolidBrush (New-Color 244 63 94)
+$bSky     = New-Object System.Drawing.SolidBrush (New-Color 56 189 248)
 $bSlate   = New-Object System.Drawing.SolidBrush (New-Color 148 163 184)
 $bCard    = New-Object System.Drawing.SolidBrush (New-Color 15 23 42)
 $pCyan    = New-Object System.Drawing.Pen (New-Color 6 182 212 120), 1.5
 
 $g3.DrawString("QUICK GLANCE WIDGET", $fSub, $bSlate, 250, 78, $sfCenter)
 
-# Glance Card inside Watch Screen
+# Glance Card inside Watch Screen (with S:68 G Fear & Greed Index)
 Fill-RoundedRect $g3 $bCard 92 112 316 124 16
 Draw-RoundedRect $g3 $pCyan 92 112 316 124 16
-$g3.DrawString("MOATWATCH PORTFOLIO", $fSub, $bCyan, 110, 126, $sfLeft)
+$g3.DrawString("MOATWATCH" + $DotSep + "S:68 G", $fSub, $bCyan, 110, 126, $sfLeft)
 $g3.DrawString("THB 1,482,910", $fBig, $bWhite, 110, 150, $sfLeft)
 $g3.DrawString("+18,420 (+1.25%)" + $DotSep + "TODAY", $fHead, $bEmerald, 110, 196, $sfLeft)
 
 # Feature Pills below Glance
 $pills = @(
+    "Daily Fear & Greed Index (Stock & Crypto)",
     "Auto-Swipe Portfolios (5s - 60s)",
-    "Sort by % Change (ASC / DESC)",
-    "Per-Watch Isolated Sync Key"
+    "Supports 20 Garmin Watches (AMOLED & MIP)"
 )
 for ($p = 0; $p -lt $pills.Count; $p++) {
     $py = 254 + ($p * 42)
-    Fill-RoundedRect $g3 $bCard 106 $py 288 33 10
-    $g3.FillEllipse($bEmerald, 120, $py + 12, 8, 8)
-    $g3.DrawString($pills[$p], $fSmall, $bWhite, 136, $py + 8, $sfLeft)
+    Fill-RoundedRect $g3 $bCard 102 $py 296 33 10
+    $g3.FillEllipse($bEmerald, 116, $py + 12, 8, 8)
+    $g3.DrawString($pills[$p], $fSmall, $bWhite, 130, $py + 8, $sfLeft)
 }
 $g3.DrawString("moat.readybyte.top", $fSub, $bCyan, 250, 396, $sfCenter)
 
@@ -346,7 +367,84 @@ Save-JpgWithMaxKb $bmp3 $screen3Jpg 140 92
 $g3.Dispose(); $bmp3.Dispose()
 
 # ==============================================================================
-# 4. COVER IMAGE & ICON: 500x500 (< 300 KB)
+# 4. NEW SCREEN IMAGE 4: What's New v1.2.0 — Daily Fear & Greed Index + 20 Garmin Models (500x500 < 150 KB)
+# ==============================================================================
+$bmp4 = New-Object System.Drawing.Bitmap 500, 500
+$g4 = [System.Drawing.Graphics]::FromImage($bmp4)
+Set-HighQuality $g4
+$bgGrad4 = New-Object System.Drawing.Drawing2D.LinearGradientBrush (New-Object System.Drawing.Rectangle 0, 0, 500, 500), (New-Color 6 10 18), (New-Color 14 28 44), 45.0
+$g4.FillRectangle($bgGrad4, 0, 0, 500, 500)
+Draw-WatchBezel $g4 250 250 205
+
+$fTag   = New-Object System.Drawing.Font "Consolas", 9.0, ([System.Drawing.FontStyle]::Bold)
+$fTitle4 = New-Object System.Drawing.Font "Segoe UI", 12.5, ([System.Drawing.FontStyle]::Bold)
+$fZone  = New-Object System.Drawing.Font "Consolas", 8.5, ([System.Drawing.FontStyle]::Bold)
+$fDesc4 = New-Object System.Drawing.Font "Segoe UI", 8.8, ([System.Drawing.FontStyle]::Bold)
+
+$bBadge4 = New-Object System.Drawing.SolidBrush (New-Color 16 185 129 35)
+$pBadge4 = New-Object System.Drawing.Pen (New-Color 16 185 129 150), 1.2
+Fill-RoundedRect $g4 $bBadge4 148 70 204 24 12
+Draw-RoundedRect $g4 $pBadge4 148 70 204 24 12
+$g4.DrawString("NEW IN v1.2.0 UPDATE", $fTag, $bEmerald, 250, 75, $sfCenter)
+
+$g4.DrawString("FEAR & GREED INDEX (FGI)", $fTitle4, $bWhite, 250, 102, $sfCenter)
+
+# Dual FGI Live Pill Cards (Stock Market S:68 G & Crypto C:72 G)
+Fill-RoundedRect $g4 $bCard 92 132 152 64 12
+Draw-RoundedRect $g4 $pBadge4 92 132 152 64 12
+$g4.DrawString("US STOCK (CNN)", $fZone, $bSlate, 168, 140, $sfCenter)
+$g4.DrawString("S:68 G", $fTitle4, $bEmerald, 168, 156, $sfCenter)
+$g4.DrawString("GREED ZONE", $fZone, $bEmerald, 168, 178, $sfCenter)
+
+$pCyan4 = New-Object System.Drawing.Pen (New-Color 6 182 212 150), 1.2
+Fill-RoundedRect $g4 $bCard 256 132 152 64 12
+Draw-RoundedRect $g4 $pCyan4 256 132 152 64 12
+$g4.DrawString("CRYPTO (ALT.ME)", $fZone, $bSlate, 332, 140, $sfCenter)
+$g4.DrawString("C:72 G", $fTitle4, $bCyan, 332, 156, $sfCenter)
+$g4.DrawString("GREED ZONE", $fZone, $bCyan, 332, 178, $sfCenter)
+
+# 5 Sentiment Color Scale Bar inside Watch
+$zones = @(
+    @{ lbl="EF 0-24";  br=$bRose;    x=88;  w=62 },
+    @{ lbl="F 25-44";  br=$bAmber;   x=153; w=62 },
+    @{ lbl="N 45-55";  br=$bSlate;   x=218; w=62 },
+    @{ lbl="G 56-74";  br=$bEmerald; x=283; w=62 },
+    @{ lbl="EG 75+";   br=$bCyan;    x=348; w=64 }
+)
+for ($z = 0; $z -lt $zones.Count; $z++) {
+    $zn = $zones[$z]
+    Fill-RoundedRect $g4 $bCard $zn.x 206 $zn.w 28 6
+    $g4.FillRectangle($zn.br, $zn.x + 4, 209, $zn.w - 8, 4)
+    $g4.DrawString($zn.lbl, $fZone, $zn.br, ($zn.x + $zn.w / 2), 217, $sfCenter)
+}
+
+# 20 Supported Garmin Watch Models Card
+Fill-RoundedRect $g4 $bCard 86 246 328 132 14
+Draw-RoundedRect $g4 $pCyan 86 246 328 132 14
+$g4.DrawString("20 GARMIN WATCHES SUPPORTED", $fTag, $bCyan, 250, 256, $sfCenter)
+
+$families = @(
+    "Venu 2 / 2S / 2 Plus / Venu 3 / 3S",
+    ("vivoactive 5" + $DotSep + "Forerunner 165 / 265 / 965"),
+    "fenix 8 (43/47/51mm AMOLED & Solar)",
+    ("Enduro 3 (MIP)" + $DotSep + "epix Pro (Gen 2)")
+)
+for ($m = 0; $m -lt $families.Count; $m++) {
+    $my = 278 + ($m * 23)
+    $g4.FillEllipse($bEmerald, 102, $my + 5, 6, 6)
+    $g4.DrawString($families[$m], $fDesc4, $bWhite, 114, $my, $sfLeft)
+}
+
+$g4.DrawString("Auto-Scaling 260px MIP to 454px AMOLED", $fZone, $bSky, 250, 392, $sfCenter)
+
+$screen4Png = Join-Path $OutDir "screen-4-whats-new-fgi-models.png"
+$screen4Jpg = Join-Path $OutDir "screen-4-whats-new-fgi-models.jpg"
+$bmp4.Save($screen4Png, [System.Drawing.Imaging.ImageFormat]::Png)
+Save-JpgWithMaxKb $bmp4 $screen4Jpg 140 92
+$g4.Dispose(); $bmp4.Dispose()
+
+# ==============================================================================
+# 5. COVER IMAGE & ICON: 500x500 (< 300 KB)
 # ==============================================================================
 $bmpCover = New-Object System.Drawing.Bitmap 500, 500
 $gCover = [System.Drawing.Graphics]::FromImage($bmpCover)
@@ -361,9 +459,9 @@ for ($gx = 0; $gx -lt 500; $gx += 50) {
 }
 
 $fCoverTitle = New-Object System.Drawing.Font "Segoe UI", 26, ([System.Drawing.FontStyle]::Bold)
-$fCoverSub   = New-Object System.Drawing.Font "Segoe UI", 10, ([System.Drawing.FontStyle]::Bold)
+$fCoverSub   = New-Object System.Drawing.Font "Segoe UI", 9.5, ([System.Drawing.FontStyle]::Bold)
 $gCover.DrawString("MoatWatch", $fCoverTitle, $bWhite, 250, 14, $sfCenter)
-$gCover.DrawString("STOCK PORTFOLIO" + $DotSep + "SMA20" + $DotSep + "RSI14" + $DotSep + "WEBMEMO", $fCoverSub, $bCyan, 250, 62, $sfCenter)
+$gCover.DrawString("PORTFOLIO" + $DotSep + "FGI (S/C)" + $DotSep + "SMA20/RSI14" + $DotSep + "WEBMEMO", $fCoverSub, $bCyan, 250, 62, $sfCenter)
 
 Draw-WatchBezel $gCover 250 288 170
 Draw-PortfolioScreenContent $gCover 250 288 170
@@ -375,7 +473,7 @@ Save-JpgWithMaxKb $bmpCover $coverJpg 280 94
 $gCover.Dispose(); $bmpCover.Dispose()
 
 # ==============================================================================
-# 5. HERO IMAGE (OPTIONAL): Exact 1440x720 pixels (< 2048 KB)
+# 6. HERO IMAGE (OPTIONAL): Exact 1440x720 pixels (< 2048 KB)
 # ==============================================================================
 $bmpHero = New-Object System.Drawing.Bitmap 1440, 720
 $gHero = [System.Drawing.Graphics]::FromImage($bmpHero)
@@ -395,38 +493,38 @@ for ($hy = 0; $hy -lt 720; $hy += 60) {
     $gHero.DrawLine($gridPen, 0, $hy, 1440, $hy)
 }
 
-$fHeroBadge = New-Object System.Drawing.Font "Consolas", 11.5, ([System.Drawing.FontStyle]::Bold)
+$fHeroBadge = New-Object System.Drawing.Font "Consolas", 11.0, ([System.Drawing.FontStyle]::Bold)
 $fHeroTitle = New-Object System.Drawing.Font "Segoe UI", 48, ([System.Drawing.FontStyle]::Bold)
 $fHeroLead  = New-Object System.Drawing.Font "Segoe UI", 17, ([System.Drawing.FontStyle]::Regular)
-$fHeroFeat  = New-Object System.Drawing.Font "Segoe UI", 13.5, ([System.Drawing.FontStyle]::Bold)
+$fHeroFeat  = New-Object System.Drawing.Font "Segoe UI", 13.0, ([System.Drawing.FontStyle]::Bold)
 
 $badgeBrush = New-Object System.Drawing.SolidBrush (New-Color 16 185 129 35)
 $badgePen   = New-Object System.Drawing.Pen (New-Color 16 185 129 140), 1.5
-Fill-RoundedRect $gHero $badgeBrush 68 78 440 38 19
-Draw-RoundedRect $gHero $badgePen 68 78 440 38 19
-$gHero.DrawString("GARMIN CONNECT IQ" + $DotSep + "REAL-TIME TELEMETRY", $fHeroBadge, $bEmerald, 90, 88, $sfLeft)
+Fill-RoundedRect $gHero $badgeBrush 68 74 495 38 19
+Draw-RoundedRect $gHero $badgePen 68 74 495 38 19
+$gHero.DrawString("GARMIN CONNECT IQ" + $DotSep + "20 WATCH MODELS (v1.2)", $fHeroBadge, $bEmerald, 90, 84, $sfLeft)
 
-$gHero.DrawString("MoatWatch", $fHeroTitle, $bWhite, 64, 132, $sfLeft)
-$gHero.DrawString("Multi-Portfolio Stock Tracker, Technicals", $fHeroLead, $bSlate, 70, 224, $sfLeft)
-$gHero.DrawString("& Cloud WebMemos on Your Wrist", $fHeroLead, $bCyan, 70, 258, $sfLeft)
+$gHero.DrawString("MoatWatch", $fHeroTitle, $bWhite, 64, 126, $sfLeft)
+$gHero.DrawString("Multi-Portfolio Stock Tracker, Fear & Greed Index", $fHeroLead, $bSlate, 70, 218, $sfLeft)
+$gHero.DrawString("& Cloud WebMemos on Your Garmin Watch", $fHeroLead, $bCyan, 70, 252, $sfLeft)
 
 $heroFeatures = @(
+    "NEW: Daily Fear & Greed Index (US Stock S & Crypto C)",
     "Price, % Change, SMA20 Distance & RSI14 Alerts",
     "20-Day Sparkline Chart + Bollinger Bands Overlay",
-    "Upcoming Earnings Date (e-dd/mm/yy) & Day Low/High",
-    "Hands-Free Auto-Swipe & Instant Cloud WebMemo Sync"
+    "Supports 20 Garmin Watches (Venu, Forerunner, fenix 8, epix)"
 )
 $featBoxBrush = New-Object System.Drawing.SolidBrush (New-Color 15 23 42 210)
 $featBoxPen   = New-Object System.Drawing.Pen (New-Color 56 189 248 70), 1.2
 for ($f = 0; $f -lt $heroFeatures.Count; $f++) {
-    $fy = 328 + ($f * 64)
-    Fill-RoundedRect $gHero $featBoxBrush 68 $fy 548 50 12
-    Draw-RoundedRect $gHero $featBoxPen 68 $fy 548 50 12
+    $fy = 322 + ($f * 64)
+    Fill-RoundedRect $gHero $featBoxBrush 68 $fy 556 50 12
+    Draw-RoundedRect $gHero $featBoxPen 68 $fy 556 50 12
     $gHero.FillEllipse($bEmerald, 88, $fy + 19, 12, 12)
     $gHero.DrawString($heroFeatures[$f], $fHeroFeat, $bWhite, 112, $fy + 13, $sfLeft)
 }
 
-$gHero.DrawString("Companion Web Dashboard: https://moat.readybyte.top", $fHeroBadge, $bCyan, 70, 610, $sfLeft)
+$gHero.DrawString("Companion Web Dashboard: https://moat.readybyte.top", $fHeroBadge, $bCyan, 70, 608, $sfLeft)
 
 # Right Column: Dual High-Res Watch Mockups (Non-overlapping clean placement)
 Draw-WatchBezel $gHero 830 335 175

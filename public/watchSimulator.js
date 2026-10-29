@@ -1,5 +1,5 @@
 /* ============================================================================
- * MoatWatchSimulator — Deep Module for Garmin Venu 2 (416x416 AMOLED)
+ * MoatWatchSimulator — Deep Module for Garmin Watch (AMOLED & MIP)
  * Virtual Watch Simulator, Data Normalization, Sorting & Technical Sparkline
  * ============================================================================ */
 
@@ -96,7 +96,7 @@
         score,
         code: 'EF',
         rating: 'Extreme Fear',
-        ratingTh: 'กลัวสุดขีด',
+        ratingTh: 'Extreme Fear',
         badge: `FG:${score}EF`,
         textClass: 'text-crimson',
         badgeClass: 'bg-crimson/15 text-crimson ring-1 ring-crimson/35',
@@ -108,7 +108,7 @@
         score,
         code: 'F',
         rating: 'Fear',
-        ratingTh: 'กลัว',
+        ratingTh: 'Fear',
         badge: `FG:${score}F`,
         textClass: 'text-amber',
         badgeClass: 'bg-amber/15 text-amber ring-1 ring-amber/35',
@@ -120,7 +120,7 @@
         score,
         code: 'N',
         rating: 'Neutral',
-        ratingTh: 'เป็นกลาง',
+        ratingTh: 'Neutral',
         badge: `FG:${score}N`,
         textClass: 'text-cyan',
         badgeClass: 'bg-cyan/15 text-cyan ring-1 ring-cyan/35',
@@ -132,7 +132,7 @@
         score,
         code: 'G',
         rating: 'Greed',
-        ratingTh: 'โลภ',
+        ratingTh: 'Greed',
         badge: `FG:${score}G`,
         textClass: 'text-emerald',
         badgeClass: 'bg-emerald/15 text-emerald ring-1 ring-emerald/35',
@@ -143,7 +143,7 @@
       score,
       code: 'EG',
       rating: 'Extreme Greed',
-      ratingTh: 'โลภสุดขีด',
+      ratingTh: 'Extreme Greed',
       badge: `FG:${score}EG`,
       textClass: 'text-emerald font-extrabold',
       badgeClass: 'bg-emerald/25 text-emerald ring-1 ring-emerald/50 font-extrabold',
@@ -700,7 +700,7 @@
     }
     if (el('watchDetailMemo')) {
       el('watchDetailMemo').textContent =
-        item.note || 'ไม่มีโน้ตสำหรับสินทรัพย์นี้ (คลิกปุ่มแก้ไขบนเว็บเพื่อเพิ่ม WebMemo)';
+        item.note || 'No WebMemo for this asset (Click Edit on web to add a memo)';
     }
 
     drawWatchSparkline(item, state.watchShowBb);
@@ -724,7 +724,7 @@
     }
     const specEl = el('watchHardwareSpecLabel');
     if (specEl) {
-      specEl.textContent = `${resStr} Round ${found.displayType} · รองรับ 20 รุ่นยอดนิยม (2024–2026)`;
+      specEl.textContent = `${resStr} Round ${found.displayType} · Supports 20 Popular Garmin Models (2024–2026)`;
     }
     const cmdEl = el('sideloadCommandHint');
     if (cmdEl) {
@@ -734,7 +734,7 @@
     if (screenEl) {
       screenEl.setAttribute(
         'aria-label',
-        `หน้าจอจำลองนาฬิกา Garmin ขนาด ${resStr} พิกเซล (${found.displayType})`
+        `Virtual Garmin Watch Screen (${resStr}px ${found.displayType})`
       );
       if (String(found.displayType).includes('MIP')) {
         screenEl.style.filter = 'contrast(0.95) saturate(0.82)';

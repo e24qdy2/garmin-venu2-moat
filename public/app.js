@@ -1,4 +1,4 @@
-/* Venu2Moat — Frontend Portfolio Manager, Auto-Swipe Engine, Always-On & License Companion
+/* MoatWatch — Frontend Portfolio Manager, Auto-Swipe Engine, Always-On & License Companion
  * Delegates Virtual Watch Simulator, Normalization & Formatting to window.MoatWatchSimulator
  */
 
@@ -78,8 +78,8 @@
       autoSwipeEnabled: true,
       autoSwipeSec: 5,
       alwaysOnDisplay: false,
-      sortByPctOrder: 'ASC', // 'ASC' (ติดลบ -> กำไร) | 'DESC' (กำไร -> ติดลบ) | 'NONE' (ปกติ)
-      sortByPctMetric: 'DAY', // 'DAY' (% Change วันนี้) | 'TOTAL' (% กำไรรวม)
+      sortByPctOrder: 'ASC', // 'ASC' (Loss -> Gain) | 'DESC' (Gain -> Loss) | 'NONE' (Manual)
+      sortByPctMetric: 'DAY', // 'DAY' (Today's % Change) | 'TOTAL' (Total Return %)
       deviceId: initialSyncKey === 'VENU2-88' ? 'V2-88VENU20' : initialSyncKey,
       activationKey: ''
     },
@@ -147,7 +147,7 @@
     localStorage.setItem('venu2_sync_key_isolated', '1');
 
     const res = await fetch(`/api/portfolio?key=${encodeURIComponent(cleanKey)}`);
-    if (!res.ok) throw new Error('ไม่สามารถโหลดข้อมูลพอร์ตได้');
+    if (!res.ok) throw new Error('Unable to load portfolio data');
     const raw = await res.json();
     state.profile = normalizeServerPayload(raw);
     state.watchSettings = { ...state.profile.watchSettings };
@@ -162,7 +162,7 @@
     restartAutoSwipeTimer();
   }
 
-  async function savePortfolioState(toastText = 'ซิงก์ข้อมูลและการตั้งค่าเข้า Garmin แล้ว') {
+  async function savePortfolioState(toastText = 'Portfolio and settings synced to Garmin') {
     if (!state.profile) return;
     const payload = {
       syncKey: state.syncKey,
@@ -193,7 +193,7 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    if (!res.ok) throw new Error('ไม่สามารถบันทึกพอร์ตได้');
+    if (!res.ok) throw new Error('Unable to save portfolio');
     const raw = await res.json();
     state.profile = normalizeServerPayload(raw);
     state.watchSettings = { ...state.profile.watchSettings };
@@ -205,7 +205,7 @@
   }
 
   /* ==========================================================================
-     AUTO-SWIPE ENGINE FOR GARMIN VENU 2 SIMULATOR (DEFAULT 5s / CUSTOM SEC)
+     AUTO-SWIPE ENGINE FOR GARMIN WATCH SIMULATOR (DEFAULT 5s / CUSTOM SEC)
      ========================================================================== */
   function resetAutoSwipeCountdown() {
     state.autoSwipeRemainingSec = Math.max(2, Number(state.watchSettings.autoSwipeSec || 5));
@@ -400,13 +400,13 @@
       const mShort = activeSortMetric === 'TOTAL' ? 'Total %' : 'Day %';
       if (sortModeBadge) {
         if (activeSortOrder === 'ASC') {
-          sortModeBadge.textContent = `▲ ติดลบ → กำไร (${mShort})`;
+          sortModeBadge.textContent = `▲ Loss → Gain (${mShort})`;
           sortModeBadge.className = 'text-crimson font-semibold';
         } else if (activeSortOrder === 'DESC') {
-          sortModeBadge.textContent = `▼ กำไร → ติดลบ (${mShort})`;
+          sortModeBadge.textContent = `▼ Gain → Loss (${mShort})`;
           sortModeBadge.className = 'text-emerald font-semibold';
         } else {
-          sortModeBadge.textContent = '• ลำดับปกติ (Manual)';
+          sortModeBadge.textContent = '• Manual Order';
           sortModeBadge.className = 'text-cyan font-semibold';
         }
       }
@@ -418,9 +418,9 @@
           const last = items[items.length - 1];
           const firstPct = formatSignedPct(getEffectiveSortPct(first, activeSortMetric));
           const lastPct = formatSignedPct(getEffectiveSortPct(last, activeSortMetric));
-          sortTopBottomText.textContent = `บนสุด: ${first.symbol} (${firstPct}) → ล่างสุด: ${last.symbol} (${lastPct})`;
+          sortTopBottomText.textContent = `Top: ${first.symbol} (${firstPct}) → Bottom: ${last.symbol} (${lastPct})`;
         } else {
-          sortTopBottomText.textContent = 'ยังไม่มีรายการหุ้นในพอร์ต';
+          sortTopBottomText.textContent = 'No holdings in this portfolio yet';
         }
       }
     }
@@ -447,7 +447,7 @@
           navBadge.className = 'hidden md:flex items-center gap-1.5 rounded-full bg-cyan/15 ring-1 ring-cyan/30 px-3 py-1 text-[11px] font-mono text-cyan spring-transition';
         }
         if (expiryText) {
-          expiryText.innerHTML = `เครื่อง <strong class="font-mono text-cyan">${escapeHtml(lic.deviceId)}</strong> เปิดใช้งานเวอร์ชันเต็ม (Lifetime Paid Version) เรียบร้อยแล้ว`;
+          expiryText.innerHTML = `Device <strong class="font-mono text-cyan">${escapeHtml(lic.deviceId)}</strong> is permanently unlocked (Lifetime Pro Edition)`;
         }
         if (keyInput && lic.activatedKey && !keyInput.value) {
           keyInput.value = lic.activatedKey;
@@ -462,7 +462,7 @@
           navBadge.className = 'hidden md:flex items-center gap-1.5 rounded-full bg-crimson/20 ring-1 ring-crimson/40 px-3 py-1 text-[11px] font-mono text-crimson spring-transition';
         }
         if (expiryText) {
-          expiryText.innerHTML = `<span class="text-crimson font-semibold">หมดเวลาทดลองใช้ 14 วันแล้ว</span> · กรุณาติดต่อเจ้าของแอปสำหรับ Paid Version ที่ <a href="mailto:${escapeHtml(lic.ownerEmail || 'saharat.bun@icloud.com')}" class="font-mono font-bold text-amber underline">${escapeHtml(lic.ownerEmail || 'saharat.bun@icloud.com')}</a>`;
+          expiryText.innerHTML = `<span class="text-crimson font-semibold">14-Day Free Trial Expired</span> · Contact app owner for Pro activation at <a href="mailto:${escapeHtml(lic.ownerEmail || 'saharat.bun@icloud.com')}" class="font-mono font-bold text-amber underline">${escapeHtml(lic.ownerEmail || 'saharat.bun@icloud.com')}</a>`;
         }
       } else {
         if (pill) {
@@ -474,7 +474,7 @@
           navBadge.className = 'hidden md:flex items-center gap-1.5 rounded-full bg-emerald/15 ring-1 ring-emerald/30 px-3 py-1 text-[11px] font-mono text-emerald spring-transition';
         }
         if (expiryText) {
-          expiryText.innerHTML = `สิทธิ์ทดลองใช้ฟรี 14 วัน (คงเหลือ <strong class="font-mono text-emerald">${lic.remainingDays} วัน</strong>) · เมื่อครบกำหนดติดต่อ Paid Version ที่ <strong class="font-mono text-amber">${escapeHtml(lic.ownerEmail || 'saharat.bun@icloud.com')}</strong>`;
+          expiryText.innerHTML = `14-Day Free Trial (<strong class="font-mono text-emerald">${lic.remainingDays} days remaining</strong>) · For Lifetime Pro contact <strong class="font-mono text-amber">${escapeHtml(lic.ownerEmail || 'saharat.bun@icloud.com')}</strong>`;
         }
       }
     }
@@ -530,7 +530,7 @@
     }
     const fgLabelEl = el('fearGreedLabel');
     if (fgLabelEl) {
-      fgLabelEl.textContent = `${fg.rating || fgStyle.rating} (${fg.ratingTh || fgStyle.ratingTh})`;
+      fgLabelEl.textContent = `${fg.rating || fgStyle.rating}`;
       fgLabelEl.className = `font-semibold ${fgStyle.textClass}`;
     }
     const fgPrevEl = el('fearGreedPrevText');
@@ -549,7 +549,7 @@
     const hh = String(fetchedDate.getHours()).padStart(2, '0');
     const mm = String(fetchedDate.getMinutes()).padStart(2, '0');
     const ss = String(fetchedDate.getSeconds()).padStart(2, '0');
-    el('lastUpdatedBadge').textContent = `ซิงก์ล่าสุด ${hh}:${mm}:${ss}`;
+    el('lastUpdatedBadge').textContent = `Last synced ${hh}:${mm}:${ss}`;
 
     const dayPos = (s.dayPnlBase || 0) >= 0;
     el('grandDayPnl').textContent = formatSignedMoney(s.dayPnlBase, baseCur);
@@ -564,7 +564,7 @@
     el('grandTotalPct').className = `font-mono text-xs tabular-nums mt-0.5 ${totPos ? 'text-emerald/80' : 'text-crimson/80'}`;
 
     el('activeAlertCount').textContent = String(s.activeAlertCount || 0);
-    el('portfolioCountSummary').textContent = `${s.portfolioCount || 0} พอร์ต · ${s.holdingCount || 0} สินทรัพย์`;
+    el('portfolioCountSummary').textContent = `${s.portfolioCount || 0} Portfolios · ${s.holdingCount || 0} Assets`;
   }
 
   function renderPortfolioTabs() {
@@ -609,7 +609,7 @@
     if (!active) return;
 
     el('activePortfolioTitle').textContent = active.name;
-    el('activePortfolioMeta').textContent = `ชื่อย่อบนนาฬิกา Garmin: ${active.shortName || active.name.toUpperCase()} · ${active.items.length} รายการ`;
+    el('activePortfolioMeta').textContent = `Garmin Watch Label: ${active.shortName || active.name.toUpperCase()} · ${active.items.length} Assets`;
     el('activePortValue').textContent = formatMoney(active.totalValueBase, baseCur);
 
     const dayPos = (active.dayPnlBase || 0) >= 0;
@@ -628,8 +628,8 @@
     if (!activePort || !activePort.items || activePort.items.length === 0) {
       container.innerHTML = `
         <div class="rounded-2xl bg-void/60 ring-1 ring-white/[0.06] p-8 text-center">
-          <p class="text-sm font-semibold text-alabaster mb-1">ยังไม่มีสินทรัพย์ในพอร์ตนี้</p>
-          <p class="text-xs text-slate-400 mb-4">พิมพ์ค้นหาชื่อหุ้นในช่องด้านบน หรือกดปุ่ม "เพิ่มรายการใหม่" เพื่อเริ่มสร้างพอร์ตเข้า Garmin</p>
+          <p class="text-sm font-semibold text-alabaster mb-1">No assets in this portfolio yet</p>
+          <p class="text-xs text-slate-400 mb-4">Use the quick search bar above or click "Add Asset" to start building your Garmin portfolio</p>
         </div>
       `;
       return;
@@ -643,11 +643,11 @@
 
       let alertBadgeHtml = '';
       if (item.alert?.status === 'TARGET_HIT') {
-        alertBadgeHtml = `<span class="inline-flex items-center gap-1 rounded-full bg-emerald/20 ring-1 ring-emerald/40 px-2 py-0.5 text-[10px] font-mono font-semibold text-emerald">▲ ถึงเป้าหมาย ${formatMoney(item.targetPrice, item.currency)}</span>`;
+        alertBadgeHtml = `<span class="inline-flex items-center gap-1 rounded-full bg-emerald/20 ring-1 ring-emerald/40 px-2 py-0.5 text-[10px] font-mono font-semibold text-emerald">▲ Target Hit ${formatMoney(item.targetPrice, item.currency)}</span>`;
       } else if (item.alert?.status === 'STOP_BREACH') {
-        alertBadgeHtml = `<span class="inline-flex items-center gap-1 rounded-full bg-crimson/20 ring-1 ring-crimson/40 px-2 py-0.5 text-[10px] font-mono font-semibold text-crimson">▼ หลุดแนวรับ ${formatMoney(item.stopPrice, item.currency)}</span>`;
+        alertBadgeHtml = `<span class="inline-flex items-center gap-1 rounded-full bg-crimson/20 ring-1 ring-crimson/40 px-2 py-0.5 text-[10px] font-mono font-semibold text-crimson">▼ Stop Breach ${formatMoney(item.stopPrice, item.currency)}</span>`;
       } else if (item.alert?.status === 'NEAR_TARGET') {
-        alertBadgeHtml = `<span class="inline-flex items-center gap-1 rounded-full bg-amber/20 ring-1 ring-amber/40 px-2 py-0.5 text-[10px] font-mono font-semibold text-amber">● ใกล้เป้า (${item.alert.distancePct}%)</span>`;
+        alertBadgeHtml = `<span class="inline-flex items-center gap-1 rounded-full bg-amber/20 ring-1 ring-amber/40 px-2 py-0.5 text-[10px] font-mono font-semibold text-amber">● Near Target (${item.alert.distancePct}%)</span>`;
       }
 
       return `
@@ -672,22 +672,22 @@
                 <div class="flex flex-wrap items-center gap-2">
                   <span class="font-mono font-bold text-sm sm:text-base text-alabaster">${escapeHtml(item.symbol)}</span>
                   <span class="text-xs text-slate-400">${escapeHtml(item.name)}</span>
-                  ${item.earningsBadge ? `<span class="rounded-full bg-amber/15 text-amber ring-1 ring-amber/30 px-2 py-0.5 font-mono text-[10px] font-semibold" title="วันประกาศงบถัดไป (Next Earnings Date)">${escapeHtml(item.earningsBadge)}</span>` : ''}
+                  ${item.earningsBadge ? `<span class="rounded-full bg-amber/15 text-amber ring-1 ring-amber/30 px-2 py-0.5 font-mono text-[10px] font-semibold" title="Next Earnings Date">${escapeHtml(item.earningsBadge)}</span>` : ''}
                   ${isWatchlistOnly ? '<span class="rounded-full bg-white/[0.06] px-2 py-0.5 font-mono text-[10px] text-slate-400">WATCHLIST</span>' : ''}
                   ${alertBadgeHtml}
                 </div>
                 <div class="mt-1 flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400">
                   ${
                     isWatchlistOnly
-                      ? `<span>โหมดเฝ้าดูราคา (ไม่ได้ระบุจำนวนหุ้น)</span>`
-                      : `<span>ถือครอง: <strong class="text-slate-200">${item.shares}</strong> @ ทุน ${formatMoney(item.avgCost, item.currency)}</span>
+                      ? `<span>Watchlist Mode (0 shares)</span>`
+                      : `<span>Position: <strong class="text-slate-200">${item.shares}</strong> @ Avg ${formatMoney(item.avgCost, item.currency)}</span>
                          <span>·</span>
-                         <span>สัดส่วน: <strong class="text-cyan">${item.allocationPct}%</strong></span>`
+                         <span>Weight: <strong class="text-cyan">${item.allocationPct}%</strong></span>`
                   }
                   <span>·</span>
                   <span class="text-cyan">SMA20: <strong>${formatMoney(item.sma20, item.currency)}</strong> <span class="${(item.smaPct || 0) >= 0 ? 'text-emerald' : 'text-crimson'}">(${formatSignedPct(item.smaPct, 1)})</span></span>
                   <span>·</span>
-                  <span class="${getRsiZoneStyle(item.rsi14).textClass}" title="RSI 14 วัน (${getRsiZoneStyle(item.rsi14).zoneLabel})">RSI14: <strong>${Number(item.rsi14 ?? 50).toFixed(1)}</strong></span>
+                  <span class="${getRsiZoneStyle(item.rsi14).textClass}" title="14-Day RSI (${getRsiZoneStyle(item.rsi14).zoneLabel})">RSI14: <strong>${Number(item.rsi14 ?? 50).toFixed(1)}</strong></span>
                   <span>·</span>
                   <span>Day L: <strong class="text-crimson/90">${formatMoney(item.dayLow ?? item.low, item.currency)}</strong> / H: <strong class="text-emerald/90">${formatMoney(item.dayHigh ?? item.high, item.currency)}</strong></span>
                 </div>
@@ -696,7 +696,7 @@
 
             <div class="flex items-center justify-between sm:justify-end gap-5 font-mono text-right">
               <div>
-                <div class="text-xs text-slate-400">ราคาตลาด</div>
+                <div class="text-xs text-slate-400">Market Price</div>
                 <div class="text-sm sm:text-base font-bold text-alabaster tabular-nums">
                   ${formatMoney(item.price, item.currency)}
                 </div>
@@ -706,7 +706,7 @@
               </div>
 
               <div class="min-w-[105px]">
-                <div class="text-xs text-slate-400">${isWatchlistOnly ? 'กรอบเป้า/รับ' : 'มูลค่า / กำไรรวม'}</div>
+                <div class="text-xs text-slate-400">${isWatchlistOnly ? 'Target / Stop' : 'Value / Total P&L'}</div>
                 ${
                   isWatchlistOnly
                     ? `<div class="text-xs text-emerald tabular-nums">▲ ${item.targetPrice ? formatMoney(item.targetPrice, item.currency) : '-'}</div>
@@ -722,7 +722,7 @@
                 type="button"
                 data-edit-idx="${idx}"
                 class="edit-holding-btn w-8 h-8 rounded-full bg-white/[0.05] hover:bg-white/[0.14] ring-1 ring-white/10 flex items-center justify-center text-slate-300 hover:text-alabaster spring-transition"
-                title="แก้ไขจำนวนหุ้น / ราคาทุน / โน้ต WebMemo"
+                title="Edit Shares / Avg Cost / WebMemo Note"
               >
                 <i class="ph-light ph-sliders-horizontal text-sm"></i>
               </button>
@@ -737,7 +737,7 @@
                      <span class="font-mono text-[11px] text-cyan shrink-0">WebMemo:</span>
                      <span class="text-slate-300">${escapeHtml(item.note)}</span>
                    </div>
-                   <span class="text-[10px] font-mono text-slate-500 hidden sm:inline">แตะเพื่อดูบนจอ Garmin →</span>
+                   <span class="text-[10px] font-mono text-slate-500 hidden sm:inline">Click to preview on Garmin →</span>
                  </div>`
               : ''
           }
@@ -773,7 +773,7 @@
     const delBtn = el('deleteHoldingBtn');
 
     if (existingItem) {
-      el('holdingModalTitle').textContent = `แก้ไข ${existingItem.symbol} & WebMemo`;
+      el('holdingModalTitle').textContent = `Edit ${existingItem.symbol} & WebMemo`;
       el('holdingEditOriginalSymbol').value = existingItem.symbol;
       el('holdingSymbolInput').value = existingItem.symbol;
       el('holdingNameInput').value = existingItem.name || '';
@@ -788,7 +788,7 @@
       el('holdingNoteInput').value = existingItem.note || '';
       delBtn.classList.remove('hidden');
     } else {
-      el('holdingModalTitle').textContent = 'เพิ่มสินทรัพย์ใหม่เข้าพอร์ต';
+      el('holdingModalTitle').textContent = 'Add New Asset to Portfolio';
       el('holdingEditOriginalSymbol').value = '';
       el('holdingSymbolInput').value = '';
       el('holdingNameInput').value = '';
@@ -870,12 +870,12 @@
     el('curThbBtn').addEventListener('click', async () => {
       if (!state.profile || state.profile.baseCurrency === 'THB') return;
       state.profile.baseCurrency = 'THB';
-      await savePortfolioState('เปลี่ยนสกุลเงินหลักเป็น THB (฿)');
+      await savePortfolioState('Base currency switched to THB (฿)');
     });
     el('curUsdBtn').addEventListener('click', async () => {
       if (!state.profile || state.profile.baseCurrency === 'USD') return;
       state.profile.baseCurrency = 'USD';
-      await savePortfolioState('เปลี่ยนสกุลเงินหลักเป็น USD ($)');
+      await savePortfolioState('Base currency switched to USD ($)');
     });
 
     // Refresh Quotes
@@ -894,7 +894,7 @@
           state.watchSettings = { ...state.profile.watchSettings };
           state.license = state.profile.license;
           renderAll();
-          showToast('อัปเดตราคาหุ้นและอัตราแลกเปลี่ยนล่าสุดแล้ว');
+          showToast('Market quotes and FX rates refreshed');
         }
       } finally {
         setTimeout(() => icon.classList.remove('animate-spin'), 450);
@@ -910,8 +910,8 @@
         state.watchSettings.autoSwipeEnabled = autoSwipeToggle.checked;
         await savePortfolioState(
           autoSwipeToggle.checked
-            ? `เปิด Auto-Swipe หน้าจอนาฬิกาทุก ${state.watchSettings.autoSwipeSec} วินาที`
-            : 'ปิด Auto-Swipe หน้าจอนาฬิกาแล้ว'
+            ? `Auto-Swipe enabled (every ${state.watchSettings.autoSwipeSec}s)`
+            : 'Auto-Swipe disabled'
         );
       });
     }
@@ -921,7 +921,7 @@
         const sec = Number(btn.getAttribute('data-swipe-preset')) || 5;
         state.watchSettings.autoSwipeEnabled = true;
         state.watchSettings.autoSwipeSec = sec;
-        await savePortfolioState(`ตั้งเวลา Auto-Swipe หน้าจอนาฬิกาเป็นทุก ${sec} วินาที`);
+        await savePortfolioState(`Auto-Swipe interval set to ${sec}s`);
       });
     });
 
@@ -931,7 +931,7 @@
         const sec = Math.max(2, Math.min(120, Math.round(Number(autoSwipeSecInput.value) || 5)));
         autoSwipeSecInput.value = sec;
         state.watchSettings.autoSwipeSec = sec;
-        await savePortfolioState(`ตั้งเวลา Auto-Swipe กำหนดเองเป็นทุก ${sec} วินาที`);
+        await savePortfolioState(`Custom Auto-Swipe interval set to ${sec}s`);
       });
     }
 
@@ -941,17 +941,17 @@
         state.watchSettings.alwaysOnDisplay = alwaysOnToggle.checked;
         await savePortfolioState(
           alwaysOnToggle.checked
-            ? 'เปิดโหมด Always-On Screen (หน้าจอนาฬิกาไม่ดับขณะเปิดแอป)'
-            : 'ปิดโหมด Always-On Screen (ประหยัดแบตเตอรี่ตามค่าปกติ)'
+            ? 'Always-On Display enabled (screen stays awake while viewing app)'
+            : 'Always-On Display disabled (standard battery saver)'
         );
       });
     }
 
     function getSortOrderLabel(order, metric) {
-      const mLabel = metric === 'TOTAL' ? '% กำไรรวม' : '% Change วันนี้';
-      if (order === 'ASC') return `เรียง ${mLabel}: ▲ ติดลบ → กำไร (บนลงล่าง)`;
-      if (order === 'DESC') return `เรียง ${mLabel}: ▼ กำไร → ติดลบ (บนลงล่าง)`;
-      return 'เรียงตามลำดับปกติที่เพิ่มเข้าพอร์ต (Manual)';
+      const mLabel = metric === 'TOTAL' ? 'Total P&L %' : 'Today % Change';
+      if (order === 'ASC') return `Sorted by ${mLabel}: ▲ Loss → Gain (Top-to-Bottom)`;
+      if (order === 'DESC') return `Sorted by ${mLabel}: ▼ Gain → Loss (Top-to-Bottom)`;
+      return 'Sorted by Manual Order (As Added)';
     }
 
     async function applyAndSyncSortSettings(newOrder, newMetric) {
@@ -1021,7 +1021,7 @@
         const cleanId = watchDeviceIdInput.value.trim().toUpperCase();
         if (!cleanId) return;
         state.watchSettings.deviceId = cleanId;
-        await savePortfolioState(`ซิงก์รหัสเครื่องนาฬิกา Garmin: ${cleanId}`);
+        await savePortfolioState(`Garmin Watch Device ID synced: ${cleanId}`);
       });
     }
 
@@ -1031,7 +1031,7 @@
         const devId = (el('watchDeviceIdInput')?.value || state.watchSettings.deviceId || 'V2-88VENU20').trim().toUpperCase();
         const actKey = (el('activationKeyInput')?.value || '').trim().toUpperCase();
         if (!actKey) {
-          showToast('กรุณากรอกรหัส Activate (MOAT-XXXX-XXXX-XXXX)');
+          showToast('Please enter an Activation Key (MOAT-XXXX-XXXX-XXXX)');
           return;
         }
         const res = await fetch('/api/device/activate', {
@@ -1045,7 +1045,7 @@
         });
         const data = await res.json();
         if (!res.ok || !data.ok) {
-          showToast(data.error || 'รหัส Activate ไม่ถูกต้อง กรุณาติดต่อ saharat.bun@icloud.com');
+          showToast(data.error || 'Invalid Activation Key. Please contact saharat.bun@icloud.com');
           return;
         }
         if (data.payload) {
@@ -1054,7 +1054,7 @@
           state.license = state.profile.license;
           renderAll();
         }
-        showToast(data.message || `Activate เครื่อง ${devId} สำเร็จ!`);
+        showToast(data.message || `Device ${devId} activated successfully!`);
       });
     }
 
@@ -1078,9 +1078,9 @@
           purchaseBtn.className = 'req-type-btn rounded-xl bg-white/[0.04] ring-1 ring-white/10 px-3 py-2.5 text-xs font-semibold text-slate-300 flex items-center justify-center gap-1.5 spring-transition';
         }
         if (extendDaysWrap) extendDaysWrap.classList.remove('opacity-40');
-        if (titleEl) titleEl.textContent = 'ขอต่ออายุสิทธิ์ทดลองใช้ฟรี (Request Trial Key Extend)';
+        if (titleEl) titleEl.textContent = 'Request Free Trial Extension';
         if (msgInput && !msgInput.value.trim()) {
-          msgInput.placeholder = 'ระบุเหตุผลหรือความประสงค์ในการขอต่ออายุทดลองใช้ (Trial Key Extend) เพื่อให้ผู้ดูแลระบบพิจารณาอนุมัติ...';
+          msgInput.placeholder = 'Please share your reason for requesting a free trial extension for Admin review...';
         }
       } else {
         if (purchaseBtn) {
@@ -1090,9 +1090,9 @@
           trialBtn.className = 'req-type-btn rounded-xl bg-white/[0.04] ring-1 ring-white/10 px-3 py-2.5 text-xs font-semibold text-slate-300 flex items-center justify-center gap-1.5 spring-transition';
         }
         if (extendDaysWrap) extendDaysWrap.classList.add('opacity-40');
-        if (titleEl) titleEl.textContent = 'แบบฟอร์มขอซื้อ License ถาวร (Purchase Request Form)';
+        if (titleEl) titleEl.textContent = 'Purchase Lifetime Pro License';
         if (msgInput && !msgInput.value.trim()) {
-          msgInput.placeholder = 'ระบุความประสงค์ต้องการซื้อรหัส Activate ถาวร (PRO Lifetime) และช่วงเวลาที่สะดวกให้ติดต่อกลับ...';
+          msgInput.placeholder = 'Let us know you would like to purchase a Lifetime Pro Activation Key and your preferred contact time...';
         }
       }
     }
@@ -1141,7 +1141,7 @@
 
       if (!contactName || !contactEmail || !contactPhone) {
         if (fb) {
-          fb.textContent = 'กรุณากรอกชื่อผู้ติดต่อ, อีเมล และเบอร์โทร/LINE ID ให้ครบถ้วน';
+          fb.textContent = 'Please complete your Contact Name, Email, and Phone / LINE ID.';
           fb.className = 'rounded-xl bg-crimson/15 ring-1 ring-crimson/35 px-3.5 py-2.5 text-xs text-crimson font-medium';
         }
         return;
@@ -1165,7 +1165,7 @@
         });
         const data = await res.json();
         if (!res.ok || !data.ok) {
-          const errMsg = data.error || 'ไม่สามารถส่งคำขอได้ กรุณาลองอีกครั้ง';
+          const errMsg = data.error || 'Unable to submit request. Please try again.';
           if (fb) {
             fb.textContent = errMsg;
             fb.className = 'rounded-xl bg-crimson/15 ring-1 ring-crimson/35 px-3.5 py-2.5 text-xs text-crimson font-medium';
@@ -1174,7 +1174,7 @@
           return;
         }
 
-        const successMsg = data.message || `ส่งคำขอ (${data.request?.id || 'REQ'}) สำเร็จ และแจ้งเตือนไปที่ e24qdy2@gmail.com แล้ว`;
+        const successMsg = data.message || `Request (${data.request?.id || 'REQ'}) submitted and notified to e24qdy2@gmail.com`;
         if (fb) {
           fb.innerHTML = `✓ <strong>${escapeHtml(successMsg)}</strong><br/><span class="text-[11px] font-mono">Request ID: ${escapeHtml(data.request?.id || '')} · Email Delivery: ${escapeHtml(data.emailDelivery?.deliveryMethod || 'QUEUED')}</span>`;
           fb.className = 'rounded-xl bg-emerald/15 ring-1 ring-emerald/35 px-3.5 py-2.5 text-xs text-emerald font-medium';
@@ -1187,7 +1187,7 @@
 
     // Portfolio Management (Create / Rename / Delete)
     el('addPortfolioBtn').addEventListener('click', async () => {
-      const name = window.prompt('ตั้งชื่อพอร์ตใหม่ (เช่น Global ETF, หุ้นปันผล, เก็งกำไร):', 'New Portfolio');
+      const name = window.prompt('Enter new portfolio name (e.g. Global ETF, Dividend Moat, Crypto):', 'New Portfolio');
       if (!name || !name.trim()) return;
       const cleanName = name.trim();
       const shortName = cleanName.slice(0, 10).toUpperCase();
@@ -1201,31 +1201,31 @@
       state.activePortfolioIndex = state.profile.portfolios.length - 1;
       state.activeSymbolIndex = 0;
       state.watchScrollOffset = 0;
-      await savePortfolioState(`สร้างพอร์ต "${cleanName}" เรียบร้อย`);
+      await savePortfolioState(`Created portfolio "${cleanName}"`);
     });
 
     el('renamePortfolioBtn').addEventListener('click', async () => {
       const active = getActivePortfolio();
       if (!active) return;
-      const newName = window.prompt('แก้ไขชื่อพอร์ต:', active.name);
+      const newName = window.prompt('Rename portfolio:', active.name);
       if (!newName || !newName.trim()) return;
       active.name = newName.trim();
       active.shortName = active.name.slice(0, 10).toUpperCase();
-      await savePortfolioState('อัปเดตชื่อพอร์ตเรียบร้อย');
+      await savePortfolioState('Portfolio name updated');
     });
 
     el('deletePortfolioBtn').addEventListener('click', async () => {
       if ((state.profile?.portfolios?.length || 0) <= 1) {
-        showToast('ต้องมีอย่างน้อย 1 พอร์ตในระบบ');
+        showToast('At least 1 portfolio must remain');
         return;
       }
       const active = getActivePortfolio();
-      if (!window.confirm(`ยืนยันการลบพอร์ต "${active.name}" ?`)) return;
+      if (!window.confirm(`Delete portfolio "${active.name}"?`)) return;
       state.profile.portfolios.splice(state.activePortfolioIndex, 1);
       state.activePortfolioIndex = 0;
       state.activeSymbolIndex = 0;
       state.watchScrollOffset = 0;
-      await savePortfolioState(`ลบพอร์ต "${active.name}" แล้ว`);
+      await savePortfolioState(`Deleted portfolio "${active.name}"`);
     });
 
     // Holding Modal Events
@@ -1272,7 +1272,7 @@
       }
 
       closeHoldingModal();
-      await savePortfolioState(`บันทึก ${sym} เข้าพอร์ตและซิงก์เข้า Garmin แล้ว`);
+      await savePortfolioState(`Saved ${sym} and synced to Garmin`);
     });
 
     el('deleteHoldingBtn').addEventListener('click', async () => {
@@ -1282,7 +1282,7 @@
       active.items = active.items.filter(x => x.symbol.toUpperCase() !== origSym);
       state.activeSymbolIndex = 0;
       closeHoldingModal();
-      await savePortfolioState(`ลบ ${origSym} ออกจากพอร์ตแล้ว`);
+      await savePortfolioState(`Removed ${origSym} from portfolio`);
     });
 
     // Live Autocomplete Search
@@ -1297,7 +1297,7 @@
         return;
       }
       state.searchTimer = setTimeout(async () => {
-        el('searchStatusBadge').textContent = 'กำลังค้นหา...';
+        el('searchStatusBadge').textContent = 'Searching...';
         const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
         const data = await res.json();
         el('searchStatusBadge').textContent = 'Yahoo Live';
@@ -1305,8 +1305,8 @@
         if (results.length === 0) {
           dropdown.innerHTML = `
             <button type="button" data-custom-sym="${escapeHtml(q.toUpperCase())}" class="w-full px-4 py-3 text-left text-xs font-mono text-alabaster hover:bg-white/[0.06] flex items-center justify-between">
-              <span>เพิ่มรหัสหุ้น <strong class="text-emerald">${escapeHtml(q.toUpperCase())}</strong> โดยตรง</span>
-              <span class="text-cyan">+ เพิ่มลงพอร์ต</span>
+              <span>Add ticker <strong class="text-emerald">${escapeHtml(q.toUpperCase())}</strong> directly</span>
+              <span class="text-cyan">+ Add to Portfolio</span>
             </button>
           `;
         } else {
@@ -1324,7 +1324,7 @@
               </div>
               <div class="flex items-center gap-2 font-mono text-[11px]">
                 <span class="text-slate-400">${escapeHtml(r.exchange)}</span>
-                <span class="rounded-full bg-emerald/15 text-emerald px-2 py-0.5">+ เลือก</span>
+                <span class="rounded-full bg-emerald/15 text-emerald px-2 py-0.5">+ Select</span>
               </div>
             </button>
           `).join('');
@@ -1361,7 +1361,7 @@
       }
     });
 
-    // Garmin Venu 2 Interactive Hardware Controls
+    // Garmin Watch Interactive Hardware Controls
     document.querySelectorAll('.watch-mode-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         state.watchMode = btn.getAttribute('data-watch-mode');
@@ -1455,7 +1455,7 @@
       if (!newKey) return;
       await loadPortfolio(newKey);
       await openSyncPayloadModal();
-      showToast(`สลับไปยัง Sync Key: ${newKey}`);
+      showToast(`Switched to Sync Key: ${newKey}`);
     });
 
     el('createNewSyncKeyBtn')?.addEventListener('click', async () => {
@@ -1463,13 +1463,13 @@
       el('syncKeyInput').value = freshKey;
       await loadPortfolio(freshKey);
       await openSyncPayloadModal();
-      showToast(`สร้างพอร์ตส่วนตัวใหม่สำเร็จ: ${freshKey}`);
+      showToast(`Created new private Sync Key: ${freshKey}`);
     });
 
     el('copyProfileUrlBtn')?.addEventListener('click', async () => {
       const url = `${window.location.origin}/?key=${encodeURIComponent(state.syncKey)}`;
       await navigator.clipboard.writeText(url);
-      showToast(`คัดลอกลิงก์พอร์ตส่วนตัว (${state.syncKey}) เรียบร้อยแล้ว`);
+      showToast(`Copied personal portfolio link (${state.syncKey})`);
     });
 
     // Copy Watch API URL
@@ -1477,7 +1477,7 @@
       const didParam = state.watchSettings.deviceId ? `&did=${encodeURIComponent(state.watchSettings.deviceId)}` : '';
       const url = `${window.location.origin}/api/watch?key=${state.syncKey}${didParam}`;
       await navigator.clipboard.writeText(url);
-      showToast('คัดลอก Watch API URL เรียบร้อยแล้ว');
+      showToast('Copied Watch API URL to clipboard');
     });
 
     // Export JSON / CSV & Import JSON
@@ -1488,7 +1488,7 @@
       a.href = URL.createObjectURL(blob);
       a.download = `garminmoat-${state.syncKey.toLowerCase()}.json`;
       a.click();
-      showToast('ดาวน์โหลดไฟล์ JSON สำเร็จ');
+      showToast('Downloaded JSON backup');
     });
 
     el('exportCsvBtn').addEventListener('click', () => {
@@ -1516,7 +1516,7 @@
       a.href = URL.createObjectURL(blob);
       a.download = `garminmoat-${state.syncKey.toLowerCase()}.csv`;
       a.click();
-      showToast('ส่งออกตาราง CSV สำเร็จ');
+      showToast('Exported CSV holdings table');
     });
 
     el('importJsonInput').addEventListener('change', async e => {
@@ -1527,13 +1527,13 @@
         const parsed = JSON.parse(text);
         const importedPortfolios = parsed.portfolios || parsed.web?.portfolios;
         if (!Array.isArray(importedPortfolios)) {
-          throw new Error('โครงสร้างไฟล์ JSON ไม่ถูกต้อง');
+          throw new Error('Invalid JSON portfolio file structure');
         }
         state.profile = normalizeServerPayload(parsed);
         toggleIslandMenu(false);
-        await savePortfolioState('นำเข้าพอร์ตจากไฟล์ JSON สำเร็จ');
+        await savePortfolioState('Imported portfolio from JSON file');
       } catch (err) {
-        showToast(err.message || 'ไม่สามารถอ่านไฟล์ JSON ได้');
+        showToast(err.message || 'Unable to parse JSON file');
       }
     });
 
@@ -1546,9 +1546,9 @@
         applyWatchModelPreview();
         const found = state.compatibleDevices.find(d => d.id === state.selectedWatchModel);
         if (found) {
-          showToast(`สลับจำลองหน้าจอเป็น ${found.name} (${formatDeviceRes(found.resolution)} ${found.displayType})`);
+          showToast(`Switched preview to ${found.name} (${formatDeviceRes(found.resolution)} ${found.displayType})`);
         } else {
-          showToast('สลับจำลองหน้าจอเป็น Garmin Watch อัตโนมัติทุกรุ่น');
+          showToast('Switched preview to Garmin Watch (Auto-Scale All Models)');
         }
       });
     }
@@ -1563,7 +1563,7 @@
         state.compatibleDevices = data.devices;
         const selectEl = el('watchModelSelect');
         if (selectEl) {
-          const defaultOpt = `<option value="garmin" ${state.selectedWatchModel === 'garmin' ? 'selected' : ''}>Garmin Watch · อัตโนมัติทุกรุ่น (20 รุ่น 2024–2026)</option>`;
+          const defaultOpt = `<option value="garmin" ${state.selectedWatchModel === 'garmin' ? 'selected' : ''}>Garmin Watch · Auto-Scale All Models (20 Models 2024–2026)</option>`;
           selectEl.innerHTML =
             defaultOpt +
             data.devices

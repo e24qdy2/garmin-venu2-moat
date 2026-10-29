@@ -103,7 +103,7 @@ const INITIAL_LICENSES_STORE = {
       status: "APPROVED",
       deviceId: "V2-88VENU20",
       syncKey: "VENU2-88",
-      contactName: "คุณสหรัฐ (Primary Watch Owner)",
+      contactName: "Saharat (Primary Watch Owner)",
       contactEmail: "saharat.bun@icloud.com",
       contactPhone: "LINE: @moatwatch",
       requestedExtendDays: 0,

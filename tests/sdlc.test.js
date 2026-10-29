@@ -308,10 +308,10 @@ async function runSdlcSuite() {
     deviceId: testDeviceId,
     syncKey: "VENU2-88",
     requestedExtendDays: 14,
-    contactName: "คุณสมชาย ทดสอบระบบ",
+    contactName: "John Doe (System Test)",
     contactEmail: "investor@readybyte.top",
     contactPhone: "081-999-8888",
-    message: "ขอต่ออายุทดลองใช้บนนาฬิกา Garmin เพิ่มเติม 14 วันครับ"
+    message: "Requesting +14 days Free Trial extension for my Garmin watch"
   });
   assert.strictEqual(trialExtendReqRes.status, 200);
   assert.strictEqual(trialExtendReqRes.json.ok, true);
@@ -321,10 +321,10 @@ async function runSdlcSuite() {
     requestType: "PURCHASE_LICENSE",
     deviceId: testDeviceId,
     syncKey: "VENU2-88",
-    contactName: "คุณสมชาย ทดสอบระบบ",
+    contactName: "John Doe (System Test)",
     contactEmail: "investor@readybyte.top",
     contactPhone: "LINE: @investor_moat",
-    message: "ต้องการซื้อ License ถาวรสำหรับ Garmin กรุณาติดต่อกลับครับ"
+    message: "Requesting a lifetime PRO License for my Garmin watch"
   });
   assert.strictEqual(purchaseReqRes.status, 200);
   assert.strictEqual(purchaseReqRes.json.ok, true);
@@ -775,8 +775,70 @@ async function runSdlcSuite() {
   );
   console.log("[PASS] 16. Daily US Market Fear & Greed Index (FG:xxG / FG:xxEF) across Backend, Web & Watch verified");
 
+  // 17. Admin Non-Permanent Session (15m Idle / 30m Max TTL) & Individual / Multi-Select Key Removal
+  assert.strictEqual(goodLoginRes.json.expiresInSec, 1800, "Admin session max TTL must be 1800s (30m) instead of permanent/12h");
+  assert.strictEqual(goodLoginRes.json.idleTimeoutSec, 900, "Admin idle auto-logout timeout must be 900s (15m)");
+  assert.ok(
+    goodLoginRes.headers["set-cookie"].some((c) => c.includes("Max-Age=1800")),
+    "Admin session cookie must use short Max-Age=1800 (30m)"
+  );
+
+  const sessionCheckRes = await httpRequest("GET", "/api/admin/session", null, {
+    "X-Admin-Token": adminToken
+  });
+  assert.strictEqual(sessionCheckRes.status, 200);
+  assert.strictEqual(sessionCheckRes.json.authenticated, true);
+  assert.ok(sessionCheckRes.json.remainingSec > 0 && sessionCheckRes.json.remainingSec <= 1800);
+  assert.strictEqual(sessionCheckRes.json.idleTimeoutSec, 900);
+
+  // Create two temporary devices with keys, then test individual REMOVE_KEY and multi-select batch DELETE
+  const tempDevA = "V2-RMKEY01";
+  const tempDevB = "V2-RMKEY02";
+  await httpRequest(
+    "POST",
+    "/api/admin/devices/generate-key",
+    { deviceId: tempDevA, label: "Temp Remove Key A", autoActivate: true },
+    { "X-Admin-Token": adminToken }
+  );
+  await httpRequest(
+    "POST",
+    "/api/admin/devices/generate-key",
+    { deviceId: tempDevB, label: "Temp Remove Key B", autoActivate: true },
+    { "X-Admin-Token": adminToken }
+  );
+
+  // Individual key removal (REMOVE_KEY) on tempDevA
+  const singleRemoveKeyRes = await httpRequest(
+    "POST",
+    "/api/admin/devices/update",
+    { deviceId: tempDevA, action: "REMOVE_KEY" },
+    { "X-Admin-Token": adminToken }
+  );
+  assert.strictEqual(singleRemoveKeyRes.status, 200);
+  assert.strictEqual(singleRemoveKeyRes.json.ok, true);
+  assert.strictEqual(singleRemoveKeyRes.json.removedKey, true);
+  assert.strictEqual(singleRemoveKeyRes.json.device.activatedKey, "");
+  assert.strictEqual(singleRemoveKeyRes.json.device.issuedKey, "");
+  assert.notStrictEqual(singleRemoveKeyRes.json.device.status, "ACTIVE");
+
+  // Multi-select batch deletion (DELETE) on [tempDevA, tempDevB]
+  const batchDeleteRes = await httpRequest(
+    "POST",
+    "/api/admin/devices/update",
+    { deviceIds: [tempDevA, tempDevB], action: "DELETE" },
+    { "X-Admin-Token": adminToken }
+  );
+  assert.strictEqual(batchDeleteRes.status, 200);
+  assert.strictEqual(batchDeleteRes.json.ok, true);
+  assert.strictEqual(batchDeleteRes.json.batch, true);
+  assert.strictEqual(batchDeleteRes.json.count, 2);
+  const remainingDeviceIds = batchDeleteRes.json.devices.map((d) => d.deviceId);
+  assert.ok(!remainingDeviceIds.includes(tempDevA), "Deleted device A must be removed from device list");
+  assert.ok(!remainingDeviceIds.includes(tempDevB), "Deleted device B must be removed from device list");
+  console.log("[PASS] 17. Admin Non-Permanent Session (15m Idle / 30m Max TTL) & Individual/Multi-Select Key Removal verified");
+
   console.log("\n==================================================================");
-  console.log("  ALL 16 SDLC + MULTI-USER + FEAR & GREED SUITES PASSED (100%)");
+  console.log("  ALL 17 SDLC + MULTI-USER + ADMIN SECURITY SUITES PASSED (100%)");
   console.log("==================================================================");
   if (ephemeralServer) {
     ephemeralServer.close();

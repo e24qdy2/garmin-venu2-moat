@@ -2,16 +2,16 @@
   "VENU2-88": {
     "syncKey": "VENU2-88",
     "baseCurrency": "THB",
-    "updatedAt": "2026-10-29T03:14:24.137Z",
+    "updatedAt": "2026-10-29T14:20:34.877Z",
     "watchSettings": {
       "autoSwipeEnabled": true,
       "autoSwipeSec": 5,
       "alwaysOnDisplay": true,
       "sortByPctOrder": "ASC",
       "sortByPctMetric": "DAY",
-      "deviceId": "V2-88VENU20",
+      "deviceId": "V2-RMKEY02",
       "watchModel": "venu2",
-      "activationKey": "MOAT-K8Y6-X9GU-R6WK"
+      "activationKey": ""
     },
     "portfolios": [
       {
@@ -458,6 +458,152 @@
             "stopPrice": 0,
             "alertDir": "ABOVE",
             "memo": ""
+          }
+        ]
+      }
+    ]
+  },
+  "V2-BYYQS7": {
+    "syncKey": "V2-BYYQS7",
+    "baseCurrency": "THB",
+    "updatedAt": "2026-10-29T04:14:34.895Z",
+    "watchSettings": {
+      "autoSwipeEnabled": true,
+      "autoSwipeSec": 5,
+      "alwaysOnDisplay": false,
+      "sortByPctOrder": "ASC",
+      "sortByPctMetric": "DAY",
+      "deviceId": "V2-BYYQS7",
+      "watchModel": "venu2",
+      "activationKey": ""
+    },
+    "portfolios": [
+      {
+        "id": "us-moat",
+        "name": "US Wide Moat",
+        "currency": "USD",
+        "holdings": [
+          {
+            "symbol": "NVDA",
+            "name": "NVIDIA Corp",
+            "shares": 40,
+            "avgCost": 92.5,
+            "targetPrice": 155,
+            "alertDir": "ABOVE",
+            "memo": "Blackwell DC ramp | Hold core"
+          },
+          {
+            "symbol": "MSFT",
+            "name": "Microsoft",
+            "shares": 25,
+            "avgCost": 380,
+            "targetPrice": 465,
+            "alertDir": "ABOVE",
+            "memo": "Azure AI moat | Accumulate < 410"
+          },
+          {
+            "symbol": "AAPL",
+            "name": "Apple Inc",
+            "shares": 55,
+            "avgCost": 188,
+            "targetPrice": 245,
+            "alertDir": "ABOVE",
+            "memo": "Ecosystem cashflow | Trim @ 250"
+          },
+          {
+            "symbol": "GOOGL",
+            "name": "Alphabet Inc",
+            "shares": 60,
+            "avgCost": 152,
+            "targetPrice": 205,
+            "alertDir": "ABOVE",
+            "memo": "Search + Cloud margin expansion"
+          },
+          {
+            "symbol": "BRK-B",
+            "name": "Berkshire B",
+            "shares": 20,
+            "avgCost": 405,
+            "targetPrice": 480,
+            "alertDir": "ABOVE",
+            "memo": "Fortress T-Bill cash reserve"
+          }
+        ]
+      },
+      {
+        "id": "thai-set",
+        "name": "Thai SET Dividend",
+        "currency": "THB",
+        "holdings": [
+          {
+            "symbol": "ADVANC.BK",
+            "name": "AIS Telecom",
+            "shares": 1500,
+            "avgCost": 214,
+            "targetPrice": 295,
+            "alertDir": "ABOVE",
+            "memo": "Yield 4.2% | Defensive cashcow"
+          },
+          {
+            "symbol": "DELTA.BK",
+            "name": "Delta Elec",
+            "shares": 1000,
+            "avgCost": 84.5,
+            "targetPrice": 140,
+            "alertDir": "ABOVE",
+            "memo": "AI server power supply"
+          },
+          {
+            "symbol": "PTTEP.BK",
+            "name": "PTT Explor",
+            "shares": 2000,
+            "avgCost": 148,
+            "targetPrice": 130,
+            "alertDir": "BELOW",
+            "memo": "Div > 6% | Hedge oil shock"
+          },
+          {
+            "symbol": "BDMS.BK",
+            "name": "Bangkok Dusit",
+            "shares": 4500,
+            "avgCost": 26.25,
+            "targetPrice": 31,
+            "alertDir": "ABOVE",
+            "memo": "Medical tourism moat"
+          }
+        ]
+      },
+      {
+        "id": "global-etf",
+        "name": "Global & Crypto",
+        "currency": "USD",
+        "holdings": [
+          {
+            "symbol": "BTC-USD",
+            "name": "Bitcoin",
+            "shares": 0.35,
+            "avgCost": 58000,
+            "targetPrice": 100000,
+            "alertDir": "ABOVE",
+            "memo": "Cold storage digital gold"
+          },
+          {
+            "symbol": "SCHD",
+            "name": "US Div ETF",
+            "shares": 300,
+            "avgCost": 26.8,
+            "targetPrice": 31,
+            "alertDir": "ABOVE",
+            "memo": "DRIP dividend compounder"
+          },
+          {
+            "symbol": "QQQ",
+            "name": "Invesco QQQ",
+            "shares": 18,
+            "avgCost": 435,
+            "targetPrice": 540,
+            "alertDir": "ABOVE",
+            "memo": "Nasdaq-100 core index"
           }
         ]
       }

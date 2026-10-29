@@ -1,9 +1,12 @@
-/* Venu2Moat Admin Portal — Admin Password Login, Change Password, Customer Requests Approval Queue, SMTP / System Mail (e24qdy2@gmail.com) & Per-Device Activation Key Manager */
+/* MoatWatch Admin Portal — Non-Persistent Auto-Expiring Admin Session, Multi-Select & Individual Key Removal, Customer Requests Approval Queue & Per-Device Activation Key Manager */
 
 (() => {
   try {
     localStorage.removeItem("venu2_admin_token");
   } catch (_) {}
+
+  const DEFAULT_IDLE_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes inactivity auto-logout
+  const DEFAULT_SESSION_TTL_MS = 30 * 60 * 1000; // 30 minutes max session lifetime
 
   const state = {
     token: sessionStorage.getItem("venu2_admin_token") || "",
@@ -15,14 +18,112 @@
     isDefaultPassword: false,
     summary: null,
     devices: [],
+    selectedDeviceIds: new Set(),
     customerRequests: [],
     emailLogs: [],
     smtpConfig: null,
     auditLogs: [],
-    lastGeneratedKey: ""
+    lastGeneratedKey: "",
+    lastActivityAt: Number(sessionStorage.getItem("venu2_admin_last_active")) || Date.now(),
+    sessionExpiresAt: Number(sessionStorage.getItem("venu2_admin_expires_at")) || 0,
+    idleTimeoutMs: DEFAULT_IDLE_TIMEOUT_MS,
+    watchdogTimer: null
   };
 
   const el = (id) => document.getElementById(id);
+
+  function formatCountdown(sec) {
+    const safeSec = Math.max(0, Math.floor(Number(sec) || 0));
+    const mm = String(Math.floor(safeSec / 60)).padStart(2, "0");
+    const ss = String(safeSec % 60).padStart(2, "0");
+    return `${mm}:${ss}`;
+  }
+
+  function recordAdminActivity() {
+    if (!state.authenticated) return;
+    const now = Date.now();
+    if (now - state.lastActivityAt < 1000) return;
+    state.lastActivityAt = now;
+    try {
+      sessionStorage.setItem("venu2_admin_last_active", String(now));
+    } catch (_) {}
+  }
+
+  function stopSessionWatchdog() {
+    if (state.watchdogTimer) {
+      clearInterval(state.watchdogTimer);
+      state.watchdogTimer = null;
+    }
+    const timerBadge = el("adminSessionTimerBadge");
+    if (timerBadge) {
+      timerBadge.classList.add("hidden");
+      timerBadge.classList.remove("inline-flex");
+    }
+  }
+
+  async function performAutoLogout(reasonMsg) {
+    stopSessionWatchdog();
+    try {
+      await fetch("/api/admin/auth/logout", {
+        method: "POST",
+        headers: authHeaders()
+      });
+    } catch (_) {}
+    state.token = "";
+    state.authenticated = false;
+    state.selectedDeviceIds.clear();
+    try {
+      sessionStorage.removeItem("venu2_admin_token");
+      sessionStorage.removeItem("venu2_admin_last_active");
+      sessionStorage.removeItem("venu2_admin_expires_at");
+    } catch (_) {}
+    renderAuthView();
+    if (reasonMsg) {
+      const errBox = el("loginErrorBox");
+      if (errBox) {
+        errBox.textContent = reasonMsg;
+        errBox.classList.remove("hidden");
+      }
+      showToast(reasonMsg);
+    }
+  }
+
+  function startSessionWatchdog() {
+    stopSessionWatchdog();
+    if (!state.authenticated) return;
+
+    const timerBadge = el("adminSessionTimerBadge");
+    const timerText = el("adminSessionTimerText");
+    if (timerBadge) {
+      timerBadge.classList.remove("hidden");
+      timerBadge.classList.add("inline-flex");
+    }
+
+    const tick = () => {
+      if (!state.authenticated) {
+        stopSessionWatchdog();
+        return;
+      }
+      const now = Date.now();
+      const idleRemSec = Math.max(0, Math.ceil((state.lastActivityAt + state.idleTimeoutMs - now) / 1000));
+      const sessRemSec = state.sessionExpiresAt
+        ? Math.max(0, Math.ceil((state.sessionExpiresAt - now) / 1000))
+        : idleRemSec;
+      const effectiveRemSec = Math.min(idleRemSec, sessRemSec);
+
+      if (timerText) {
+        timerText.textContent = `Auto-Logout: ${formatCountdown(effectiveRemSec)}`;
+      }
+      if (effectiveRemSec <= 0) {
+        performAutoLogout(
+          "Session expired automatically due to inactivity or max session lifetime to prevent forgotten logins. Please sign in again."
+        );
+      }
+    };
+
+    tick();
+    state.watchdogTimer = setInterval(tick, 1000);
+  }
 
   function showToast(msg) {
     const banner = el("adminToastBanner");
@@ -55,19 +156,47 @@
   }
 
   async function checkSessionAndLoad() {
+    // Prevent permanent cookie auto-login if tab session token is absent or already idle-expired
+    const now = Date.now();
+    const hasTabToken = Boolean(state.token);
+    const isIdleExpired = hasTabToken && now - state.lastActivityAt > state.idleTimeoutMs;
+    if (!hasTabToken || isIdleExpired) {
+      try {
+        await fetch("/api/admin/auth/logout", { method: "POST" });
+      } catch (_) {}
+      state.token = "";
+      state.authenticated = false;
+      try {
+        sessionStorage.removeItem("venu2_admin_token");
+        sessionStorage.removeItem("venu2_admin_last_active");
+        sessionStorage.removeItem("venu2_admin_expires_at");
+      } catch (_) {}
+    }
+
     const res = await fetch("/api/admin/session", { headers: authHeaders() });
     const data = await res.json();
     state.isDefaultPassword = Boolean(data.isDefaultPassword);
     state.passwordUpdatedAt = data.passwordUpdatedAt || "";
     if (data.notifyEmail) state.notifyEmail = data.notifyEmail;
+    if (data.idleTimeoutSec) {
+      state.idleTimeoutMs = Math.max(60 * 1000, Number(data.idleTimeoutSec) * 1000);
+    }
 
-    if (data.authenticated) {
+    if (data.authenticated && (hasTabToken || data.authMethod === "CLOUDFLARE_ZERO_TRUST")) {
       state.authenticated = true;
       state.adminEmail = data.email || "saharat.bun@icloud.com";
       state.authMethod = data.authMethod || "ADMIN_PASSWORD";
+      state.sessionExpiresAt = Number(data.expiresAt) || Date.now() + DEFAULT_SESSION_TTL_MS;
+      state.lastActivityAt = Date.now();
+      try {
+        sessionStorage.setItem("venu2_admin_last_active", String(state.lastActivityAt));
+        sessionStorage.setItem("venu2_admin_expires_at", String(state.sessionExpiresAt));
+      } catch (_) {}
+      startSessionWatchdog();
       await Promise.all([fetchDevicesData(), fetchEmailConfig()]);
     } else {
       state.authenticated = false;
+      stopSessionWatchdog();
     }
     renderAuthView();
   }
@@ -118,8 +247,8 @@
     if (el("smtpPassInput")) {
       el("smtpPassInput").value = "";
       el("smtpPassInput").placeholder = cfg.hasPassword
-        ? `ตั้งรหัสผ่านไว้แล้ว (${cfg.smtpPassMasked}) — เว้นว่างหากไม่ต้องการเปลี่ยน`
-        : "กรอก App Password 16 หลัก (ถ้าใช้ SMTP Auth)";
+        ? `Password saved (${cfg.smtpPassMasked}) — leave blank to keep current`
+        : "Enter 16-digit App Password (if using SMTP Auth)";
     }
   }
 
@@ -156,7 +285,7 @@
     }
 
     if (!requests.length) {
-      reqListEl.innerHTML = `<div class="rounded-2xl bg-void/60 p-6 text-center text-xs text-slate-400">ยังไม่มีคำขอต่ออายุทดลองใช้ (Trial Extend) หรือคำขอซื้อ License จากลูกค้า</div>`;
+      reqListEl.innerHTML = `<div class="rounded-2xl bg-void/60 p-6 text-center text-xs text-slate-400">No customer trial extension or license purchase requests yet.</div>`;
       return;
     }
 
@@ -190,13 +319,13 @@
                 <span class="font-mono text-[11px] text-slate-400">Sync: ${escapeHtml(req.syncKey)}</span>
               </div>
               <div class="text-[11px] font-mono text-slate-400">
-                ${new Date(req.createdAt).toLocaleString("th-TH")}
+                ${new Date(req.createdAt).toLocaleString("en-GB")}
               </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs bg-core/70 rounded-xl p-3 ring-1 ring-white/[0.05]">
               <div>
-                <span class="text-slate-400">ผู้ติดต่อ:</span>
+                <span class="text-slate-400">Contact:</span>
                 <strong class="text-alabaster ml-1">${escapeHtml(req.contactName)}</strong>
               </div>
               <div>
@@ -204,11 +333,11 @@
                 <a href="mailto:${escapeHtml(req.contactEmail)}" class="font-mono text-cyan underline ml-1">${escapeHtml(req.contactEmail)}</a>
               </div>
               <div>
-                <span class="text-slate-400">โทร / LINE:</span>
+                <span class="text-slate-400">Phone / LINE:</span>
                 <strong class="font-mono text-emerald ml-1">${escapeHtml(req.contactPhone)}</strong>
               </div>
               <div class="md:col-span-3 pt-1 border-t border-white/[0.05] text-slate-300">
-                <span class="text-slate-400">ความประสงค์:</span>
+                <span class="text-slate-400">Notes:</span>
                 <span class="ml-1">${escapeHtml(req.message || "-")}</span>
               </div>
             </div>
@@ -274,9 +403,9 @@
           state.emailLogs = data.emailLogs || state.emailLogs;
           state.auditLogs = data.auditLogs;
           renderDashboard();
-          showToast(`ดำเนินการคำขอ ${requestId} (${action}) สำเร็จ`);
+          showToast(`Processed request ${requestId} (${action}) successfully.`);
         } else {
-          showToast(data.error || "ไม่สามารถดำเนินการคำขอได้");
+          showToast(data.error || "Unable to process request.");
         }
       });
     });
@@ -287,14 +416,14 @@
     if (!bodyEl) return;
     const logs = state.emailLogs || [];
     if (!logs.length) {
-      bodyEl.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-400">ยังไม่มีประวัติการส่งอีเมลแจ้งเตือน</td></tr>`;
+      bodyEl.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-400">No email notification history yet.</td></tr>`;
       return;
     }
     bodyEl.innerHTML = logs
       .map(
         (m) => `
         <tr>
-          <td class="py-2 pr-4 text-slate-400 whitespace-nowrap">${new Date(m.timestamp).toLocaleString("th-TH")}</td>
+          <td class="py-2 pr-4 text-slate-400 whitespace-nowrap">${new Date(m.timestamp).toLocaleString("en-GB")}</td>
           <td class="py-2 pr-4 text-emerald font-semibold">${escapeHtml(m.to)}</td>
           <td class="py-2 pr-4 text-alabaster font-sans text-xs">${escapeHtml(m.subject)}</td>
           <td class="py-2 pr-4 text-cyan">${escapeHtml(m.deliveryMethod)}</td>
@@ -318,22 +447,61 @@
     const pwdStatusEl = el("pwdLastUpdatedText");
     if (pwdStatusEl) {
       const updatedStr = state.passwordUpdatedAt
-        ? new Date(state.passwordUpdatedAt).toLocaleString("th-TH")
+        ? new Date(state.passwordUpdatedAt).toLocaleString("en-GB")
         : "-";
       pwdStatusEl.innerHTML = state.isDefaultPassword
-        ? `สถานะรหัสผ่าน: <span class="text-amber">ใช้รหัสผ่านเริ่มต้น (Default)</span> · อัปเดตล่าสุด ${escapeHtml(updatedStr)}`
-        : `สถานะรหัสผ่าน: <span class="text-emerald">ตั้งค่ารหัสผ่านส่วนตัวแล้ว (Custom Password)</span> · อัปเดตล่าสุด ${escapeHtml(updatedStr)}`;
+        ? `Password Status: <span class="text-amber">Default Password</span> · Last updated ${escapeHtml(updatedStr)}`
+        : `Password Status: <span class="text-emerald">Custom Password Configured</span> · Last updated ${escapeHtml(updatedStr)}`;
     }
 
     renderCustomerRequests();
     renderEmailLogs();
 
+    const validIds = new Set((state.devices || []).map((d) => d.deviceId));
+    for (const selectedId of Array.from(state.selectedDeviceIds)) {
+      if (!validIds.has(selectedId)) {
+        state.selectedDeviceIds.delete(selectedId);
+      }
+    }
+
+    const updateSelectionToolbarUI = () => {
+      const totalCount = (state.devices || []).length;
+      const selectedCount = state.selectedDeviceIds.size;
+      const selectAllCheck = el("selectAllDevicesCheck");
+      const countBadge = el("selectedDevicesCountBadge");
+      const bulkRemoveBtn = el("bulkRemoveKeysBtn");
+      const bulkDeleteBtn = el("bulkDeleteDevicesBtn");
+
+      if (selectAllCheck) {
+        selectAllCheck.disabled = totalCount === 0;
+        selectAllCheck.checked = totalCount > 0 && selectedCount === totalCount;
+        selectAllCheck.indeterminate = selectedCount > 0 && selectedCount < totalCount;
+      }
+      if (countBadge) {
+        countBadge.textContent = `${selectedCount} Selected`;
+        countBadge.className =
+          selectedCount > 0
+            ? "font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-cyan/20 text-cyan ring-1 ring-cyan/40 font-semibold"
+            : "font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-white/[0.06] text-slate-300";
+      }
+      if (bulkRemoveBtn) bulkRemoveBtn.disabled = selectedCount === 0;
+      if (bulkDeleteBtn) bulkDeleteBtn.disabled = selectedCount === 0;
+    };
+
+    updateSelectionToolbarUI();
+
     const listEl = el("adminDevicesList");
     if (!state.devices.length) {
-      listEl.innerHTML = `<div class="rounded-2xl bg-void/60 p-6 text-center text-xs text-slate-400">ยังไม่มีอุปกรณ์ในระบบ</div>`;
+      listEl.innerHTML = `<div class="rounded-2xl bg-void/60 p-6 text-center text-xs text-slate-400">No registered devices yet.</div>`;
     } else {
       listEl.innerHTML = state.devices
         .map((d) => {
+          const isSelected = state.selectedDeviceIds.has(d.deviceId);
+          const hasKey = Boolean(d.issuedKey || d.activatedKey);
+          const keyDisplay = hasKey
+            ? `<code class="font-mono text-cyan font-semibold">${escapeHtml(d.activatedKey || d.issuedKey)}</code>`
+            : `<span class="font-mono text-amber font-semibold">No Key (Revoked)</span>`;
+
           let badgeClass = "bg-emerald/15 text-emerald ring-1 ring-emerald/30";
           let badgeLabel = `TRIAL · ${d.remainingDays}d left`;
           if (d.status === "ACTIVE") {
@@ -345,32 +513,44 @@
           }
 
           return `
-            <div class="rounded-2xl bg-void/75 ring-1 ring-white/[0.08] p-4 sm:p-5 space-y-3">
+            <div class="rounded-2xl bg-void/75 ring-1 ${isSelected ? "ring-cyan/50 bg-cyan/[0.04]" : "ring-white/[0.08]"} p-4 sm:p-5 space-y-3 transition-all">
               <div class="flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2.5">
+                  <label class="inline-flex items-center cursor-pointer select-none" title="Select this device to manage or revoke its key">
+                    <input
+                      type="checkbox"
+                      data-select-device-id="${escapeHtml(d.deviceId)}"
+                      ${isSelected ? "checked" : ""}
+                      class="device-select-checkbox h-4 w-4 rounded border-white/25 bg-void text-cyan focus:ring-cyan cursor-pointer"
+                    />
+                  </label>
                   <span class="font-mono text-sm sm:text-base font-extrabold text-alabaster">${escapeHtml(d.deviceId)}</span>
                   <span class="font-mono text-[11px] px-2.5 py-0.5 rounded-full font-semibold ${badgeClass}">${badgeLabel}</span>
                   <span class="font-mono text-[11px] px-2 py-0.5 rounded-lg bg-white/[0.05] text-slate-300">Sync: ${escapeHtml(d.syncKey)}</span>
                 </div>
                 <div class="text-[11px] font-mono text-slate-400">
-                  หมดอายุทดลอง: ${new Date(d.trialExpiresAt).toLocaleDateString("th-TH")}
+                  Trial Expires: ${new Date(d.trialExpiresAt).toLocaleDateString("en-GB")}
                 </div>
               </div>
 
               <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
                 <div>
-                  <span>ชื่อเครื่อง: <strong class="text-slate-200">${escapeHtml(d.label)}</strong></span>
+                  <span>Device Label: <strong class="text-slate-200">${escapeHtml(d.label)}</strong></span>
                   <span class="mx-2 text-slate-600">|</span>
-                  <span>รหัสประจำเครื่องนี้: <code class="font-mono text-cyan font-semibold">${escapeHtml(d.issuedKey)}</code></span>
+                  <span>Activation Key: ${keyDisplay}</span>
                 </div>
-                <button
-                  type="button"
-                  data-copy-key="${escapeHtml(d.issuedKey)}"
-                  class="copy-device-key-btn rounded-lg bg-white/[0.06] hover:bg-white/[0.12] px-2.5 py-1 font-mono text-[11px] text-cyan flex items-center gap-1"
-                >
-                  <i class="ph-light ph-copy"></i>
-                  <span>Copy Key</span>
-                </button>
+                ${
+                  hasKey
+                    ? `<button
+                        type="button"
+                        data-copy-key="${escapeHtml(d.activatedKey || d.issuedKey)}"
+                        class="copy-device-key-btn rounded-lg bg-white/[0.06] hover:bg-white/[0.12] px-2.5 py-1 font-mono text-[11px] text-cyan flex items-center gap-1"
+                      >
+                        <i class="ph-light ph-copy"></i>
+                        <span>Copy Key</span>
+                      </button>`
+                    : ""
+                }
               </div>
 
               <div class="pt-2 border-t border-white/[0.06] flex flex-wrap items-center gap-2">
@@ -388,7 +568,7 @@
                   data-dev-id="${escapeHtml(d.deviceId)}"
                   class="dev-action-btn rounded-full bg-emerald/15 hover:bg-emerald/25 ring-1 ring-emerald/30 px-3 py-1 text-[11px] font-mono text-emerald"
                 >
-                  + ต่อเวลาทดลอง 14 วัน
+                  + Extend Trial +14d
                 </button>
                 <button
                   type="button"
@@ -396,14 +576,32 @@
                   data-dev-id="${escapeHtml(d.deviceId)}"
                   class="dev-action-btn rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 px-3 py-1 text-[11px] font-mono text-slate-300"
                 >
-                  รีเซ็ต Trial 14 วันใหม่
+                  Reset 14d Trial
+                </button>
+                <button
+                  type="button"
+                  data-dev-action="REMOVE_KEY"
+                  data-dev-id="${escapeHtml(d.deviceId)}"
+                  class="dev-action-btn rounded-full bg-amber/15 hover:bg-amber/25 ring-1 ring-amber/35 px-3 py-1 text-[11px] font-mono font-semibold text-amber"
+                  title="Revoke only the Activation Key from this device"
+                >
+                  🔑 Remove Key
+                </button>
+                <button
+                  type="button"
+                  data-dev-action="DELETE"
+                  data-dev-id="${escapeHtml(d.deviceId)}"
+                  class="dev-action-btn rounded-full bg-crimson/20 hover:bg-crimson/30 ring-1 ring-crimson/40 px-3 py-1 text-[11px] font-mono font-semibold text-crimson"
+                  title="Delete this device and its key from the system"
+                >
+                  🗑️ Delete Device
                 </button>
                 <button
                   type="button"
                   data-dev-action="EXPIRE_TRIAL"
                   data-dev-id="${escapeHtml(d.deviceId)}"
                   class="dev-action-btn rounded-full bg-crimson/15 hover:bg-crimson/25 ring-1 ring-crimson/30 px-3 py-1 text-[11px] font-mono text-crimson ml-auto"
-                  title="จำลองสถานะหมดเวลาทดลอง 14 วัน เพื่อทดสอบหน้าจอล็อกให้ติดต่อ saharat.bun@icloud.com"
+                  title="Simulate 14-day trial expiration to test the lock screen (saharat.bun@icloud.com)"
                 >
                   Simulate 14d Expired (Lock)
                 </button>
@@ -413,11 +611,24 @@
         })
         .join("");
 
+      listEl.querySelectorAll(".device-select-checkbox").forEach((chk) => {
+        chk.addEventListener("change", () => {
+          const did = chk.getAttribute("data-select-device-id");
+          if (!did) return;
+          if (chk.checked) {
+            state.selectedDeviceIds.add(did);
+          } else {
+            state.selectedDeviceIds.delete(did);
+          }
+          renderDashboard();
+        });
+      });
+
       listEl.querySelectorAll(".copy-device-key-btn").forEach((btn) => {
         btn.addEventListener("click", async () => {
           const k = btn.getAttribute("data-copy-key");
           await navigator.clipboard.writeText(k);
-          showToast(`คัดลอกรหัส ${k} แล้ว`);
+          showToast(`Copied key ${k}`);
         });
       });
 
@@ -432,14 +643,23 @@
           });
           const data = await res.json();
           if (res.ok && data.ok) {
+            if (action === "DELETE") {
+              state.selectedDeviceIds.delete(deviceId);
+            }
             state.summary = data.summary;
             state.devices = data.devices;
             state.customerRequests = data.customerRequests || state.customerRequests;
             state.auditLogs = data.auditLogs;
             renderDashboard();
-            showToast(`อัปเดตสถานะเครื่อง ${deviceId} (${action}) สำเร็จ`);
+            const actionLabel =
+              action === "REMOVE_KEY"
+                ? `Removed activation key from device ${deviceId}`
+                : action === "DELETE"
+                ? `Deleted device ${deviceId} from system`
+                : `Updated device ${deviceId} (${action}) successfully`;
+            showToast(actionLabel);
           } else {
-            showToast(data.error || "ไม่สามารถอัปเดตสถานะได้");
+            showToast(data.error || "Unable to update device status.");
           }
         });
       });
@@ -450,7 +670,7 @@
       .map(
         (log) => `
         <tr>
-          <td class="py-2 pr-4 text-slate-400 whitespace-nowrap">${new Date(log.timestamp).toLocaleString("th-TH")}</td>
+          <td class="py-2 pr-4 text-slate-400 whitespace-nowrap">${new Date(log.timestamp).toLocaleString("en-GB")}</td>
           <td class="py-2 pr-4 text-emerald">${escapeHtml(log.actor)}</td>
           <td class="py-2 pr-4 text-cyan font-semibold">${escapeHtml(log.action)}</td>
           <td class="py-2 pr-4 text-alabaster">${escapeHtml(log.deviceId)}</td>
@@ -523,7 +743,7 @@
         });
         const data = await res.json();
         if (!res.ok || !data.ok) {
-          const msg = data.error || "รหัสผ่านผู้ดูแลระบบไม่ถูกต้อง";
+          const msg = data.error || "Invalid administrator password.";
           if (errBox) {
             errBox.textContent = msg;
             errBox.classList.remove("hidden");
@@ -534,11 +754,71 @@
 
         el("adminPasswordInput").value = "";
         state.token = data.token;
-        sessionStorage.setItem("venu2_admin_token", data.token);
+        state.lastActivityAt = Date.now();
+        state.sessionExpiresAt = Number(data.expiresAt) || Date.now() + DEFAULT_SESSION_TTL_MS;
+        if (data.idleTimeoutSec) {
+          state.idleTimeoutMs = Math.max(60 * 1000, Number(data.idleTimeoutSec) * 1000);
+        }
+        try {
+          sessionStorage.setItem("venu2_admin_token", data.token);
+          sessionStorage.setItem("venu2_admin_last_active", String(state.lastActivityAt));
+          sessionStorage.setItem("venu2_admin_expires_at", String(state.sessionExpiresAt));
+        } catch (_) {}
         await checkSessionAndLoad();
-        showToast(`ยินดีต้อนรับผู้ดูแลระบบ ${data.email}`);
+        showToast(`Welcome Administrator ${data.email} (Auto-expiring secure session active)`);
       });
     }
+
+    // 3b. Activity listeners for Idle Auto-Logout reset
+    ["mousemove", "mousedown", "keydown", "touchstart", "click", "scroll"].forEach((evtName) => {
+      window.addEventListener(evtName, recordAdminActivity, { passive: true });
+    });
+
+    // 3c. Select All & Bulk Key Removal / Deletion Toolbar
+    el("selectAllDevicesCheck")?.addEventListener("change", (e) => {
+      const checked = Boolean(e.target.checked);
+      if (checked) {
+        (state.devices || []).forEach((d) => state.selectedDeviceIds.add(d.deviceId));
+      } else {
+        state.selectedDeviceIds.clear();
+      }
+      renderDashboard();
+    });
+
+    const executeBulkDeviceAction = async (action) => {
+      const selectedIds = Array.from(state.selectedDeviceIds);
+      if (!selectedIds.length) {
+        showToast("Please select at least 1 device.");
+        return;
+      }
+      const res = await fetch("/api/admin/devices/update", {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify({
+          action,
+          deviceIds: selectedIds
+        })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        showToast(data.error || "Unable to process selected devices.");
+        return;
+      }
+      state.selectedDeviceIds.clear();
+      state.summary = data.summary;
+      state.devices = data.devices;
+      state.customerRequests = data.customerRequests || state.customerRequests;
+      state.auditLogs = data.auditLogs;
+      renderDashboard();
+      if (action === "REMOVE_KEY") {
+        showToast(`Removed Activation Keys from ${selectedIds.length} selected device(s).`);
+      } else if (action === "DELETE") {
+        showToast(`Deleted ${selectedIds.length} selected device(s) and their keys.`);
+      }
+    };
+
+    el("bulkRemoveKeysBtn")?.addEventListener("click", () => executeBulkDeviceAction("REMOVE_KEY"));
+    el("bulkDeleteDevicesBtn")?.addEventListener("click", () => executeBulkDeviceAction("DELETE"));
 
     // 4. Scroll to Change Admin Password Panel & Email Settings Panel
     el("scrollToChangePwdBtn")?.addEventListener("click", () => {
@@ -566,15 +846,15 @@
         const confirmPassword = el("confirmAdminPwdInput").value.trim();
 
         if (!currentPassword) {
-          showChangePwdFeedback("กรุณากรอกรหัสผ่านเดิมเพื่อยืนยันตัวตน", false);
+          showChangePwdFeedback("Please enter your current password to verify your identity.", false);
           return;
         }
         if (newPassword.length < 6) {
-          showChangePwdFeedback("รหัสผ่านใหม่ต้องมีความยาวอย่างน้อย 6 ตัวอักษร", false);
+          showChangePwdFeedback("New password must be at least 6 characters long.", false);
           return;
         }
         if (newPassword !== confirmPassword) {
-          showChangePwdFeedback("รหัสผ่านใหม่และการยืนยันรหัสผ่านใหม่ไม่ตรงกัน", false);
+          showChangePwdFeedback("New password and confirmation do not match.", false);
           return;
         }
 
@@ -589,7 +869,7 @@
         });
         const data = await res.json();
         if (!res.ok || !data.ok) {
-          const errMsg = data.error || "ไม่สามารถเปลี่ยนรหัสผ่านได้";
+          const errMsg = data.error || "Unable to change password.";
           showChangePwdFeedback(errMsg, false);
           showToast(errMsg);
           return;
@@ -607,8 +887,8 @@
 
         renderAuthView();
         renderDashboard();
-        showChangePwdFeedback("✓ ยืนยันรหัสเดิมและเปลี่ยนรหัสผ่านผู้ดูแลระบบใหม่เรียบร้อยแล้ว", true);
-        showToast("เปลี่ยนรหัสผ่านผู้ดูแลระบบสำเร็จ");
+        showChangePwdFeedback("✓ Current password verified and administrator password updated.", true);
+        showToast("Administrator password updated successfully.");
       });
     }
 
@@ -633,19 +913,19 @@
         });
         const data = await res.json();
         if (!res.ok || !data.ok) {
-          showEmailServiceFeedback(data.error || "ไม่สามารถบันทึกตั้งค่า SMTP ได้", false);
+          showEmailServiceFeedback(data.error || "Unable to save SMTP configuration.", false);
           return;
         }
         state.smtpConfig = data.smtpConfig;
         populateSmtpForm(data.smtpConfig);
-        showEmailServiceFeedback(data.message || "บันทึกการตั้งค่า SMTP สำเร็จ", true);
-        showToast("บันทึกการตั้งค่า SMTP เรียบร้อยแล้ว");
+        showEmailServiceFeedback(data.message || "SMTP configuration saved successfully.", true);
+        showToast("SMTP configuration saved.");
       });
     }
 
     el("testSendEmailBtn")?.addEventListener("click", async () => {
       const recipientEmail = el("smtpRecipientEmailInput")?.value.trim() || "e24qdy2@gmail.com";
-      showEmailServiceFeedback(`กำลังทดสอบส่งอีเมลแจ้งเตือนไปที่ ${recipientEmail}...`, true);
+      showEmailServiceFeedback(`Sending test notification email to ${recipientEmail}...`, true);
       const res = await fetch("/api/admin/email/test", {
         method: "POST",
         headers: authHeaders(),
@@ -653,37 +933,28 @@
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
-        showEmailServiceFeedback(data.error || "การทดสอบส่งอีเมลล้มเหลว", false);
-        showToast("ทดสอบส่งอีเมลไม่สำเร็จ");
+        showEmailServiceFeedback(data.error || "Test email delivery failed.", false);
+        showToast("Test email failed.");
         return;
       }
       state.emailLogs = data.emailLogs || state.emailLogs;
       renderEmailLogs();
       const method = data.delivery?.deliveryMethod || "SENT";
       const detail = data.delivery?.detail || "";
-      showEmailServiceFeedback(`✓ ทดสอบส่งอีเมลไปที่ ${recipientEmail} สำเร็จ (${method}: ${detail})`, true);
-      showToast(`ส่งอีเมลทดสอบไปที่ ${recipientEmail} สำเร็จ`);
+      showEmailServiceFeedback(`✓ Test email sent to ${recipientEmail} (${method}: ${detail})`, true);
+      showToast(`Test email sent to ${recipientEmail}`);
     });
 
     // 7. Sign Out
     el("adminLogoutBtn").addEventListener("click", async () => {
-      try {
-        await fetch("/api/admin/auth/logout", {
-          method: "POST",
-          headers: authHeaders()
-        });
-      } catch (_) {}
-      state.token = "";
-      state.authenticated = false;
-      sessionStorage.removeItem("venu2_admin_token");
-      renderAuthView();
-      showToast("ออกจากระบบ Admin แล้ว");
+      await performAutoLogout("");
+      showToast("Signed out of Admin Portal.");
     });
 
     // 8. Refresh Dashboard
     el("refreshAdminBtn").addEventListener("click", async () => {
       await Promise.all([fetchDevicesData(), fetchEmailConfig()]);
-      showToast("อัปเดตข้อมูลอุปกรณ์และคิวคำขอล่าสุดแล้ว");
+      showToast("Refreshed latest devices and customer request queue.");
     });
 
     // 9. Generate Per-Device Activation Key
@@ -701,7 +972,7 @@
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
-        showToast(data.error || "ไม่สามารถสร้างรหัส Activate ได้");
+        showToast(data.error || "Unable to generate activation key.");
         return;
       }
       state.lastGeneratedKey = data.activationKey;
@@ -711,13 +982,13 @@
       state.devices = data.devices;
       state.auditLogs = data.auditLogs;
       renderDashboard();
-      showToast(`สร้างรหัส ${data.activationKey} สำหรับ ${data.deviceId} สำเร็จ`);
+      showToast(`Generated key ${data.activationKey} for ${data.deviceId}`);
     });
 
     el("copyGeneratedKeyBtn").addEventListener("click", async () => {
       if (!state.lastGeneratedKey) return;
       await navigator.clipboard.writeText(state.lastGeneratedKey);
-      showToast(`คัดลอกรหัส ${state.lastGeneratedKey} แล้ว`);
+      showToast(`Copied key ${state.lastGeneratedKey}`);
     });
   }
 

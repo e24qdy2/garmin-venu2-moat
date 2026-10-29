@@ -515,8 +515,8 @@ async function handleRequest(req, res) {
       return sendJson(res, 200, {
         ok: true,
         message: isTrialExtend
-          ? `ส่งคำขอต่ออายุทดลองใช้ (+${created.request.requestedExtendDays} วัน) เรียบร้อยแล้ว! ระบบได้แจ้งเตือนไปยัง ${emailNotification.to} แล้ว`
-          : `ส่งคำขอซื้อ License ถาวร (PRO) เรียบร้อยแล้ว! ระบบได้ส่งข้อมูลติดต่อกลับไปยัง ${emailNotification.to} แล้ว`,
+          ? `Trial extension request (+${created.request.requestedExtendDays} days) submitted! Notification sent to ${emailNotification.to}.`
+          : `PRO License purchase request submitted! Contact details sent to ${emailNotification.to}.`,
         request: created.request,
         device: licenseManager.toPublicLicenseState(created.device),
         emailNotification,
@@ -533,14 +533,24 @@ async function handleRequest(req, res) {
   if (pathname === "/api/admin/session" && req.method === "GET") {
     const auth = licenseManager.verifyAdminRequest(req);
     const meta = licenseManager.getAdminAuthMeta({ includeSensitive: auth.authenticated });
-    return sendAdminJson(req, res, 200, {
-      ...auth,
-      ...meta,
-      ownerEmail: OWNER_EMAIL,
-      notifyEmail: NOTIFY_EMAIL,
-      trialDays: TRIAL_DAYS,
-      host: hostHeader
-    });
+    const extraHeaders =
+      !auth.authenticated && String(req.headers["cookie"] || "").includes("__moat_admin_session=")
+        ? { "Set-Cookie": "__moat_admin_session=; HttpOnly; Path=/; Max-Age=0; SameSite=Strict" }
+        : {};
+    return sendAdminJson(
+      req,
+      res,
+      200,
+      {
+        ...auth,
+        ...meta,
+        ownerEmail: OWNER_EMAIL,
+        notifyEmail: NOTIFY_EMAIL,
+        trialDays: TRIAL_DAYS,
+        host: hostHeader
+      },
+      extraHeaders
+    );
   }
 
   if (pathname === "/api/admin/auth/login" && req.method === "POST") {
@@ -553,11 +563,12 @@ async function handleRequest(req, res) {
         { ip: clientIp }
       );
       if (result.ok && result.token) {
+        const maxAgeSec = Math.max(60, Number(result.expiresInSec || 1800));
         const cookieFlags = [
           `__moat_admin_session=${encodeURIComponent(result.token)}`,
           "HttpOnly",
           "Path=/",
-          "Max-Age=43200",
+          `Max-Age=${maxAgeSec}`,
           "SameSite=Strict"
         ];
         if (req.headers["x-forwarded-proto"] === "https" || hostHeader.endsWith(".readybyte.top")) {
@@ -710,7 +721,7 @@ async function handleRequest(req, res) {
         const smtpConfig = emailService.updateSmtpConfig(body);
         return sendAdminJson(req, res, 200, {
           ok: true,
-          message: "บันทึกการตั้งค่า SMTP / System Mail เรียบร้อยแล้ว",
+          message: "SMTP / System Mail configuration saved successfully.",
           smtpConfig,
           emailLogs: emailService.listEmailLogs(30)
         });
@@ -728,7 +739,7 @@ async function handleRequest(req, res) {
         const mailResult = await emailService.sendTestEmail(body.note);
         return sendAdminJson(req, res, 200, {
           ok: true,
-          message: `ส่งอีเมลทดสอบไปยัง ${mailResult.to} เรียบร้อยแล้ว (${mailResult.status})`,
+          message: `Test email sent to ${mailResult.to} (${mailResult.status})`,
           mailResult,
           delivery: mailResult,
           smtpConfig: emailService.getSmtpConfig(false),
@@ -779,10 +790,18 @@ async function handleRequest(req, res) {
       }
     }
 
-    if (pathname === "/api/admin/devices/update" && req.method === "POST") {
+    if (
+      (pathname === "/api/admin/devices/update" || pathname === "/api/admin/devices/remove-keys") &&
+      req.method === "POST"
+    ) {
       try {
         const body = await parseBody(req);
-        const updated = licenseManager.adminUpdateDevice(body.deviceId, body.action, {
+        const action =
+          pathname === "/api/admin/devices/remove-keys"
+            ? body.action || "REMOVE_KEY"
+            : body.action;
+        const updated = licenseManager.adminUpdateDevice(body.deviceId, action, {
+          deviceIds: body.deviceIds,
           days: body.days,
           label: body.label,
           notes: body.notes,
@@ -793,17 +812,28 @@ async function handleRequest(req, res) {
           return sendAdminJson(req, res, 400, updated);
         }
 
-        // Sync activationKey removal if expired/revoked/reset so profile reflects state immediately
-        const act = String(body.action || "").toUpperCase();
-        if (act === "EXPIRE_TRIAL" || act === "REVOKE" || act === "RESET_TRIAL") {
+        // Sync activationKey removal if expired/revoked/reset/removed/deleted so profile reflects state immediately
+        const act = String(action || "").toUpperCase();
+        const targetIds = Array.isArray(updated.deviceIds)
+          ? updated.deviceIds
+          : [updated.deviceId].filter(Boolean);
+        if (
+          act === "EXPIRE_TRIAL" ||
+          act === "REVOKE" ||
+          act === "RESET_TRIAL" ||
+          act === "REMOVE_KEY" ||
+          act === "DELETE"
+        ) {
           const store = readStore();
           for (const prof of Object.values(store)) {
-            if (
-              prof.watchSettings &&
-              (prof.watchSettings.deviceId === updated.deviceId ||
-                licenseManager.verifyActivationKey(updated.deviceId, prof.watchSettings.activationKey))
-            ) {
-              prof.watchSettings.activationKey = "";
+            for (const tid of targetIds) {
+              if (
+                prof.watchSettings &&
+                (prof.watchSettings.deviceId === tid ||
+                  licenseManager.verifyActivationKey(tid, prof.watchSettings.activationKey))
+              ) {
+                prof.watchSettings.activationKey = "";
+              }
             }
           }
           writeStore(store);

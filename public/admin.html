@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th" class="dark">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -32,7 +32,7 @@
       }
     };
   </script>
-  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/styles.css?v=20261029-en1" />
 </head>
 <body class="bg-void text-alabaster font-sans antialiased min-h-screen selection:bg-cyan/30 selection:text-alabaster">
 
@@ -57,12 +57,16 @@
       </div>
 
       <div class="flex items-center gap-2.5">
+        <span id="adminSessionTimerBadge" class="hidden font-mono text-[11px] px-2.5 py-1 rounded-full bg-amber/15 ring-1 ring-amber/35 text-amber items-center gap-1.5" title="Automatic session timeout on inactivity (Auto-Logout Protection against forgotten sessions)">
+          <i class="ph-light ph-timer"></i>
+          <span id="adminSessionTimerText">Auto-Logout: 15:00</span>
+        </span>
         <span id="adminAuthStatusPill" class="font-mono text-xs px-3 py-1 rounded-full bg-white/[0.05] ring-1 ring-white/10 text-slate-300">
           Checking Auth...
         </span>
         <a href="https://moat.readybyte.top" class="rounded-full bg-white/[0.05] hover:bg-white/[0.1] ring-1 ring-white/10 px-3.5 py-1.5 text-xs font-medium text-cyan flex items-center gap-1.5">
           <i class="ph-light ph-watch"></i>
-          <span class="hidden sm:inline">หน้าพอร์ตหลัก (moat.readybyte.top)</span>
+          <span class="hidden sm:inline">Main Portal (moat.readybyte.top)</span>
         </a>
         <button id="adminLogoutBtn" type="button" class="hidden rounded-full bg-crimson/15 hover:bg-crimson/25 ring-1 ring-crimson/30 px-3 py-1.5 text-xs font-mono text-crimson">
           Sign Out
@@ -89,21 +93,21 @@
 
           <div>
             <h1 class="text-2xl font-extrabold text-alabaster tracking-tight">
-              เข้าสู่ระบบผู้ดูแล (Admin Login)
+              Administrator Sign In
             </h1>
             <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">
-              ระบบจัดการรหัส Activate รายเครื่อง (<code class="font-mono text-cyan">deviceId</code>), คิวคำขอซื้อ/ต่ออายุ Trial และการแจ้งเตือนอีเมลไปที่ <code class="font-mono text-emerald">e24qdy2@gmail.com</code> สงวนสิทธิ์เฉพาะเจ้าของแอป <strong class="font-mono text-alabaster">saharat.bun@icloud.com</strong> เท่านั้น
+              Manage per-device activation keys (<code class="font-mono text-cyan">deviceId</code>), trial extension &amp; purchase requests, and email notifications to <code class="font-mono text-emerald">e24qdy2@gmail.com</code>. Restricted to app owner <strong class="font-mono text-alabaster">saharat.bun@icloud.com</strong>.
             </p>
           </div>
 
           <!-- Security Hardening Notice (Zero plaintext hints in DOM) -->
           <div class="rounded-2xl bg-emerald/10 ring-1 ring-emerald/25 p-3.5 text-xs space-y-1">
             <div class="flex items-center justify-between text-emerald font-mono">
-              <span>VA HARDENED · SCRYPT + LOCKOUT</span>
-              <span class="text-[10px]">5 Attempts / 15m Lock</span>
+              <span>VA HARDENED · AUTO-EXPIRING SESSION</span>
+              <span class="text-[10px]">15m Idle / 30m Max</span>
             </div>
             <p class="text-slate-300 text-[11px] leading-relaxed">
-              ระบบป้องกันการเดารหัสผ่านอัตโนมัติ (Brute-Force Lockout) และจัดเก็บรหัสผ่านแบบเข้ารหัสทางเดียว (<code class="font-mono text-emerald">scrypt + salt</code>) ไม่มีการแสดงรหัสผ่านเริ่มต้นในซอร์สโค้ดหน้าเว็บ
+              Protected by automated brute-force lockout and non-persistent session timeout after 15 minutes of inactivity or when the browser tab closes (prevents forgotten persistent logins).
             </p>
           </div>
 
@@ -120,20 +124,20 @@
             </div>
 
             <div>
-              <label class="block text-xs text-slate-400 mb-1.5" for="adminPasswordInput">รหัสผ่านผู้ดูแลระบบ (Admin Password)</label>
+              <label class="block text-xs text-slate-400 mb-1.5" for="adminPasswordInput">Administrator Password</label>
               <div class="relative">
                 <input
                   id="adminPasswordInput"
                   type="password"
                   required
                   autocomplete="current-password"
-                  placeholder="กรอกรหัสผ่านผู้ดูแลระบบ (Admin Password)"
+                  placeholder="Enter administrator password"
                   class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-amber pl-4 pr-11 py-2.5 font-mono text-sm text-alabaster tracking-wider focus:outline-none"
                 />
                 <button
                   id="toggleLoginPwdBtn"
                   type="button"
-                  title="แสดง/ซ่อนรหัสผ่าน"
+                  title="Show/Hide Password"
                   class="absolute inset-y-0 right-0 px-3.5 flex items-center text-slate-400 hover:text-alabaster"
                 >
                   <i class="ph-light ph-eye text-base"></i>
@@ -148,7 +152,7 @@
               class="w-full rounded-full bg-emerald text-void font-bold text-xs py-3 px-5 flex items-center justify-center gap-2 shadow-lg shadow-emerald/15 spring-transition active:scale-[0.98]"
             >
               <i class="ph-light ph-lock-key-open text-sm font-bold"></i>
-              <span>เข้าสู่ระบบจัดการ (Sign In with Password)</span>
+              <span>Sign In with Password</span>
             </button>
           </form>
         </div>
@@ -168,21 +172,21 @@
             <span>Owner: saharat.bun@icloud.com · Mail Notify: e24qdy2@gmail.com</span>
           </div>
           <h1 class="text-2xl sm:text-4xl font-extrabold text-alabaster tracking-tight">
-            ระบบบริหารจัดการรหัส Activate รายเครื่อง &amp; คิวคำขอลูกค้า
+            Per-Device Activation Key &amp; Customer Request Management
           </h1>
         </div>
         <div class="flex flex-wrap items-center gap-2.5 self-start md:self-auto">
           <button id="scrollToEmailSettingsBtn" type="button" class="rounded-full bg-cyan/15 hover:bg-cyan/25 ring-1 ring-cyan/35 px-4 py-2 text-xs font-mono text-cyan flex items-center gap-2">
             <i class="ph-light ph-envelope-simple-open"></i>
-            <span>ตั้งค่า SMTP / ทดสอบส่งเมล</span>
+            <span>SMTP Settings / Test Email</span>
           </button>
           <button id="scrollToChangePwdBtn" type="button" class="rounded-full bg-amber/15 hover:bg-amber/25 ring-1 ring-amber/35 px-4 py-2 text-xs font-mono text-amber flex items-center gap-2">
             <i class="ph-light ph-keyhole"></i>
-            <span>เปลี่ยนรหัสผ่าน Admin</span>
+            <span>Change Admin Password</span>
           </button>
           <button id="refreshAdminBtn" type="button" class="rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 px-4 py-2 text-xs font-mono text-alabaster flex items-center gap-2">
             <i class="ph-light ph-arrows-clockwise text-emerald"></i>
-            <span>รีเฟรชข้อมูลล่าสุด</span>
+            <span>Refresh Data</span>
           </button>
         </div>
       </div>
@@ -191,35 +195,35 @@
       <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
         <div class="double-bezel-shell">
           <div class="double-bezel-core p-5">
-            <div class="text-xs text-slate-400">จำนวนเครื่องทั้งหมด (Devices)</div>
+            <div class="text-xs text-slate-400">Total Devices</div>
             <div id="kpiTotalDevices" class="font-mono text-3xl font-bold text-alabaster mt-1 tabular-nums">0</div>
             <div class="text-[11px] font-mono text-slate-400 mt-1">Registered Garmin Watches</div>
           </div>
         </div>
         <div class="double-bezel-shell">
           <div class="double-bezel-core p-5">
-            <div class="text-xs text-slate-400">เปิดใช้งานถาวรแล้ว (PRO Active)</div>
+            <div class="text-xs text-slate-400">PRO Active (Permanent)</div>
             <div id="kpiActivePaid" class="font-mono text-3xl font-bold text-cyan mt-1 tabular-nums">0</div>
             <div class="text-[11px] font-mono text-cyan/80 mt-1">Activated via Key</div>
           </div>
         </div>
         <div class="double-bezel-shell">
           <div class="double-bezel-core p-5">
-            <div class="text-xs text-slate-400">กำลังทดลองใช้ฟรี (14D Trial)</div>
+            <div class="text-xs text-slate-400">Active 14D Free Trial</div>
             <div id="kpiActiveTrial" class="font-mono text-3xl font-bold text-emerald mt-1 tabular-nums">0</div>
             <div class="text-[11px] font-mono text-emerald/80 mt-1">Within 14-day window</div>
           </div>
         </div>
         <div class="double-bezel-shell">
           <div class="double-bezel-core p-5">
-            <div class="text-xs text-slate-400">หมดเวลาทดลอง (Trial Expired)</div>
+            <div class="text-xs text-slate-400">Trial Expired</div>
             <div id="kpiExpiredTrial" class="font-mono text-3xl font-bold text-crimson mt-1 tabular-nums">0</div>
             <div class="text-[11px] font-mono text-crimson/80 mt-1">Locked → saharat.bun@icloud.com</div>
           </div>
         </div>
         <div class="double-bezel-shell col-span-2 lg:col-span-1">
           <div class="double-bezel-core p-5">
-            <div class="text-xs text-amber font-semibold">คำขอรออนุมัติ (Pending Requests)</div>
+            <div class="text-xs text-amber font-semibold">Pending Requests</div>
             <div id="kpiPendingRequests" class="font-mono text-3xl font-bold text-amber mt-1 tabular-nums">0</div>
             <div class="text-[11px] font-mono text-amber/80 mt-1">Sent to e24qdy2@gmail.com</div>
           </div>
@@ -236,11 +240,11 @@
               <div class="flex items-center gap-2">
                 <i class="ph-light ph-tray-arrow-down text-amber text-lg"></i>
                 <h2 class="text-lg font-bold text-alabaster">
-                  คิวคำขอลูกค้า: ขอต่ออายุทดลองใช้ (Trial Extend) &amp; ขอซื้อ License ถาวร (Purchase Request)
+                  Customer Requests Queue: Trial Extensions &amp; Permanent License Purchases
                 </h2>
               </div>
               <p class="text-xs text-slate-400 mt-0.5">
-                รายการที่ลูกค้ากดส่งมาจากหน้าเว็บหลัก พร้อมแจ้งเตือนเข้าอีเมล <code class="font-mono text-emerald">e24qdy2@gmail.com</code> — สามารถกดอนุมัติต่อเวลา +7 วัน, +14 วัน หรือ Activate PRO ได้ในคลิกเดียว
+                Requests submitted from the main web portal with email notifications to <code class="font-mono text-emerald">e24qdy2@gmail.com</code> — approve +7d, +14d trial extension, or PRO Activation in one click.
               </p>
             </div>
             <span id="customerRequestsCountBadge" class="font-mono text-xs px-3 py-1 rounded-full bg-amber/15 ring-1 ring-amber/35 text-amber font-semibold">
@@ -266,9 +270,9 @@
                 <span class="text-xs font-mono text-cyan">KEY GENERATOR (HMAC-SHA256)</span>
                 <i class="ph-light ph-key text-lg text-cyan"></i>
               </div>
-              <h2 class="text-lg font-bold text-alabaster">ออกรหัส Activate ราย Device ID</h2>
+              <h2 class="text-lg font-bold text-alabaster">Issue Per-Device Activation Key</h2>
               <p class="text-xs text-slate-400 leading-relaxed">
-                ระบุรหัส <code class="font-mono text-alabaster">Device ID</code> ที่ปรากฏบนหน้าจอนาฬิกา Garmin ของผู้ใช้ เพื่อสร้างรหัส Activate เฉพาะเครื่องนั้น
+                Enter the <code class="font-mono text-alabaster">Device ID</code> displayed on the user's Garmin watch screen to generate a hardware-bound activation key.
               </p>
 
               <form id="generateKeyForm" class="space-y-3.5">
@@ -279,35 +283,35 @@
                     type="text"
                     required
                     value="V2-GARMIN88"
-                    placeholder="เช่น V2-GARMIN88"
+                    placeholder="e.g. V2-GARMIN88"
                     class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2.5 font-mono text-sm text-alabaster uppercase focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label class="block text-xs text-slate-400 mb-1" for="genSyncKeyInput">Sync Key ที่ผูกกับพอร์ต</label>
+                  <label class="block text-xs text-slate-400 mb-1" for="genSyncKeyInput">Linked Portfolio Sync Key</label>
                   <input
                     id="genSyncKeyInput"
                     type="text"
                     value="GARMIN-88"
-                    placeholder="เช่น GARMIN-88"
+                    placeholder="e.g. GARMIN-88"
                     class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2 font-mono text-xs text-alabaster uppercase focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label class="block text-xs text-slate-400 mb-1" for="genLabelInput">ชื่อเรียกเครื่อง / หมายเหตุลูกค้า</label>
+                  <label class="block text-xs text-slate-400 mb-1" for="genLabelInput">Device Label / Customer Note</label>
                   <input
                     id="genLabelInput"
                     type="text"
-                    placeholder="เช่น นาฬิกา Garmin ของคุณลูกค้า A"
+                    placeholder="e.g. Customer A Garmin Watch"
                     class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2 text-xs text-alabaster focus:outline-none"
                   />
                 </div>
 
                 <label class="flex items-center gap-2.5 text-xs text-slate-300 cursor-pointer pt-1">
                   <input id="genAutoActivateCheck" type="checkbox" class="rounded bg-void text-emerald focus:ring-0" />
-                  <span>สั่ง Activate เครื่องนี้ทันทีโดยไม่ต้องรอกรอกรหัส</span>
+                  <span>Activate this device immediately without waiting for code entry</span>
                 </label>
 
                 <button
@@ -331,7 +335,7 @@
                   class="w-full rounded-xl bg-white/10 hover:bg-white/20 py-1.5 text-xs font-mono text-alabaster flex items-center justify-center gap-1.5"
                 >
                   <i class="ph-light ph-copy"></i>
-                  <span>คัดลอกรหัสส่งให้ลูกค้า</span>
+                  <span>Copy Code for Customer</span>
                 </button>
               </div>
             </div>
@@ -345,19 +349,19 @@
                 <i class="ph-light ph-shield-check text-lg text-amber"></i>
               </div>
               <div>
-                <h2 class="text-lg font-bold text-alabaster">เปลี่ยนรหัสผ่านผู้ดูแลระบบ (Change Password)</h2>
+                <h2 class="text-lg font-bold text-alabaster">Change Administrator Password</h2>
                 <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-                  เปลี่ยนรหัสผ่านสำหรับเข้าหน้า Admin Portal โดยต้องยืนยันรหัสผ่านเดิม (<code class="font-mono text-amber">Current Password</code>) ก่อนทุกครั้ง
+                  Update the Admin Portal password. Verification of your <code class="font-mono text-amber">Current Password</code> is required every time.
                 </p>
                 <div id="pwdLastUpdatedText" class="text-[11px] font-mono text-slate-400 mt-1.5">
-                  สถานะรหัสผ่าน: ตรวจสอบแล้ว
+                  Password Status: Verified
                 </div>
               </div>
 
               <form id="changeAdminPasswordForm" class="space-y-3.5">
                 <div>
                   <label class="block text-xs text-slate-400 mb-1" for="currentAdminPwdInput">
-                    1. รหัสผ่านเดิม (Current Password) <span class="text-amber">*ยืนยันรหัสเดิม</span>
+                    1. Current Password <span class="text-amber">*Required</span>
                   </label>
                   <div class="relative">
                     <input
@@ -365,7 +369,7 @@
                       type="password"
                       required
                       autocomplete="current-password"
-                      placeholder="กรอกรหัสผ่านปัจจุบันเพื่อยืนยัน"
+                      placeholder="Enter current password to verify"
                       class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-amber pl-3.5 pr-10 py-2 font-mono text-xs text-alabaster focus:outline-none"
                     />
                     <button
@@ -380,7 +384,7 @@
 
                 <div>
                   <label class="block text-xs text-slate-400 mb-1" for="newAdminPwdInput">
-                    2. รหัสผ่านใหม่ (New Password — อย่างน้อย 6 ตัวอักษร)
+                    2. New Password (minimum 6 characters)
                   </label>
                   <div class="relative">
                     <input
@@ -389,7 +393,7 @@
                       required
                       minlength="6"
                       autocomplete="new-password"
-                      placeholder="ตั้งรหัสผ่านใหม่ (อย่างน้อย 6 ตัวอักษร)"
+                      placeholder="Set new password (at least 6 characters)"
                       class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald pl-3.5 pr-10 py-2 font-mono text-xs text-alabaster focus:outline-none"
                     />
                     <button
@@ -404,7 +408,7 @@
 
                 <div>
                   <label class="block text-xs text-slate-400 mb-1" for="confirmAdminPwdInput">
-                    3. ยืนยันรหัสผ่านใหม่ (Confirm New Password)
+                    3. Confirm New Password
                   </label>
                   <div class="relative">
                     <input
@@ -413,7 +417,7 @@
                       required
                       minlength="6"
                       autocomplete="new-password"
-                      placeholder="กรอกรหัสผ่านใหม่อีกครั้งให้ตรงกัน"
+                      placeholder="Re-enter new password to match"
                       class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-emerald pl-3.5 pr-10 py-2 font-mono text-xs text-alabaster focus:outline-none"
                     />
                     <button
@@ -433,7 +437,7 @@
                   class="w-full rounded-full bg-amber text-void font-bold text-xs py-3 px-4 flex items-center justify-center gap-2 spring-transition active:scale-[0.98]"
                 >
                   <i class="ph-light ph-lock-key text-sm font-bold"></i>
-                  <span>ยืนยันรหัสเดิมและเปลี่ยนรหัสผ่านใหม่</span>
+                  <span>Verify Current &amp; Update Password</span>
                 </button>
               </form>
             </div>
@@ -445,8 +449,48 @@
           <div class="double-bezel-core p-6">
             <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
               <div>
-                <h2 class="text-lg font-bold text-alabaster">รายการอุปกรณ์นาฬิกา Garmin ทั้งหมดในระบบ</h2>
-                <p class="text-xs text-slate-400">สามารถกด Activate ทันที, ต่ออายุทดลองใช้ +14 วัน, หรือจำลองสถานะหมดอายุ (Simulate Expired) เพื่อทดสอบหน้าจอล็อกบนนาฬิกาได้ทันที</p>
+                <h2 class="text-lg font-bold text-alabaster">Registered Garmin Watch Devices</h2>
+                <p class="text-xs text-slate-400">Select individual or multiple devices to revoke keys (Remove Key), activate PRO immediately, or extend the 14-day trial.</p>
+              </div>
+            </div>
+
+            <!-- Multi-Select & Individual Key Removal Toolbar -->
+            <div id="deviceSelectionToolbar" class="mb-4 rounded-2xl bg-void/80 ring-1 ring-white/10 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <label class="inline-flex items-center gap-2.5 cursor-pointer select-none text-xs font-mono text-alabaster">
+                  <input
+                    id="selectAllDevicesCheck"
+                    type="checkbox"
+                    class="h-4 w-4 rounded border-white/25 bg-void text-cyan focus:ring-cyan cursor-pointer"
+                  />
+                  <span>Select All</span>
+                </label>
+                <span id="selectedDevicesCountBadge" class="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-white/[0.06] text-slate-300">
+                  0 Selected
+                </span>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2">
+                <button
+                  id="bulkRemoveKeysBtn"
+                  type="button"
+                  disabled
+                  class="rounded-full bg-amber/20 hover:bg-amber/30 disabled:opacity-40 disabled:pointer-events-none ring-1 ring-amber/40 px-3.5 py-1.5 text-xs font-mono font-semibold text-amber flex items-center gap-1.5"
+                  title="Revoke activation keys from selected devices"
+                >
+                  <i class="ph-light ph-key-return"></i>
+                  <span>Remove Selected Keys</span>
+                </button>
+                <button
+                  id="bulkDeleteDevicesBtn"
+                  type="button"
+                  disabled
+                  class="rounded-full bg-crimson/20 hover:bg-crimson/30 disabled:opacity-40 disabled:pointer-events-none ring-1 ring-crimson/40 px-3.5 py-1.5 text-xs font-mono font-semibold text-crimson flex items-center gap-1.5"
+                  title="Delete selected devices and keys from the system"
+                >
+                  <i class="ph-light ph-trash"></i>
+                  <span>Delete Selected</span>
+                </button>
               </div>
             </div>
 
@@ -467,11 +511,11 @@
               <div class="flex items-center gap-2">
                 <i class="ph-light ph-paper-plane-tilt text-cyan text-lg"></i>
                 <h2 class="text-lg font-bold text-alabaster">
-                  ตั้งค่าระบบส่งอีเมลแจ้งเตือน (SMTP / System Mail → e24qdy2@gmail.com)
+                  Email Notification Configuration (SMTP / System Mail → e24qdy2@gmail.com)
                 </h2>
               </div>
               <p class="text-xs text-slate-400 mt-0.5">
-                รองรับทั้งการผูก SMTP (เช่น Gmail App Password / iCloud / Custom SMTP) และระบบส่งตรงผ่าน MX System Mail + บันทึกไฟล์ <code class="font-mono text-cyan">.eml</code> ลง Outbox อัตโนมัติทุกครั้งที่มีคำขอจากลูกค้า
+                Supports authenticated SMTP (Gmail App Password / iCloud / Custom SMTP), direct MX System Mail delivery, and automatic <code class="font-mono text-cyan">.eml</code> outbox spooling for every customer request.
               </p>
             </div>
             <button
@@ -480,13 +524,13 @@
               class="rounded-full bg-emerald text-void font-bold text-xs px-4 py-2.5 flex items-center gap-2 spring-transition active:scale-[0.98]"
             >
               <i class="ph-light ph-envelope-simple-open text-sm font-bold"></i>
-              <span>ทดสอบส่งอีเมลไปที่ e24qdy2@gmail.com ทันที</span>
+              <span>Send Test Email to e24qdy2@gmail.com</span>
             </button>
           </div>
 
           <form id="smtpConfigForm" class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t border-white/[0.06]">
             <div>
-              <label class="block text-xs text-slate-400 mb-1" for="smtpRecipientEmailInput">อีเมลปลายทางรับแจ้งเตือน (Recipient)</label>
+              <label class="block text-xs text-slate-400 mb-1" for="smtpRecipientEmailInput">Notification Recipient Email</label>
               <input
                 id="smtpRecipientEmailInput"
                 type="email"
@@ -496,7 +540,7 @@
               />
             </div>
             <div>
-              <label class="block text-xs text-slate-400 mb-1" for="smtpFromEmailInput">อีเมลผู้ส่ง (From Email)</label>
+              <label class="block text-xs text-slate-400 mb-1" for="smtpFromEmailInput">Sender Email (From)</label>
               <input
                 id="smtpFromEmailInput"
                 type="email"
@@ -505,12 +549,12 @@
               />
             </div>
             <div>
-              <label class="block text-xs text-slate-400 mb-1" for="smtpHostInput">SMTP Host (เช่น smtp.gmail.com)</label>
+              <label class="block text-xs text-slate-400 mb-1" for="smtpHostInput">SMTP Host (e.g. smtp.gmail.com)</label>
               <input
                 id="smtpHostInput"
                 type="text"
                 value="smtp.gmail.com"
-                placeholder="smtp.gmail.com หรือ smtp.mail.me.com"
+                placeholder="smtp.gmail.com or smtp.mail.me.com"
                 class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2 font-mono text-xs text-alabaster focus:outline-none"
               />
             </div>
@@ -535,7 +579,7 @@
               <input
                 id="smtpUserInput"
                 type="text"
-                placeholder="เช่น e24qdy2@gmail.com"
+                placeholder="e.g. e24qdy2@gmail.com"
                 class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2 font-mono text-xs text-alabaster focus:outline-none"
               />
             </div>
@@ -545,14 +589,14 @@
                 <input
                   id="smtpPassInput"
                   type="password"
-                  placeholder="กรอก App Password 16 หลัก (ถ้าใช้ SMTP Auth)"
+                  placeholder="Enter 16-digit App Password (if using SMTP Auth)"
                   class="flex-1 rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3.5 py-2 font-mono text-xs text-alabaster focus:outline-none"
                 />
                 <button
                   type="submit"
                   class="rounded-xl bg-cyan text-void font-bold text-xs px-4 py-2 whitespace-nowrap spring-transition active:scale-[0.98]"
                 >
-                  บันทึก SMTP
+                  Save SMTP
                 </button>
               </div>
             </div>
@@ -563,7 +607,7 @@
           <!-- Email Outbox & Delivery History Table -->
           <div class="pt-2 border-t border-white/[0.06]">
             <div class="flex items-center justify-between mb-3">
-              <h3 class="text-sm font-bold text-alabaster">ประวัติการส่งอีเมลแจ้งเตือน (Email Outbox &amp; Delivery Log)</h3>
+              <h3 class="text-sm font-bold text-alabaster">Email Outbox &amp; Delivery Log</h3>
               <span class="font-mono text-[11px] text-slate-400">Spool Dir: <code class="text-cyan">data/mail-outbox/*.eml</code></span>
             </div>
             <div class="overflow-x-auto">
@@ -591,8 +635,8 @@
         <div class="double-bezel-core p-6">
           <div class="flex items-center justify-between mb-4">
             <div>
-              <h3 class="text-base font-bold text-alabaster">บันทึกประวัติความปลอดภัยและการออกรหัส (SDLC Audit Trail)</h3>
-              <p class="text-xs text-slate-400">ตรวจสอบการเข้าสู่ระบบด้วยรหัสผ่าน, การเปลี่ยนรหัสผ่านผู้ดูแล, การสร้าง Activation Key, การอนุมัติคำขอลูกค้า และการเปลี่ยนแปลงสถานะเครื่องย้อนหลัง</p>
+              <h3 class="text-base font-bold text-alabaster">Security &amp; Licensing Audit Trail (SDLC)</h3>
+              <p class="text-xs text-slate-400">Track administrator sign-ins, password updates, activation key issuance, customer request approvals, and device state changes.</p>
             </div>
             <span class="font-mono text-xs text-slate-400">Owner: saharat.bun@icloud.com</span>
           </div>
@@ -622,10 +666,10 @@
   <div id="adminToastBanner" class="fixed bottom-6 right-6 z-50 translate-y-20 opacity-0 pointer-events-none spring-transition">
     <div class="rounded-full bg-core/95 backdrop-blur-xl ring-1 ring-cyan/40 px-5 py-3 shadow-2xl flex items-center gap-3">
       <span class="w-2 h-2 rounded-full bg-cyan"></span>
-      <span id="adminToastMessage" class="text-xs font-medium text-alabaster">ดำเนินการสำเร็จ</span>
+      <span id="adminToastMessage" class="text-xs font-medium text-alabaster">Action completed</span>
     </div>
   </div>
 
-  <script src="/admin.js"></script>
+  <script src="/admin.js?v=20261029-en1"></script>
 </body>
 </html>
