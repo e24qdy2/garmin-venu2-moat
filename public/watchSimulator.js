@@ -519,16 +519,20 @@
 
     const isTrialExpired = Boolean(state.license?.isExpired);
     const expiredView = el('watchViewExpired');
+    const expDid = el('watchExpiredDeviceId');
+    if (expDid) {
+      expDid.textContent = state.license?.deviceId || state.watchSettings?.deviceId || p.syncKey;
+    }
+    const expEmail = el('watchExpiredOwnerEmail');
+    if (expEmail) {
+      expEmail.textContent = state.license?.ownerEmail || 'saharat.bun@icloud.com';
+    }
 
     if (isTrialExpired && expiredView) {
       el('watchViewGlance')?.classList.add('hidden');
       el('watchViewList')?.classList.add('hidden');
       el('watchViewDetail')?.classList.add('hidden');
       expiredView.classList.remove('hidden');
-      const expDid = el('watchExpiredDeviceId');
-      if (expDid) expDid.textContent = state.license.deviceId || state.watchSettings.deviceId;
-      const expEmail = el('watchExpiredOwnerEmail');
-      if (expEmail) expEmail.textContent = state.license.ownerEmail || 'saharat.bun@icloud.com';
       return;
     }
 
@@ -707,7 +711,7 @@
     const found =
       (state.compatibleDevices || []).find(d => d.id === state.selectedWatchModel) || {
         id: state.selectedWatchModel || 'venu2',
-        name: 'Garmin Venu 2',
+        name: 'Garmin Watch',
         resolution: '416×416',
         displayType: 'AMOLED',
         releaseYear: '2021–2026'
@@ -716,7 +720,7 @@
     const resStr = formatDeviceRes(found.resolution);
     const titleEl = el('watchHardwareTitle');
     if (titleEl) {
-      titleEl.textContent = `${found.name} Hardware Preview`;
+      titleEl.textContent = 'Garmin Watch Hardware Preview';
     }
     const specEl = el('watchHardwareSpecLabel');
     if (specEl) {
@@ -724,13 +728,13 @@
     }
     const cmdEl = el('sideloadCommandHint');
     if (cmdEl) {
-      cmdEl.textContent = `.\\build-and-sideload.ps1 -Device ${found.id}`;
+      cmdEl.textContent = '.\\build-and-sideload.ps1';
     }
     const screenEl = el('venuScreenViewport');
     if (screenEl) {
       screenEl.setAttribute(
         'aria-label',
-        `หน้าจอจำลอง ${found.name} ขนาด ${resStr} พิกเซล (${found.displayType})`
+        `หน้าจอจำลองนาฬิกา Garmin ขนาด ${resStr} พิกเซล (${found.displayType})`
       );
       if (String(found.displayType).includes('MIP')) {
         screenEl.style.filter = 'contrast(0.95) saturate(0.82)';

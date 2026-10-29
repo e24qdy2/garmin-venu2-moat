@@ -61,7 +61,7 @@
       <button id="openSyncModalBtn" type="button" class="group flex items-center gap-2 rounded-full bg-white/[0.04] hover:bg-white/[0.08] ring-1 ring-white/10 px-3.5 py-1.5 text-xs spring-transition active:scale-[0.98]" title="เปลี่ยนรหัส Sync Key ของนาฬิกา Garmin">
         <i class="ph-light ph-watch text-cyan text-sm"></i>
         <span class="text-slate-400 hidden sm:inline">Sync Key:</span>
-        <span id="navSyncKeyDisplay" class="font-mono font-semibold text-alabaster">VENU2-88</span>
+        <span id="navSyncKeyDisplay" class="font-mono font-semibold text-alabaster">GARMIN-88</span>
       </button>
 
       <!-- License Status Badge -->
@@ -112,7 +112,7 @@
               URL ที่แอปบนนาฬิกา Garmin ใช้ดึงข้อมูลพอร์ตและกราฟราคาผ่าน <code class="font-mono text-alabaster">makeWebRequest</code>
             </p>
             <div class="rounded-2xl bg-void/80 ring-1 ring-white/10 p-3 font-mono text-[11px] text-emerald break-all" id="watchEndpointUrlBox">
-              /api/watch?key=VENU2-88
+              /api/watch?key=GARMIN-88
             </div>
           </div>
           <button id="copyWatchApiBtn" type="button" class="mt-5 w-full rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 py-2.5 px-4 text-xs font-medium flex items-center justify-center gap-2 spring-transition active:scale-[0.98]">
@@ -163,10 +163,10 @@
             </div>
             <h3 class="text-lg font-bold text-alabaster mb-2">ติดตั้งลงนาฬิกา Garmin</h3>
             <p class="text-xs text-slate-400 leading-relaxed mb-3">
-              ซอร์สโค้ด Monkey C สำหรับนาฬิกา Garmin อยู่ในโฟลเดอร์ <code class="font-mono text-alabaster">garmin-venu2-app/</code> พร้อมสคริปต์ Build &amp; Sideload ลงนาฬิกาผ่านสาย USB
+              ซอร์สโค้ด Monkey C สำหรับนาฬิกา Garmin พร้อมสคริปต์ Build &amp; Sideload ลงนาฬิกาผ่านสาย USB
             </p>
             <div class="rounded-2xl bg-void/80 ring-1 ring-white/10 p-3 font-mono text-[11px] text-slate-300">
-              .\build-and-sideload.ps1 -SyncKey VENU2-88
+              .\build-and-sideload.ps1
             </div>
           </div>
           <button id="inspectPayloadBtn" type="button" class="mt-5 w-full rounded-full bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/10 py-2.5 px-4 text-xs font-medium flex items-center justify-center gap-2 spring-transition active:scale-[0.98]">
@@ -453,6 +453,7 @@
                 id="watchModelSelect"
                 class="w-full sm:w-auto flex-1 min-w-0 max-w-full truncate rounded-xl bg-core ring-1 ring-white/15 focus:ring-cyan px-3 py-1.5 text-xs font-mono text-alabaster focus:outline-none"
               >
+                <option value="garmin" selected>Garmin Watch · อัตโนมัติทุกรุ่น (20 รุ่น 2024–2026)</option>
                 <option value="venu2">Garmin Venu 2 (416×416 AMOLED)</option>
                 <option value="venu3">Garmin Venu 3 (454×454 AMOLED)</option>
                 <option value="venu3s">Garmin Venu 3S (390×390 AMOLED)</option>
@@ -562,7 +563,7 @@
                         <div class="flex items-center justify-center gap-1 text-[9px] font-mono text-slate-400">
                           <span id="watchListClock">10:10</span>
                           <span>·</span>
-                          <span id="watchListSyncKey" class="text-cyan">VENU2-88</span>
+                          <span id="watchListSyncKey" class="text-cyan">GARMIN-88</span>
                           <span id="watchBadgeAutoSwipe" class="px-1.5 py-0.2 rounded-full bg-cyan/15 text-cyan text-[8px]">AUTO 5s</span>
                           <span id="watchBadgeAlwaysOn" class="hidden px-1.5 py-0.2 rounded-full bg-amber/20 text-amber text-[8px]">AON</span>
                           <button id="watchBadgeSortOrder" type="button" class="px-1.5 py-0.2 rounded-full bg-crimson/20 text-crimson text-[8px] hover:opacity-80 transition" title="คลิกเพื่อสลับเรียงลำดับ % Change (ติดลบ→กำไร / กำไร→ติดลบ)">▲ -%→+%</button>
@@ -679,7 +680,7 @@
                         <div class="text-[10px] text-slate-400 mt-0.5">หมดเวลาทดลองใช้ฟรี 14 วัน</div>
                         <div class="mt-2.5 rounded-xl bg-white/[0.04] ring-1 ring-white/10 px-3 py-1.5 font-mono text-[10px]">
                           <span class="text-slate-400">DEVICE ID:</span>
-                          <span id="watchExpiredDeviceId" class="text-cyan font-bold ml-1">V2-88VENU20</span>
+                          <span id="watchExpiredDeviceId" class="text-cyan font-bold ml-1">V2-GARMIN88</span>
                         </div>
                         <div class="mt-2 rounded-2xl bg-amber/10 ring-1 ring-amber/30 px-3 py-1.5">
                           <div class="text-[9px] font-mono text-amber uppercase">Contact App Owner (Paid Version)</div>
@@ -856,7 +857,7 @@
                   <div class="text-[11px] font-mono text-slate-400">GARMIN DEVICE LICENSE (14-DAY TRIAL)</div>
                   <div class="flex items-center gap-2 mt-0.5">
                     <span class="text-xs text-slate-400">Device ID:</span>
-                    <input id="watchDeviceIdInput" type="text" value="V2-88VENU20" class="w-32 rounded-lg bg-core ring-1 ring-white/10 px-2 py-0.5 font-mono text-xs font-bold text-cyan uppercase focus:outline-none focus:ring-cyan" title="รหัสประจำเครื่องนาฬิกา Garmin" />
+                    <input id="watchDeviceIdInput" type="text" value="V2-GARMIN88" class="w-32 rounded-lg bg-core ring-1 ring-white/10 px-2 py-0.5 font-mono text-xs font-bold text-cyan uppercase focus:outline-none focus:ring-cyan" title="รหัสประจำเครื่องนาฬิกา Garmin" />
                   </div>
                 </div>
                 <span id="licenseStatusPill" class="font-mono text-[11px] px-2.5 py-1 rounded-full bg-emerald/15 text-emerald ring-1 ring-emerald/30 font-semibold">
@@ -937,14 +938,14 @@
           <div class="double-bezel-core p-6 sm:p-8 h-full flex flex-col justify-between">
             <div>
               <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
-                <span class="font-mono text-xs text-emerald">garmin-venu2-app/source/*.mc</span>
-                <span class="font-mono text-xs text-slate-400">20 รุ่น: Venu 2/3 · vívoactive 5/6 · Forerunner 165/265/965 · fēnix 8 · Enduro 3 · epix Pro · Approach S70</span>
+                <span class="font-mono text-xs text-emerald">Connect IQ Monkey C · source/*.mc</span>
+                <span class="font-mono text-xs text-slate-400">20 รุ่น: Venu · vívoactive · Forerunner · fēnix · Enduro · epix Pro · Approach</span>
               </div>
               <h3 class="text-xl font-bold text-alabaster mb-2">
                 สถาปัตยกรรมแบบเดียวกับ Easymoat MarketWatch + WebMemo รองรับ Garmin 20 รุ่นยอดนิยม (2024–2026)
               </h3>
               <p class="text-sm text-slate-400 leading-relaxed mb-6">
-                ตัวแอปภาษา Monkey C ถูกออกแบบด้วยระบบ <strong class="text-alabaster">Proportional Responsive Scaling</strong> ปรับขนาดฟอนต์และเลย์เอาต์อัตโนมัติตั้งแต่จอ MIP Solar ขนาด <code class="font-mono text-cyan">260×260 / 280×280</code> (fēnix 8 Solar, Enduro 3) ไปจนถึงจอ AMOLED ความละเอียดสูง <code class="font-mono text-cyan">360×360 / 390×390 / 416×416 / 454×454</code> (Venu 2/3, Forerunner 165/265/965, fēnix 8 AMOLED, epix Pro Gen 2, Approach S70) พร้อมรองรับทั้งหน้าจอสัมผัสและปุ่มกด 5 ปุ่ม (UP/DOWN)
+                ตัวแอปภาษา Monkey C ถูกออกแบบด้วยระบบ <strong class="text-alabaster">Proportional Responsive Scaling</strong> ปรับขนาดฟอนต์และเลย์เอาต์อัตโนมัติตั้งแต่จอ MIP Solar ขนาด <code class="font-mono text-cyan">260×260 / 280×280</code> (fēnix 8 Solar, Enduro 3) ไปจนถึงจอ AMOLED ความละเอียดสูง <code class="font-mono text-cyan">360×360 / 390×390 / 416×416 / 454×454</code> (Venu Series, Forerunner Series, fēnix 8 AMOLED, epix Pro Gen 2, Approach S70) พร้อมรองรับทั้งหน้าจอสัมผัสและปุ่มกด 5 ปุ่ม (UP/DOWN)
               </p>
             </div>
 
@@ -976,7 +977,7 @@
               <h3 class="text-lg font-bold text-alabaster mb-2">วิธีนำเข้าสู่นาฬิกา Garmin (20 รุ่น)</h3>
               <ol class="space-y-2.5 text-xs text-slate-300 list-decimal list-inside leading-relaxed">
                 <li>เสียบสายชาร์จนาฬิกา Garmin เข้ากับคอมพิวเตอร์</li>
-                <li>รันคำสั่ง <code id="sideloadCommandHint" class="font-mono text-emerald">.\build-and-sideload.ps1 -Device venu2</code> เพื่อคอมไพล์ไฟล์ <code class="font-mono text-alabaster">MoatWatch.prg</code></li>
+                <li>รันคำสั่ง <code id="sideloadCommandHint" class="font-mono text-emerald">.\build-and-sideload.ps1</code> เพื่อคอมไพล์ไฟล์ <code class="font-mono text-alabaster">MoatWatch.prg</code></li>
                 <li>สคริปต์จะคัดลอกไฟล์เข้าโฟลเดอร์ <code class="font-mono text-alabaster">GARMIN\APPS</code> บนนาฬิกาโดยอัตโนมัติ</li>
               </ol>
             </div>
@@ -1099,7 +1100,7 @@
         </div>
 
         <div class="flex flex-col sm:flex-row gap-2.5 mb-3">
-          <input id="syncKeyInput" type="text" value="VENU2-88" placeholder="เช่น V2-A1B2C3D4 หรือตั้งรหัสส่วนตัว" class="flex-1 rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-4 py-2.5 font-mono text-sm text-alabaster uppercase focus:outline-none" />
+          <input id="syncKeyInput" type="text" value="GARMIN-88" placeholder="เช่น V2-A1B2C3D4 หรือตั้งรหัสส่วนตัว" class="flex-1 rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-4 py-2.5 font-mono text-sm text-alabaster uppercase focus:outline-none" />
           <button id="applySyncKeyBtn" type="button" class="rounded-full bg-cyan text-void font-bold text-xs px-5 py-2.5 spring-transition active:scale-[0.98]">
             โหลด / สลับ Sync Key
           </button>
@@ -1109,14 +1110,14 @@
         </div>
 
         <div class="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-white/[0.03] ring-1 ring-white/10 px-3.5 py-2 mb-4 text-[11px]">
-          <span class="text-slate-400">ลิงก์เข้าพอร์ตส่วนตัวของคุณโดยตรง: <code id="personalProfileUrlLabel" class="font-mono text-cyan">/?key=VENU2-88</code></span>
+          <span class="text-slate-400">ลิงก์เข้าพอร์ตส่วนตัวของคุณโดยตรง: <code id="personalProfileUrlLabel" class="font-mono text-cyan">/?key=GARMIN-88</code></span>
           <button id="copyProfileUrlBtn" type="button" class="rounded-full bg-white/[0.08] hover:bg-white/[0.15] text-alabaster px-3 py-1 font-mono text-[11px] spring-transition">
             คัดลอกลิงก์ส่วนตัว
           </button>
         </div>
 
         <div class="mb-2 flex items-center justify-between text-xs font-mono">
-          <span class="text-slate-400">Compact Payload (<code id="modalWatchEndpointLabel" class="text-emerald">/api/watch?key=VENU2-88</code>)</span>
+          <span class="text-slate-400">Compact Payload (<code id="modalWatchEndpointLabel" class="text-emerald">/api/watch?key=GARMIN-88</code>)</span>
           <span id="payloadByteSizeLabel" class="text-cyan">0 bytes</span>
         </div>
         <pre id="watchJsonPreview" class="rounded-2xl bg-void ring-1 ring-white/10 p-4 font-mono text-[11px] text-slate-300 max-h-72 overflow-auto"></pre>
@@ -1181,7 +1182,7 @@
                 id="requestDeviceIdInput"
                 type="text"
                 required
-                value="V2-88VENU20"
+                value="V2-GARMIN88"
                 class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3 py-2 font-mono text-xs text-cyan font-bold uppercase focus:outline-none"
               />
             </div>
@@ -1190,7 +1191,7 @@
               <input
                 id="requestSyncKeyInput"
                 type="text"
-                value="VENU2-88"
+                value="GARMIN-88"
                 class="w-full rounded-xl bg-void ring-1 ring-white/15 focus:ring-cyan px-3 py-2 font-mono text-xs text-alabaster uppercase focus:outline-none"
               />
             </div>
@@ -1297,7 +1298,7 @@
     </div>
   </div>
 
-  <script src="/watchSimulator.js?v=20261029-garmin"></script>
-  <script src="/app.js?v=20261029-garmin"></script>
+  <script src="/watchSimulator.js?v=20261029-garmin3"></script>
+  <script src="/app.js?v=20261029-garmin3"></script>
 </body>
 </html>

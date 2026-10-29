@@ -83,7 +83,7 @@ const INITIAL_LICENSES_STORE = {
   devices: {
     "V2-88VENU20": {
       deviceId: "V2-88VENU20",
-      label: "Garmin Venu 2 (Primary USB Watch)",
+      label: "Garmin Watch (Primary USB Watch)",
       syncKey: "VENU2-88",
       status: "ACTIVE",
       firstSeenAt: "2026-10-20T15:32:31.129Z",
@@ -93,7 +93,7 @@ const INITIAL_LICENSES_STORE = {
       activatedKey: "MOAT-K8Y6-X9GU-R6WK",
       activatedAt: "2026-10-20T17:00:07.027Z",
       issuedKey: "MOAT-K8Y6-X9GU-R6WK",
-      notes: "PRO Activated (Primary Garmin Venu 2)"
+      notes: "PRO Activated (Primary Garmin Watch)"
     }
   },
   customerRequests: [
@@ -105,9 +105,9 @@ const INITIAL_LICENSES_STORE = {
       syncKey: "VENU2-88",
       contactName: "คุณสหรัฐ (Primary Watch Owner)",
       contactEmail: "saharat.bun@icloud.com",
-      contactPhone: "LINE: @venu2moat",
+      contactPhone: "LINE: @moatwatch",
       requestedExtendDays: 0,
-      message: "Activated PRO License for Garmin Venu 2 (V2-88VENU20)",
+      message: "Activated PRO License for Garmin Watch (V2-88VENU20)",
       createdAt: "2026-10-20T16:21:13.727Z",
       resolvedAt: "2026-10-20T16:25:32.096Z",
       resolvedBy: "saharat.bun@icloud.com",
@@ -122,7 +122,7 @@ const INITIAL_LICENSES_STORE = {
       actor: "system",
       action: "CLOUDFLARE_EDGE_INIT",
       deviceId: "V2-88VENU20",
-      detail: "Initialized Venu2Moat Serverless Edge Store on Cloudflare"
+      detail: "Initialized MoatWatch Serverless Edge Store on Cloudflare"
     }
   ],
   smtpConfig: {

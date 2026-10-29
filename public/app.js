@@ -65,7 +65,7 @@
 
   const state = {
     syncKey: initialSyncKey,
-    selectedWatchModel: localStorage.getItem('venu2_watch_model') || 'venu2',
+    selectedWatchModel: localStorage.getItem('garmin_watch_model') || 'garmin',
     compatibleDevices: [],
     profile: null,
     activePortfolioIndex: 0,
@@ -489,6 +489,22 @@
     el('navSyncKeyDisplay').textContent = p.syncKey;
     const didParam = state.watchSettings.deviceId ? `&did=${encodeURIComponent(state.watchSettings.deviceId)}` : '';
     el('watchEndpointUrlBox').textContent = `${window.location.origin}/api/watch?key=${p.syncKey}${didParam}`;
+    const syncKeyInputEl = el('syncKeyInput');
+    if (syncKeyInputEl && document.activeElement !== syncKeyInputEl) {
+      syncKeyInputEl.value = p.syncKey;
+    }
+    const personalUrlEl = el('personalProfileUrlLabel');
+    if (personalUrlEl) personalUrlEl.textContent = `/?key=${p.syncKey}`;
+    const modalWatchEpEl = el('modalWatchEndpointLabel');
+    if (modalWatchEpEl) modalWatchEpEl.textContent = `/api/watch?key=${p.syncKey}${didParam}`;
+    const reqDidEl = el('requestDeviceIdInput');
+    if (reqDidEl && document.activeElement !== reqDidEl) {
+      reqDidEl.value = state.license?.deviceId || state.watchSettings.deviceId || p.syncKey;
+    }
+    const reqKeyEl = el('requestSyncKeyInput');
+    if (reqKeyEl && document.activeElement !== reqKeyEl) {
+      reqKeyEl.value = p.syncKey;
+    }
 
     const thbBtn = el('curThbBtn');
     const usdBtn = el('curUsdBtn');
@@ -1525,12 +1541,14 @@
     const watchModelSelect = el('watchModelSelect');
     if (watchModelSelect) {
       watchModelSelect.addEventListener('change', () => {
-        state.selectedWatchModel = watchModelSelect.value || 'venu2';
-        localStorage.setItem('venu2_watch_model', state.selectedWatchModel);
+        state.selectedWatchModel = watchModelSelect.value || 'garmin';
+        localStorage.setItem('garmin_watch_model', state.selectedWatchModel);
         applyWatchModelPreview();
         const found = state.compatibleDevices.find(d => d.id === state.selectedWatchModel);
         if (found) {
           showToast(`สลับจำลองหน้าจอเป็น ${found.name} (${formatDeviceRes(found.resolution)} ${found.displayType})`);
+        } else {
+          showToast('สลับจำลองหน้าจอเป็น Garmin Watch อัตโนมัติทุกรุ่น');
         }
       });
     }
@@ -1545,12 +1563,15 @@
         state.compatibleDevices = data.devices;
         const selectEl = el('watchModelSelect');
         if (selectEl) {
-          selectEl.innerHTML = data.devices
-            .map(
-              d =>
-                `<option value="${escapeHtml(d.id)}" ${d.id === state.selectedWatchModel ? 'selected' : ''}>${escapeHtml(d.name)} (${escapeHtml(formatDeviceRes(d.resolution))} ${escapeHtml(d.displayType)})</option>`
-            )
-            .join('');
+          const defaultOpt = `<option value="garmin" ${state.selectedWatchModel === 'garmin' ? 'selected' : ''}>Garmin Watch · อัตโนมัติทุกรุ่น (20 รุ่น 2024–2026)</option>`;
+          selectEl.innerHTML =
+            defaultOpt +
+            data.devices
+              .map(
+                d =>
+                  `<option value="${escapeHtml(d.id)}" ${d.id === state.selectedWatchModel ? 'selected' : ''}>${escapeHtml(d.name)} (${escapeHtml(formatDeviceRes(d.resolution))} ${escapeHtml(d.displayType)})</option>`
+              )
+              .join('');
         }
         applyWatchModelPreview();
       }
