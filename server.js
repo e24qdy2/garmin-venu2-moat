@@ -28,6 +28,11 @@ const {
   fetchSymbolMarketData,
   buildEnrichedPayload: buildEnrichedPayloadCore
 } = require("./lib/moatEngine");
+const {
+  reconcileWebPortfolioSave,
+  createIntegrationStoreAdapter,
+  handleIntegrationRequest
+} = require("./lib/webMemoIntegration");
 
 // Ensure Connect IQ device definitions exist for all 2024-2026 supported watches
 try {
@@ -39,6 +44,7 @@ try {
 const PORT = process.env.PORT || 3880;
 const DATA_DIR = path.join(__dirname, "data");
 const DATA_FILE = path.join(DATA_DIR, "portfolios.json");
+const DRAFTS_FILE = path.join(DATA_DIR, "webmemo_drafts.json");
 const PUBLIC_DIR = path.join(__dirname, "public");
 
 const licenseManager = new LicenseManager({
@@ -120,6 +126,30 @@ function readStore() {
 
 function writeStore(store) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(store, null, 2), "utf8");
+}
+
+function readDraftsStore() {
+  try {
+    if (!fs.existsSync(DRAFTS_FILE)) return [];
+    const raw = fs.readFileSync(DRAFTS_FILE, "utf8");
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (_) {
+    return [];
+  }
+}
+
+function writeDraftsStore(drafts) {
+  fs.writeFileSync(DRAFTS_FILE, JSON.stringify(Array.isArray(drafts) ? drafts : [], null, 2), "utf8");
+}
+
+function buildNodeIntegrationStore() {
+  return createIntegrationStoreAdapter({
+    getMemoryPortfolios: () => readStore(),
+    setMemoryPortfolios: (next) => writeStore(next),
+    getMemoryDrafts: () => readDraftsStore(),
+    setMemoryDrafts: (next) => writeDraftsStore(next)
+  });
 }
 
 function getOrCreateProfile(syncKey) {
@@ -283,6 +313,30 @@ async function handleRequest(req, res) {
     });
   }
 
+  // 0b. SCOPED WEBMEMO INTEGRATION API (Hermes Agent + Discord Approval)
+  if (pathname === "/api/integration" || pathname.startsWith("/api/integration/")) {
+    let body = {};
+    if (req.method === "POST" || req.method === "PUT" || req.method === "PATCH") {
+      try {
+        body = await parseBody(req);
+      } catch (err) {
+        return sendJson(res, 400, { ok: false, error: err.message, code: "INVALID_JSON" });
+      }
+    }
+    const result = await handleIntegrationRequest({
+      method: req.method,
+      pathname,
+      query: parsedUrl.query || {},
+      headers: req.headers || {},
+      body,
+      env: process.env,
+      store: buildNodeIntegrationStore()
+    });
+    if (result) {
+      return sendJson(res, result.status, result.body, result.headers || {});
+    }
+  }
+
   // 1. GET /api/portfolio?key=VENU2-88 (Full Web Companion + Watch Preview Payload)
   if (pathname === "/api/portfolio" && req.method === "GET") {
     const syncKey = parsedUrl.query.key || "VENU2-88";
@@ -300,18 +354,23 @@ async function handleRequest(req, res) {
     try {
       const body = await parseBody(req);
       const syncKey = (body.syncKey || "VENU2-88").trim().toUpperCase();
-      const store = readStore();
       const existing = getOrCreateProfile(syncKey);
+      const store = readStore();
       const mergedWatchSettings = sanitizeWatchSettings(body.watchSettings || {}, existing.watchSettings);
 
       const normalizedPortfolios = normalizePortfoliosInput(body.portfolios, existing.portfolios);
+      const reconciled = reconcileWebPortfolioSave({
+        currentServerPortfolios: existing.portfolios,
+        normalizedClientPortfolios: normalizedPortfolios,
+        rawClientPortfolios: body.portfolios
+      });
 
       store[syncKey] = {
         syncKey,
         baseCurrency: body.baseCurrency === "USD" ? "USD" : "THB",
         updatedAt: new Date().toISOString(),
         watchSettings: mergedWatchSettings,
-        portfolios: normalizedPortfolios
+        portfolios: reconciled.portfolios
       };
       // If user paired a physical Garmin Device ID (e.g. V2-XXXXXXXX) whose watch auto-syncs via its Device ID, keep that device profile in sync
       const boundDid = mergedWatchSettings.deviceId;

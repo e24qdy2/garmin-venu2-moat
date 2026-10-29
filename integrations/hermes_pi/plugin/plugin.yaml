@@ -1,0 +1,6 @@
+name: webmemo-approval
+version: 1.0.0
+description: MoatWatch Scoped WebMemo Integration + Persistent Discord Approval Buttons for Hermes Agent
+author: MoatWatch Integration
+requires_env:
+  - WEBMEMO_INTEGRATION_TOKEN

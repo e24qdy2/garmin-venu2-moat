@@ -7,6 +7,7 @@
     "start": "node server.js",
     "dev": "node server.js",
     "test": "node tests/sdlc.test.js",
+    "test:webmemo": "node tests/webmemo-integration.test.js",
     "build:watch": "powershell -NoProfile -ExecutionPolicy Bypass -File ./build-and-sideload.ps1",
     "cf:login": "npx wrangler login",
     "cf:bundle": "npx wrangler deploy --dry-run --outdir dist/worker-bundle",

@@ -2,6 +2,7 @@ import licenseMod from "../lib/licenseManager.js";
 import emailMod from "../lib/emailService.js";
 import garminMod from "../lib/garminDevices.js";
 import moatEngineMod from "../lib/moatEngine.js";
+import webMemoIntegrationMod from "../lib/webMemoIntegration.js";
 import seedMod from "./seedData.js";
 
 const { LicenseManager, OWNER_EMAIL, NOTIFY_EMAIL, TRIAL_DAYS } = licenseMod;
@@ -22,11 +23,18 @@ const {
   fetchSymbolMarketData,
   buildEnrichedPayload: buildEnrichedPayloadCore
 } = moatEngineMod;
+const {
+  reconcileWebPortfolioSave,
+  createIntegrationStoreAdapter,
+  handleIntegrationRequest
+} = webMemoIntegrationMod;
 const { INITIAL_PORTFOLIOS_STORE, INITIAL_LICENSES_STORE } = seedMod;
 
 // In-memory state per Worker isolate, hydrated from D1 or KV if bound, or seeded from INITIAL_*_STORE
 let runtimePortfoliosStore = null;
 let runtimeLicensesStore = null;
+let runtimeDraftsStore = [];
+let runtimePortfoliosDirty = false;
 let runtimeHydrated = false;
 let licenseManagerInstance = null;
 let emailServiceInstance = null;
@@ -131,6 +139,33 @@ async function ensureStoreHydrated(env) {
   runtimeHydrated = true;
 }
 
+async function refreshPortfoliosFromD1(env) {
+  if (env && env.DB && typeof env.DB.prepare === "function") {
+    try {
+      const pRow = await env.DB.prepare("SELECT value FROM kv_store WHERE key = ?").bind("portfolios").first();
+      if (pRow && pRow.value) {
+        runtimePortfoliosStore = JSON.parse(pRow.value);
+      }
+    } catch (_) {
+      // Keep existing runtimePortfoliosStore on transient read error
+    }
+  }
+}
+
+function buildIntegrationStore(env) {
+  return createIntegrationStoreAdapter({
+    env,
+    getMemoryPortfolios: () => runtimePortfoliosStore,
+    setMemoryPortfolios: (next) => {
+      runtimePortfoliosStore = next;
+    },
+    getMemoryDrafts: () => runtimeDraftsStore,
+    setMemoryDrafts: (next) => {
+      runtimeDraftsStore = next;
+    }
+  });
+}
+
 async function persistKey(env, key, valueObj) {
   const serialized = JSON.stringify(valueObj);
   const now = new Date().toISOString();
@@ -154,11 +189,15 @@ async function persistKey(env, key, valueObj) {
   }
 }
 
-async function flushStores(env, ctx) {
-  const promise = Promise.all([
-    persistKey(env, "portfolios", runtimePortfoliosStore),
+async function flushStores(env, ctx, { includePortfolios = true } = {}) {
+  const tasks = [
     persistKey(env, "licenses", licenseManagerInstance ? licenseManagerInstance.readDb() : runtimeLicensesStore)
-  ]);
+  ];
+  if (includePortfolios) {
+    tasks.unshift(persistKey(env, "portfolios", runtimePortfoliosStore));
+  }
+  runtimePortfoliosDirty = false;
+  const promise = Promise.all(tasks);
   if (ctx && typeof ctx.waitUntil === "function") {
     ctx.waitUntil(promise);
   } else {
@@ -175,8 +214,11 @@ function getOrCreateProfile(syncKey) {
   if (!runtimePortfoliosStore[key]) {
     const template = runtimePortfoliosStore["VENU2-88"] || INITIAL_PORTFOLIOS_STORE["VENU2-88"];
     runtimePortfoliosStore[key] = createIsolatedProfile(key, template, licenseManagerInstance);
+    runtimePortfoliosDirty = true;
   }
-  ensureIsolatedProfileSettings(runtimePortfoliosStore[key], licenseManagerInstance);
+  if (ensureIsolatedProfileSettings(runtimePortfoliosStore[key], licenseManagerInstance)) {
+    runtimePortfoliosDirty = true;
+  }
   return runtimePortfoliosStore[key];
 }
 
@@ -214,6 +256,7 @@ async function buildEnrichedPayload(profile, queryOpts = {}) {
     onSyncWatchSettings: (syncKey, nextSettings) => {
       if (runtimePortfoliosStore[syncKey]) {
         runtimePortfoliosStore[syncKey].watchSettings = nextSettings;
+        runtimePortfoliosDirty = true;
       }
     }
   });
@@ -346,8 +389,35 @@ export default {
       });
     }
 
+    // 1B. SCOPED WEBMEMO INTEGRATION API (Hermes Agent + Discord Approval)
+    if (pathname === "/api/integration" || pathname.startsWith("/api/integration/")) {
+      let body = {};
+      if (request.method === "POST" || request.method === "PUT" || request.method === "PATCH") {
+        try {
+          body = await parseRequestBody(request);
+        } catch (err) {
+          return jsonResponse(400, { ok: false, error: err.message, code: "INVALID_JSON" });
+        }
+      }
+      const integrationStore = buildIntegrationStore(env);
+      const result = await handleIntegrationRequest({
+        method: request.method,
+        pathname,
+        query,
+        headers: reqHeaders,
+        body,
+        env,
+        store: integrationStore
+      });
+      if (result) {
+        return jsonResponse(result.status, result.body, result.headers || {});
+      }
+    }
+
     // 2. GET FULL ENRICHED PORTFOLIO (For Web App + Simulator)
     if (pathname === "/api/portfolio" && request.method === "GET") {
+      await refreshPortfoliosFromD1(env);
+      runtimePortfoliosDirty = false;
       const syncKey = query.key || "VENU2-88";
       const profile = getOrCreateProfile(syncKey);
       const payload = await buildEnrichedPayload(profile, {
@@ -355,23 +425,27 @@ export default {
         activationKey: query.akey || query.licenseKey,
         watchModel: query.model || query.watchModel
       });
-      await flushStores(env, ctx);
+      await flushStores(env, ctx, { includePortfolios: runtimePortfoliosDirty });
       return jsonResponse(200, payload);
     }
 
     // 2B. POST /api/refresh (Clear cache and return fresh quotes)
     if (pathname === "/api/refresh" && request.method === "POST") {
+      await refreshPortfoliosFromD1(env);
+      runtimePortfoliosDirty = false;
       const body = await parseRequestBody(request).catch(() => ({}));
       const syncKey = (body.syncKey || query.key || "VENU2-88").trim().toUpperCase();
       clearMarketCache();
       const profile = getOrCreateProfile(syncKey);
       const payload = await buildEnrichedPayload(profile);
-      await flushStores(env, ctx);
+      await flushStores(env, ctx, { includePortfolios: runtimePortfoliosDirty });
       return jsonResponse(200, payload);
     }
 
     // 3. GET ULTRA-COMPACT GARMIN WATCH PAYLOAD
     if ((pathname === "/api/watch" || pathname.startsWith("/api/watch/")) && request.method === "GET") {
+      await refreshPortfoliosFromD1(env);
+      runtimePortfoliosDirty = false;
       const pathKey = pathname.startsWith("/api/watch/") ? pathname.replace("/api/watch/", "") : "";
       const rawSyncKey = pathKey || query.key || "";
       const rawDid = query.did || query.deviceId;
@@ -387,7 +461,7 @@ export default {
         activationKey: query.akey || query.lkey || query.licenseKey,
         watchModel: query.model || query.mdl || query.watchModel
       });
-      await flushStores(env, ctx);
+      await flushStores(env, ctx, { includePortfolios: runtimePortfoliosDirty });
       return jsonResponse(200, payload.watch);
     }
 
@@ -396,38 +470,74 @@ export default {
       try {
         const body = await parseRequestBody(request);
         const syncKey = (body.syncKey || query.key || "VENU2-88").trim().toUpperCase();
-        const existing = getOrCreateProfile(syncKey);
-        const nextWatchSettings = sanitizeWatchSettings(
-          body.watchSettings || {},
-          existing.watchSettings || DEFAULT_WATCH_SETTINGS
-        );
+        const integrationStore = buildIntegrationStore(env);
 
-        const normalizedPortfolios = normalizePortfoliosInput(body.portfolios, existing.portfolios);
+        let savedProfile = null;
+        let savedWatchSettings = null;
+        let casSuccess = false;
 
-        runtimePortfoliosStore[syncKey] = {
-          syncKey,
-          baseCurrency: body.baseCurrency === "USD" ? "USD" : "THB",
-          updatedAt: new Date().toISOString(),
-          watchSettings: nextWatchSettings,
-          portfolios: normalizedPortfolios
-        };
-        const boundDid = nextWatchSettings.deviceId;
-        if (boundDid && boundDid !== "V2-88VENU20" && boundDid !== syncKey && runtimePortfoliosStore[boundDid]) {
-          runtimePortfoliosStore[boundDid] = {
-            ...runtimePortfoliosStore[syncKey],
-            syncKey: boundDid,
-            watchSettings: {
-              ...nextWatchSettings,
-              activationKey: runtimePortfoliosStore[boundDid].watchSettings?.activationKey || nextWatchSettings.activationKey
-            }
+        for (let attempt = 0; attempt < 3; attempt++) {
+          const snapshot = await integrationStore.readPortfoliosSnapshot();
+          runtimePortfoliosStore = snapshot.store;
+          const existing = getOrCreateProfile(syncKey);
+          const nextWatchSettings = sanitizeWatchSettings(
+            body.watchSettings || {},
+            existing.watchSettings || DEFAULT_WATCH_SETTINGS
+          );
+
+          const normalizedPortfolios = normalizePortfoliosInput(body.portfolios, existing.portfolios);
+          const reconciled = reconcileWebPortfolioSave({
+            currentServerPortfolios: existing.portfolios,
+            normalizedClientPortfolios: normalizedPortfolios,
+            rawClientPortfolios: body.portfolios
+          });
+
+          const nextStore = deepClone(runtimePortfoliosStore);
+          nextStore[syncKey] = {
+            syncKey,
+            baseCurrency: body.baseCurrency === "USD" ? "USD" : "THB",
+            updatedAt: new Date().toISOString(),
+            watchSettings: nextWatchSettings,
+            portfolios: reconciled.portfolios
           };
+          const boundDid = nextWatchSettings.deviceId;
+          if (boundDid && boundDid !== "V2-88VENU20" && boundDid !== syncKey && nextStore[boundDid]) {
+            nextStore[boundDid] = {
+              ...nextStore[syncKey],
+              syncKey: boundDid,
+              watchSettings: {
+                ...nextWatchSettings,
+                activationKey: nextStore[boundDid].watchSettings?.activationKey || nextWatchSettings.activationKey
+              }
+            };
+          }
+
+          const casWrite = await integrationStore.casWritePortfoliosSnapshot(snapshot.raw, nextStore);
+          if (casWrite && casWrite.ok) {
+            runtimePortfoliosStore = nextStore;
+            savedProfile = runtimePortfoliosStore[syncKey];
+            savedWatchSettings = nextWatchSettings;
+            casSuccess = true;
+            break;
+          }
         }
-        const payload = await buildEnrichedPayload(runtimePortfoliosStore[syncKey], {
-          deviceId: nextWatchSettings.deviceId,
-          activationKey: nextWatchSettings.activationKey,
-          watchModel: nextWatchSettings.watchModel
+
+        if (!casSuccess || !savedProfile) {
+          return jsonResponse(409, {
+            error: "Concurrent portfolio update conflict; please retry save.",
+            code: "PORTFOLIO_CAS_CONFLICT"
+          });
+        }
+
+        const payload = await buildEnrichedPayload(savedProfile, {
+          deviceId: savedWatchSettings.deviceId,
+          activationKey: savedWatchSettings.activationKey,
+          watchModel: savedWatchSettings.watchModel
         });
-        await flushStores(env, ctx);
+        await flushStores(env, ctx, { includePortfolios: false });
+        if (env && env.MOAT_KV && typeof env.MOAT_KV.put === "function") {
+          await env.MOAT_KV.put("portfolios", JSON.stringify(runtimePortfoliosStore)).catch(() => {});
+        }
         return jsonResponse(200, payload);
       } catch (err) {
         return jsonResponse(400, { error: err.message });

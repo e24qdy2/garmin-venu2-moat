@@ -61,8 +61,9 @@ if ($dbId) {
   ) -Force
   $wranglerConfig | ConvertTo-Json -Depth 10 | Set-Content -Path "$PSScriptRoot\wrangler.jsonc" -Encoding UTF8
 
-  Write-Host "Applying D1 schema migration (migrations/0001_init_moat_store.sql)..." -ForegroundColor Cyan
+  Write-Host "Applying D1 schema migrations (0001 + 0002)..." -ForegroundColor Cyan
   npx wrangler d1 execute venu2-moat-db --remote --file=./migrations/0001_init_moat_store.sql
+  npx wrangler d1 execute venu2-moat-db --remote --file=./migrations/0002_webmemo_drafts.sql
 } else {
   Write-Host "Proceeding with Worker deployment (using built-in seed store)." -ForegroundColor Yellow
 }

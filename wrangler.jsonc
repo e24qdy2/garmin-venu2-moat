@@ -24,7 +24,9 @@
   ],
   "vars": {
     "OWNER_EMAIL": "saharat.bun@icloud.com",
-    "NOTIFY_EMAIL": "e24qdy2@gmail.com"
+    "NOTIFY_EMAIL": "e24qdy2@gmail.com",
+    "WEBMEMO_INTEGRATION_ENABLED": "true",
+    "WEBMEMO_ALLOWED_DISCORD_USER_IDS": "714126273964736522"
   },
   "d1_databases": [
     {

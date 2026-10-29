@@ -227,7 +227,9 @@
           stopPrice: Number(it.stopPrice || 0),
           alertDir: it.stopPrice > 0 && !it.targetPrice ? 'BELOW' : 'ABOVE',
           earningsDate: String(it.earningsDate || '').replace(/^e-/i, '').trim(),
-          memo: it.note || ''
+          memo: it.note !== undefined ? it.note : (it.memo || ''),
+          baseMemo: it.loadedMemo !== undefined ? it.loadedMemo : undefined,
+          memoRevision: it.memoRevision !== undefined ? Number(it.memoRevision) : undefined
         }))
       }))
     };
@@ -1715,7 +1717,14 @@
       const sym = (el('holdingSymbolInput')?.value || '').trim().toUpperCase();
       if (!sym) return;
 
+      const existingIdx = origSym
+        ? active.items.findIndex(x => x.symbol.toUpperCase() === origSym)
+        : active.items.findIndex(x => x.symbol.toUpperCase() === sym);
+      const prevItem = existingIdx >= 0 ? active.items[existingIdx] : null;
+      const nextNote = (el('holdingNoteInput')?.value || '').trim();
+
       const newItem = {
+        ...(prevItem || {}),
         symbol: sym,
         name: (el('holdingNameInput')?.value || '').trim(),
         currency: el('holdingCurrencySelect')?.value || 'USD',
@@ -1724,17 +1733,14 @@
         targetPrice: Number(el('holdingTargetInput')?.value || 0),
         stopPrice: Number(el('holdingStopInput')?.value || 0),
         earningsDate: (el('holdingEarningsDateInput')?.value || '').trim().replace(/^e-/i, ''),
-        note: (el('holdingNoteInput')?.value || '').trim()
+        note: nextNote,
+        memo: nextNote
       };
 
-      if (origSym) {
-        const idx = active.items.findIndex(x => x.symbol.toUpperCase() === origSym);
-        if (idx >= 0) active.items[idx] = newItem;
-        else active.items.push(newItem);
+      if (existingIdx >= 0) {
+        active.items[existingIdx] = newItem;
       } else {
-        const existingIdx = active.items.findIndex(x => x.symbol.toUpperCase() === sym);
-        if (existingIdx >= 0) active.items[existingIdx] = newItem;
-        else active.items.push(newItem);
+        active.items.push(newItem);
       }
 
       closeHoldingModal();
