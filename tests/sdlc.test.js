@@ -1114,7 +1114,49 @@ async function runSdlcSuite() {
       assert.strictEqual(statusRes.json.connectionState, "ONLINE");
       assert.strictEqual(statusRes.json.host, "echo24");
 
-      console.log("[PASS] 19. Hermes Live Connection Status, 5 Remote Commands & 8-Step Functional Diagnostics verified");
+      // 19f. Hermes updates an existing seeded card (NVDA) with flat s1..r3 and referencePrice
+      const nvdaUpdateRes = await httpRequest(
+        "POST",
+        "/api/integration/research-posts",
+        {
+          action: "UPSERT",
+          symbol: "NVDA",
+          companyName: "NVIDIA Corp.",
+          headline: "NVDA Live Cron Update — S1-S3 / R1-R3 Re-anchored @ $201.97",
+          summary: "Automated Hermes cron update with fresh Yahoo Finance price and S/R 1-2-3 levels.",
+          signalMemo: "Hold core; S1 $186.99 / S2 $176.22 · R1 $205.00 / R2 $212.19",
+          bias: "BULLISH",
+          confidence: 92,
+          referencePrice: 201.97,
+          s1: 186.99,
+          s2: 176.22,
+          s3: 164.27,
+          r1: 205.00,
+          r2: 212.19,
+          r3: 225.00,
+          s1Note: "EMA-20 Short-Term Pullback Zone",
+          r2Note: "52-Week High Breakout Target",
+          tags: ["#hermes-daily", "#ai-infra", "#support-resistance"]
+        },
+        { Authorization: `Bearer ${hermesToken}` }
+      );
+      assert.strictEqual(nvdaUpdateRes.status, 200);
+      assert.strictEqual(nvdaUpdateRes.json.ok, true);
+      assert.strictEqual(nvdaUpdateRes.json.post.referencePrice, 201.97);
+      assert.strictEqual(nvdaUpdateRes.json.post.supportLevels.s1.price, 186.99);
+      assert.strictEqual(nvdaUpdateRes.json.post.supportLevels.s2.price, 176.22);
+      assert.strictEqual(nvdaUpdateRes.json.post.supportLevels.s3.price, 164.27);
+      assert.strictEqual(nvdaUpdateRes.json.post.resistanceLevels.r1.price, 205.0);
+      assert.strictEqual(nvdaUpdateRes.json.post.resistanceLevels.r2.price, 212.19);
+      assert.strictEqual(nvdaUpdateRes.json.post.resistanceLevels.r3.price, 225.0);
+      assert.strictEqual(nvdaUpdateRes.json.post.supportLevels.s1.note, "EMA-20 Short-Term Pullback Zone");
+      assert.strictEqual(nvdaUpdateRes.json.post.resistanceLevels.r2.note, "52-Week High Breakout Target");
+      assert.strictEqual(
+        nvdaUpdateRes.json.post.title,
+        "NVDA Live Cron Update — S1-S3 / R1-R3 Re-anchored @ $201.97"
+      );
+
+      console.log("[PASS] 19. Hermes Live Connection Status, 5 Remote Commands, S/R 1-2-3 Re-Anchor & 8-Step Functional Diagnostics verified");
     } finally {
       if (prevIntEnabled === undefined) delete process.env.WEBMEMO_INTEGRATION_ENABLED;
       else process.env.WEBMEMO_INTEGRATION_ENABLED = prevIntEnabled;
