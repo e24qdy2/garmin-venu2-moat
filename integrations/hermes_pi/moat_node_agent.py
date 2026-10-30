@@ -62,6 +62,39 @@ def run_cmd(cmd: list[str], timeout: int = 20) -> Tuple[int, str, str]:
         return 1, "", str(exc)
 
 
+def read_hermes_cron_jobs(jobs_path: str = "/root/.hermes/cron/jobs.json") -> list[Dict[str, Any]]:
+    path = Path(jobs_path)
+    if not path.is_file():
+        return []
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        jobs = raw.get("jobs") if isinstance(raw, dict) else (raw if isinstance(raw, list) else [])
+        compact_jobs: list[Dict[str, Any]] = []
+        for j in jobs:
+            if not isinstance(j, dict) or not j.get("id"):
+                continue
+            compact_jobs.append(
+                {
+                    "id": str(j.get("id") or ""),
+                    "name": str(j.get("name") or j.get("id") or ""),
+                    "schedule": j.get("schedule") if isinstance(j.get("schedule"), dict) else {},
+                    "schedule_display": str(j.get("schedule_display") or ""),
+                    "enabled": bool(j.get("enabled", True)),
+                    "state": str(j.get("state") or ("scheduled" if j.get("enabled", True) else "paused")),
+                    "next_run_at": j.get("next_run_at"),
+                    "last_run_at": j.get("last_run_at"),
+                    "last_status": j.get("last_status"),
+                    "last_error": j.get("last_error"),
+                    "deliver": str(j.get("deliver") or "origin"),
+                    "skills": list(j.get("skills") or []),
+                    "repeat": j.get("repeat") if isinstance(j.get("repeat"), dict) else {},
+                }
+            )
+        return compact_jobs
+    except Exception:
+        return []
+
+
 def collect_pi_metrics() -> Dict[str, Any]:
     hostname = socket.gethostname() or "echo24"
 
@@ -153,7 +186,8 @@ def collect_pi_metrics() -> Dict[str, Any]:
         "loadAvg1m": load_1m,
         "memUsedMb": mem_used_mb,
         "memTotalMb": mem_total_mb,
-        "agentVersion": "1.2.0",
+        "cronJobs": read_hermes_cron_jobs(),
+        "agentVersion": "1.3.0",
     }
 
 
@@ -298,6 +332,37 @@ def execute_remote_command(cmd_obj: Dict[str, Any]) -> None:
 
     elif action == "TEST_ALL_FUNCTIONS":
         ok, output = run_node_functional_test()
+
+    elif action in ("CRON_RUN_NOW", "CRON_PAUSE", "CRON_RESUME"):
+        raw_job_id = str(cmd_obj.get("jobId") or "").strip()
+        job_id = "".join(c for c in raw_job_id if c.isalnum() or c in ("-", "_"))[:64]
+        if not job_id:
+            ok = False
+            output = f"Missing or invalid jobId for {action}"
+        else:
+            subcmd_map = {
+                "CRON_RUN_NOW": "run",
+                "CRON_PAUSE": "pause",
+                "CRON_RESUME": "resume",
+            }
+            subcmd = subcmd_map[action]
+            hermes_bin = "/root/.hermes/hermes-agent/venv/bin/hermes"
+            rc, out, err = run_cmd([hermes_bin, "cron", subcmd, job_id], timeout=25)
+            ok = rc == 0
+            output = (
+                f"Executed `hermes cron {subcmd} {job_id}` -> {'OK' if ok else f'EXIT {rc}'}. "
+                f"{out} {err}".strip()
+            )
+            if action == "CRON_RUN_NOW" and ok:
+                # Also trigger a background scheduler tick so the job runs right away without blocking heartbeat
+                try:
+                    subprocess.Popen(
+                        [hermes_bin, "--accept-hooks", "cron", "tick"],
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL,
+                    )
+                except Exception:
+                    pass
 
     else:
         ok = False

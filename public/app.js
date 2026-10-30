@@ -1004,9 +1004,16 @@
               </div>
               ${
                 item.note
-                  ? `<div class="mt-1 flex items-center gap-1 text-[11px] text-amber-200/90 truncate" title="${escapeHtml(item.note)}">
-                       <i class="ph-fill ph-note text-amber-400 text-xs shrink-0"></i>
-                       <span class="truncate">${escapeHtml(item.note)}</span>
+                  ? `<div class="mt-1 flex flex-col gap-0.5" title="${escapeHtml(item.note)}">
+                       <div class="flex items-center gap-1 text-[11px] text-amber-200/90 truncate">
+                         <i class="ph-fill ph-note text-amber-400 text-xs shrink-0"></i>
+                         <span class="truncate">${escapeHtml(item.note)}</span>
+                       </div>
+                       ${
+                         item.memoUpdatedAt
+                           ? `<div class="text-[9px] font-mono text-slate-400 truncate">📅 ${escapeHtml(formatThaiTimestamp(item.memoUpdatedAt))} (${escapeHtml(formatRelativeTimeThai(item.memoUpdatedAt))})</div>`
+                           : ''
+                       }
                      </div>`
                   : ''
               }
@@ -1129,6 +1136,14 @@
             <p class="mt-1 text-xs ${item.note ? 'text-amber-200/95' : 'text-slate-500 italic'}">
               ${item.note ? `"${escapeHtml(item.note)}"` : 'Click to add an investment thesis WebMemo for your Garmin watch...'}
             </p>
+            ${
+              item.note && (item.memoUpdatedAt || state.profile?.fetchedAt)
+                ? `<div class="mt-1 text-[10px] font-mono text-emerald-300/90 flex items-center gap-1.5 flex-wrap">
+                     <span>📅 เผยแพร่/อัปเดต: ${escapeHtml(formatThaiTimestamp(item.memoUpdatedAt || state.profile?.fetchedAt))}</span>
+                     <span class="text-slate-500">(${escapeHtml(formatRelativeTimeThai(item.memoUpdatedAt || state.profile?.fetchedAt))})</span>
+                   </div>`
+                : ''
+            }
             <div class="mt-1.5 flex items-center justify-between text-[10px] font-mono text-slate-400">
               <span>SMA20: ${formatSignedPct(item.smaPct, 1)} · RSI: ${Math.round(item.rsi14 ?? 50)}</span>
               <button
@@ -1484,6 +1499,45 @@
     return `${days}d ago`;
   }
 
+  function formatThaiTimestamp(isoStr) {
+    if (!isoStr) return '—';
+    const ms = Date.parse(isoStr);
+    if (!Number.isFinite(ms)) return String(isoStr);
+    try {
+      const d = new Date(ms);
+      const dateStr = d.toLocaleDateString('th-TH', {
+        timeZone: 'Asia/Bangkok',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      });
+      const timeStr = d.toLocaleTimeString('th-TH', {
+        timeZone: 'Asia/Bangkok',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      });
+      return `${dateStr} ${timeStr} น.`;
+    } catch {
+      return new Date(ms).toLocaleString();
+    }
+  }
+
+  function formatRelativeTimeThai(isoStr) {
+    if (!isoStr) return '';
+    const ms = Date.parse(isoStr);
+    if (!Number.isFinite(ms)) return '';
+    const diffSec = Math.round((ms - Date.now()) / 1000);
+    const absSec = Math.abs(diffSec);
+    if (absSec < 60) return diffSec >= 0 ? 'อีกไม่กี่วินาที' : 'เมื่อสักครู่';
+    const mins = Math.round(absSec / 60);
+    if (mins < 60) return diffSec >= 0 ? `อีก ${mins} นาที` : `${mins} นาทีที่แล้ว`;
+    const hours = Math.round(mins / 60);
+    if (hours < 24) return diffSec >= 0 ? `อีก ${hours} ชม.` : `${hours} ชม.ที่แล้ว`;
+    const days = Math.round(hours / 24);
+    return diffSec >= 0 ? `อีก ${days} วัน` : `${days} วันที่แล้ว`;
+  }
+
   function computeSrChannelCursorPct(price, s3, r3) {
     const p = Number(price || 0);
     const low = Number(s3 || 0);
@@ -1508,6 +1562,8 @@
       ? feed.watchlistMatrix
       : [];
     const tagCloud = Array.isArray(feed?.tagCloud) ? feed.tagCloud : [];
+    const tagRegistry = Array.isArray(feed?.tagRegistry) ? feed.tagRegistry : [];
+    const tagRegistryMap = new Map(tagRegistry.map(r => [String(r.tag || '').toLowerCase(), r]));
     const policy = feed?.policy || { autoArchiveEnabled: true, autoArchiveDays: 21 };
 
     if (el('hermesActivePostCountBadge')) {
@@ -1544,15 +1600,22 @@
       btn.classList.toggle('active', btn.getAttribute('data-sr-horizon') === activeHorizon);
     });
 
-    // Render #tag filter pills
+    // Render #tag filter pills (Dynamic Tag Registry aware)
     if (tagPillsBox) {
-      const topTags = tagCloud.slice(0, 12);
+      const topTags = tagCloud.filter(t => !t.hidden).slice(0, 14);
       tagPillsBox.innerHTML = [
         `<button type="button" data-hermes-tag="ALL" class="mw-filter-pill text-[11px] py-1 px-2.5 ${state.hermesActiveTag === 'ALL' ? 'active' : ''}">All Topics (${posts.length})</button>`,
-        ...topTags.map(
-          t =>
-            `<button type="button" data-hermes-tag="${escapeHtml(t.tag)}" class="mw-filter-pill text-[11px] py-1 px-2.5 ${state.hermesActiveTag === t.tag ? 'active' : ''}">${escapeHtml(t.tag)} <span class="opacity-60 font-mono">${t.activeCount || t.count}</span></button>`
-        )
+        ...topTags.map(t => {
+          const isActive = state.hermesActiveTag === t.tag;
+          const reg = tagRegistryMap.get(String(t.tag || '').toLowerCase()) || t;
+          const color = reg?.color || '';
+          const pinnedStar = reg?.pinned ? '<span class="text-amber-300 mr-0.5">★</span>' : '';
+          const customStyle =
+            !isActive && color
+              ? `style="border-color:${escapeHtml(color)}55;color:${escapeHtml(color)}"`
+              : '';
+          return `<button type="button" data-hermes-tag="${escapeHtml(t.tag)}" class="mw-filter-pill text-[11px] py-1 px-2.5 ${isActive ? 'active' : ''}" ${customStyle} title="${escapeHtml(reg?.description || reg?.labelTh || t.tag)}">${pinnedStar}${escapeHtml(t.tag)} <span class="opacity-60 font-mono">${t.activeCount ?? t.count ?? 0}</span></button>`;
+        })
       ].join('');
 
       tagPillsBox.querySelectorAll('[data-hermes-tag]').forEach(btn => {
@@ -1725,19 +1788,36 @@
                 </div>
               </div>
 
-              <!-- Footer: Signal Memo, #Tags & 1-Click Apply to Watch Alert -->
+              <!-- Footer: Signal Memo, Explicit Publish/Update Timestamp, #Tags & 1-Click Apply to Watch Alert -->
               <div class="pt-2.5 border-t border-white/[0.06] flex flex-col gap-2">
                 <div class="flex items-center justify-between gap-2 text-[11px] font-mono bg-cyan-500/[0.07] border border-cyan-500/20 rounded-lg px-2.5 py-1.5 text-cyan-200">
                   <span class="truncate" title="${escapeHtml(post.signalMemo || '')}">⚡ ${escapeHtml(post.signalMemo || post.title)}</span>
-                  <span class="text-[9px] text-slate-400 shrink-0">${formatRelativeAge(post.updatedAt)}</span>
+                  <span class="text-[9px] text-slate-400 shrink-0">${formatRelativeAge(post.updatedAt || post.publishedAt)}</span>
+                </div>
+                <div class="flex flex-wrap items-center justify-between gap-1.5 text-[10px] font-mono text-slate-400 bg-white/[0.02] border border-white/[0.05] rounded-lg px-2.5 py-1">
+                  <span class="text-emerald-300/95">
+                    📅 เผยแพร่: <strong>${escapeHtml(formatThaiTimestamp(post.publishedAt || post.createdAt || post.updatedAt))}</strong>
+                    <span class="text-slate-500">(${escapeHtml(formatRelativeTimeThai(post.publishedAt || post.createdAt || post.updatedAt))})</span>
+                  </span>
+                  ${
+                    post.updatedAt &&
+                    post.publishedAt &&
+                    Math.abs(Date.parse(post.updatedAt) - Date.parse(post.publishedAt)) > 60_000
+                      ? `<span class="text-cyan-300/95">🔄 อัปเดต: <strong>${escapeHtml(formatThaiTimestamp(post.updatedAt))}</strong> (${escapeHtml(formatRelativeTimeThai(post.updatedAt))})</span>`
+                      : ''
+                  }
                 </div>
                 <div class="flex items-center justify-between gap-2 flex-wrap">
                   <div class="flex items-center gap-1 flex-wrap">
                     ${(post.tags || [])
-                      .map(
-                        tag =>
-                          `<button type="button" data-card-tag="${escapeHtml(tag)}" class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/[0.04] hover:bg-cyan-500/15 text-slate-300 hover:text-cyan-300 border border-white/10 transition">${escapeHtml(tag)}</button>`
-                      )
+                      .map(tag => {
+                        const reg = tagRegistryMap.get(String(tag || '').toLowerCase());
+                        const c = reg?.color || '';
+                        const styleAttr = c
+                          ? `style="border-color:${escapeHtml(c)}55;color:${escapeHtml(c)};background:${escapeHtml(c)}14"`
+                          : '';
+                        return `<button type="button" data-card-tag="${escapeHtml(tag)}" class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/[0.04] hover:bg-cyan-500/15 text-slate-300 hover:text-cyan-300 border border-white/10 transition" ${styleAttr}>${reg?.pinned ? '★ ' : ''}${escapeHtml(tag)}</button>`;
+                      })
                       .join('')}
                   </div>
                   <div class="flex items-center gap-1.5">
@@ -1847,10 +1927,21 @@
                 <div class="text-[11px] text-slate-200 font-medium truncate max-w-[240px]" title="${escapeHtml(row.signalMemo || row.headline || '')}">
                   ${escapeHtml(row.signalMemo || row.headline || '')}
                 </div>
+                <div class="text-[9px] font-mono text-emerald-300/90 mt-0.5">
+                  📅 ${escapeHtml(formatThaiTimestamp(row.publishedAt || row.memoUpdatedAt || row.updatedAt))}
+                  <span class="text-slate-500">(${escapeHtml(formatRelativeTimeThai(row.publishedAt || row.memoUpdatedAt || row.updatedAt))})</span>
+                </div>
                 <div class="flex items-center gap-1 mt-0.5 flex-wrap">
                   ${(row.tags || [])
                     .slice(0, 3)
-                    .map(t => `<span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-white/[0.05] text-cyan-300">${escapeHtml(t)}</span>`)
+                    .map(t => {
+                      const reg = tagRegistryMap.get(String(t || '').toLowerCase());
+                      const c = reg?.color || '';
+                      const styleAttr = c
+                        ? `style="border-color:${escapeHtml(c)}55;color:${escapeHtml(c)};background:${escapeHtml(c)}14"`
+                        : '';
+                      return `<span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-white/[0.05] text-cyan-300 border border-transparent" ${styleAttr}>${escapeHtml(t)}</span>`;
+                    })
                     .join('')}
                 </div>
               </td>

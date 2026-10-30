@@ -1195,7 +1195,12 @@ export default {
 
           const enq = enqueueHermesCommand(
             runtimeHermesNodeState,
-            { action, reason: body.reason || "" },
+            {
+              action,
+              reason: body.reason || "",
+              jobId: body.jobId || "",
+              jobName: body.jobName || ""
+            },
             { actor: auth.email || OWNER_EMAIL }
           );
           if (!enq.ok) {

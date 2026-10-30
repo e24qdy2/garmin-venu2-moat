@@ -1042,7 +1042,12 @@ async function handleRequest(req, res) {
 
         const enq = enqueueHermesCommand(
           nodeState,
-          { action, reason: body.reason || "" },
+          {
+            action,
+            reason: body.reason || "",
+            jobId: body.jobId || "",
+            jobName: body.jobName || ""
+          },
           { actor: auth.email || OWNER_EMAIL }
         );
         if (!enq.ok) {

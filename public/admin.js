@@ -127,6 +127,7 @@
       if (timerText) {
         timerText.textContent = `Auto-Logout: ${formatCountdown(effectiveRemSec)}`;
       }
+      updateSchedulerLiveCountdown();
       if (effectiveRemSec <= 0) {
         performAutoLogout(
           "Session expired automatically due to inactivity or max session lifetime to prevent forgotten logins. Please sign in again."
@@ -136,6 +137,83 @@
 
     tick();
     state.watchdogTimer = setInterval(tick, 1000);
+  }
+
+  function formatThaiTimestamp(isoStr) {
+    if (!isoStr) return "—";
+    const d = new Date(isoStr);
+    if (Number.isNaN(d.getTime())) return String(isoStr);
+    try {
+      const datePart = d.toLocaleDateString("th-TH", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        timeZone: "Asia/Bangkok"
+      });
+      const timePart = d.toLocaleTimeString("th-TH", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+        timeZone: "Asia/Bangkok"
+      });
+      return `${datePart} ${timePart} น.`;
+    } catch (_) {
+      return d.toLocaleString("en-GB");
+    }
+  }
+
+  function formatRelativeTimeThai(isoStr) {
+    if (!isoStr) return "";
+    const ts = Date.parse(isoStr);
+    if (!Number.isFinite(ts)) return "";
+    const diffSec = Math.round((Date.now() - ts) / 1000);
+    if (diffSec < -60) {
+      const aheadMin = Math.round(Math.abs(diffSec) / 60);
+      if (aheadMin < 60) return `อีก ${aheadMin} นาที`;
+      const aheadHr = Math.floor(aheadMin / 60);
+      const remM = aheadMin % 60;
+      return remM > 0 ? `อีก ${aheadHr} ชม. ${remM} นาที` : `อีก ${aheadHr} ชม.`;
+    }
+    if (diffSec < 60) return "เมื่อสักครู่";
+    const diffMin = Math.floor(diffSec / 60);
+    if (diffMin < 60) return `${diffMin} นาทีที่แล้ว`;
+    const diffHr = Math.floor(diffMin / 60);
+    if (diffHr < 24) return `${diffHr} ชม. ที่แล้ว`;
+    const diffDay = Math.floor(diffHr / 24);
+    return `${diffDay} วันที่แล้ว`;
+  }
+
+  function formatDurationCountdown(sec) {
+    if (sec === null || sec === undefined || !Number.isFinite(Number(sec))) return "—";
+    const s = Math.max(0, Math.floor(Number(sec)));
+    if (s <= 0) return "กำลังถึงรอบรัน (Due now)";
+    const hrs = Math.floor(s / 3600);
+    const mins = Math.floor((s % 3600) / 60);
+    const remSec = s % 60;
+    if (hrs > 0) {
+      return `อีก ${hrs} ชม. ${mins} นาที ${String(remSec).padStart(2, "0")}วิ`;
+    }
+    if (mins > 0) {
+      return `อีก ${mins} นาที ${String(remSec).padStart(2, "0")} วินาที`;
+    }
+    return `อีก ${remSec} วินาที`;
+  }
+
+  function updateSchedulerLiveCountdown() {
+    const nextJob = state.hermesNode?.scheduler?.nextJob;
+    const countdownEl = el("hermesCronNextCountdown");
+    if (!countdownEl) return;
+    if (!nextJob || !nextJob.nextRunAt) {
+      countdownEl.textContent = "ไม่มีคิวรัน";
+      return;
+    }
+    const nextMs = Date.parse(nextJob.nextRunAt);
+    if (!Number.isFinite(nextMs)) {
+      countdownEl.textContent = nextJob.nextRunInHuman || "—";
+      return;
+    }
+    const remSec = Math.max(0, Math.round((nextMs - Date.now()) / 1000));
+    countdownEl.textContent = formatDurationCountdown(remSec);
   }
 
   function showToast(msg) {
@@ -262,7 +340,7 @@
     }
   }
 
-  async function sendHermesRemoteCommand(action) {
+  async function sendHermesRemoteCommand(action, extra = {}) {
     if (!action || state.hermesCommandBusy) return;
     if (action === "REBOOT_PI") {
       const confirmed = window.confirm(
@@ -274,7 +352,7 @@
     state.hermesCommandBusy = true;
     const cmdBadge = el("hermesCommandStateBadge");
     if (cmdBadge) {
-      cmdBadge.textContent = `Sending ${action}...`;
+      cmdBadge.textContent = `Sending ${action}${extra.jobId ? " (" + extra.jobId + ")" : ""}...`;
       cmdBadge.className =
         "text-[11px] font-mono px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 self-start sm:self-center";
     }
@@ -285,6 +363,8 @@
         headers: authHeaders(),
         body: JSON.stringify({
           action,
+          jobId: extra.jobId || undefined,
+          jobName: extra.jobName || undefined,
           reason: `Triggered from Admin Page by ${state.adminEmail}`
         })
       });
@@ -511,6 +591,154 @@
         })
         .join("");
     }
+
+    // 6. Render Hermes Cron Jobs & Next Scheduler Panel
+    renderHermesSchedulerPanel(node);
+  }
+
+  function renderHermesSchedulerPanel(node) {
+    if (!node) return;
+    const sched = node.scheduler || {};
+    const jobs = Array.isArray(sched.jobs)
+      ? sched.jobs
+      : Array.isArray(node.cronJobs)
+      ? node.cronJobs
+      : [];
+
+    if (el("hermesCronTotalBadge")) {
+      el("hermesCronTotalBadge").textContent = `${jobs.length} Jobs`;
+    }
+    if (el("hermesCronActiveCount")) {
+      el("hermesCronActiveCount").textContent = String(sched.activeCount ?? jobs.filter((j) => j.status === "ACTIVE" || j.enabled).length);
+    }
+    if (el("hermesCronActiveSub")) {
+      const activeNames = (sched.activeJobs || jobs.filter((j) => j.status === "ACTIVE" || j.enabled))
+        .map((j) => j.name || j.id)
+        .filter(Boolean);
+      el("hermesCronActiveSub").textContent = activeNames.length
+        ? activeNames.join(" · ")
+        : "ไม่มีงานที่กำลังรันตามรอบ";
+    }
+
+    const pausedTotal = (sched.pausedCount ?? 0) + (sched.stoppedCount ?? 0);
+    if (el("hermesCronPausedCount")) {
+      el("hermesCronPausedCount").textContent = String(pausedTotal);
+    }
+    if (el("hermesCronPausedSub")) {
+      el("hermesCronPausedSub").textContent = `${sched.pausedCount ?? 0} Paused · ${sched.completedCount ?? 0} Completed (One-shot)`;
+    }
+
+    const nextJob = sched.nextJob || null;
+    if (el("hermesCronNextRunAtText")) {
+      el("hermesCronNextRunAtText").textContent = nextJob && nextJob.nextRunAt
+        ? formatThaiTimestamp(nextJob.nextRunAt)
+        : "—";
+    }
+    if (el("hermesCronNextJobName")) {
+      el("hermesCronNextJobName").textContent = nextJob
+        ? `Job: ${nextJob.name || nextJob.id} (${nextJob.scheduleDisplay || ""})`
+        : "ไม่มีงานในคิวถัดไป";
+    }
+    updateSchedulerLiveCountdown();
+
+    const tbody = el("hermesCronJobsTableBody");
+    if (!tbody) return;
+    if (!jobs.length) {
+      tbody.innerHTML = `<tr><td colspan="6" class="py-4 text-center text-slate-400">No Hermes scheduled jobs reported from echo24 yet.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = jobs
+      .map((job) => {
+        const st = String(job.status || (job.enabled ? "ACTIVE" : "PAUSED")).toUpperCase();
+        let stBadge = `<span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/35 font-bold text-[10px]">PAUSED / STOPPED</span>`;
+        if (st === "ACTIVE") {
+          stBadge = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/35 font-bold text-[10px]"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>ACTIVE</span>`;
+        } else if (st === "COMPLETED") {
+          stBadge = `<span class="px-2 py-0.5 rounded-full bg-slate-500/20 text-slate-300 border border-slate-500/35 font-bold text-[10px]">COMPLETED (1x)</span>`;
+        } else if (st === "BROKEN") {
+          stBadge = `<span class="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/35 font-bold text-[10px]">BROKEN SCHEDULE</span>`;
+        }
+
+        const lastRunStr = job.lastRunAt ? formatThaiTimestamp(job.lastRunAt) : "ยังไม่เคยรัน";
+        const lastRunRel = job.lastRunAt ? formatRelativeTimeThai(job.lastRunAt) : "";
+        const nextRunStr = job.nextRunAt ? formatThaiTimestamp(job.nextRunAt) : st === "ACTIVE" ? "รอคำนวณรอบถัดไป" : "— (Paused)";
+        const nextRunRel = job.nextRunAt ? formatRelativeTimeThai(job.nextRunAt) : "";
+        const skillsBadge = Array.isArray(job.skills) && job.skills.length
+          ? `<span class="px-1.5 py-0.5 rounded bg-cyan-500/15 text-cyan-300 text-[9px]">skills: ${escapeHtml(job.skills.join(","))}</span>`
+          : "";
+
+        return `
+          <tr class="hover:bg-white/[0.02] transition">
+            <td class="py-2.5 pr-3">
+              <div class="font-sans font-bold text-white text-xs">${escapeHtml(job.name || job.id)}</div>
+              <div class="flex flex-wrap items-center gap-1.5 mt-0.5 text-[10px] text-slate-400">
+                <code>ID: ${escapeHtml(job.id)}</code>
+                ${job.deliver ? `<span>· Deliver: ${escapeHtml(job.deliver)}</span>` : ""}
+                ${skillsBadge}
+              </div>
+            </td>
+            <td class="py-2.5 px-2 whitespace-nowrap">${stBadge}</td>
+            <td class="py-2.5 px-2 text-slate-200 whitespace-nowrap">${escapeHtml(job.scheduleDisplay || "—")}</td>
+            <td class="py-2.5 px-2 whitespace-nowrap">
+              <div class="text-slate-200">${escapeHtml(lastRunStr)}</div>
+              ${lastRunRel ? `<div class="text-[10px] text-slate-400">${escapeHtml(lastRunRel)}${job.lastStatus ? " · " + escapeHtml(job.lastStatus) : ""}</div>` : ""}
+            </td>
+            <td class="py-2.5 px-2 whitespace-nowrap">
+              <div class="${st === "ACTIVE" ? "text-cyan-300 font-semibold" : "text-slate-500"}">${escapeHtml(nextRunStr)}</div>
+              ${nextRunRel && st === "ACTIVE" ? `<div class="text-[10px] text-emerald-300">${escapeHtml(nextRunRel)}</div>` : ""}
+            </td>
+            <td class="py-2.5 pl-2 text-right whitespace-nowrap">
+              <div class="inline-flex items-center gap-1.5">
+                <button
+                  type="button"
+                  data-cron-cmd="CRON_RUN_NOW"
+                  data-job-id="${escapeHtml(job.id)}"
+                  data-job-name="${escapeHtml(job.name || job.id)}"
+                  class="hermes-cron-action-btn px-2.5 py-1 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/40 text-cyan-300 text-[10px] font-bold transition"
+                  title="สั่งรัน Job นี้ทันทีบน echo24"
+                >
+                  ▶ Run Now
+                </button>
+                ${
+                  st === "ACTIVE"
+                    ? `<button
+                        type="button"
+                        data-cron-cmd="CRON_PAUSE"
+                        data-job-id="${escapeHtml(job.id)}"
+                        data-job-name="${escapeHtml(job.name || job.id)}"
+                        class="hermes-cron-action-btn px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 text-[10px] font-bold transition"
+                        title="พัก/หยุดตารางรัน Job นี้ชั่วคราว"
+                      >
+                        ⏸ Pause
+                      </button>`
+                    : `<button
+                        type="button"
+                        data-cron-cmd="CRON_RESUME"
+                        data-job-id="${escapeHtml(job.id)}"
+                        data-job-name="${escapeHtml(job.name || job.id)}"
+                        class="hermes-cron-action-btn px-2.5 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-[10px] font-bold transition"
+                        title="เปิดใช้งานตารางรัน Job นี้อีกครั้ง"
+                      >
+                        ↻ Resume
+                      </button>`
+                }
+              </div>
+            </td>
+          </tr>
+        `;
+      })
+      .join("");
+
+    tbody.querySelectorAll(".hermes-cron-action-btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const cmd = btn.getAttribute("data-cron-cmd");
+        const jobId = btn.getAttribute("data-job-id");
+        const jobName = btn.getAttribute("data-job-name");
+        if (!cmd || !jobId) return;
+        await sendHermesRemoteCommand(cmd, { jobId, jobName });
+      });
+    });
   }
 
   async function fetchDevicesData() {
@@ -1266,8 +1494,15 @@
 
     // Populate #Tag dropdown
     const tagSelect = el("cmsTagFilterSelect");
+    const tagRegistryList = Array.isArray(feed.tagRegistry) ? feed.tagRegistry : [];
+    const tagColorMap = new Map(tagRegistryList.map((r) => [String(r.tag).toLowerCase(), r]));
+
     if (tagSelect) {
-      const tags = Array.isArray(feed.tagCloud) ? feed.tagCloud.map((t) => t.tag) : [];
+      const tags = tagRegistryList.length
+        ? tagRegistryList.map((t) => t.tag)
+        : Array.isArray(feed.tagCloud)
+        ? feed.tagCloud.map((t) => t.tag)
+        : [];
       const currentVal = state.cmsTagFilter || "ALL";
       tagSelect.innerHTML = [
         `<option value="ALL">All #Tags (${tags.length})</option>`,
@@ -1276,6 +1511,9 @@
         )
       ].join("");
     }
+
+    // Render Admin Dynamic #Tag Registry Panel
+    renderAdminDynamicTagRegistry(feed, allPosts);
 
     // Status filter buttons
     document.querySelectorAll("#cmsStatusFilterGroup [data-cms-status]").forEach((btn) => {
@@ -1323,6 +1561,14 @@
         const r2 = sr.resistance?.[1]?.price || 0;
         const r3 = sr.resistance?.[2]?.price || 0;
 
+        const pubIso = post.publishedAt || post.createdAt || post.updatedAt;
+        const updIso = post.updatedAt || pubIso;
+        const pubThai = formatThaiTimestamp(pubIso);
+        const pubRel = formatRelativeTimeThai(pubIso);
+        const updThai = formatThaiTimestamp(updIso);
+        const updRel = formatRelativeTimeThai(updIso);
+        const isEditedLater = pubIso && updIso && Math.abs(Date.parse(updIso) - Date.parse(pubIso)) > 60 * 1000;
+
         const statusBadge = isArchived
           ? `<span class="font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 ring-1 ring-amber-500/40 font-bold">ARCHIVED / HIDDEN (${escapeHtml(post.archivedReason || "HIDDEN")})</span>`
           : `<span class="font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-500/40 font-bold">ACTIVE ON FRONTPAGE</span>`;
@@ -1347,8 +1593,18 @@
                 <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-300">${escapeHtml(post.bias || "NEUTRAL")} · ${Number(post.confidence || 80)}%</span>
                 <span class="font-mono text-[11px] text-slate-400">By ${escapeHtml(post.author || "Hermes Agent")}</span>
               </div>
-              <div class="text-[11px] font-mono text-slate-400">
-                ID: <code class="text-slate-300">${escapeHtml(post.id)}</code> · Updated ${new Date(post.updatedAt || post.createdAt).toLocaleString("en-GB")}
+              <div class="flex flex-wrap items-center gap-2 text-[11px] font-mono text-slate-400">
+                <span>ID: <code class="text-slate-300">${escapeHtml(post.id)}</code></span>
+                <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/25" title="เวลาเผยแพร่ครั้งแรก (Published At)">
+                  📅 เผยแพร่: ${escapeHtml(pubThai)}${pubRel ? " (" + escapeHtml(pubRel) + ")" : ""}
+                </span>
+                ${
+                  isEditedLater
+                    ? `<span class="px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/25" title="เวลาอัปเดตล่าสุด (Updated At)">
+                        🔄 อัปเดต: ${escapeHtml(updThai)}${updRel ? " (" + escapeHtml(updRel) + ")" : ""}
+                      </span>`
+                    : ""
+                }
               </div>
             </div>
 
@@ -1369,10 +1625,12 @@
             <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
               <div class="flex flex-wrap items-center gap-1">
                 ${(post.tags || [])
-                  .map(
-                    (t) =>
-                      `<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.05] text-cyan-300 border border-white/10">${escapeHtml(t)}</span>`
-                  )
+                  .map((t) => {
+                    const regEntry = tagColorMap.get(String(t).toLowerCase());
+                    const col = regEntry?.color || "#06B6D4";
+                    const pinMark = regEntry?.pinned ? "★ " : "";
+                    return `<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.05] border" style="color:${escapeHtml(col)};border-color:${escapeHtml(col)}55">${pinMark}${escapeHtml(t)}</span>`;
+                  })
                   .join("")}
               </div>
 
@@ -1452,6 +1710,213 @@
         await executeCmsMutation({ action, postId });
       });
     });
+  }
+
+  function renderAdminDynamicTagRegistry(feed, allPosts = []) {
+    const registry = Array.isArray(feed?.tagRegistry) ? feed.tagRegistry : [];
+    const tagCloudMap = new Map(
+      (Array.isArray(feed?.tagCloud) ? feed.tagCloud : []).map((t) => [String(t.tag).toLowerCase(), t])
+    );
+
+    if (el("cmsTagRegistryCountBadge")) {
+      const visibleCount = registry.filter((r) => !r.hidden).length;
+      const pinnedCount = registry.filter((r) => r.pinned).length;
+      el("cmsTagRegistryCountBadge").textContent = `${registry.length} Managed #Tags (${visibleCount} Visible · ${pinnedCount} Pinned)`;
+    }
+
+    // Populate Merge Source & Target Dropdowns
+    const srcSelect = el("cmsMergeSourceTagSelect");
+    const dstSelect = el("cmsMergeTargetTagSelect");
+    if (srcSelect && dstSelect) {
+      const curSrc = srcSelect.value;
+      const curDst = dstSelect.value;
+      srcSelect.innerHTML = [
+        `<option value="">ต้นทาง (Source #Tag)...</option>`,
+        ...registry.map(
+          (r) => `<option value="${escapeHtml(r.tag)}" ${r.tag === curSrc ? "selected" : ""}>${escapeHtml(r.tag)}</option>`
+        )
+      ].join("");
+      dstSelect.innerHTML = [
+        `<option value="">ปลายทาง (Target #Tag)...</option>`,
+        ...registry.map(
+          (r) => `<option value="${escapeHtml(r.tag)}" ${r.tag === curDst ? "selected" : ""}>${escapeHtml(r.tag)}</option>`
+        )
+      ].join("");
+    }
+
+    // Populate Official #Tag Quick-Picker inside Post Editor Form
+    const pickerBar = el("cmsOfficialTagPickerBar");
+    if (pickerBar) {
+      pickerBar.innerHTML = [
+        `<span class="text-[10px] font-mono text-slate-400 mr-1">คลิกเลือก Official #Tag:</span>`,
+        ...registry
+          .filter((r) => !r.hidden)
+          .map((r) => {
+            const col = r.color || "#06B6D4";
+            return `<button
+              type="button"
+              data-pick-official-tag="${escapeHtml(r.tag)}"
+              class="cms-pick-tag-btn text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/[0.04] hover:bg-white/[0.12] border transition"
+              style="color:${escapeHtml(col)};border-color:${escapeHtml(col)}55"
+              title="${escapeHtml(r.description || r.category || "")}"
+            >${r.pinned ? "★ " : ""}${escapeHtml(r.tag)}</button>`;
+          })
+      ].join("");
+
+      pickerBar.querySelectorAll(".cms-pick-tag-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const picked = btn.getAttribute("data-pick-official-tag");
+          const input = el("cmsTagsInput");
+          if (!picked || !input) return;
+          const existing = input.value
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean);
+          const existsIdx = existing.findIndex((t) => t.toLowerCase() === picked.toLowerCase());
+          if (existsIdx >= 0) {
+            existing.splice(existsIdx, 1);
+          } else {
+            existing.push(picked);
+          }
+          input.value = existing.join(", ");
+        });
+      });
+    }
+
+    const tbody = el("cmsTagRegistryTableBody");
+    if (!tbody) return;
+    if (!registry.length) {
+      tbody.innerHTML = `<tr><td colspan="6" class="py-4 text-center text-slate-400">No managed #tags in registry yet.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = registry
+      .map((entry) => {
+        const cloudStat = tagCloudMap.get(String(entry.tag).toLowerCase());
+        const postCount =
+          cloudStat?.total ??
+          allPosts.filter((p) => (p.tags || []).some((t) => String(t).toLowerCase() === String(entry.tag).toLowerCase())).length;
+        const activePostCount =
+          cloudStat?.active ??
+          allPosts.filter(
+            (p) =>
+              (p.status === "ACTIVE" || p.status === "PUBLISHED") &&
+              (p.tags || []).some((t) => String(t).toLowerCase() === String(entry.tag).toLowerCase())
+          ).length;
+
+        const col = entry.color || "#06B6D4";
+        const visBadge = entry.hidden
+          ? `<span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/35 text-[10px] font-bold">HIDDEN</span>`
+          : `<span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/35 text-[10px] font-bold">VISIBLE</span>`;
+        const pinBadge = entry.pinned
+          ? `<span class="px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 text-[10px] font-bold ml-1">★ PINNED</span>`
+          : "";
+
+        return `
+          <tr class="hover:bg-white/[0.02] transition">
+            <td class="py-2 pr-3 whitespace-nowrap">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/[0.04] border font-bold text-xs" style="color:${escapeHtml(col)};border-color:${escapeHtml(col)}66">
+                <span class="w-2 h-2 rounded-full" style="background:${escapeHtml(col)}"></span>
+                ${escapeHtml(entry.tag)}
+              </span>
+            </td>
+            <td class="py-2 px-2 text-slate-300 whitespace-nowrap">${escapeHtml(entry.category || "THEME")}</td>
+            <td class="py-2 px-2 text-slate-200 whitespace-nowrap">
+              <span class="font-bold text-white">${activePostCount}</span> Active <span class="text-slate-500">(${postCount} total)</span>
+            </td>
+            <td class="py-2 px-2 whitespace-nowrap">${visBadge}${pinBadge}</td>
+            <td class="py-2 px-2 text-slate-300 font-sans text-xs max-w-xs truncate" title="${escapeHtml(entry.description || "")}">
+              ${escapeHtml(entry.description || "—")}
+            </td>
+            <td class="py-2 pl-2 text-right whitespace-nowrap">
+              <div class="inline-flex items-center gap-1">
+                <button
+                  type="button"
+                  data-tag-action="EDIT"
+                  data-tag-name="${escapeHtml(entry.tag)}"
+                  class="cms-tag-row-btn px-2 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/35 text-[10px] font-bold"
+                  title="แก้ไขหรือเปลี่ยนชื่อ #Tag (Rename อัปเดตทุกการ์ดอัตโนมัติ)"
+                >
+                  ✎ Edit/Rename
+                </button>
+                <button
+                  type="button"
+                  data-tag-action="TOGGLE_TAG_PIN"
+                  data-tag-name="${escapeHtml(entry.tag)}"
+                  class="cms-tag-row-btn px-2 py-1 rounded bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-[10px]"
+                  title="ปักหมุด/ยกเลิกปักหมุดบนหน้าเว็บ"
+                >
+                  ${entry.pinned ? "★ Unpin" : "☆ Pin"}
+                </button>
+                <button
+                  type="button"
+                  data-tag-action="TOGGLE_TAG_VISIBILITY"
+                  data-tag-name="${escapeHtml(entry.tag)}"
+                  class="cms-tag-row-btn px-2 py-1 rounded bg-white/[0.06] hover:bg-white/[0.12] text-slate-200 border border-white/15 text-[10px]"
+                  title="ซ่อน/แสดง #Tag บนแถบตัวกรองหน้าเว็บ"
+                >
+                  ${entry.hidden ? "👁 Show" : "🙈 Hide"}
+                </button>
+                <button
+                  type="button"
+                  data-tag-action="DELETE_TAG"
+                  data-tag-name="${escapeHtml(entry.tag)}"
+                  class="cms-tag-row-btn px-2 py-1 rounded bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/35 text-[10px] font-bold"
+                  title="ลบ #Tag ออกจาก Registry และถอดออกจากการ์ดทั้งหมด"
+                >
+                  🗑
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      })
+      .join("");
+
+    tbody.querySelectorAll(".cms-tag-row-btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const action = btn.getAttribute("data-tag-action");
+        const tagName = btn.getAttribute("data-tag-name");
+        if (!action || !tagName) return;
+
+        if (action === "EDIT") {
+          const entry = registry.find((r) => String(r.tag).toLowerCase() === String(tagName).toLowerCase());
+          if (entry) populateCmsTagForm(entry);
+          return;
+        }
+
+        if (action === "DELETE_TAG") {
+          const ok = window.confirm(`ยืนยันการลบแท็ก ${tagName} ออกจาก Registry และถอดออกจากบทวิเคราะห์ทั้งหมดหรือไม่?`);
+          if (!ok) return;
+        }
+
+        await executeCmsMutation(
+          { action, tag: tagName },
+          `Updated #Tag ${tagName} (${action})`
+        );
+      });
+    });
+  }
+
+  function populateCmsTagForm(entry) {
+    if (!entry) return;
+    if (el("cmsTagOldNameInput")) el("cmsTagOldNameInput").value = entry.tag || "";
+    if (el("cmsTagNameInput")) el("cmsTagNameInput").value = entry.tag || "";
+    if (el("cmsTagCategorySelect")) el("cmsTagCategorySelect").value = entry.category || "THEME";
+    if (el("cmsTagColorInput")) el("cmsTagColorInput").value = entry.color || "#10B981";
+    if (el("cmsTagDescInput")) el("cmsTagDescInput").value = entry.description || "";
+    if (el("cmsTagPinnedCheck")) el("cmsTagPinnedCheck").checked = Boolean(entry.pinned);
+    if (el("cmsTagHiddenCheck")) el("cmsTagHiddenCheck").checked = Boolean(entry.hidden);
+    if (el("cmsTagSaveBtn")) el("cmsTagSaveBtn").textContent = `✓ Save / Rename ${entry.tag}`;
+    el("cmsTagForm")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    showToast(`Loaded ${entry.tag} into Tag Editor (change name to Rename across all posts)`);
+  }
+
+  function resetCmsTagForm() {
+    if (el("cmsTagOldNameInput")) el("cmsTagOldNameInput").value = "";
+    el("cmsTagForm")?.reset();
+    if (el("cmsTagColorInput")) el("cmsTagColorInput").value = "#10B981";
+    if (el("cmsTagSaveBtn")) el("cmsTagSaveBtn").textContent = "✓ Save / Rename #Tag";
   }
 
   function populateCmsFormFromPost(post) {
@@ -2344,6 +2809,84 @@
     el("cmsBulkDeleteBtn")?.addEventListener("click", () =>
       executeBulkCmsAction("DELETE", "Deleted selected posts")
     );
+
+    // 8g. Dynamic #Tag Registry Management (Create / Edit / Rename / Merge)
+    el("cmsTagResetBtn")?.addEventListener("click", () => {
+      resetCmsTagForm();
+      showToast("Cleared #Tag Editor form.");
+    });
+
+    el("cmsTagForm")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const oldTagRaw = (el("cmsTagOldNameInput")?.value || "").trim();
+      const tagRaw = (el("cmsTagNameInput")?.value || "").trim();
+      if (!tagRaw) {
+        showToast("Please enter a #tag name (e.g. #Moat, #AI).");
+        return;
+      }
+      const tagData = {
+        tag: tagRaw,
+        category: el("cmsTagCategorySelect")?.value || "THEME",
+        color: el("cmsTagColorInput")?.value || "#10B981",
+        description: (el("cmsTagDescInput")?.value || "").trim(),
+        pinned: Boolean(el("cmsTagPinnedCheck")?.checked),
+        hidden: Boolean(el("cmsTagHiddenCheck")?.checked)
+      };
+
+      const isRename =
+        oldTagRaw &&
+        oldTagRaw.replace(/^#+/, "").toLowerCase() !== tagRaw.replace(/^#+/, "").toLowerCase();
+
+      if (isRename) {
+        const renamedOk = await executeCmsMutation(
+          {
+            action: "RENAME_TAG",
+            oldTag: oldTagRaw,
+            newTag: tagRaw
+          },
+          `Renamed ${oldTagRaw} → ${tagRaw} across all research posts`
+        );
+        if (!renamedOk) return;
+      }
+
+      const savedOk = await executeCmsMutation(
+        {
+          action: "UPSERT_TAG",
+          tagData
+        },
+        isRename
+          ? `Renamed ${oldTagRaw} → ${tagRaw} & updated #Tag metadata`
+          : `Saved #Tag ${tagRaw} in Official Registry`
+      );
+      if (savedOk) {
+        resetCmsTagForm();
+      }
+    });
+
+    el("cmsMergeTagBtn")?.addEventListener("click", async () => {
+      const sourceTag = (el("cmsMergeSourceTagSelect")?.value || "").trim();
+      const targetTag = (el("cmsMergeTargetTagSelect")?.value || "").trim();
+      if (!sourceTag || !targetTag) {
+        showToast("กรุณาเลือก Source #Tag และ Target #Tag ที่ต้องการควบรวม");
+        return;
+      }
+      if (sourceTag.toLowerCase() === targetTag.toLowerCase()) {
+        showToast("Source #Tag และ Target #Tag ต้องไม่ซ้ำกัน");
+        return;
+      }
+      const ok = window.confirm(
+        `ยืนยันการควบรวมแท็ก ${sourceTag} เข้ากับ ${targetTag} หรือไม่?\n\nทุกบทวิเคราะห์ที่ติดแท็ก ${sourceTag} จะถูกเปลี่ยนเป็น ${targetTag} โดยอัตโนมัติ`
+      );
+      if (!ok) return;
+      await executeCmsMutation(
+        {
+          action: "MERGE_TAG",
+          sourceTag,
+          targetTag
+        },
+        `Merged ${sourceTag} into ${targetTag} across all research posts`
+      );
+    });
 
     // 9. Generate Per-Device Activation Key
     el("generateKeyForm").addEventListener("submit", async (e) => {

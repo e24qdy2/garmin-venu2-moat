@@ -178,7 +178,11 @@ TOOLS = [
                 "tags": {
                     "type": "array",
                     "items": {"type": "string"},
-                    "description": "Topic #tags (e.g. ['#hermes-daily', '#ai-infra', '#support-resistance']).",
+                    "description": (
+                        "Topic #tags managed in the Admin Dynamic Tag Registry "
+                        "(e.g. ['#SupportResistance', '#HermesDaily', '#AIInfra', '#SemiconductorMoat']). "
+                        "Call moat_list_research_posts to inspect officialTags."
+                    ),
                 },
                 "pinned": {
                     "type": "boolean",
@@ -191,7 +195,8 @@ TOOLS = [
     {
         "name": "moat_list_research_posts",
         "description": (
-            "List active shared Support/Resistance 1-2-3 research posts and the full Watchlist S/R 1-2-3 matrix."
+            "List active shared Support/Resistance 1-2-3 research posts, the full Watchlist S/R 1-2-3 matrix, "
+            "and the Admin-managed Dynamic Tag Registry (officialTags & tagRegistry)."
         ),
         "inputSchema": {
             "type": "object",

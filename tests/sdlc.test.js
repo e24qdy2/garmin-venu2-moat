@@ -1157,6 +1157,235 @@ async function runSdlcSuite() {
       );
 
       console.log("[PASS] 19. Hermes Live Connection Status, 5 Remote Commands, S/R 1-2-3 Re-Anchor & 8-Step Functional Diagnostics verified");
+
+      // =========================================================================
+      // 20. HERMES CRON SCHEDULER TELEMETRY, DYNAMIC #TAG REGISTRY & PUBLISH TIMESTAMPS
+      // =========================================================================
+      const futureNextRun = new Date(Date.now() + 25 * 60 * 1000).toISOString();
+      const laterNextRun = new Date(Date.now() + 120 * 60 * 1000).toISOString();
+      const cronHbRes = await httpRequest(
+        "POST",
+        "/api/integration/hermes-node/heartbeat",
+        {
+          host: "echo24",
+          lanIp: "192.168.1.100",
+          tailscaleIp: "100.113.60.19",
+          gatewayStatus: "RUNNING (PID 24990)",
+          gatewayServiceActive: true,
+          gatewayPid: 24990,
+          cpuTempC: 48.9,
+          memUsedMb: 410,
+          memTotalMb: 924,
+          loadAvg1m: 0.22,
+          uptimeHuman: "5 days, 5 hours",
+          cronJobs: [
+            {
+              id: "bf4153d5646f",
+              name: "MoatWatch Daily Watchlist & Portfolio Analyst",
+              scheduleDisplay: "5 8,20 * * *",
+              enabled: true,
+              state: "scheduled",
+              nextRunAt: futureNextRun,
+              lastRunAt: "2026-10-30T01:05:00.000Z",
+              lastStatus: "ok",
+              deliver: "discord"
+            },
+            {
+              id: "a5a26db09ca5",
+              name: "RPi System Resource Monitor",
+              scheduleDisplay: "every 10m",
+              enabled: true,
+              state: "scheduled",
+              nextRunAt: laterNextRun,
+              lastRunAt: "2026-10-30T03:50:00.000Z",
+              lastStatus: "ok",
+              deliver: "local"
+            },
+            {
+              id: "c67fb5e4e5e1",
+              name: "US Market Hourly Portfolio Tracker",
+              scheduleDisplay: "35 20-23,0-2 * * 1-5",
+              enabled: false,
+              state: "paused",
+              nextRunAt: null,
+              lastRunAt: "2026-10-26T20:35:00.000Z",
+              lastStatus: "ok",
+              deliver: "discord"
+            }
+          ]
+        },
+        { Authorization: `Bearer ${hermesToken}` }
+      );
+      assert.strictEqual(cronHbRes.status, 200);
+      assert.strictEqual(cronHbRes.json.ok, true);
+      assert.strictEqual(cronHbRes.json.nodeStatus.scheduler.activeCount, 2);
+      assert.strictEqual(cronHbRes.json.nodeStatus.scheduler.pausedCount, 1);
+      assert.ok(cronHbRes.json.nodeStatus.scheduler.nextJob, "Scheduler must identify nearest active nextJob");
+      assert.strictEqual(cronHbRes.json.nodeStatus.scheduler.nextJob.id, "bf4153d5646f");
+      assert.ok(cronHbRes.json.nodeStatus.scheduler.nextJob.nextRunInSec > 0);
+
+      // 20a. Admin pauses a specific Cron Job (CRON_PAUSE)
+      const pauseJobRes = await httpRequest(
+        "POST",
+        "/api/admin/hermes-node/command",
+        {
+          action: "CRON_PAUSE",
+          jobId: "bf4153d5646f",
+          jobName: "MoatWatch Daily Watchlist & Portfolio Analyst",
+          reason: "Admin test pause"
+        },
+        { "X-Admin-Token": adminToken }
+      );
+      assert.strictEqual(pauseJobRes.status, 200);
+      assert.strictEqual(pauseJobRes.json.ok, true);
+      assert.strictEqual(pauseJobRes.json.command.action, "CRON_PAUSE");
+      assert.strictEqual(pauseJobRes.json.command.jobId, "bf4153d5646f");
+      assert.strictEqual(pauseJobRes.json.nodeStatus.scheduler.activeCount, 1);
+      assert.strictEqual(pauseJobRes.json.nodeStatus.scheduler.pausedCount, 2);
+
+      // 20b. Admin resumes the Cron Job (CRON_RESUME) and triggers CRON_RUN_NOW
+      const resumeJobRes = await httpRequest(
+        "POST",
+        "/api/admin/hermes-node/command",
+        {
+          action: "CRON_RESUME",
+          jobId: "bf4153d5646f",
+          jobName: "MoatWatch Daily Watchlist & Portfolio Analyst"
+        },
+        { "X-Admin-Token": adminToken }
+      );
+      assert.strictEqual(resumeJobRes.status, 200);
+      assert.strictEqual(resumeJobRes.json.nodeStatus.scheduler.activeCount, 2);
+
+      const runNowJobRes = await httpRequest(
+        "POST",
+        "/api/admin/hermes-node/command",
+        {
+          action: "CRON_RUN_NOW",
+          jobId: "bf4153d5646f",
+          jobName: "MoatWatch Daily Watchlist & Portfolio Analyst"
+        },
+        { "X-Admin-Token": adminToken }
+      );
+      assert.strictEqual(runNowJobRes.status, 200);
+      assert.strictEqual(runNowJobRes.json.command.action, "CRON_RUN_NOW");
+      assert.strictEqual(runNowJobRes.json.command.jobId, "bf4153d5646f");
+
+      // 20c. Dynamic #Tag Registry: Create, Cascade Rename, Cascade Merge, Pin & Visibility
+      const createTagRes = await httpRequest(
+        "POST",
+        "/api/admin/research-posts",
+        {
+          action: "UPSERT_TAG",
+          tag: "#quant-breakout",
+          labelTh: "สัญญาณ Quant Breakout",
+          category: "QUANT",
+          color: "#f43f5e",
+          pinned: true,
+          description: "Breakout confirmation tag"
+        },
+        { "X-Admin-Token": adminToken }
+      );
+      assert.strictEqual(createTagRes.status, 201);
+      assert.strictEqual(createTagRes.json.ok, true);
+      assert.strictEqual(createTagRes.json.tagEntry.tag, "#quant-breakout");
+      assert.strictEqual(createTagRes.json.tagEntry.pinned, true);
+
+      // Create a post with explicit publishedAt and #quant-breakout tag
+      const initialPublishedAt = "2026-10-29T01:05:00.000Z";
+      const taggedPostRes = await httpRequest(
+        "POST",
+        "/api/admin/research-posts",
+        {
+          action: "CREATE",
+          post: {
+            id: "post_tag_ts_test",
+            symbol: "AMD",
+            name: "Advanced Micro Devices",
+            title: "AMD MI350 Ramp & S/R 1-2-3 Channels",
+            summary: "Testing explicit publishedAt vs updatedAt and cascading dynamic #tag operations.",
+            signalMemo: "Hold above S1 $152; target R2 $178",
+            publishedAt: initialPublishedAt,
+            tags: ["#quant-breakout", "#ai-infra"]
+          }
+        },
+        { "X-Admin-Token": adminToken }
+      );
+      assert.strictEqual(taggedPostRes.status, 201);
+      assert.strictEqual(taggedPostRes.json.post.publishedAt, initialPublishedAt);
+
+      // Update the post and verify publishedAt is preserved while updatedAt advances
+      const updatedPostRes = await httpRequest(
+        "POST",
+        "/api/admin/research-posts",
+        {
+          action: "UPDATE",
+          id: "post_tag_ts_test",
+          post: {
+            id: "post_tag_ts_test",
+            symbol: "AMD",
+            title: "AMD MI350 Ramp — Updated Target R2 $182",
+            tags: ["#quant-breakout", "#ai-infra"]
+          }
+        },
+        { "X-Admin-Token": adminToken }
+      );
+      assert.strictEqual(updatedPostRes.status, 200);
+      assert.strictEqual(updatedPostRes.json.post.publishedAt, initialPublishedAt, "Original publishedAt must be preserved on update");
+      assert.notStrictEqual(updatedPostRes.json.post.updatedAt, initialPublishedAt, "updatedAt must advance to latest edit timestamp");
+
+      // Rename #quant-breakout -> #quant-momentum and verify cascade across posts
+      const renameTagRes = await httpRequest(
+        "POST",
+        "/api/admin/research-posts",
+        {
+          action: "RENAME_TAG",
+          oldTag: "#quant-breakout",
+          newTag: "#quant-momentum",
+          labelTh: "โมเมนตัมเชิงปริมาณ",
+          category: "QUANT",
+          color: "#a855f7",
+          pinned: true
+        },
+        { "X-Admin-Token": adminToken }
+      );
+      assert.strictEqual(renameTagRes.status, 200);
+      assert.strictEqual(renameTagRes.json.ok, true);
+      assert.ok(renameTagRes.json.replacedInPosts >= 1, "Rename must cascade to existing posts");
+
+      // Verify public /api/research-feed reflects renamed tag, officialTags, and matrix publishedAt
+      const feedAfterRename = await httpRequest("GET", "/api/research-feed?key=V2-07090781");
+      assert.strictEqual(feedAfterRename.status, 200);
+      assert.ok(Array.isArray(feedAfterRename.json.officialTags), "Feed must expose officialTags array");
+      assert.ok(feedAfterRename.json.officialTags.includes("#quant-momentum"), "officialTags must include renamed #quant-momentum");
+      const amdPost = feedAfterRename.json.posts.find((p) => p.id === "post_tag_ts_test");
+      assert.ok(amdPost, "AMD test post must be in active feed");
+      assert.ok(amdPost.tags.includes("#quant-momentum"), "Post tags must be cascaded to #quant-momentum");
+      assert.strictEqual(amdPost.publishedAt, initialPublishedAt);
+
+      // Merge #quant-momentum -> #hermes-daily and clean up test post
+      const mergeTagRes = await httpRequest(
+        "POST",
+        "/api/admin/research-posts",
+        {
+          action: "MERGE_TAG",
+          sourceTag: "#quant-momentum",
+          targetTag: "#hermes-daily"
+        },
+        { "X-Admin-Token": adminToken }
+      );
+      assert.strictEqual(mergeTagRes.status, 200);
+      assert.strictEqual(mergeTagRes.json.ok, true);
+      assert.ok(mergeTagRes.json.mergedInPosts >= 1, "Merge must cascade to posts");
+
+      await httpRequest(
+        "POST",
+        "/api/admin/research-posts",
+        { action: "DELETE", id: "post_tag_ts_test" },
+        { "X-Admin-Token": adminToken }
+      );
+
+      console.log("[PASS] 20. Hermes Cron Scheduler Telemetry, Per-Job Controls, Dynamic #Tag Registry & Explicit Publish Timestamps verified");
     } finally {
       if (prevIntEnabled === undefined) delete process.env.WEBMEMO_INTEGRATION_ENABLED;
       else process.env.WEBMEMO_INTEGRATION_ENABLED = prevIntEnabled;
@@ -1180,7 +1409,7 @@ async function runSdlcSuite() {
   }
 
   console.log("\n==================================================================");
-  console.log("  ALL 19 SDLC + MULTI-USER + BI & HERMES CMS SUITES PASSED (100%)");
+  console.log("  ALL 20 SDLC + MULTI-USER + BI & HERMES CMS SUITES PASSED (100%)");
   console.log("==================================================================");
   if (ephemeralServer) {
     ephemeralServer.close();
