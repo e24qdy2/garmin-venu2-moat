@@ -92,13 +92,38 @@ if (Test-Path $OutputPrg) {
 
 if ($PackageStoreIq) {
     $OutputIq = Join-Path $DistDir "MoatWatch.iq"
+    $BetaIq = Join-Path $DistDir "MoatWatch-Beta.iq"
+    $PublicIq = Join-Path $DistDir "MoatWatch-Public.iq"
     $GarminMoatIq = Join-Path $DistDir "GarminMoat.iq"
-    Write-Host "[*] Packaging Garmin Connect IQ Store bundle: $OutputIq (20 Garmin models)..." -ForegroundColor Cyan
+    $ManifestFile = Join-Path $AppDir "manifest.xml"
+    $BetaAppId = "83e22c8d-edfe-40f4-9d8a-16a5fd99cbfa"
+    $PublicAppId = "94f33d9e-fe0f-41a5-8e9b-27b6fe00dc0b"
+
+    Write-Host "[*] Packaging Garmin Connect IQ Store bundle (Beta ID: $BetaAppId): $OutputIq (20 Garmin models)..." -ForegroundColor Cyan
     & $JavaExe "-Xms1g" "-Dfile.encoding=UTF-8" -jar $MonkeyJar -e -r -o $OutputIq -f $JungleFile -y $KeyPath -w
     if (Test-Path $OutputIq) {
+        Copy-Item -Path $OutputIq -Destination $BetaIq -Force
         Copy-Item -Path $OutputIq -Destination $GarminMoatIq -Force
         $IqSizeKb = [Math]::Round((Get-Item $OutputIq).Length / 1KB, 1)
-        Write-Host "[OK] Built Connect IQ Store Package: $OutputIq ($IqSizeKb KB)" -ForegroundColor Green
+        Write-Host "[OK] Built Connect IQ Store Beta Package: $BetaIq & $OutputIq ($IqSizeKb KB)" -ForegroundColor Green
+    }
+
+    if (Test-Path $ManifestFile) {
+        $origManifest = [System.IO.File]::ReadAllText($ManifestFile, [System.Text.Encoding]::UTF8)
+        try {
+            $pubManifest = $origManifest -replace [regex]::Escape("id=`"$BetaAppId`""), "id=`"$PublicAppId`""
+            $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+            [System.IO.File]::WriteAllText($ManifestFile, $pubManifest, $utf8NoBom)
+            Write-Host "[*] Packaging Garmin Connect IQ Store bundle (Public ID: $PublicAppId): $PublicIq (20 Garmin models)..." -ForegroundColor Cyan
+            & $JavaExe "-Xms1g" "-Dfile.encoding=UTF-8" -jar $MonkeyJar -e -r -o $PublicIq -f $JungleFile -y $KeyPath -w
+            if (Test-Path $PublicIq) {
+                $PubSizeKb = [Math]::Round((Get-Item $PublicIq).Length / 1KB, 1)
+                Write-Host "[OK] Built Connect IQ Store Public Package: $PublicIq ($PubSizeKb KB)" -ForegroundColor Green
+            }
+        } finally {
+            $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+            [System.IO.File]::WriteAllText($ManifestFile, $origManifest, $utf8NoBom)
+        }
     }
 }
 
