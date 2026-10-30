@@ -581,6 +581,7 @@ async function runTests() {
       "Blackwell DC ramp +93% YoY | แนวรับ $135 | Hold core"
     );
     assert.strictEqual(approveRes.json.readback.memoRevision, 1);
+    assert.strictEqual(approveRes.json.readback.researchPostSynced, true);
 
     // Verify strict field-level immutability: NO other field, stock, portfolio, or account changed
     const afterStore = JSON.parse(mockDb.kvStore.get("portfolios").value);

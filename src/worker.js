@@ -36,7 +36,8 @@ const {
   buildInitialSeedStore,
   buildPublicResearchFeedPayload,
   buildAdminBiAnalytics,
-  mutateResearchStore
+  mutateResearchStore,
+  syncApprovedWebMemoToResearchStore
 } = researchFeedMod;
 const {
   createDefaultHermesNodeState,
@@ -586,6 +587,25 @@ export default {
         store: integrationStore
       });
       if (result) {
+        if (result.body && result.body.ok && result.body.decision === "APPROVED" && result.body.readback) {
+          await refreshResearchStoreFromD1(env);
+          const rb = result.body.readback;
+          const draftObj = result.body.draft || {};
+          const syncedPost = syncApprovedWebMemoToResearchStore(runtimeResearchStore, {
+            symbol: rb.symbol || draftObj.symbol,
+            portfolioId: rb.portfolioId || draftObj.portfolioId,
+            memo: rb.memo || draftObj.proposedMemo,
+            analysisSummary: draftObj.analysisSummary || "",
+            memoRevision: rb.memoRevision,
+            updatedAt: rb.memoUpdatedAt,
+            draftId: draftObj.draftId
+          });
+          if (syncedPost) {
+            await persistKey(env, "research_feed", runtimeResearchStore);
+            result.body.readback.researchPostSynced = true;
+            result.body.readback.researchPostId = syncedPost.id;
+          }
+        }
         return jsonResponse(result.status, result.body, result.headers || {});
       }
     }
