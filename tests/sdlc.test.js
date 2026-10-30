@@ -1456,6 +1456,39 @@ async function runSdlcSuite() {
       );
 
       console.log("[PASS] 20. Hermes Cron Scheduler Telemetry, Per-Job Controls, Dynamic #Tag Registry & Explicit Publish Timestamps verified");
+
+      // ==================================================================
+      // 21. Thai & English Watch WebMemo Bitmap Fonts, Sanitizer & 2-Tier Circle Fit
+      // ==================================================================
+      const { sanitizeWatchMemo } = require("../lib/moatEngine");
+      const rawMixedMemo = "📈 แนวรับสำคัญ $162.50 — รอจังหวะย่อตัวสะสม • เป้าหมาย $195.00 🚀 ทะลุแนวต้านใหญ่พร้อมวอลุ่มหนาแน่นมาก";
+      const sanitized90 = sanitizeWatchMemo(rawMixedMemo, 90);
+      assert.ok(sanitized90.length > 36 && sanitized90.length <= 90, `Expected length between 37 and 90, got ${sanitized90.length}`);
+      assert.ok(!sanitized90.includes("\u0E33"), "Sara Am (U+0E33) must be decomposed into Nikhahit + Sara Aa for bitmap font rendering");
+      assert.ok(sanitized90.includes("\u0E4D\u0E32"), "Decomposed Nikhahit + Sara Aa must be present in sanitized memo");
+      assert.ok(sanitized90.includes("▲"), "Upward chart emoji must normalize to watch-safe triangle glyph ▲");
+      assert.ok(sanitized90.includes("-"), "Em-dash must normalize to ASCII hyphen -");
+      assert.ok(sanitized90.includes("·"), "Bullet point must normalize to watch-safe middle dot ·");
+
+      const fontsDir = path.join(__dirname, "..", "garmin-venu2-app", "resources", "fonts");
+      for (const fntName of ["moat_memo_xs.fnt", "moat_micro.fnt", "moat_row.fnt", "moat_val.fnt"]) {
+        const fntContent = fs.readFileSync(path.join(fontsDir, fntName), "utf8");
+        for (const thaiCode of [3585, 3607, 3629, 3633, 3636, 3640, 3648, 3656, 3661]) {
+          const lineMatch = fntContent.match(new RegExp(`^char id=${thaiCode}\\s+.*$`, "m"));
+          assert.ok(lineMatch, `${fntName} must include Thai glyph id=${thaiCode}`);
+          assert.ok(!lineMatch[0].includes("xadvance=0"), `${fntName} glyph id=${thaiCode} must have positive xadvance for Connect IQ compiler compatibility`);
+        }
+      }
+
+      const layoutMc = fs.readFileSync(
+        path.join(__dirname, "..", "garmin-venu2-app", "source", "MoatWatchLayout.mc"),
+        "utf8"
+      );
+      assert.ok(layoutMc.includes("function drawFittedCircleMemo("), "MoatWatchLayout.mc must define drawFittedCircleMemo");
+      assert.ok(layoutMc.includes("function wrapCircleMemoLines("), "MoatWatchLayout.mc must define wrapCircleMemoLines");
+      assert.ok(layoutMc.includes("function drawThaiCenteredLine("), "MoatWatchLayout.mc must define drawThaiCenteredLine");
+
+      console.log("[PASS] 21. Thai & English Watch WebMemo Bitmap Fonts, Sanitizer & 2-Tier Circle Fit verified");
     } finally {
       if (prevIntEnabled === undefined) delete process.env.WEBMEMO_INTEGRATION_ENABLED;
       else process.env.WEBMEMO_INTEGRATION_ENABLED = prevIntEnabled;

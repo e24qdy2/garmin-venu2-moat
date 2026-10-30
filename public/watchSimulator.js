@@ -703,7 +703,16 @@
       el('watchDetailStop').textContent = item.stopPrice > 0 ? formatMoney(item.stopPrice, item.currency) : '-';
     }
     if (el('watchDetailMemo')) {
-      el('watchDetailMemo').textContent =
+      const memoEl = el('watchDetailMemo');
+      const rawMemo = (item.note || item.m || '').trim();
+      const memoText = rawMemo || 'No WebMemo for this asset (Click Edit on web to add a memo)';
+      memoEl.textContent = memoText;
+      const isLongMemo = memoText.length > 36;
+      memoEl.className = isLongMemo
+        ? 'text-[9.5px] text-alabaster leading-tight line-clamp-3 px-2 break-words'
+        : 'text-[11px] text-alabaster leading-snug line-clamp-2 px-1 break-words';
+      memoEl.dataset.fontTier = isLongMemo ? 'FontMemoXS-11px-3L' : 'FontMicro-14px-2L';
+      if (false) el('watchDetailMemo').textContent =
         item.note || 'No WebMemo for this asset (Click Edit on web to add a memo)';
     }
 

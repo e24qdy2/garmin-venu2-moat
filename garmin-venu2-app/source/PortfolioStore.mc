@@ -16,7 +16,8 @@ class PortfolioStore {
     public var isSyncing as Boolean = false;
     public var lastStatus as String = "READY";
 
-    // Anti-Aliased Custom Bitmap Fonts matching Web Virtual Watch (14.5px Micro, 17px Row, 22px Val)
+    // Anti-Aliased Custom Bitmap Fonts matching Web Virtual Watch (11px MemoXS, 14px Micro, 17px Row, 22px Val)
+    public var fontMemoXs = Graphics.FONT_XTINY;
     public var fontMicro = Graphics.FONT_XTINY;
     public var fontRow = Graphics.FONT_XTINY;
     public var fontVal = Graphics.FONT_SMALL;
@@ -67,8 +68,14 @@ class PortfolioStore {
                 fontMicro = WatchUi.loadResource(Rez.Fonts.FontMicro);
                 fontRow = WatchUi.loadResource(Rez.Fonts.FontRow);
                 fontVal = WatchUi.loadResource(Rez.Fonts.FontVal);
+                if (Rez.Fonts has :FontMemoXS) {
+                    fontMemoXs = WatchUi.loadResource(Rez.Fonts.FontMemoXS);
+                } else {
+                    fontMemoXs = fontMicro;
+                }
             }
         } catch (ex) {
+            fontMemoXs = Graphics.FONT_XTINY;
             fontMicro = Graphics.FONT_XTINY;
             fontRow = Graphics.FONT_XTINY;
             fontVal = Graphics.FONT_SMALL;

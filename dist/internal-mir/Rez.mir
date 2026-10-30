@@ -26,33 +26,35 @@ module Rez {
         [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 12; ]
         <init> {
         }
-        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 13; @position = 27; initialized = true; @symbol_vardef = [FontMicro,13,27,36]; @symbol_type<0> = [ResourceId,13,40,50]; ]
+        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 13; @position = 27; initialized = true; @symbol_vardef = [FontMemoXS,13,27,37]; @symbol_type<0> = [ResourceId,13,41,51]; ]
+        var FontMemoXS as ResourceId;
+        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 14; @position = 27; initialized = true; @symbol_vardef = [FontMicro,14,27,36]; @symbol_type<0> = [ResourceId,14,40,50]; ]
         var FontMicro as ResourceId;
-        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 14; @position = 27; initialized = true; @symbol_vardef = [FontRow,14,27,34]; @symbol_type<0> = [ResourceId,14,38,48]; ]
+        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 15; @position = 27; initialized = true; @symbol_vardef = [FontRow,15,27,34]; @symbol_type<0> = [ResourceId,15,38,48]; ]
         var FontRow as ResourceId;
-        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 15; @position = 27; initialized = true; @symbol_vardef = [FontVal,15,27,34]; @symbol_type<0> = [ResourceId,15,38,48]; ]
+        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 16; @position = 27; initialized = true; @symbol_vardef = [FontVal,16,27,34]; @symbol_type<0> = [ResourceId,16,38,48]; ]
         var FontVal as ResourceId;
     }
-    [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 18; @symbol_moduledef = [Strings,18,11,18]; ]
+    [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 19; @symbol_moduledef = [Strings,19,11,18]; ]
     module Strings {
-        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 18; ]
+        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 19; ]
         <init> {
         }
-        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 19; @position = 27; initialized = true; @symbol_vardef = [AutoSwipeEnabledTitle,19,27,48]; @symbol_type<0> = [ResourceId,19,52,62]; ]
+        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 20; @position = 27; initialized = true; @symbol_vardef = [AutoSwipeEnabledTitle,20,27,48]; @symbol_type<0> = [ResourceId,20,52,62]; ]
         var AutoSwipeEnabledTitle as ResourceId;
-        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 20; @position = 27; initialized = true; @symbol_vardef = [ShowBollingerTitle,20,27,45]; @symbol_type<0> = [ResourceId,20,49,59]; ]
+        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 21; @position = 27; initialized = true; @symbol_vardef = [ShowBollingerTitle,21,27,45]; @symbol_type<0> = [ResourceId,21,49,59]; ]
         var ShowBollingerTitle as ResourceId;
-        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 21; @position = 27; initialized = true; @symbol_vardef = [AutoSwipeSecTitle,21,27,44]; @symbol_type<0> = [ResourceId,21,48,58]; ]
+        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 22; @position = 27; initialized = true; @symbol_vardef = [AutoSwipeSecTitle,22,27,44]; @symbol_type<0> = [ResourceId,22,48,58]; ]
         var AutoSwipeSecTitle as ResourceId;
-        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 22; @position = 27; initialized = true; @symbol_vardef = [ApiUrlTitle,22,27,38]; @symbol_type<0> = [ResourceId,22,42,52]; ]
+        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 23; @position = 27; initialized = true; @symbol_vardef = [ApiUrlTitle,23,27,38]; @symbol_type<0> = [ResourceId,23,42,52]; ]
         var ApiUrlTitle as ResourceId;
-        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 23; @position = 27; initialized = true; @symbol_vardef = [ActivationKeyTitle,23,27,45]; @symbol_type<0> = [ResourceId,23,49,59]; ]
+        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 24; @position = 27; initialized = true; @symbol_vardef = [ActivationKeyTitle,24,27,45]; @symbol_type<0> = [ResourceId,24,49,59]; ]
         var ActivationKeyTitle as ResourceId;
-        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 24; @position = 27; initialized = true; @symbol_vardef = [SyncKeyTitle,24,27,39]; @symbol_type<0> = [ResourceId,24,43,53]; ]
+        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 25; @position = 27; initialized = true; @symbol_vardef = [SyncKeyTitle,25,27,39]; @symbol_type<0> = [ResourceId,25,43,53]; ]
         var SyncKeyTitle as ResourceId;
-        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 25; @position = 27; initialized = true; @symbol_vardef = [AlwaysOnDisplayTitle,25,27,47]; @symbol_type<0> = [ResourceId,25,51,61]; ]
+        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 26; @position = 27; initialized = true; @symbol_vardef = [AlwaysOnDisplayTitle,26,27,47]; @symbol_type<0> = [ResourceId,26,51,61]; ]
         var AlwaysOnDisplayTitle as ResourceId;
-        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 26; @position = 27; initialized = true; @symbol_vardef = [AppName,26,27,34]; @symbol_type<0> = [ResourceId,26,38,48]; ]
+        [ @file = "D:\all-workspace\garmin-venu2\dist\gen\006-B3703-00\source\Rez.mcgen"; @line = 27; @position = 27; initialized = true; @symbol_vardef = [AppName,27,27,34]; @symbol_type<0> = [ResourceId,27,38,48]; ]
         var AppName as ResourceId;
     }
 }

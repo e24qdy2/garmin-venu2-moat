@@ -174,25 +174,11 @@ class SymbolDetailView extends WatchUi.View {
             : ("Watchlist · Target: " + cur + tgt.format("%.1f"));
         dc.drawText(cx, (h * 58) / 100, fMicro, posLine, Graphics.TEXT_JUSTIFY_CENTER);
 
-        // 6. WebMemo Note Box at Bottom of Screen
+        // 6. WebMemo Note Box at Bottom of Screen (2-Tier Auto-Fit Font + Circle-Chord Multi-Line)
         var note = (item.hasKey("note") ? item.get("note") : item.get("m")) as String?;
         if (note == null || note.length() == 0) {
             note = "No WebMemo attached";
         }
-        dc.setColor(0x06B6D4, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, (h * 65) / 100, fMicro, "WEBMEMO", Graphics.TEXT_JUSTIFY_CENTER);
-
-        var fittedNote = Graphics.fitTextToArea(note, fMicro, w - ((w * 28) / 100), (h * 16) / 100, true);
-        if (fittedNote == null) {
-            fittedNote = (note.length() > 28) ? (note.substring(0, 28) + "...") : note;
-        }
-        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(
-            cx,
-            (h * 71) / 100,
-            fMicro,
-            fittedNote,
-            Graphics.TEXT_JUSTIFY_CENTER
-        );
+        MoatWatchLayout.drawFittedCircleMemo(dc, _store, note, w, h, cx);
     }
 }

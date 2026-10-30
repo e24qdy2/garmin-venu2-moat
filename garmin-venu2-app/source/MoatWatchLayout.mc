@@ -415,4 +415,239 @@ module MoatWatchLayout {
         dc.setColor(priceColor, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(lastX, lastY, 2);
     }
+
+    // Returns true if codepoint is a Thai combining vowel/tone mark or Sara Am that must stay attached to its preceding consonant
+    function isThaiFollowerCode(code as Number) as Boolean {
+        return (code == 3633) || (code >= 3635 && code <= 3642) || (code >= 3655 && code <= 3662);
+    }
+
+    // Returns true if codepoint is a zero-advance Thai combining mark (upper/lower vowel or tone mark)
+    function isThaiZeroAdvanceCode(code as Number) as Boolean {
+        return (code == 3633) || (code >= 3636 && code <= 3642) || (code >= 3655 && code <= 3662);
+    }
+
+    function isThaiUpperVowelCode(code as Number) as Boolean {
+        return (code == 3633) || (code >= 3636 && code <= 3639) || (code == 3655) || (code == 3661);
+    }
+
+    function isThaiToneMarkCode(code as Number) as Boolean {
+        return (code >= 3656 && code <= 3660);
+    }
+
+    // True horizontal pixel width of a Thai+ASCII string (excluding zero-advance combining marks)
+    function getThaiTextWidth(dc as Dc, text as String, font as FontDefinition) as Number {
+        var chars = text.toCharArray();
+        var baseOnly = "";
+        for (var i = 0; i < chars.size(); i++) {
+            var code = chars[i].toNumber();
+            if (code == 3635) {
+                baseOnly = baseOnly + "\u0E32";
+            } else if (!isThaiZeroAdvanceCode(code)) {
+                baseOnly = baseOnly + chars[i].toString();
+            }
+        }
+        return dc.getTextWidthInPixels(baseOnly, font);
+    }
+
+    // Renders a centered Thai+ASCII line by drawing base runs left-to-right and overlaying combining marks on their base consonant
+    function drawThaiCenteredLine(
+        dc as Dc,
+        cx as Number,
+        y as Number,
+        font as FontDefinition,
+        text as String
+    ) as Void {
+        var chars = text.toCharArray();
+        var totalW = getThaiTextWidth(dc, text, font);
+        var curX = cx - (totalW / 2);
+        var baseRun = "";
+        var prevCode = 0;
+
+        for (var i = 0; i < chars.size(); i++) {
+            var code = chars[i].toNumber();
+            if (code == 3635) {
+                // Decompose Sara Am (U+0E33) into combining nikhahit (U+0E4D) + Sara Aa (U+0E32)
+                if (baseRun.length() > 0) {
+                    dc.drawText(curX, y, font, baseRun, Graphics.TEXT_JUSTIFY_LEFT);
+                    curX += dc.getTextWidthInPixels(baseRun, font);
+                    baseRun = "";
+                }
+                var nikStr = "\u0E4D";
+                var nikW = dc.getTextWidthInPixels(nikStr, font);
+                dc.drawText(curX - nikW, y, font, nikStr, Graphics.TEXT_JUSTIFY_LEFT);
+                baseRun = "\u0E32";
+                prevCode = 3634;
+            } else if (isThaiZeroAdvanceCode(code)) {
+                if (baseRun.length() > 0) {
+                    dc.drawText(curX, y, font, baseRun, Graphics.TEXT_JUSTIFY_LEFT);
+                    curX += dc.getTextWidthInPixels(baseRun, font);
+                    baseRun = "";
+                }
+                var markStr = chars[i].toString();
+                var markW = dc.getTextWidthInPixels(markStr, font);
+                var drawY = (isThaiToneMarkCode(code) && isThaiUpperVowelCode(prevCode)) ? (y - 3) : y;
+                dc.drawText(curX - markW, drawY, font, markStr, Graphics.TEXT_JUSTIFY_LEFT);
+                prevCode = code;
+            } else {
+                baseRun = baseRun + chars[i].toString();
+                prevCode = code;
+            }
+        }
+        if (baseRun.length() > 0) {
+            dc.drawText(curX, y, font, baseRun, Graphics.TEXT_JUSTIFY_LEFT);
+        }
+    }
+
+    // Circle-chord aware multi-line text wrapper for round watch screens
+    function wrapCircleMemoLines(
+        dc as Dc,
+        store as PortfolioStore,
+        text as String,
+        font as FontDefinition,
+        startY as Number,
+        lineStep as Number,
+        maxLines as Number,
+        w as Number
+    ) as Dictionary {
+        var chars = text.toCharArray();
+        var totalLen = chars.size();
+        var lines = [] as Array<String>;
+        var idx = 0;
+        var truncated = false;
+        var minSidePad = (w * 9) / 100;
+
+        for (var lineIdx = 0; lineIdx < maxLines; lineIdx++) {
+            while (idx < totalLen && chars[idx].toNumber() == 32) {
+                idx++;
+            }
+            if (idx >= totalLen) {
+                break;
+            }
+
+            var lineY = startY + (lineIdx * lineStep);
+            var padX = store.getCirclePadX(lineY, lineY + lineStep, minSidePad);
+            var maxChordW = w - (padX * 2);
+            if (maxChordW < 80) {
+                maxChordW = 80;
+            }
+
+            var bestEnd = idx + 1;
+            var lastSpace = -1;
+            var curStr = "";
+
+            for (var scan = idx; scan < totalLen; scan++) {
+                curStr = curStr + chars[scan].toString();
+                // Always attach any immediately following Thai combining marks to the same cluster before measuring
+                while ((scan + 1) < totalLen && isThaiFollowerCode(chars[scan + 1].toNumber())) {
+                    scan++;
+                    curStr = curStr + chars[scan].toString();
+                }
+
+                var curW = getThaiTextWidth(dc, curStr, font);
+                if (curW <= maxChordW) {
+                    bestEnd = scan + 1;
+                    if (chars[scan].toNumber() == 32 && (scan - idx) >= 4) {
+                        lastSpace = scan;
+                    }
+                } else {
+                    break;
+                }
+            }
+
+            if (bestEnd >= totalLen) {
+                lines.add(curStr);
+                idx = totalLen;
+                break;
+            }
+
+            if (lineIdx < (maxLines - 1)) {
+                var splitAt = (lastSpace > idx) ? lastSpace : bestEnd;
+                var lineStr = "";
+                for (var k = idx; k < splitAt; k++) {
+                    lineStr = lineStr + chars[k].toString();
+                }
+                lines.add(lineStr);
+                idx = (lastSpace > idx) ? (lastSpace + 1) : splitAt;
+            } else {
+                truncated = true;
+                var safeEnd = bestEnd;
+                var ellipStr = "";
+                while (safeEnd > idx) {
+                    if (safeEnd < totalLen && isThaiFollowerCode(chars[safeEnd].toNumber())) {
+                        safeEnd--;
+                        continue;
+                    }
+                    var candidate = "";
+                    for (var m = idx; m < safeEnd; m++) {
+                        candidate = candidate + chars[m].toString();
+                    }
+                    if (getThaiTextWidth(dc, candidate + "..", font) <= maxChordW || safeEnd <= (idx + 1)) {
+                        ellipStr = candidate + "..";
+                        break;
+                    }
+                    safeEnd--;
+                }
+                lines.add(ellipStr);
+                idx = totalLen;
+            }
+        }
+
+        if (idx < totalLen) {
+            truncated = true;
+        }
+
+        return {
+            "lines" => lines,
+            "truncated" => truncated
+        };
+    }
+
+    // 2-Tier Auto-Scaling Circle-Safe WebMemo Renderer (14px FontMicro for 1-2 lines -> 11px FontMemoXS for up to 3 lines)
+    function drawFittedCircleMemo(
+        dc as Dc,
+        store as PortfolioStore,
+        note as String,
+        w as Number,
+        h as Number,
+        cx as Number
+    ) as Void {
+        var fMicro = store.fontMicro;
+        var fMemoXs = store.fontMemoXs;
+
+        dc.setColor(0x06B6D4, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, (h * 64) / 100, fMemoXs, "WEBMEMO", Graphics.TEXT_JUSTIFY_CENTER);
+
+        var startYMicro = (h * 70) / 100;
+        var stepMicro = dc.getFontHeight(fMicro) - 1;
+        if (stepMicro < 14) { stepMicro = 14; }
+
+        var tier1 = wrapCircleMemoLines(dc, store, note, fMicro, startYMicro, stepMicro, 2, w);
+        var tier1Trunc = tier1.get("truncated") as Boolean;
+        var activeFont = fMicro;
+        var activeLines = tier1.get("lines") as Array<String>;
+        var activeStartY = startYMicro;
+        var activeStep = stepMicro;
+
+        if (tier1Trunc) {
+            var startYXs = (h * 69) / 100;
+            var stepXs = dc.getFontHeight(fMemoXs) - 1;
+            if (stepXs < 12) { stepXs = 12; }
+            var tier2 = wrapCircleMemoLines(dc, store, note, fMemoXs, startYXs, stepXs, 3, w);
+            activeFont = fMemoXs;
+            activeLines = tier2.get("lines") as Array<String>;
+            activeStartY = startYXs;
+            activeStep = stepXs;
+        }
+
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        for (var i = 0; i < activeLines.size(); i++) {
+            drawThaiCenteredLine(
+                dc,
+                cx,
+                activeStartY + (i * activeStep),
+                activeFont,
+                activeLines[i]
+            );
+        }
+    }
 }
