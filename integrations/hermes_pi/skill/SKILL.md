@@ -1,7 +1,7 @@
 ---
 name: portfolio-monitoring-analysis
-description: Monitor the owner's real MoatWatch portfolio & watchlist on moat.readybyte.top, analyze material news/earnings/signals, and propose concise WebMemo drafts with Discord Approve/Reject buttons.
-version: 2.0.0
+description: Monitor the owner's real MoatWatch portfolio & watchlist on moat.readybyte.top, dynamically select Watchlist highlights without any static tickers, analyze material news/earnings/signals, and propose concise WebMemo drafts with Discord Approve/Reject buttons.
+version: 2.1.0
 platforms: [linux]
 metadata:
   hermes:
@@ -28,6 +28,13 @@ This skill connects Hermes Agent on Raspberry Pi 3B+ (`echo24`) to the owner's r
      Example: `Blackwell demand strong | DC rev +93% YoY | Hold core / Watch 145`
 4. **Secret Hygiene**:
    - Never print or ask for `WEBMEMO_INTEGRATION_TOKEN`, `DISCORD_BOT_TOKEN`, or any Sync Key in chat responses or logs.
+5. **Zero Static Tickers — Dynamic Watchlist Highlight Selection Only**:
+   - **NEVER** hardcode or lock any job or analysis loop to a static ticker list (e.g., never lock to `IREN/APLD/CIFR/ONDS` or any fixed symbol list).
+   - **ALWAYS** call `moat_get_account_portfolio(portfolioId="us-moat")` first to fetch the live Watchlist (`shares == 0`) and Portfolio holdings (`shares > 0`).
+   - Dynamically select **Highlight Stocks** from the live Watchlist & Portfolio on every run based on:
+     1. Active held positions (`shares > 0`) or positions testing `targetPrice` / `stopPrice`.
+     2. Watchlist symbols near Support/Resistance levels (`S1/S2/S3`, `R1/R2/R3`).
+     3. Watchlist symbols with upcoming `earningsDate`, material breaking news, or outdated/missing WebMemo.
 
 ## Available Tools
 - `moat_get_account_portfolio(portfolioId?, symbol?)`:
@@ -44,7 +51,7 @@ This skill connects Hermes Agent on Raspberry Pi 3B+ (`echo24`) to the owner's r
   Lists active/archived shared research posts and the full Watchlist S/R 1-2-3 matrix.
 
 ## Workflow 1: On-Demand Stock Analysis & WebMemo Draft
-When the owner asks in Discord to analyze a stock (e.g. `NVDA`, `SPCX`, `AVGO`, `TSM`) or draft a WebMemo:
+When the owner asks in Discord to analyze a symbol from the Watchlist/Portfolio or draft a WebMemo:
 1. Call `moat_get_holding_memo(symbol="<SYMBOL>", portfolioId="us-moat")` to read the stock's current position (`shares`, `avgCost`, `targetPrice`, `stopPrice`, `earningsDate`) and current `memo` (`memoRevision`).
 2. Gather the latest news, earnings catalysts, or technical setup sequentially (keep memory usage low on Pi 3B+).
 3. Synthesize:
@@ -53,11 +60,11 @@ When the owner asks in Discord to analyze a stock (e.g. `NVDA`, `SPCX`, `AVGO`, 
 4. Call `moat_propose_webmemo_draft(symbol="<SYMBOL>", portfolioId="us-moat", proposedMemo="<MEMO>", analysisSummary="<SUMMARY>")`.
 5. Tell the owner the `draftId` and remind them to click **อนุมัติขึ้นเว็บ (Approve)** or **ปฏิเสธ (Reject)** on the Discord card.
 
-## Workflow 2: Daily Sequential Monitor (Pi 3B+ Lightweight Cron)
-When triggered by the daily scheduled monitor:
-1. Call `moat_get_account_portfolio(portfolioId="us-moat")` once.
-2. Prioritize:
-   - Held positions (`shares > 0`, e.g., `SPCX`),
-   - Watchlist stocks with upcoming earnings (`earningsDate` present) or missing/outdated memos (up to 3–5 notable tickers per run, processed strictly sequentially to keep RAM usage minimal on Raspberry Pi 3B+).
-3. Only call `moat_propose_webmemo_draft` for stocks with a **material new catalyst, earnings update, or thesis change** (max 3 draft cards per daily run so Discord is never spammed).
-4. Post a brief daily digest summarizing the portfolio/watchlist check and any new pending drafts awaiting approval.
+## Workflow 2: Dynamic Watchlist Highlight Monitor (All Scheduled Cron Jobs)
+Whenever any scheduled MoatWatch job runs (Intraday Pulse, News & Sentiment, Pre-Market, Post-Market, Daily Analyst, Weekly Review, or Weekly Deep-Dive):
+1. Call `moat_get_account_portfolio(portfolioId="us-moat")` once to load the live Watchlist & Portfolio dynamically (zero static tickers).
+2. Rank and select **Highlight Stocks** dynamically from the live Watchlist (`shares == 0`) and Portfolio (`shares > 0`):
+   - Held positions (`shares > 0`) and stocks testing `targetPrice`, `stopPrice`, or `S1/R1` levels,
+   - Watchlist stocks with upcoming earnings (`earningsDate` present), breaking news catalysts, or missing/outdated memos (select the top 3–5 dynamic highlights per run, processed strictly sequentially to keep RAM usage minimal on Raspberry Pi 3B+).
+3. Call `moat_publish_research_post` to update S/R 1–2–3 levels and `#tags` for the selected Watchlist highlights, and call `moat_propose_webmemo_draft` when a material catalyst or thesis update warrants a new Garmin/Web memo draft (max 3 draft cards per run).
+4. Post a concise digest in Discord summarizing which Watchlist highlights were selected and why.

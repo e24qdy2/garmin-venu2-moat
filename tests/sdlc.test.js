@@ -1290,7 +1290,7 @@ async function runSdlcSuite() {
       assert.strictEqual(v12HbRes.json.nextCommand, null, "v1.2.0 agent must never be sent CRON_* commands");
       assert.strictEqual(v12HbRes.json.nodeStatus.lastCommandResult.status, "SUCCEEDED");
 
-      // Also verify all 11 real echo24 cron jobs upgrade cleanly from a legacy list and succeed on CRON_RUN_NOW
+      // Also verify static-ticker legacy jobs are purged and all 8 active jobs (1 Pi Watchdog + 7 Dynamic Watchlist Highlight MoatWatch jobs) succeed on CRON_RUN_NOW
       await httpRequest(
         "POST",
         "/api/integration/hermes-node/heartbeat",
@@ -1298,16 +1298,35 @@ async function runSdlcSuite() {
           host: "echo24",
           gatewayStatus: "RUNNING (PID 24990)",
           gatewayServiceActive: true,
-          cronJobs: [{ id: "fbf4dbde4336", name: "Monitor Stock Portfolio (Legacy Hourly)", enabled: false, state: "paused" }]
+          cronJobs: [
+            { id: "fbf4dbde4336", name: "Monitor Stock Portfolio (Legacy Hourly)", enabled: false, state: "paused" },
+            { id: "220b8a4712c8", name: "hourly-news-iren-apld-cifr-onds", enabled: false, state: "completed" },
+            { id: "93e7014cfe37", name: "trend-monitor-iren-apld-cifr-onds", enabled: false, state: "completed" },
+            { id: "be097f1d6598", name: "ONDS Call 8 Sep 2026 close monitor", enabled: false, state: "completed" }
+          ]
         },
         { Authorization: `Bearer ${hermesToken}` }
       );
-      const status11Res = await httpRequest("GET", "/api/admin/hermes-node/status", null, {
+      const status8Res = await httpRequest("GET", "/api/admin/hermes-node/status", null, {
         "X-Admin-Token": adminToken
       });
-      assert.strictEqual(status11Res.status, 200);
-      assert.strictEqual(status11Res.json.scheduler.totalCount, 11, "Must auto-upgrade to all 11 real echo24 cron jobs");
-      for (const job of status11Res.json.scheduler.jobs) {
+      assert.strictEqual(status8Res.status, 200);
+      assert.strictEqual(
+        status8Res.json.scheduler.totalCount,
+        8,
+        "Must purge static-ticker legacy jobs and retain the 8 active jobs (1 Pi Watchdog + 7 Dynamic Watchlist Highlight MoatWatch jobs)"
+      );
+      const moatJobs = status8Res.json.scheduler.jobs.filter((j) => j.id !== "88495a2d2aef");
+      assert.strictEqual(moatJobs.length, 7, "Must have 7 MoatWatch Dynamic Watchlist Highlight jobs");
+      for (const mj of moatJobs) {
+        assert.strictEqual(
+          mj.selectionMode,
+          "DYNAMIC_WATCHLIST_HIGHLIGHTS",
+          `Job ${mj.id} (${mj.name}) must enforce DYNAMIC_WATCHLIST_HIGHLIGHTS`
+        );
+        assert.ok(mj.highlightCriteria && mj.highlightCriteria.length > 10, `Job ${mj.id} must define highlightCriteria`);
+      }
+      for (const job of status8Res.json.scheduler.jobs) {
         const jobRunRes = await httpRequest(
           "POST",
           "/api/admin/hermes-node/command",

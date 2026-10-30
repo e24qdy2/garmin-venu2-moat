@@ -62,6 +62,19 @@ def run_cmd(cmd: list[str], timeout: int = 20) -> Tuple[int, str, str]:
         return 1, "", str(exc)
 
 
+STATIC_TICKER_LEGACY_JOB_IDS = {"93e7014cfe37", "220b8a4712c8", "be097f1d6598"}
+
+
+def is_static_ticker_job(job: Dict[str, Any]) -> bool:
+    jid = str(job.get("id") or "").strip()
+    if jid in STATIC_TICKER_LEGACY_JOB_IDS:
+        return True
+    name_lower = str(job.get("name") or "").strip().lower()
+    if "iren-apld-cifr-onds" in name_lower or "onds call" in name_lower:
+        return True
+    return False
+
+
 def read_hermes_cron_jobs(jobs_path: str = "/root/.hermes/cron/jobs.json") -> list[Dict[str, Any]]:
     path = Path(jobs_path)
     if not path.is_file():
@@ -70,9 +83,15 @@ def read_hermes_cron_jobs(jobs_path: str = "/root/.hermes/cron/jobs.json") -> li
         raw = json.loads(path.read_text(encoding="utf-8"))
         jobs = raw.get("jobs") if isinstance(raw, dict) else (raw if isinstance(raw, list) else [])
         compact_jobs: list[Dict[str, Any]] = []
+        filtered_raw_jobs: list[Dict[str, Any]] = []
+        pruned_static = False
         for j in jobs:
             if not isinstance(j, dict) or not j.get("id"):
                 continue
+            if is_static_ticker_job(j):
+                pruned_static = True
+                continue
+            filtered_raw_jobs.append(j)
             compact_jobs.append(
                 {
                     "id": str(j.get("id") or ""),
@@ -90,6 +109,12 @@ def read_hermes_cron_jobs(jobs_path: str = "/root/.hermes/cron/jobs.json") -> li
                     "repeat": j.get("repeat") if isinstance(j.get("repeat"), dict) else {},
                 }
             )
+        if pruned_static and isinstance(raw, dict):
+            try:
+                raw["jobs"] = filtered_raw_jobs
+                path.write_text(json.dumps(raw, indent=2, ensure_ascii=False), encoding="utf-8")
+            except Exception:
+                pass
         return compact_jobs
     except Exception:
         return []

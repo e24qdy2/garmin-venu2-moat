@@ -669,6 +669,13 @@
         const skillsBadge = Array.isArray(job.skills) && job.skills.length
           ? `<span class="px-1.5 py-0.5 rounded bg-cyan-500/15 text-cyan-300 text-[9px]">skills: ${escapeHtml(job.skills.join(","))}</span>`
           : "";
+        const isDynamicWatchlist = job.selectionMode === "DYNAMIC_WATCHLIST_HIGHLIGHTS" || (Array.isArray(job.skills) && job.skills.includes("portfolio-monitoring-analysis"));
+        const selectionBadge = isDynamicWatchlist
+          ? `<span class="px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-[9px] font-bold" title="${escapeHtml(job.targetSource || "Live Watchlist & Portfolio")}">🔄 Dynamic Watchlist Highlights</span>`
+          : `<span class="px-1.5 py-0.5 rounded bg-slate-500/15 text-slate-300 border border-slate-500/30 text-[9px]">⚙️ System Telemetry</span>`;
+        const criteriaLine = job.highlightCriteria
+          ? `<div class="mt-1 text-[10px] text-emerald-200/80 font-sans">🎯 ${escapeHtml(job.highlightCriteria)}</div>`
+          : "";
 
         return `
           <tr class="hover:bg-white/[0.02] transition">
@@ -676,9 +683,11 @@
               <div class="font-sans font-bold text-white text-xs">${escapeHtml(job.name || job.id)}</div>
               <div class="flex flex-wrap items-center gap-1.5 mt-0.5 text-[10px] text-slate-400">
                 <code>ID: ${escapeHtml(job.id)}</code>
+                ${selectionBadge}
                 ${job.deliver ? `<span>· Deliver: ${escapeHtml(job.deliver)}</span>` : ""}
                 ${skillsBadge}
               </div>
+              ${criteriaLine}
             </td>
             <td class="py-2.5 px-2 whitespace-nowrap">${stBadge}</td>
             <td class="py-2.5 px-2 text-slate-200 whitespace-nowrap">${escapeHtml(job.scheduleDisplay || "—")}</td>
