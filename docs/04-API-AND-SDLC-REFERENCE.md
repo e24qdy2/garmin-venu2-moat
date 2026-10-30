@@ -175,12 +175,33 @@ erDiagram
 | `POST` | `/api/admin/email/test` | ทดสอบส่งอีเมลแจ้งเตือนไปยัง `e24qdy2@gmail.com` ทันที |
 | `POST` | `/api/admin/devices/generate-key` | สร้างรหัส Activation Key (`MOAT-XXXX-XXXX-XXXX`) ผูกกับ `deviceId` |
 | `POST` | `/api/admin/devices/update` | เปลี่ยนสถานะเครื่อง (`ACTIVATE`, `EXPIRE_TRIAL`, `EXTEND_TRIAL`, `RESET_TRIAL`, `DELETE`) |
+| `GET` | `/api/admin/research/overview` | ดึงข้อมูลภาพรวม Quantitative BI Dashboard (กราฟ 4 มิติ), ตาราง S/R 1-2-3 Matrix, และรายการโพสต์ `#Tag` ทั้งหมด |
+| `POST` | `/api/admin/research/posts/manage` | บริหารจัดการโพสต์ `#Tag` และการ์ดแนวรับ/แนวต้าน (`EDIT`, `HIDE`, `PUBLISH`, `ARCHIVE`, `DELETE`, `SET_TTL`, `PURGE_EXPIRED`) |
+| `GET` | `/api/admin/hermes/status` | ตรวจสอบสถานะการเชื่อมต่อของโหนด Hermes บน Raspberry Pi (`echo24`), คิวคำสั่งรีโมต, และผล Diagnostic |
+| `POST` | `/api/admin/hermes/command` | ส่งคำสั่งรีโมตไปยัง `echo24` (`RESTART_GW`, `PAUSE_HERMES`, `START_HERMES`, `REBOOT_PI`, `TEST_ALL_FUNCTIONS`) |
 
 ---
 
-## 3. กระบวนการพัฒนาและทดสอบตามมาตรฐาน SDLC (`tests/sdlc.test.js` — 16 Suites)
+### 2.3 Hermes Agent, MoatWatch MCP Tools & WebMemo Approval Endpoints
 
-โปรเจกต์นี้มีชุดทดสอบอัตโนมัติแบบ End-to-End ในไฟล์ [`tests/sdlc.test.js`](../tests/sdlc.test.js) ซึ่งตรวจสอบครบ **16 แกนหลัก (100% Pass)**:
+ระบบเชื่อมต่อกับ **Hermes Agent** บน Raspberry Pi 3B+ (`echo24`) ผ่าน **MCP Server (`integrations/hermes_pi/hermes_mcp_server.py`)** และ **Hermes Native Plugin (`webmemo-approval`)** โดยใช้โทเคนจำกัดสิทธิ์ (Least-Privilege Scoped Bearer Tokens) แทนการใช้ `SyncKey` ในการเขียนข้อมูล:
+
+| MCP Tool Name | REST Endpoint | Token Scope | คำอธิบาย |
+| :--- | :--- | :--- | :--- |
+| `moat_get_account_portfolio` | `GET /api/integrations/hermes/account` | `MOAT_HERMES_READ_TOKEN` | อ่านพอร์ตหุ้นและ Watchlist ของบัญชีเจ้าของ พร้อม `memoRevision` โดยไม่เปิดเผย `SyncKey` ดิบ |
+| `moat_get_holding_memo` | `GET /api/integrations/hermes/memo` | `MOAT_HERMES_READ_TOKEN` | อ่าน `note` (`WebMemo`) ปัจจุบันและเลข `memoRevision` ของหุ้นรายตัวตาม `(portfolioId, symbol)` |
+| `moat_propose_webmemo_draft` | `POST /api/integrations/hermes/webmemo-drafts` | `MOAT_HERMES_DRAFT_TOKEN` | สร้างร่าง `WebMemo` (ไม่เกิน 140 ตัวอักษร, TTL 24 ชม., รองรับ `Idempotency-Key`) รอการกดอนุมัติบน Discord |
+| `moat_list_webmemo_drafts` | `GET /api/integrations/hermes/webmemo-drafts` | `MOAT_HERMES_READ_TOKEN` | ดึงรายการร่าง `WebMemo` ตามสถานะ (`PENDING_APPROVAL`, `PUBLISHED`, `REJECTED`, `SUPERSEDED`) |
+| `moat_publish_research_post` | `POST /api/integrations/hermes/research-posts` | `MOAT_HERMES_DRAFT_TOKEN` | เผยแพร่บทวิเคราะห์หุ้น แนวรับ 1-2-3 (`S1/S2/S3`), แนวต้าน 1-2-3 (`R1/R2/R3`) และ `#Tag` ลงกระดานกลาง |
+| `moat_list_research_posts` | `GET /api/research/feed` | Public / Read | ดึงรายการบทวิเคราะห์และตารางแนวรับ/แนวต้าน 1-2-3 บนกระดานกลาง (กรองตาม `symbol` และ `tag` ได้) |
+| *(Discord Gateway Hook)* | `POST /api/integrations/discord/webmemo-actions` | `MOAT_DISCORD_ACTION_TOKEN` + Ed25519 | ยืนยันการกดปุ่ม **Approve / Reject** บน Discord เฉพาะเจ้าของบัญชี (`1480786426220155052`), ตรวจสอบ CAS (`memoRevision`), เขียนเฉพาะฟิลด์ `note` และซิงก์ขึ้นกระดานกลางอัตโนมัติ |
+| *(Hermes Heartbeat Daemon)* | `POST /api/integrations/hermes/heartbeat` | `MOAT_HERMES_READ_TOKEN` | รายงานสถานะเครื่อง Raspberry Pi (`echo24`), รับคำสั่งรีโมตจากคิว Admin และส่งผลลัพธ์กลับ |
+
+---
+
+## 3. กระบวนการพัฒนาและทดสอบตามมาตรฐาน SDLC (`tests/sdlc.test.js` — 19 Suites + `tests/webmemo-integration.test.js` — 9 Suites)
+
+โปรเจกต์นี้มีชุดทดสอบอัตโนมัติแบบ End-to-End ในไฟล์ [`tests/sdlc.test.js`](../tests/sdlc.test.js) (19 ชุด) และ [`tests/webmemo-integration.test.js`](../tests/webmemo-integration.test.js) (9 ชุด) ซึ่งตรวจสอบครบทุกแกนหลัก (**100% Pass**):
 1. **Subdomain Routing + VA C-01 + Security Headers:** ทดสอบ `Host: admin-moat.readybyte.top`, ตรวจสอบว่าไม่มี Password Hint รั่วใน View-Source และตรวจสอบ Security Headers
 2. **VA C-02 & C-03 Protection:** ทดสอบการบล็อก Cloudflare Header Spoofing (`401`) และปิดกั้น Legacy OTP Backdoor (`403`)
 3. **Web -> Watch Auto-Swipe & Always-On Sync:** ทดสอบการบันทึกค่า `autoSwipeEnabled`, `autoSwipeSec` (`5s` และ `9s`) และ `alwaysOnDisplay`
@@ -197,8 +218,13 @@ erDiagram
 14. **Parts 2 & 3 Deep Modules (`MoatWatchLayout.mc` + `public/watchSimulator.js`):** ทดสอบโมดูลคำนวณพิกัดหน้าจอนาฬิกาและตัวจำลองหน้าปัดบนเว็บ
 15. **Multi-User Profile & Trial Isolation:** ทดสอบการแยกข้อมูลพอร์ตและสิทธิ์ Trial 14 วันระหว่างผู้ใช้หลายคนไม่ให้ปะปนกัน
 16. **Daily US Market Fear & Greed Index (`FG:xxG` / `FG:xxEF`):** ทดสอบการจัดโซนสีทั้ง 5 ระดับ (`EF`, `F`, `N`, `G`, `EG`), การซิงก์ผ่าน `/api/portfolio` และ `/api/watch`, สวิตช์เปิด/ปิด `showFearGreed`, และการแสดงผลบน Garmin Watch Simulator
+17. **Shared S/R 1-2-3 Research Feed Across All SyncKeys:** ทดสอบการคำนวณแนวรับ 1-2-3 / แนวต้าน 1-2-3 (ระยะสั้น-กลาง-ยาว) และการเข้าถึงกระดานกลางจากทุก `SyncKey`
+18. **Hermes `#Tag` Post CMS, Auto-Archive TTL & Quantitative BI Analytics:** ทดสอบการเผยแพร่โพสต์จาก Hermes, การกรองตาม `#Tag`, การแก้ไข/ซ่อน/Archive/ลบจากหน้า Admin และความถูกต้องของข้อมูลกราฟ BI 4 มิติ
+19. **Hermes Node Heartbeat, Remote Command Queue & 8-Step Diagnostic Self-Test:** ทดสอบการส่ง Heartbeat จาก `echo24`, การสั่งงานรีโมต 5 ปุ่ม (`RESTART_GW`, `PAUSE_HERMES`, `START_HERMES`, `REBOOT_PI`, `TEST_ALL_FUNCTIONS`) และการตรวจสอบผลลัพธ์ครบ 8 ขั้นตอน
 
-### คำสั่งรันทดสอบ SDLC
+### คำสั่งรันทดสอบทั้งหมด
 ```powershell
 npm test
+node --test tests/webmemo-integration.test.js
+python -m unittest discover -s integrations/hermes_pi -p "test_*.py"
 ```

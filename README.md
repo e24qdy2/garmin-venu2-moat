@@ -1,25 +1,45 @@
-# MoatWatch — Multi-Device Garmin Portfolio Companion (2024–2026), Daily US Fear & Greed Index, Auto-Swipe, Security VA Hardened & Licensing Platform
+# MoatWatch — Multi-Device Garmin Portfolio Companion (2024–2026), Hermes AI Quant Analyst (MCP + Discord Approval), Shared Support/Resistance 1–2–3 Feed & Executive BI Admin Platform
 
-ระบบติดตามพอร์ตหุ้นหลายพอร์ต (US / Thai SET `.BK` / Crypto), **ดัชนีจิตวิทยาตลาดหุ้นสหรัฐฯ รายวัน (Daily US Market Fear & Greed Index — `FG:xxG` / `FG:xxEF`)**, แจ้งเตือนราคาเป้าหมาย (Target/Stop Alert), อินดิเคเตอร์ครบชุด (**SMA-20 + SMA%**, **RSI-14**, **Day High/Low**, **วันประกาศงบ `e-dd/mm/yy`**, **กราฟ 14-Day Sparkline + Bollinger Bands**), และบันทึกช่วยจำ **WebMemo** ที่ออกแบบด้วยสถาปัตยกรรม **Responsive Round-Screen Layout (`260×260` ถึง `454×454` AMOLED & Solar MIP)** รองรับนาฬิกา **Garmin รุ่นยอดนิยมปี 2024–2026 รวม 20 รุ่น** พร้อมระบบ **Auto-Swipe หน้าจออัตโนมัติ**, **Auto-Sort เรียงหุ้นตาม `% Change`**, **โหมด Always-On Screen**, **ระบบแยกข้อมูลรายผู้ใช้ (Multi-User Profile & Trial Isolation)**, **ระบบทดลองใช้ฟรี 14 วัน (14-Day Trial)**, **ฟอร์มขอต่ออายุ Trial / สั่งซื้อคีย์ถาวร (Purchase Request Form)**, **บริการส่งอีเมลแจ้งเตือนไปยัง `e24qdy2@gmail.com`**, และ **หน้า Admin ออกคีย์ปลดล็อกรายเครื่อง (`Device ID`) ที่ผ่านการทำ Security / Vulnerability Assessment (VA) Hardening ครบสมบูรณ์**
+ระบบติดตามพอร์ตหุ้นหลายพอร์ต (US / Thai SET `.BK` / Crypto), **เชื่อมโยงกับ Hermes Agent บน Raspberry Pi 3B+ (`echo24`) ผ่านโปรโตคอล MCP (Model Context Protocol) และระบบอนุมัติ WebMemo ผ่านปุ่มกด Discord**, **กระดานวิเคราะห์แนวรับ/แนวต้าน 3 ระดับ (Support/Resistance 1–2–3: ระยะสั้น `S1/R1` · ระยะกลาง `S2/R2` · ระยะยาว `S3/R3`) ที่แชร์ร่วมกันทุก SyncKey**, **ดัชนีจิตวิทยาตลาดหุ้นสหรัฐฯ รายวัน (`FG:xxG` / `FG:xxEF`)**, อินดิเคเตอร์ครบชุด (**SMA-20 + SMA%**, **RSI-14**, **Day High/Low**, **วันประกาศงบ `e-dd/mm/yy`**, **กราฟ 14-Day Sparkline + Bollinger Bands**), และบันทึกช่วยจำ **WebMemo** บนสถาปัตยกรรม **Responsive Round-Screen Layout (`260×260` ถึง `454×454` AMOLED & Solar MIP)** รองรับนาฬิกา **Garmin รุ่นยอดนิยมปี 2024–2026 รวม 20 รุ่น** พร้อม **หน้า Admin Console โฉมใหม่ (`admin-moat.readybyte.top`) ที่รวมศูนย์ควบคุม Hermes Gateway & Raspberry Pi ระยะไกล, ระบบ CMS จัดการโพสต์ `#Tags` + Auto-Archive, และกระดาน Quantitative BI Dashboard**
 
 ---
 
 ## ✨ ฟีเจอร์ไฮไลต์ล่าสุด (Latest Release Highlights)
 
+- 🤖 **Hermes AI Quant Analyst (`echo24`) ↔ MoatWatch Scoped MCP & Discord WebMemo Approval:**
+  - เชื่อมต่อ **Hermes Agent** บน Raspberry Pi 3B+ (`echo24`) เข้ากับฐานข้อมูล **Cloudflare Worker + D1 (`venu2-moat-db`)** ด้วยสิทธิ์แบบ **Least-Privilege (`SCOPED_MEMO_ONLY`)** — ห้ามแก้ไขจำนวนหุ้น (`shares`), ต้นทุน (`avgCost`), เป้าหมายราคา (`targetPrice`/`stopPrice`), หรือส่งคำสั่งซื้อขายโดยเด็ดขาด
+  - **ระบบอนุมัติผ่านปุ่มกด Discord (Owner-Only Interactive Approval):** เมื่อ Hermes วิเคราะห์หุ้นและเสนอร่าง WebMemo ($\le 140$ ตัวอักษร) ระบบจะส่งการ์ดปุ่ม **`อนุมัติขึ้นเว็บ (Approve)`** และ **`ปฏิเสธ (Reject)`** เข้าห้อง Discord พร้อมตรวจสิทธิ์เจ้าของ (`WEBMEMO_ALLOWED_DISCORD_USER_IDS`), ป้องกันการกดซ้ำ (Replay Protection), อายุร่าง 24 ชั่วโมง, และระบบ **Compare-And-Swap (`memoRevision`) + Readback Verification**
+  - **ซิงก์ 2 ทางอัตโนมัติหลังกด Approve:** ทันทีที่เจ้าของกดอนุมัติใน Discord ระบบจะอัปเดตทั้ง **WebMemo ในพอร์ตของเจ้าของ (`V2-***81`)** และอัปเดต **การ์ดวิเคราะห์แนวรับ/ต้าน S/R 1–2–3 กลาง (`#DiscordApproved`)** บนหน้าเว็บให้ทุก SyncKey เห็นพร้อมกัน
+- 📈 **Shared Support/Resistance Level 1–2–3 (`S1/S2/S3` & `R1/R2/R3`) Research Feed (ดูได้ทุก SyncKey):**
+  - แสดงการ์ดวิเคราะห์แนวรับ 3 ระดับ (**`S1` ระยะสั้น · `S2` ระยะกลาง · `S3` ระยะยาว**) และแนวต้าน 3 ระดับ (**`R1` ระยะสั้น · `R2` ระยะกลาง · `R3` ระยะยาว**) พร้อมแถบตำแหน่งราคาปัจจุบัน (`Price Position Gauge`), อัตราผลตอบแทนต่อความเสี่ยง (`Risk/Reward Ratio`), และตาราง **Watchlist Multi-Horizon S/R Matrix** ที่แชร์ให้ผู้ใช้ทุก `SyncKey` ติดตามบทวิเคราะห์จาก Hermes ร่วมกันได้
+- 🎛️ **Executive Admin Console โฉมใหม่ (`https://admin-moat.readybyte.top`):**
+  - **Hermes Live Telemetry & Remote Control Center:** ตรวจสอบสถานะการเชื่อมต่อของ `echo24` แบบเรียลไทม์ (สถานะ `ONLINE`/`OFFLINE`, `gatewayPid`, อุณหภูมิ CPU, RAM, Load Average, Uptime) พร้อม **5 ปุ่มคำสั่งควบคุมระยะไกล**:
+    1. `Restart GW Hermes` (`RESTART_GW`) — สั่งรีสตาร์ท `hermes-gateway.service`
+    2. `Pause / Stop Hermes` (`PAUSE_STOP_HERMES`) — พักหรือหยุดการทำงานของ Hermes Gateway ชั่วคราวโดยที่ตัวรับคำสั่ง (`moat-hermes-node.service`) ยังออนไลน์อยู่
+    3. `Start Hermes Service` (`START_HERMES`) — สั่งเปิดบริการ `hermes-gateway.service` กลับมาทำงานต่อได้ทันที
+    4. `Reboot Pi (echo24)` (`REBOOT_PI`) — สั่งรีบูตเครื่อง Raspberry Pi ระยะไกล
+    5. `Test All Hermes & API Functions` (`TEST_ALL_FUNCTIONS`) — รันชุดตรวจสอบ End-to-End ครบ 8 ขั้นตอนฝั่ง Server + 6 ขั้นตอนฝั่ง Raspberry Pi (`echo24`)
+  - **Hermes `#Tag` Research CMS & Auto-Archive Engine:** สร้าง/แก้ไข/ปักหมุด (`Pin`)/ซ่อน (`Archive`)/กู้คืน (`Restore`)/ลบการ์ดบทวิเคราะห์ กรองตาม `#tag` และตั้งค่า **Auto-Archive Policy** เพื่อซ่อนการ์ดเก่าอัตโนมัติตามอายุวัน (เช่น 21 วัน) ไม่ให้หน้าเว็บรกรุงรัง
+  - **Quantitative BI & Virtualized Dashboard:** กราฟแท่งซ้อน (Stacked Bar Charts 4 มุมมอง: User Portfolio Stack, S/R Quantitative Stack, Topic `#Tag` Stack, WebMemo Coverage Stack) และกราฟโดนัท (Donut Charts 3 มุมมอง) สรุปภาพรวมเชิงปริมาณครบทุกมิติ
 - 📊 **Daily US Market Fear & Greed Index (`FG:xxG` / `FG:xxEF`):**
-  - ดึงค่าดัชนี **CNN US Stock Market Fear & Greed Index (0–100)** รายวันอัตโนมัติ (แคช 30 นาที พร้อมระบบ Fallback)
-  - **บนหน้าเว็บ (Web Companion):** แสดงป้ายสถานะที่มุมซ้ายบนถัดจากนาฬิกาเวลาตลาดหุ้นสหรัฐฯ เช่น `US F&G: 64 · GREED (FG:64G)` พร้อมสวิตช์เปิด/ปิดการซิงก์ขึ้นหน้าปัดนาฬิกา
-  - **บนหน้าจอนาฬิกา Garmin (Watch Header):** แสดงตัวย่อขนาดเล็กประหยัดพื้นที่บนแถบสถานะด้านบนสุด เช่น `14:30 · FG:64G · 5s · PRO` พร้อมแยกสีตามโซนอารมณ์ตลาด 5 ระดับ:
-    - `0–24` -> **`FG:xxEF`** (*Extreme Fear* — สีแดง `#F43F5E`)
-    - `25–44` -> **`FG:xxF`** (*Fear* — สีส้ม `#FB923C`)
-    - `45–55` -> **`FG:xxN`** (*Neutral* — สีเทาฟ้า `#94A3B8`)
-    - `56–74` -> **`FG:xxG`** (*Greed* — สีเขียวมรกต `#10B981`)
-    - `75–100` -> **`FG:xxEG`** (*Extreme Greed* — สีฟ้าไซแอน `#06B6D4`)
+  - ดึงค่าดัชนี **CNN US Stock Market Fear & Greed Index (0–100)** รายวันอัตโนมัติ แสดงทั้งบนหน้าเว็บและบนแถบสถานะบนสุดของนาฬิกา Garmin (`14:30 · FG:64G · 5s · PRO`)
 - ⌚ **รองรับนาฬิกา Garmin 20 รุ่น (2024–2026 Lineup) & Connect IQ Store Ready (`MoatWatch.iq`):**
-  - ปรับถ้อยคำและ UI ทั้งหมดบนหน้าเว็บและหน้า Admin ให้รองรับผู้ใช้ **Garmin Watch ทุกรุ่นที่รองรับ** (ไม่ได้จำกัดเฉพาะ Venu 2)
-  - ปรับ `minApiLevel="3.2.0"` เพื่อความเข้ากันได้สูงสุดกับฮาร์ดแวร์จริงบน Garmin Connect IQ Store พร้อมชุดภาพ Store Assets (`dist/store-assets/`) และหน้า Privacy Policy (`/privacy`)
-- 👥 **Multi-User Isolation & Hardware Auto-Device-ID:**
-  - แยกพอร์ตและสิทธิ์ทดลองใช้ 14 วันตาม `Sync Key` และ `Device ID` ของแต่ละเครื่องโดยอัตโนมัติ ไม่ปะปนกันระหว่างผู้ใช้งาน
+  - รองรับหน้าจอกลม `260×260` ถึง `454×454` (AMOLED & Solar MIP) พร้อมระบบ **Auto-Swipe หน้าจออัตโนมัติ**, **Auto-Sort เรียงหุ้นตาม `% Change`**, และ **Multi-User Isolation**
+
+---
+
+## 🔌 ความสามารถของ MoatWatch MCP (`moatwatch-webmemo`) & Hermes Plugin (`webmemo-approval`)
+
+ไฟล์หลัก: [`integrations/hermes_pi/moat_mcp_server.py`](./integrations/hermes_pi/moat_mcp_server.py), [`integrations/hermes_pi/plugin/__init__.py`](./integrations/hermes_pi/plugin/__init__.py), และ [`integrations/hermes_pi/moat_node_agent.py`](./integrations/hermes_pi/moat_node_agent.py)
+
+| ลำดับ | ชื่อ Tool (MCP & Plugin) | ความสามารถและการทำงาน | สิทธิ์การเข้าถึง |
+| :--- | :--- | :--- | :--- |
+| **1** | `moat_get_account_portfolio` | อ่านพอร์ตโฟลิโอ (`us-moat`), หุ้นที่ถือครอง และรายการ **Watchlist ทั้งหมด** ของบัญชีเจ้าของ (`V2-***81`) เพื่อใช้เป็นข้อมูลตั้งต้นในการวิเคราะห์รายวัน (กรองตาม `portfolioId` หรือ `symbol` ได้) | อ่านอย่างเดียว (ซ่อน SyncKey จริง) |
+| **2** | `moat_get_holding_memo` | อ่านข้อความ `memo` ปัจจุบันบนหน้าเว็บ, เลขเวอร์ชัน (`memoRevision`), `contentHash` และเช็คว่ามีร่างค้างอนุมัติอยู่หรือไม่ของหุ้นรายตัว | อ่านอย่างเดียว |
+| **3** | `moat_propose_webmemo_draft` | สร้างร่าง **WebMemo** ใหม่ ($\le 140$ ตัวอักษร) พร้อมสรุปเหตุผล/สัญญาณ (`analysisSummary`) ลงฐานข้อมูล D1 และ **ส่งการ์ดปุ่มกด `Approve` / `Reject` เข้าห้อง Discord อัตโนมัติ** (ยังไม่เขียนลงเว็บจริงจนกว่าเจ้าของจะกดอนุมัติ) | สร้างเฉพาะ Draft รออนุมัติ |
+| **4** | `moat_list_webmemo_drafts` | ตรวจสอบประวัติและสถานะของร่าง WebMemo ทั้งหมด (`PENDING`, `APPROVED`, `REJECTED`, `CONFLICT`, `EXPIRED`) | อ่านอย่างเดียว |
+| **5** | `moat_publish_research_post` | โพสต์หรืออัปเดต **การ์ดวิเคราะห์แนวรับ/แนวต้าน 3 ระดับ (`S1, S2, S3` และ `R1, R2, R3` ระยะสั้น-กลาง-ยาว)** พร้อมจุดอ้างอิงราคา (`referencePrice`), มุมมอง (`BULLISH`/`NEUTRAL`/`CAUTIOUS`), คะแนนความมั่นใจ และ `#tags` ขึ้นบนหน้าเว็บ `https://moat.readybyte.top` เพื่อให้ผู้ใช้ทุก SyncKey ติดตามบทวิเคราะห์ร่วมกันได้ | เขียน/อัปเดตเฉพาะการ์ดบทวิเคราะห์ S/R 1–2–3 |
+| **6** | `moat_list_research_posts` | ดึงรายการการ์ดบทวิเคราะห์และตารางแนวรับ/ต้าน S/R 1–2–3 ที่แสดงอยู่บนหน้าเว็บ (เลือกกรองตามชื่อหุ้น `symbol`, `#tag`, หรือรวมการ์ดที่ถูก Archive ได้) | อ่านอย่างเดียว |
 
 ---
 
@@ -92,8 +112,8 @@
    - State Machine & อัลกอริทึม **HMAC-SHA256 Per-Device Activation Key** (`MOAT-XXXX-XXXX-XXXX`)
 4. 🛠️ **[เอกสารอ้างอิง API, โครงสร้างข้อมูล และ SDLC (API & SDLC Reference)](./docs/04-API-AND-SDLC-REFERENCE.md)**
    - แผนภาพฐานข้อมูล (`ER Diagram`) ของ `portfolios.json`, `licenses.json`, และ `data/mail-outbox/*.eml`
-   - รายละเอียด REST API ทุก Endpoint พร้อมตัวอย่าง JSON (รวมอ็อบเจกต์ `fearGreed` และ `fg`)
-   - คู่มือการรันชุดทดสอบอัตโนมัติครบ **16 ชุด (`tests/sdlc.test.js`)**
+   - รายละเอียด REST API ทุก Endpoint พร้อมตัวอย่าง JSON (รวมอ็อบเจกต์ `fearGreed`, `fg`, `research/feed`, `hermes/*` และ `webmemo-drafts`)
+   - คู่มือการรันชุดทดสอบอัตโนมัติครบ **19 ชุด (`tests/sdlc.test.js`) + 9 ชุด (`tests/webmemo-integration.test.js`)**
 
 ---
 
@@ -103,32 +123,40 @@
 flowchart LR
     subgraph UserWeb["Web Companion (moat.readybyte.top)"]
         W1["จัดการพอร์ตหุ้น & WebMemo<br/>+ ดูดัชนี US Fear & Greed (FG:xxG)"]
-        W2["ตั้งค่า Auto-Swipe, Auto-Sort %Chg,<br/>Show FG Badge & Always-On Screen"]
-        W3["กรอกรหัสปลดล็อกเครื่อง<br/>(MOAT-XXXX-XXXX-XXXX)"]
-        W4["กด Request Trial Extend<br/>& กรอก Purchase Request Form"]
+        W2["Shared S/R 1-2-3 Research Feed<br/>(ดูได้จากทุก SyncKey + #Tag Filter)"]
+        W3["ตั้งค่า Auto-Swipe, Auto-Sort %Chg,<br/>Show FG Badge & Always-On Screen"]
+        W4["กรอกรหัสปลดล็อกเครื่อง & ขอต่ออายุ Trial"]
     end
 
-    subgraph AdminWeb["Admin Portal (admin-moat.readybyte.top)"]
-        A1["Admin Password Login (saharat.bun@icloud.com)<br/>& Change Password (ยืนยันรหัสเดิม)"]
-        A2["คิวอนุมัติคำขอ 1-Click (+7d / +14d / PRO)<br/>& Gen Activation Key ราย Device ID"]
-        A3["ตั้งค่า SMTP / System Mail<br/>& ปุ่มทดสอบส่งเมลไป e24qdy2@gmail.com"]
+    subgraph HermesPi["Hermes Agent on Pi 3B+ (echo24)"]
+        H1["MCP Server (hermes_mcp_server.py)<br/>& Native Plugin (webmemo-approval)"]
+        H2["Cron Jobs (08:00 / 21:00 ICT)<br/>วิเคราะห์ Watchlist + ข่าว + S/R 1-2-3"]
+        H3["Discord Bot (@HermesEchoBot)<br/>ปุ่ม Approve / Reject (Owner 1480786426220155052)"]
     end
 
-    subgraph CoreAPI["MoatWatch Engine (server.js & src/worker.js)"]
-        S1["Market, Technical & Sentiment Engine<br/>(Yahoo Finance + CNN Fear & Greed + SMA20/RSI14)"]
-        S2["License & Trial Engine<br/>(14-Day Trial + HMAC-SHA256 Key)"]
-        S3["Email Service (lib/emailService.js)<br/>SMTP / Direct MX / Outbox .eml"]
+    subgraph AdminWeb["Executive Admin Console (admin-moat.readybyte.top)"]
+        A1["Hermes Node Control & 8-Step Diagnostic<br/>(Restart GW / Pause / Start / Reboot Pi)"]
+        A2["Hermes #Tag Post CMS & S/R Feed Manager<br/>(Inline Edit / Hide / Archive / Delete / Auto-TTL)"]
+        A3["Quantitative BI Dashboard (4 Interactive Charts)<br/>+ 1-Click License Approval & SMTP Mail"]
+    end
+
+    subgraph CoreAPI["MoatWatch Engine (server.js & src/worker.js + D1)"]
+        S1["Market, Technical & S/R 1-2-3 Engine<br/>(Yahoo Finance + CNN Fear & Greed + SMA20/RSI14)"]
+        S2["WebMemo Approval & CAS Engine<br/>(lib/webMemoIntegration.js + Shared Feed Auto-Sync)"]
+        S3["Research Feed & BI Analytics Engine<br/>(lib/researchFeedManager.js + lib/hermesNodeManager.js)"]
+        S4["License & Email Engine<br/>(lib/licenseManager.js + lib/emailService.js)"]
     end
 
     subgraph Watch["Garmin Watch (20 Models - MoatWatch)"]
         G1["หน้าจอ AMOLED / MIP (260px–454px)<br/>แสดง FG:xxG + Auto-Swipe หุ้นครบทุกพอร์ต"]
-        G2["หน้าจอล็อกเมื่อครบ 14 วัน<br/>แสดง Device ID & saharat.bun@icloud.com"]
+        G2["Symbol Detail + Sparkline + WebMemo<br/>ซิงค์ทันทีที่กด Approve บน Discord"]
     end
 
     UserWeb --> CoreAPI
+    HermesPi <-->|"Bearer Scoped Tokens + Ed25519"| CoreAPI
     AdminWeb --> CoreAPI
     CoreAPI --> Watch
-    S3 -->|"แจ้งเตือนคำขอใหม่ทันที"| Inbox["e24qdy2@gmail.com"]
+    S4 -->|"แจ้งเตือนคำขอใหม่ทันที"| Inbox["e24qdy2@gmail.com"]
 ```
 
 ---
@@ -137,50 +165,59 @@ flowchart LR
 
 ```text
 garmin-venu2-moat/
-├── README.md                          # หน้าหลักสรุปภาพรวมและสารบัญเอกสาร
-├── docs/                              # คู่มือการใช้งานและเอกสารการออกแบบระบบอย่างละเอียด
-│   ├── 01-USER-AND-ADMIN-MANUAL.md    # คู่มือผู้ใช้, นาฬิกา Garmin 20 รุ่น, Fear & Greed, ฟอร์มสั่งซื้อ และหน้า Admin
-│   ├── 02-APP-DESIGN-AND-UI-SPEC.md   # พิกัดหน้าจอ Garmin (260x260–454x454), โซนสี FG:xx & Class Diagram
-│   ├── 03-APP-FLOW-AND-LOGIC-FLOW.md  # Sequence Diagrams, State Machines & Logic Flows
-│   └── 04-API-AND-SDLC-REFERENCE.md   # ER Diagram, REST API Docs & SDLC Test Guide (16 Suites)
-├── server.js                          # เซิร์ฟเวอร์หลัก Node.js (Web API + Watch API + Admin Subdomain Router)
+├── README.md                              # หน้าหลักสรุปภาพรวม, ตาราง MCP Tools 6 รายการ และสารบัญเอกสาร
+├── docs/                                  # คู่มือการใช้งานและเอกสารการออกแบบระบบอย่างละเอียด
+│   ├── 01-USER-AND-ADMIN-MANUAL.md        # คู่มือผู้ใช้, นาฬิกา Garmin 20 รุ่น, Fear & Greed, ฟอร์มสั่งซื้อ และหน้า Admin
+│   ├── 02-APP-DESIGN-AND-UI-SPEC.md       # พิกัดหน้าจอ Garmin (260x260–454x454), โซนสี FG:xx & Class Diagram
+│   ├── 03-APP-FLOW-AND-LOGIC-FLOW.md      # Sequence Diagrams, State Machines & Logic Flows
+│   └── 04-API-AND-SDLC-REFERENCE.md       # ER Diagram, REST API Docs & SDLC Test Guide
+├── server.js                              # เซิร์ฟเวอร์หลัก Node.js (Web API + Watch API + Hermes/MCP API + Admin Router)
 ├── src/
-│   └── worker.js                      # Cloudflare Worker Serverless Bundle (Edge Deployment Ready)
+│   └── worker.js                          # Cloudflare Worker Serverless Bundle + D1 SQLite Persistence
+├── migrations/
+│   ├── 0001_initial_schema.sql            # โครงสร้างตารางหลัก D1 (`app_kv`, `portfolios`, `licenses`)
+│   └── 0002_webmemo_drafts.sql            # โครงสร้างตาราง D1 สำหรับ `webmemo_drafts` และ `webmemo_audit_log`
 ├── lib/
-│   ├── moatEngine.js                  # Deep Module คำนวณพอร์ต, อินดิเคเตอร์หุ้น, และดัชนี US Fear & Greed (FG:xxG)
-│   ├── garminDevices.js               # ตารางข้อมูลจำเพาะนาฬิกา Garmin 20 รุ่น (2024–2026)
-│   ├── licenseManager.js              # เอ็นจิ้นจัดการ Trial 14 วัน, คิวคำขอลูกค้า, HMAC Key & Admin Password
-│   └── emailService.js                # เอ็นจิ้นส่งอีเมลแจ้งเตือนไปที่ e24qdy2@gmail.com (SMTP TLS + Direct MX + Outbox)
+│   ├── moatEngine.js                      # Deep Module คำนวณพอร์ต, อินดิเคเตอร์หุ้น, และดัชนี US Fear & Greed (FG:xxG)
+│   ├── webMemoIntegration.js              # Least-Privilege Scoped Auth, Draft Lifecycle, CAS Memo Publish & Audit Log
+│   ├── researchFeedManager.js             # Shared S/R 1-2-3 Matrix, Hermes Research Post CMS, Auto-TTL & Quantitative BI
+│   ├── hermesNodeManager.js               # Hermes Node Heartbeat, Command Queue (Restart/Pause/Start/Reboot) & 8-Step Self-Test
+│   ├── garminDevices.js                   # ตารางข้อมูลจำเพาะนาฬิกา Garmin 20 รุ่น (2024–2026)
+│   ├── licenseManager.js                  # เอ็นจิ้นจัดการ Trial 14 วัน, คิวคำขอลูกค้า, HMAC Key & Admin Password
+│   └── emailService.js                    # เอ็นจิ้นส่งอีเมลแจ้งเตือนไปที่ e24qdy2@gmail.com (SMTP TLS + Direct MX + Outbox)
+├── integrations/
+│   └── hermes_pi/                         # โมดูลเชื่อมต่อ Hermes Agent บน Raspberry Pi 3B+ (`echo24`)
+│       ├── hermes_mcp_server.py           # MoatWatch MCP Server (stdio) รองรับ 6 Tools ครบวงจร
+│       ├── moatwatch_client.py            # Typed Python HTTP Client พร้อม Idempotency, Ed25519 Header & Scoped Tokens
+│       ├── test_hermes_mcp_server.py      # ชุดทดสอบ Python Unit Test สำหรับ MCP Server & Client
+│       ├── plugin/
+│       │   ├── __init__.py                # Hermes Native Plugin (`webmemo-approval`) ลงทะเบียน 6 Tools + Discord Hooks
+│       │   └── plugin.yaml                # Manifest ของ Hermes Plugin
+│       └── skill/
+│           └── SKILL.md                   # Skill `moatwatch-webmemo` กำหนดขั้นตอนวิเคราะห์หุ้นและส่งร่าง WebMemo
 ├── public/
-│   ├── index.html                     # หน้าเว็บหลัก Web Companion + Garmin Simulator + ป้าย US Fear & Greed
-│   ├── app.js                         # ลอจิกหน้าเว็บหลัก, Auto-Swipe Simulator, Settings Sync & Request Form
-│   ├── watchSimulator.js              # โมดูลจำลองการวาดหน้าปัดนาฬิกา Garmin บนเว็บ (ตรงกับ Monkey C 100%)
-│   ├── admin.html                     # หน้าเว็บ Admin Portal (https://admin-moat.readybyte.top)
-│   ├── admin.js                       # ลอจิกหน้า Admin, อนุมัติคำขอ 1 คลิก, ตั้งค่า SMTP & Key Generator
-│   ├── privacy.html                   # หน้านโยบายความเป็นส่วนตัว (/privacy) สำหรับ Garmin Connect IQ Store
-│   └── styles.css                     # สไตล์เสริมสำหรับหน้าเว็บ
-├── garmin-venu2-app/                  # ซอร์สโค้ดแอปนาฬิกา Garmin Connect IQ (Monkey C)
-│   ├── manifest.xml                   # กำหนดค่าแอป MoatWatch รองรับ Garmin 20 รุ่น (minApiLevel 3.2.0)
-│   ├── monkey.jungle                  # ไฟล์ตั้งค่าการคอมไพล์ Connect IQ
-│   ├── resources/                     # ไอคอน, ฟอนต์, Strings และ Settings Properties XML
-│   └── source/
-│       ├── Venu2MoatApp.mc            # จุดเริ่มต้นแอปและการควบคุม Runtime Timer
-│       ├── MoatWatchLayout.mc         # Deep Module คำนวณพิกัดหน้าจอตามสัดส่วน (260px–454px) & แถบสถานะ FG:xx
-│       ├── PortfolioStore.mc          # จัดการข้อมูล, Fear & Greed State, Auto-Swipe, Always-On & License
-│       ├── Venu2MoatView.mc           # วาดหน้าจอหลัก, ป้ายสี FG:xxG และหน้าจอล็อก Trial 14d Expired
-│       ├── Venu2MoatDelegate.mc       # รับอินพุตปุ่มกดและการปัด/แตะหน้าจอ
-│       ├── SymbolDetailView.mc        # วาดกราฟ Sparkline, SMA-20, Bollinger และ WebMemo
-│       ├── SymbolDetailDelegate.mc    # รับอินพุตในหน้ารายละเอียดหุ้น
-│       └── Venu2MoatGlanceView.mc     # วาด Widget Glance บนหน้ารวมของนาฬิกา
+│   ├── index.html                         # หน้าเว็บหลัก Web Companion + Shared S/R 1-2-3 Research Feed + Garmin Simulator
+│   ├── app.js                             # ลอจิกหน้าเว็บหลัก, S/R 1-2-3 Card Matrix, Tag Filter & Simulator Sync
+│   ├── watchSimulator.js                  # โมดูลจำลองการวาดหน้าปัดนาฬิกา Garmin บนเว็บ (ตรงกับ Monkey C 100%)
+│   ├── admin.html                         # หน้าเว็บ Executive Admin Console (Hermes Control + BI Dashboard + #Tag CMS)
+│   ├── admin.js                           # ลอจิกหน้า Admin, ปุ่มคำสั่งรีโมต 5 ปุ่ม, กราฟ BI 4 มิติ & CMS แก้ไขโพสต์
+│   ├── privacy.html                       # หน้านโยบายความเป็นส่วนตัว (/privacy) สำหรับ Garmin Connect IQ Store
+│   └── styles.css                         # สไตล์เสริมสำหรับหน้าเว็บ
+├── garmin-venu2-app/                      # ซอร์สโค้ดแอปนาฬิกา Garmin Connect IQ (Monkey C)
+│   ├── manifest.xml                       # กำหนดค่าแอป MoatWatch รองรับ Garmin 20 รุ่น (minApiLevel 3.2.0)
+│   ├── monkey.jungle                      # ไฟล์ตั้งค่าการคอมไพล์ Connect IQ
+│   ├── resources/                         # ไอคอน, ฟอนต์, Strings และ Settings Properties XML
+│   └── source/                            # ซอร์สโค้ด Monkey C (Venu2MoatApp, MoatWatchLayout, PortfolioStore, Views)
 ├── dist/
-│   ├── MoatWatch.iq                   # แพ็กเกจสำหรับอัปโหลดขึ้น Garmin Connect IQ Store (20 รุ่น)
-│   ├── MoatWatch.prg / Venu2Moat.prg  # ไฟล์ไบนารีที่คอมไพล์แล้วสำหรับ Sideload ลงนาฬิกา Garmin
-│   └── store-assets/                  # ภาพประกอบสำหรับอัปโหลดขึ้น Connect IQ Store (Cover, Hero, Screenshots, Icons)
+│   ├── MoatWatch.iq                       # แพ็กเกจสำหรับอัปโหลดขึ้น Garmin Connect IQ Store (20 รุ่น)
+│   ├── MoatWatch.prg / Venu2Moat.prg      # ไฟล์ไบนารีที่คอมไพล์แล้วสำหรับ Sideload ลงนาฬิกา Garmin
+│   └── store-assets/                      # ภาพประกอบสำหรับอัปโหลดขึ้น Connect IQ Store
 ├── tests/
-│   └── sdlc.test.js                   # ชุดทดสอบอัตโนมัติ End-to-End ครบ 16 ส่วนตามมาตรฐาน SDLC
-├── build-and-sideload.ps1             # สคริปต์คอมไพล์ .prg + Sideload ผ่าน MTP USB + Auto-Sync GitHub
-├── start-cloudflare-domain.ps1        # สคริปต์รัน Cloudflare Tunnel สำหรับ moat & admin-moat.readybyte.top
-└── sync-github.ps1                    # สคริปต์ Commit & Push การเปลี่ยนแปลงขึ้น GitHub อัตโนมัติ
+│   ├── sdlc.test.js                       # ชุดทดสอบอัตโนมัติ End-to-End ครบ 19 ส่วน (รวม S/R Feed, BI, Hermes Node Control)
+│   └── webmemo-integration.test.js        # ชุดทดสอบอัตโนมัติ 9 ส่วนสำหรับ WebMemo CAS, Scoped Tokens & Discord Approval
+├── build-and-sideload.ps1                 # สคริปต์คอมไพล์ .prg + Sideload ผ่าน MTP USB + Auto-Sync GitHub
+├── start-cloudflare-domain.ps1            # สคริปต์รัน Cloudflare Tunnel สำหรับ moat & admin-moat.readybyte.top
+└── sync-github.ps1                        # สคริปต์ Commit & Push การเปลี่ยนแปลงขึ้น GitHub อัตโนมัติ
 ```
 
 ---
@@ -188,17 +225,18 @@ garmin-venu2-moat/
 ## 🚀 คำสั่งใช้งานด่วน (Quick Commands)
 
 ```powershell
-# 1. รันเซิร์ฟเวอร์ Web Companion + Watch API + Admin Portal (พอร์ต 3880)
+# 1. รันเซิร์ฟเวอร์ Web Companion + Watch API + Hermes API + Admin Portal (พอร์ต 3880)
 npm start
 
-# 2. รันชุดทดสอบอัตโนมัติ SDLC ทั้ง 16 ชุด (100% Green)
+# 2. รันชุดทดสอบอัตโนมัติ SDLC ทั้ง 19 ชุด + WebMemo Integration ทั้ง 9 ชุด (100% Green)
 npm test
+node --test tests/webmemo-integration.test.js
 
 # 3. คอมไพล์แอปนาฬิกา Garmin (.prg) และส่งเข้านาฬิกาผ่านสาย USB MTP
 npm run build:watch
 
-# 4. สร้างบันเดิลสำหรับ Cloudflare Worker
-npm run cf:bundle
+# 4. Deploy ขึ้น Cloudflare Workers + D1 Production (moat.readybyte.top & admin-moat.readybyte.top)
+npx wrangler deploy
 
 # 5. อัปเดตซอร์สโค้ดและเอกสารล่าสุดขึ้น GitHub Repository อัตโนมัติ
 npm run git:sync
