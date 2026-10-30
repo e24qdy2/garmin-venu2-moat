@@ -37,12 +37,41 @@ def _allowed_discord_users() -> List[str]:
     return users
 
 
+def _ensure_env_loaded() -> None:
+    if os.environ.get("WEBMEMO_INTEGRATION_TOKEN") and os.environ.get("DISCORD_BOT_TOKEN"):
+        return
+    candidates = [
+        os.environ.get("HERMES_ENV_FILE", ""),
+        os.path.expanduser("~/.hermes/.env"),
+        "/root/.hermes/.env",
+    ]
+    for path in candidates:
+        if not path or not os.path.isfile(path):
+            continue
+        try:
+            with open(path, "r", encoding="utf-8") as fh:
+                for raw_line in fh:
+                    line = raw_line.strip()
+                    if not line or line.startswith("#") or "=" not in line:
+                        continue
+                    if line.startswith("export "):
+                        line = line[7:].strip()
+                    k, v = line.split("=", 1)
+                    k = k.strip()
+                    v = v.strip().strip('"').strip("'")
+                    if k and k not in os.environ:
+                        os.environ[k] = v
+        except Exception:
+            pass
+
+
 def _api_request(
     method: str,
     path: str,
     query: Optional[Dict[str, Any]] = None,
     body: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
+    _ensure_env_loaded()
     base_url = os.environ.get("WEBMEMO_API_BASE", "https://moat.readybyte.top").rstrip("/")
     token = os.environ.get("WEBMEMO_INTEGRATION_TOKEN", "").strip()
     if not token:
@@ -134,6 +163,7 @@ def format_draft_discord_message(draft: Dict[str, Any], analysis_summary: str = 
 
 
 def post_discord_draft_card_rest(draft: Dict[str, Any], analysis_summary: str = "") -> Optional[Dict[str, Any]]:
+    _ensure_env_loaded()
     bot_token = os.environ.get("DISCORD_BOT_TOKEN", "").strip()
     channel_id = (
         draft.get("discordChannelId")

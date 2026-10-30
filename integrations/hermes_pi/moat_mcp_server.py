@@ -214,12 +214,41 @@ TOOLS = [
 ]
 
 
+def _ensure_env_loaded() -> None:
+    if os.environ.get("WEBMEMO_INTEGRATION_TOKEN") and os.environ.get("DISCORD_BOT_TOKEN"):
+        return
+    candidates = [
+        os.environ.get("HERMES_ENV_FILE", ""),
+        os.path.expanduser("~/.hermes/.env"),
+        "/root/.hermes/.env",
+    ]
+    for path in candidates:
+        if not path or not os.path.isfile(path):
+            continue
+        try:
+            with open(path, "r", encoding="utf-8") as fh:
+                for raw_line in fh:
+                    line = raw_line.strip()
+                    if not line or line.startswith("#") or "=" not in line:
+                        continue
+                    if line.startswith("export "):
+                        line = line[7:].strip()
+                    k, v = line.split("=", 1)
+                    k = k.strip()
+                    v = v.strip().strip('"').strip("'")
+                    if k and k not in os.environ:
+                        os.environ[k] = v
+        except Exception:
+            pass
+
+
 def _api_request(
     method: str,
     path: str,
     query: Optional[Dict[str, str]] = None,
     body: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
+    _ensure_env_loaded()
     base_url = os.environ.get("WEBMEMO_API_BASE", "https://moat.readybyte.top").rstrip("/")
     token = os.environ.get("WEBMEMO_INTEGRATION_TOKEN", "").strip()
     if not token:
@@ -267,6 +296,7 @@ def _notify_discord_draft_card(draft_resp: Dict[str, Any], analysis_summary: str
     If a draft was created via MCP tool call, post the interactive Approve/Reject button card
     to the configured Discord channel using Discord REST API and record the message ID.
     """
+    _ensure_env_loaded()
     draft = draft_resp.get("draft")
     if not isinstance(draft, dict) or not draft.get("draftId"):
         return None
