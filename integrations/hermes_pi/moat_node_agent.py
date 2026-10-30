@@ -340,29 +340,31 @@ def execute_remote_command(cmd_obj: Dict[str, Any]) -> None:
             ok = False
             output = f"Missing or invalid jobId for {action}"
         else:
-            subcmd_map = {
-                "CRON_RUN_NOW": "run",
-                "CRON_PAUSE": "pause",
-                "CRON_RESUME": "resume",
-            }
-            subcmd = subcmd_map[action]
             hermes_bin = "/root/.hermes/hermes-agent/venv/bin/hermes"
-            rc, out, err = run_cmd([hermes_bin, "cron", subcmd, job_id], timeout=25)
-            ok = rc == 0
-            output = (
-                f"Executed `hermes cron {subcmd} {job_id}` -> {'OK' if ok else f'EXIT {rc}'}. "
-                f"{out} {err}".strip()
-            )
-            if action == "CRON_RUN_NOW" and ok:
-                # Also trigger a background scheduler tick so the job runs right away without blocking heartbeat
+            if action == "CRON_RUN_NOW":
                 try:
-                    subprocess.Popen(
-                        [hermes_bin, "--accept-hooks", "cron", "tick"],
+                    proc = subprocess.Popen(
+                        [hermes_bin, "--accept-hooks", "cron", "run", job_id],
                         stdout=subprocess.DEVNULL,
                         stderr=subprocess.DEVNULL,
+                        start_new_session=True,
                     )
-                except Exception:
-                    pass
+                    ok = True
+                    output = (
+                        f"Spawned background execution `hermes --accept-hooks cron run {job_id}` "
+                        f"on echo24 (PID {proc.pid}) -> SUCCEEDED"
+                    )
+                except Exception as exc:
+                    ok = False
+                    output = f"Failed to spawn `hermes cron run {job_id}`: {exc}"
+            else:
+                subcmd = "pause" if action == "CRON_PAUSE" else "resume"
+                rc, out, err = run_cmd([hermes_bin, "cron", subcmd, job_id], timeout=15)
+                ok = rc == 0
+                output = (
+                    f"Executed `hermes cron {subcmd} {job_id}` -> {'OK' if ok else f'EXIT {rc}'}. "
+                    f"{out} {err}".strip()
+                )
 
     else:
         ok = False

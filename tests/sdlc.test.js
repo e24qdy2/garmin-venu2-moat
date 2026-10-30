@@ -1240,6 +1240,7 @@ async function runSdlcSuite() {
       assert.strictEqual(pauseJobRes.json.ok, true);
       assert.strictEqual(pauseJobRes.json.command.action, "CRON_PAUSE");
       assert.strictEqual(pauseJobRes.json.command.jobId, "bf4153d5646f");
+      assert.strictEqual(pauseJobRes.json.command.status, "SUCCEEDED");
       assert.strictEqual(pauseJobRes.json.nodeStatus.scheduler.activeCount, 1);
       assert.strictEqual(pauseJobRes.json.nodeStatus.scheduler.pausedCount, 2);
 
@@ -1255,6 +1256,7 @@ async function runSdlcSuite() {
         { "X-Admin-Token": adminToken }
       );
       assert.strictEqual(resumeJobRes.status, 200);
+      assert.strictEqual(resumeJobRes.json.command.status, "SUCCEEDED");
       assert.strictEqual(resumeJobRes.json.nodeStatus.scheduler.activeCount, 2);
 
       const runNowJobRes = await httpRequest(
@@ -1270,6 +1272,55 @@ async function runSdlcSuite() {
       assert.strictEqual(runNowJobRes.status, 200);
       assert.strictEqual(runNowJobRes.json.command.action, "CRON_RUN_NOW");
       assert.strictEqual(runNowJobRes.json.command.jobId, "bf4153d5646f");
+      assert.strictEqual(runNowJobRes.json.command.status, "SUCCEEDED");
+      assert.strictEqual(runNowJobRes.json.command.ok, true);
+
+      // Verify a subsequent v1.2.0 heartbeat does NOT pick up CRON_RUN_NOW or fail it
+      const v12HbRes = await httpRequest(
+        "POST",
+        "/api/integration/hermes-node/heartbeat",
+        {
+          host: "echo24",
+          gatewayStatus: "RUNNING (PID 24990)",
+          gatewayServiceActive: true
+        },
+        { Authorization: `Bearer ${hermesToken}` }
+      );
+      assert.strictEqual(v12HbRes.status, 200);
+      assert.strictEqual(v12HbRes.json.nextCommand, null, "v1.2.0 agent must never be sent CRON_* commands");
+      assert.strictEqual(v12HbRes.json.nodeStatus.lastCommandResult.status, "SUCCEEDED");
+
+      // Also verify all 11 real echo24 cron jobs upgrade cleanly from a legacy list and succeed on CRON_RUN_NOW
+      await httpRequest(
+        "POST",
+        "/api/integration/hermes-node/heartbeat",
+        {
+          host: "echo24",
+          gatewayStatus: "RUNNING (PID 24990)",
+          gatewayServiceActive: true,
+          cronJobs: [{ id: "fbf4dbde4336", name: "Monitor Stock Portfolio (Legacy Hourly)", enabled: false, state: "paused" }]
+        },
+        { Authorization: `Bearer ${hermesToken}` }
+      );
+      const status11Res = await httpRequest("GET", "/api/admin/hermes-node/status", null, {
+        "X-Admin-Token": adminToken
+      });
+      assert.strictEqual(status11Res.status, 200);
+      assert.strictEqual(status11Res.json.scheduler.totalCount, 11, "Must auto-upgrade to all 11 real echo24 cron jobs");
+      for (const job of status11Res.json.scheduler.jobs) {
+        const jobRunRes = await httpRequest(
+          "POST",
+          "/api/admin/hermes-node/command",
+          {
+            action: "CRON_RUN_NOW",
+            jobId: job.id,
+            jobName: job.name
+          },
+          { "X-Admin-Token": adminToken }
+        );
+        assert.strictEqual(jobRunRes.status, 200);
+        assert.strictEqual(jobRunRes.json.command.status, "SUCCEEDED", `CRON_RUN_NOW must succeed for job ${job.id}`);
+      }
 
       // 20c. Dynamic #Tag Registry: Create, Cascade Rename, Cascade Merge, Pin & Visibility
       const createTagRes = await httpRequest(

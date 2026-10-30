@@ -386,6 +386,8 @@
         showToast(
           `Functional Test Complete: ${s.passed || 0}/${s.total || 8} Checks PASSED (${data.diagnosticReport.overallStatus})`
         );
+      } else if (data.command?.status === "SUCCEEDED") {
+        showToast(`✓ Executed "${data.command?.label || action}" (SUCCEEDED)`);
       } else {
         showToast(`Queued command "${data.command?.label || action}" for echo24`);
       }
@@ -620,7 +622,7 @@
         : "ไม่มีงานที่กำลังรันตามรอบ";
     }
 
-    const pausedTotal = (sched.pausedCount ?? 0) + (sched.stoppedCount ?? 0);
+    const pausedTotal = sched.stoppedCount ?? ((sched.pausedCount ?? 0) + (sched.completedCount ?? 0));
     if (el("hermesCronPausedCount")) {
       el("hermesCronPausedCount").textContent = String(pausedTotal);
     }

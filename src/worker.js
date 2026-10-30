@@ -207,6 +207,13 @@ async function refreshResearchStoreFromD1(env) {
   }
 }
 
+let hermesNodeLockPromise = Promise.resolve();
+function withHermesNodeLock(fn) {
+  const next = hermesNodeLockPromise.then(fn, fn);
+  hermesNodeLockPromise = next.catch(() => {});
+  return next;
+}
+
 async function refreshHermesNodeStateFromD1(env) {
   if (env && env.DB && typeof env.DB.prepare === "function") {
     try {
@@ -537,43 +544,48 @@ export default {
 
       // Hermes Pi Node Live Heartbeat & Remote Control Agent Endpoints
       if (pathname.startsWith("/api/integration/hermes-node")) {
-        await refreshPortfoliosFromD1(env);
-        await refreshHermesNodeStateFromD1(env);
-        const cfg = resolveIntegrationConfig(env);
-        const authCheck = verifyIntegrationAuth(reqHeaders, cfg, runtimePortfoliosStore);
-        if (!authCheck.ok) {
-          return jsonResponse(authCheck.status, {
-            ok: false,
-            code: authCheck.code,
-            error: authCheck.error
-          });
-        }
+        return withHermesNodeLock(async () => {
+          await refreshPortfoliosFromD1(env);
+          const currentState = await refreshHermesNodeStateFromD1(env);
+          const cfg = resolveIntegrationConfig(env);
+          const authCheck = verifyIntegrationAuth(reqHeaders, cfg, runtimePortfoliosStore);
+          if (!authCheck.ok) {
+            return jsonResponse(authCheck.status, {
+              ok: false,
+              code: authCheck.code,
+              error: authCheck.error
+            });
+          }
 
-        if (pathname === "/api/integration/hermes-node/status" && request.method === "GET") {
-          return jsonResponse(200, buildHermesNodeStatusPayload(runtimeHermesNodeState));
-        }
+          if (pathname === "/api/integration/hermes-node/status" && request.method === "GET") {
+            return jsonResponse(200, buildHermesNodeStatusPayload(currentState));
+          }
 
-        if (pathname === "/api/integration/hermes-node/heartbeat" && request.method === "POST") {
-          const hbRes = recordHermesNodeHeartbeat(runtimeHermesNodeState, body);
-          runtimeHermesNodeState = hbRes.state;
-          await persistKey(env, "hermes_node_state_v1", runtimeHermesNodeState);
-          return jsonResponse(200, {
-            ok: true,
-            nextCommand: hbRes.nextCommand,
-            nodeStatus: buildHermesNodeStatusPayload(runtimeHermesNodeState)
-          });
-        }
+          if (pathname === "/api/integration/hermes-node/heartbeat" && request.method === "POST") {
+            const hbRes = recordHermesNodeHeartbeat(currentState, body);
+            const nextState = hbRes.state;
+            runtimeHermesNodeState = nextState;
+            await persistKey(env, "hermes_node_state_v1", nextState);
+            return jsonResponse(200, {
+              ok: true,
+              nextCommand: hbRes.nextCommand,
+              nodeStatus: buildHermesNodeStatusPayload(nextState)
+            });
+          }
 
-        if (pathname === "/api/integration/hermes-node/command-result" && request.method === "POST") {
-          const cmdRes = recordHermesCommandResult(runtimeHermesNodeState, body);
-          runtimeHermesNodeState = cmdRes.state;
-          await persistKey(env, "hermes_node_state_v1", runtimeHermesNodeState);
-          return jsonResponse(200, {
-            ok: cmdRes.ok,
-            command: cmdRes.command,
-            nodeStatus: buildHermesNodeStatusPayload(runtimeHermesNodeState)
-          });
-        }
+          if (pathname === "/api/integration/hermes-node/command-result" && request.method === "POST") {
+            const cmdRes = recordHermesCommandResult(currentState, body);
+            const nextState = cmdRes.state;
+            runtimeHermesNodeState = nextState;
+            await persistKey(env, "hermes_node_state_v1", nextState);
+            return jsonResponse(200, {
+              ok: cmdRes.ok,
+              command: cmdRes.command,
+              nodeStatus: buildHermesNodeStatusPayload(nextState)
+            });
+          }
+          return null;
+        });
       }
 
       const integrationStore = buildIntegrationStore(env);
@@ -1135,54 +1147,23 @@ export default {
       }
 
       if (pathname === "/api/admin/hermes-node/status" && request.method === "GET") {
-        await refreshHermesNodeStateFromD1(env);
-        return adminJsonResponse(reqHeaders, 200, buildHermesNodeStatusPayload(runtimeHermesNodeState));
+        return withHermesNodeLock(async () => {
+          const currentState = await refreshHermesNodeStateFromD1(env);
+          return adminJsonResponse(reqHeaders, 200, buildHermesNodeStatusPayload(currentState));
+        });
       }
 
       if (pathname === "/api/admin/hermes-node/diagnostics" && request.method === "POST") {
-        try {
-          await refreshPortfoliosFromD1(env);
-          await refreshResearchStoreFromD1(env);
-          await refreshHermesNodeStateFromD1(env);
-          const licensesData = licenseManagerInstance.listDevices();
-          const draftsList = await buildIntegrationStore(env).listDrafts({ accountId: "owner", limit: 200 }).catch(() => []);
-          const integrationConfig = resolveIntegrationConfig(env);
-          const report = await runHermesFunctionalDiagnostics({
-            nodeState: runtimeHermesNodeState,
-            portfoliosStore: runtimePortfoliosStore,
-            researchStore: runtimeResearchStore,
-            licensesData,
-            draftsList,
-            integrationConfig,
-            buildPublicResearchFeedPayload,
-            buildAdminBiAnalytics
-          });
-          await persistKey(env, "hermes_node_state_v1", runtimeHermesNodeState);
-          return adminJsonResponse(reqHeaders, 200, {
-            ok: true,
-            report,
-            nodeStatus: buildHermesNodeStatusPayload(runtimeHermesNodeState)
-          });
-        } catch (err) {
-          return adminJsonResponse(reqHeaders, 400, { ok: false, error: err.message });
-        }
-      }
-
-      if (pathname === "/api/admin/hermes-node/command" && request.method === "POST") {
-        try {
-          await refreshPortfoliosFromD1(env);
-          await refreshResearchStoreFromD1(env);
-          await refreshHermesNodeStateFromD1(env);
-          const body = await parseRequestBody(request);
-          const action = String(body.action || "").trim().toUpperCase();
-          let diagnosticReport = null;
-
-          if (action === "TEST_ALL_FUNCTIONS") {
+        return withHermesNodeLock(async () => {
+          try {
+            await refreshPortfoliosFromD1(env);
+            await refreshResearchStoreFromD1(env);
+            const currentState = await refreshHermesNodeStateFromD1(env);
             const licensesData = licenseManagerInstance.listDevices();
             const draftsList = await buildIntegrationStore(env).listDrafts({ accountId: "owner", limit: 200 }).catch(() => []);
             const integrationConfig = resolveIntegrationConfig(env);
-            diagnosticReport = await runHermesFunctionalDiagnostics({
-              nodeState: runtimeHermesNodeState,
+            const report = await runHermesFunctionalDiagnostics({
+              nodeState: currentState,
               portfoliosStore: runtimePortfoliosStore,
               researchStore: runtimeResearchStore,
               licensesData,
@@ -1191,32 +1172,71 @@ export default {
               buildPublicResearchFeedPayload,
               buildAdminBiAnalytics
             });
+            runtimeHermesNodeState = currentState;
+            await persistKey(env, "hermes_node_state_v1", currentState);
+            return adminJsonResponse(reqHeaders, 200, {
+              ok: true,
+              report,
+              nodeStatus: buildHermesNodeStatusPayload(currentState)
+            });
+          } catch (err) {
+            return adminJsonResponse(reqHeaders, 400, { ok: false, error: err.message });
           }
+        });
+      }
 
-          const enq = enqueueHermesCommand(
-            runtimeHermesNodeState,
-            {
-              action,
-              reason: body.reason || "",
-              jobId: body.jobId || "",
-              jobName: body.jobName || ""
-            },
-            { actor: auth.email || OWNER_EMAIL }
-          );
-          if (!enq.ok) {
-            return adminJsonResponse(reqHeaders, enq.status || 400, enq);
+      if (pathname === "/api/admin/hermes-node/command" && request.method === "POST") {
+        return withHermesNodeLock(async () => {
+          try {
+            await refreshPortfoliosFromD1(env);
+            await refreshResearchStoreFromD1(env);
+            const currentState = await refreshHermesNodeStateFromD1(env);
+            const body = await parseRequestBody(request);
+            const action = String(body.action || "").trim().toUpperCase();
+            let diagnosticReport = null;
+
+            if (action === "TEST_ALL_FUNCTIONS") {
+              const licensesData = licenseManagerInstance.listDevices();
+              const draftsList = await buildIntegrationStore(env).listDrafts({ accountId: "owner", limit: 200 }).catch(() => []);
+              const integrationConfig = resolveIntegrationConfig(env);
+              diagnosticReport = await runHermesFunctionalDiagnostics({
+                nodeState: currentState,
+                portfoliosStore: runtimePortfoliosStore,
+                researchStore: runtimeResearchStore,
+                licensesData,
+                draftsList,
+                integrationConfig,
+                buildPublicResearchFeedPayload,
+                buildAdminBiAnalytics
+              });
+            }
+
+            const enq = enqueueHermesCommand(
+              currentState,
+              {
+                action,
+                reason: body.reason || "",
+                jobId: body.jobId || "",
+                jobName: body.jobName || ""
+              },
+              { actor: auth.email || OWNER_EMAIL }
+            );
+            if (!enq.ok) {
+              return adminJsonResponse(reqHeaders, enq.status || 400, enq);
+            }
+            const nextState = enq.state;
+            runtimeHermesNodeState = nextState;
+            await persistKey(env, "hermes_node_state_v1", nextState);
+            return adminJsonResponse(reqHeaders, 200, {
+              ok: true,
+              command: enq.command,
+              diagnosticReport,
+              nodeStatus: buildHermesNodeStatusPayload(nextState)
+            });
+          } catch (err) {
+            return adminJsonResponse(reqHeaders, 400, { ok: false, error: err.message });
           }
-          runtimeHermesNodeState = enq.state;
-          await persistKey(env, "hermes_node_state_v1", runtimeHermesNodeState);
-          return adminJsonResponse(reqHeaders, 200, {
-            ok: true,
-            command: enq.command,
-            diagnosticReport,
-            nodeStatus: buildHermesNodeStatusPayload(runtimeHermesNodeState)
-          });
-        } catch (err) {
-          return adminJsonResponse(reqHeaders, 400, { ok: false, error: err.message });
-        }
+        });
       }
 
       if (pathname === "/api/admin/research-posts" && request.method === "GET") {
