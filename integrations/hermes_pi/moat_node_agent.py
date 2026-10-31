@@ -391,6 +391,26 @@ def execute_remote_command(cmd_obj: Dict[str, Any]) -> None:
                     f"{out} {err}".strip()
                 )
 
+    elif action == "ANALYZE_SYMBOL_NOW":
+        raw_sym = str(cmd_obj.get("symbol") or "").strip().upper()
+        sym = "".join(c for c in raw_sym if c.isalnum() or c in (".", "-", "^", "="))[:16]
+        if not sym:
+            ok = False
+            output = "Missing symbol for ANALYZE_SYMBOL_NOW"
+        else:
+            try:
+                res = api_request(
+                    "POST",
+                    "/api/integration/research-posts",
+                    {"action": "ANALYZE_SYMBOL_NOW", "symbol": sym},
+                    timeout=15,
+                )
+                ok = bool(res.get("ok", True))
+                output = str(res.get("message") or f"Hermes analyzed {sym} S/R 1-2-3 & Smart WatchMemo")
+            except Exception as exc:
+                ok = False
+                output = f"Failed to execute ANALYZE_SYMBOL_NOW for {sym}: {exc}"
+
     else:
         ok = False
         output = f"Unsupported command action: {action}"

@@ -475,7 +475,11 @@ export default {
     }
 
     // 1B. SCOPED WEBMEMO & RESEARCH FEED INTEGRATION API (Hermes Agent + Discord Approval)
-    if (pathname === "/api/integration" || pathname.startsWith("/api/integration/")) {
+    if (
+      pathname === "/api/integration" ||
+      pathname.startsWith("/api/integration/") ||
+      pathname === "/api/integrations/webmemo/watchlist-signals"
+    ) {
       let body = {};
       if (request.method === "POST" || request.method === "PUT" || request.method === "PATCH") {
         try {
@@ -483,6 +487,69 @@ export default {
         } catch (err) {
           return jsonResponse(400, { ok: false, error: err.message, code: "INVALID_JSON" });
         }
+      }
+
+      if (
+        (pathname === "/api/integration/watchlist-signals" ||
+          pathname === "/api/integrations/webmemo/watchlist-signals") &&
+        request.method === "GET"
+      ) {
+        await refreshPortfoliosFromD1(env);
+        await refreshResearchStoreFromD1(env);
+        const cfg = resolveIntegrationConfig(env);
+        const authCheck = verifyIntegrationAuth(reqHeaders, cfg, runtimePortfoliosStore);
+        if (!authCheck.ok) {
+          return jsonResponse(authCheck.status, {
+            ok: false,
+            code: authCheck.code,
+            error: authCheck.error
+          });
+        }
+        const syncKey = String(query.key || "VENU2-88").trim().toUpperCase();
+        const feedPayload = buildPublicResearchFeedPayload({
+          researchStore: runtimeResearchStore,
+          portfoliosStore: runtimePortfoliosStore,
+          syncKey,
+          symbolFilter: query.symbol
+        });
+        const zoneFilter = String(query.zone || "ALL").trim().toUpperCase();
+        const symFilter = String(query.symbol || "").trim().toUpperCase();
+        const minUrgency = Number(query.minUrgency);
+        const maxLimit = Math.max(1, Math.min(50, Number(query.limit) || 15));
+        let signals = Array.isArray(feedPayload.smartRadar?.signals)
+          ? feedPayload.smartRadar.signals
+          : [];
+        if (symFilter) {
+          signals = signals.filter((s) => s.symbol === symFilter);
+        }
+        if (Number.isFinite(minUrgency) && minUrgency > 0) {
+          signals = signals.filter((s) => Number(s.urgencyScore) >= minUrgency);
+        }
+        if (zoneFilter && zoneFilter !== "ALL") {
+          signals = signals.filter((s) => {
+            if (zoneFilter === "HIGH_URGENCY") {
+              return s.urgencyTier === "CRITICAL" || s.urgencyTier === "HIGH" || s.urgencyScore >= 50;
+            }
+            if (zoneFilter === "EARNINGS_SOON") {
+              return (
+                s.zoneCategory === "EARNINGS_SOON" ||
+                (Number.isFinite(s.daysToEarnings) && s.daysToEarnings >= 0 && s.daysToEarnings <= 7)
+              );
+            }
+            return s.zoneCategory === zoneFilter;
+          });
+        }
+        const slicedSignals = signals.slice(0, maxLimit);
+        return jsonResponse(200, {
+          ok: true,
+          zoneFilter,
+          count: slicedSignals.length,
+          signals: slicedSignals,
+          topPrioritySignals: slicedSignals,
+          recommendedHermesFocus: feedPayload.smartRadar?.recommendedHermesFocus || [],
+          smartRadar: feedPayload.smartRadar,
+          srScorecard: feedPayload.srScorecard
+        });
       }
 
       // Hermes Agent Research Posts & Support/Resistance 1-2-3 Publishing Endpoint
@@ -523,7 +590,7 @@ export default {
               source: body.source || "HERMES_AGENT",
               author: body.author || "Hermes Quant Research Agent"
             },
-            { actor: "hermes-agent" }
+            { actor: "hermes-agent", portfoliosStore: runtimePortfoliosStore }
           );
           if (!mutRes.ok) {
             return jsonResponse(mutRes.status || 400, mutRes);
@@ -537,7 +604,9 @@ export default {
           return jsonResponse(mutRes.status || 200, {
             ...mutRes,
             summary: feedPayload.summary,
-            policy: feedPayload.policy
+            policy: feedPayload.policy,
+            smartRadar: feedPayload.smartRadar,
+            srScorecard: feedPayload.srScorecard
           });
         }
       }
@@ -642,6 +711,83 @@ export default {
         includeResearch: Boolean(feedPayload.sweep && feedPayload.sweep.dirty)
       });
       return jsonResponse(200, feedPayload);
+    }
+
+    // 1D. POST /api/research-feed/analyze-symbol (1-Click "Ask Hermes Deep-Dive" On-Demand Symbol Analysis)
+    if (pathname === "/api/research-feed/analyze-symbol" && request.method === "POST") {
+      try {
+        await refreshPortfoliosFromD1(env);
+        await refreshResearchStoreFromD1(env);
+        runtimePortfoliosDirty = false;
+        const body = await parseRequestBody(request);
+        const symbol = String(body.symbol || "").trim().toUpperCase();
+        if (!symbol) {
+          return jsonResponse(400, { ok: false, error: "symbol is required for on-demand analysis" });
+        }
+        const syncKey = String(body.syncKey || query.key || "VENU2-88").trim().toUpperCase();
+        getOrCreateProfile(syncKey);
+        let liveQuote = null;
+        try {
+          liveQuote = await fetchSymbolMarketData(symbol);
+        } catch (_) {}
+
+        const mutRes = mutateResearchStore(
+          runtimeResearchStore,
+          {
+            ...body,
+            action: "ANALYZE_SYMBOL_NOW",
+            symbol,
+            syncKey,
+            livePrice: liveQuote?.price || body.livePrice
+          },
+          {
+            actor: "web-on-demand",
+            portfoliosStore: runtimePortfoliosStore,
+            liveQuotesMap: liveQuote ? { [symbol]: liveQuote } : {}
+          }
+        );
+        if (!mutRes.ok) {
+          return jsonResponse(mutRes.status || 400, mutRes);
+        }
+        await persistKey(env, "research_feed", runtimeResearchStore);
+
+        let enqCommand = null;
+        await withHermesNodeLock(async () => {
+          const currentState = await refreshHermesNodeStateFromD1(env);
+          const enq = enqueueHermesCommand(
+            currentState,
+            {
+              action: "ANALYZE_SYMBOL_NOW",
+              symbol,
+              reason: body.focusNote || `1-Click Web On-Demand Deep-Dive for ${symbol}`
+            },
+            { actor: "web-on-demand" }
+          );
+          if (enq.ok) {
+            runtimeHermesNodeState = enq.state;
+            enqCommand = enq.command;
+            await persistKey(env, "hermes_node_state_v1", enq.state);
+          }
+        });
+
+        const researchFeed = buildPublicResearchFeedPayload({
+          researchStore: runtimeResearchStore,
+          portfoliosStore: runtimePortfoliosStore,
+          syncKey
+        });
+        await flushStores(env, ctx, {
+          includePortfolios: runtimePortfoliosDirty,
+          includeResearch: false
+        });
+        return jsonResponse(200, {
+          ...mutRes,
+          command: enqCommand,
+          hermesCommand: enqCommand,
+          researchFeed
+        });
+      } catch (err) {
+        return jsonResponse(400, { ok: false, error: err.message });
+      }
     }
 
     // 2. GET FULL ENRICHED PORTFOLIO (For Web App + Simulator)
@@ -1217,7 +1363,8 @@ export default {
                 action,
                 reason: body.reason || "",
                 jobId: body.jobId || "",
-                jobName: body.jobName || ""
+                jobName: body.jobName || "",
+                symbol: body.symbol || ""
               },
               { actor: auth.email || OWNER_EMAIL }
             );
@@ -1227,9 +1374,31 @@ export default {
             const nextState = enq.state;
             runtimeHermesNodeState = nextState;
             await persistKey(env, "hermes_node_state_v1", nextState);
+
+            let analyzedPost = null;
+            if (
+              (action === "ANALYZE_SYMBOL_NOW" || action === "ASK_HERMES_SYMBOL" || action === "ANALYZE_SYMBOL") &&
+              body.symbol
+            ) {
+              const mutRes = mutateResearchStore(
+                runtimeResearchStore,
+                {
+                  action: "ANALYZE_SYMBOL_NOW",
+                  symbol: body.symbol,
+                  focusNote: body.reason || ""
+                },
+                { actor: auth.email || OWNER_EMAIL, portfoliosStore: runtimePortfoliosStore }
+              );
+              if (mutRes.ok) {
+                await persistKey(env, "research_feed", runtimeResearchStore);
+                analyzedPost = mutRes.post;
+              }
+            }
+
             return adminJsonResponse(reqHeaders, 200, {
               ok: true,
               command: enq.command,
+              analyzedPost,
               diagnosticReport,
               nodeStatus: buildHermesNodeStatusPayload(nextState)
             });
@@ -1283,7 +1452,7 @@ export default {
           const mutRes = mutateResearchStore(
             runtimeResearchStore,
             { ...body, action },
-            { actor: auth.email || OWNER_EMAIL }
+            { actor: auth.email || OWNER_EMAIL, portfoliosStore: runtimePortfoliosStore }
           );
           if (!mutRes.ok) {
             return adminJsonResponse(reqHeaders, mutRes.status || 400, mutRes);

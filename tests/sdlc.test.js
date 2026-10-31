@@ -1489,6 +1489,82 @@ async function runSdlcSuite() {
       assert.ok(layoutMc.includes("function drawThaiCenteredLine("), "MoatWatchLayout.mc must define drawThaiCenteredLine");
 
       console.log("[PASS] 21. Thai & English Watch WebMemo Bitmap Fonts, Sanitizer & 2-Tier Circle Fit verified");
+
+      // ==================================================================
+      // 22. 4-Axis Smart Quant Suite: Watchlist Signal Scanner, S/R Scorecard, Watch Prefix & 1-Click Analyze Symbol
+      // ==================================================================
+      const {
+        computeDaysToEarnings,
+        buildSmartWatchMemoPrefix,
+        formatSmartWatchMemo
+      } = require("../lib/moatEngine");
+
+      const fixedNow = Date.parse("2026-05-10T00:00:00Z");
+      assert.strictEqual(computeDaysToEarnings("e-13May26", fixedNow), 3, "Expected 3 days to earnings for 13May26");
+      const earnPrefix = buildSmartWatchMemoPrefix(
+        { price: 120, earningsDate: "13May26", rsi14: 50, bbLower: 108, bbUpper: 132 },
+        fixedNow
+      );
+      assert.strictEqual(earnPrefix, "[งบ3ว.]");
+
+      const s1Prefix = buildSmartWatchMemoPrefix(
+        { price: 101.2, stopPrice: 100.0, targetPrice: 125.0, rsi14: 44, bbLower: 100.5, bbUpper: 120.0 },
+        fixedNow
+      );
+      assert.strictEqual(s1Prefix, "[ใกล้รับS1]");
+
+      const formattedWatchMemo = formatSmartWatchMemo(
+        "รอรับสะสมแนวรับ S1 เป้าหมาย R2 พร้อมติดตามงบไตรมาสล่าสุดอย่างใกล้ชิด",
+        { price: 101.2, stopPrice: 100.0, targetPrice: 125.0, rsi14: 44, bbLower: 100.5, bbUpper: 120.0 },
+        90,
+        fixedNow
+      );
+      assert.ok(formattedWatchMemo.startsWith("[ใกล้รับS1] "), `Expected prefix [ใกล้รับS1], got ${formattedWatchMemo}`);
+      assert.ok(formattedWatchMemo.length <= 90, `Expected <= 90 chars, got ${formattedWatchMemo.length}`);
+
+      // Verify /api/research-feed includes smartRadar and srScorecard
+      const smartFeedRes = await httpRequest("GET", "/api/research-feed?key=V2-07090781");
+      assert.strictEqual(smartFeedRes.status, 200);
+      assert.ok(smartFeedRes.json.smartRadar, "Public research feed must include smartRadar");
+      assert.ok(Array.isArray(smartFeedRes.json.smartRadar.signals), "smartRadar must include ranked signals array");
+      assert.ok(Array.isArray(smartFeedRes.json.smartRadar.recommendedHermesFocus), "smartRadar must include recommendedHermesFocus");
+      assert.ok(smartFeedRes.json.srScorecard, "Public research feed must include srScorecard");
+      assert.strictEqual(typeof smartFeedRes.json.srScorecard.supportHoldRatePct, "number");
+      assert.strictEqual(typeof smartFeedRes.json.srScorecard.directionalWinRatePct, "number");
+
+      // Verify GET /api/integration/watchlist-signals for Hermes MCP tool moat_scan_watchlist_signals
+      const signalsIntRes = await httpRequest(
+        "GET",
+        "/api/integration/watchlist-signals?key=V2-07090781&minUrgency=0&limit=5",
+        null,
+        { Authorization: `Bearer ${hermesToken}` }
+      );
+      assert.strictEqual(signalsIntRes.status, 200);
+      assert.strictEqual(signalsIntRes.json.ok, true);
+      assert.ok(Array.isArray(signalsIntRes.json.topPrioritySignals), "Must return topPrioritySignals array");
+      assert.ok(signalsIntRes.json.srScorecard, "Must return srScorecard in watchlist-signals response");
+
+      // Verify 1-Click Ask Hermes Deep-Dive (POST /api/research-feed/analyze-symbol)
+      const analyzeNowRes = await httpRequest("POST", "/api/research-feed/analyze-symbol", {
+        symbol: "NVDA",
+        syncKey: "V2-07090781",
+        focusNote: "ประเมินแนวรับ S1-S2 ก่อนประกาศงบ Data Center"
+      });
+      assert.strictEqual(analyzeNowRes.status, 200);
+      assert.strictEqual(analyzeNowRes.json.ok, true);
+      assert.ok(analyzeNowRes.json.post, "Must return updated/created Hermes S/R post");
+      assert.strictEqual(analyzeNowRes.json.post.symbol, "NVDA");
+      assert.ok(analyzeNowRes.json.post.publishedAt, "Analyzed post must carry explicit publishedAt timestamp");
+      assert.strictEqual(analyzeNowRes.json.hermesCommand?.action, "ANALYZE_SYMBOL_NOW");
+
+      const mcpPySource = fs.readFileSync(
+        path.join(__dirname, "..", "integrations", "hermes_pi", "moat_mcp_server.py"),
+        "utf8"
+      );
+      assert.ok(mcpPySource.includes('"moat_scan_watchlist_signals"'), "moat_mcp_server.py must expose moat_scan_watchlist_signals");
+      assert.ok(mcpPySource.includes('"moat_evaluate_sr_scorecard"'), "moat_mcp_server.py must expose moat_evaluate_sr_scorecard");
+
+      console.log("[PASS] 22. 4-Axis Smart Quant Suite (Watchlist Scanner, S/R Scorecard, Watch Prefix & 1-Click Analyze Symbol) verified");
     } finally {
       if (prevIntEnabled === undefined) delete process.env.WEBMEMO_INTEGRATION_ENABLED;
       else process.env.WEBMEMO_INTEGRATION_ENABLED = prevIntEnabled;
@@ -1512,7 +1588,7 @@ async function runSdlcSuite() {
   }
 
   console.log("\n==================================================================");
-  console.log("  ALL 20 SDLC + MULTI-USER + BI & HERMES CMS SUITES PASSED (100%)");
+  console.log("  ALL 22 SDLC + MULTI-USER + BI & HERMES CMS SUITES PASSED (100%)");
   console.log("==================================================================");
   if (ephemeralServer) {
     ephemeralServer.close();

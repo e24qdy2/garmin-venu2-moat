@@ -73,6 +73,7 @@
     researchFeed: null,
     hermesViewMode: 'CARDS', // 'CARDS' | 'MATRIX' | 'DUAL'
     hermesSrHorizon: 'ALL', // 'ALL' | 'SHORT' | 'MEDIUM' | 'LONG'
+    hermesSmartZone: 'ALL', // 'ALL' | 'S1_S2_ACCUMULATE' | 'R1_R2_BREAKOUT' | 'EARNINGS_SOON' | 'HIGH_URGENCY'
     hermesActiveTag: 'ALL',
     hermesSearchQuery: '',
     autoSwipeTimerId: null,
@@ -902,6 +903,9 @@
         if (item.earningsBadge) {
           signalBadges += `<span class="px-1.5 py-0.5 rounded text-[9px] font-mono font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30">${escapeHtml(item.earningsBadge)}</span>`;
         }
+        if (item.smartPrefix) {
+          signalBadges += `<span class="px-1.5 py-0.5 rounded text-[9px] font-mono font-semibold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30" title="Auto-Synced Garmin Watch Tactical Prefix (watch.m)">⌚ ${escapeHtml(item.smartPrefix)}</span>`;
+        }
 
         return `
           <tr
@@ -1547,6 +1551,52 @@
     return Math.max(4, Math.min(96, Math.round(raw)));
   }
 
+  async function triggerAskHermesSymbol(symbol, focusNote = '') {
+    const cleanSym = String(symbol || '').trim().toUpperCase();
+    if (!cleanSym) {
+      showToast('กรุณาระบุชื่อหุ้น เช่น NVDA, IREN, ADVANC.BK');
+      return;
+    }
+    const btn = el('askHermesDeepDiveBtn');
+    const origText = btn ? btn.textContent : '';
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = `⏳ กำลังวิเคราะห์ ${cleanSym}...`;
+    }
+    try {
+      const res = await fetch('/api/research-feed/analyze-symbol', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          symbol: cleanSym,
+          syncKey: state.syncKey,
+          focusNote
+        })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        showToast(data.error || `ไม่สามารถวิเคราะห์หุ้น ${cleanSym} ได้`);
+        return;
+      }
+      if (data.researchFeed) {
+        state.researchFeed = data.researchFeed;
+      } else {
+        await loadResearchFeed(state.syncKey, false);
+      }
+      if (el('askHermesSymbolInput')) el('askHermesSymbolInput').value = '';
+      renderHermesResearchSection();
+      const prefixInfo = data.post?.watchPrefix ? ` · Watch ${data.post.watchPrefix}` : '';
+      showToast(`⚡ Hermes วิเคราะห์สด ${cleanSym} สำเร็จ (อัปเดต S1-S3 / R1-R3${prefixInfo})`);
+    } catch (err) {
+      showToast(err.message || `Error analyzing ${cleanSym}`);
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = origText || '⚡ Ask Hermes Deep-Dive';
+      }
+    }
+  }
+
   function renderHermesResearchSection() {
     const feed = state.researchFeed;
     const cardsGrid = el('hermesResearchCardsGrid');
@@ -1565,6 +1615,11 @@
     const tagRegistry = Array.isArray(feed?.tagRegistry) ? feed.tagRegistry : [];
     const tagRegistryMap = new Map(tagRegistry.map(r => [String(r.tag || '').toLowerCase(), r]));
     const policy = feed?.policy || { autoArchiveEnabled: true, autoArchiveDays: 21 };
+    const smartRadar = feed?.smartRadar || {};
+    const srScorecard = feed?.srScorecard || {};
+    const signalBySymbol = new Map(
+      (Array.isArray(smartRadar.signals) ? smartRadar.signals : []).map(s => [String(s.symbol || '').toUpperCase(), s])
+    );
 
     if (el('hermesActivePostCountBadge')) {
       el('hermesActivePostCountBadge').textContent = `${posts.length} Active Cards`;
@@ -1582,6 +1637,54 @@
       el('hermesAutoArchiveTtlBadge').textContent = policy.autoArchiveEnabled
         ? `Auto-Archive: ${policy.autoArchiveDays}d TTL`
         : 'Auto-Archive: Manual Only';
+    }
+
+    // Update S/R 1-2-3 Accuracy Scorecard & Smart Zone Radar counters
+    if (el('hermesScorecardSupportHoldBadge')) {
+      el('hermesScorecardSupportHoldBadge').textContent = `🎯 S1–S2 Hold Rate: ${srScorecard.supportHoldRatePct ?? 100}% (S1: ${srScorecard.s1HoldRatePct ?? 100}%)`;
+    }
+    if (el('hermesScorecardWinRateBadge')) {
+      el('hermesScorecardWinRateBadge').textContent = `🏆 Win Rate: ${srScorecard.directionalWinRatePct ?? 100}% · R1 Hits: ${srScorecard.r1HitCount ?? 0}`;
+    }
+    const zCounts = smartRadar.zoneCounts || {};
+    if (el('smartZoneCountAccum')) el('smartZoneCountAccum').textContent = String(zCounts.s1_s2_accumulate ?? 0);
+    if (el('smartZoneCountBreakout')) el('smartZoneCountBreakout').textContent = String(zCounts.r1_r2_breakout ?? 0);
+    if (el('smartZoneCountEarnings')) el('smartZoneCountEarnings').textContent = String(zCounts.earnings_soon ?? 0);
+    if (el('smartZoneCountUrgency')) el('smartZoneCountUrgency').textContent = String(zCounts.high_urgency ?? 0);
+
+    const activeSmartZone = state.hermesSmartZone || 'ALL';
+    document.querySelectorAll('#hermesSmartZoneFilterGroup [data-smart-zone]').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-smart-zone') === activeSmartZone);
+    });
+
+    const focusChipsBox = el('hermesFocusPriorityChips');
+    if (focusChipsBox) {
+      const topFocus = Array.isArray(smartRadar.recommendedHermesFocus)
+        ? smartRadar.recommendedHermesFocus.slice(0, 5)
+        : [];
+      if (topFocus.length === 0) {
+        focusChipsBox.innerHTML = `<span class="text-[11px] font-mono text-slate-400">All watchlist tickers within normal channel</span>`;
+      } else {
+        focusChipsBox.innerHTML = topFocus
+          .map(item => {
+            const sym = escapeHtml(item.symbol || '');
+            const score = Number(item.urgencyScore || 0);
+            const prefix = item.watchPrefix ? ` ${escapeHtml(item.watchPrefix)}` : '';
+            const badgeClass =
+              score >= 70
+                ? 'bg-rose-500/15 text-rose-300 border-rose-500/35 hover:bg-rose-500/25'
+                : score >= 45
+                ? 'bg-amber-500/15 text-amber-300 border-amber-500/35 hover:bg-amber-500/25'
+                : 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30 hover:bg-cyan-500/25';
+            return `<button type="button" data-ask-hermes-symbol="${sym}" class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-md border transition ${badgeClass}" title="${escapeHtml((item.reasons || []).join(' · '))} — คลิกเพื่อให้ Hermes วิเคราะห์สดทันที">${sym}${prefix} · Urgency ${score}</button>`;
+          })
+          .join('');
+        focusChipsBox.querySelectorAll('[data-ask-hermes-symbol]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            triggerAskHermesSymbol(btn.getAttribute('data-ask-hermes-symbol'));
+          });
+        });
+      }
     }
 
     // View mode toggle state
@@ -1637,7 +1740,21 @@
     const q = (state.hermesSearchQuery || '').trim().toLowerCase();
     const activeTag = state.hermesActiveTag || 'ALL';
 
+    const matchesSmartZone = (symbol, item) => {
+      if (activeSmartZone === 'ALL') return true;
+      const sig = signalBySymbol.get(String(symbol || '').toUpperCase()) || item?.smartSignal || item || {};
+      const zoneCat = sig.zoneCategory || item?.smartZoneCategory || 'CHANNEL_NORMAL';
+      const dte = sig.daysToEarnings ?? item?.daysToEarnings ?? null;
+      const urg = Number(sig.urgencyScore ?? item?.urgencyScore ?? 0);
+      if (activeSmartZone === 'S1_S2_ACCUMULATE') return zoneCat === 'S1_S2_ACCUMULATE';
+      if (activeSmartZone === 'R1_R2_BREAKOUT') return zoneCat === 'R1_R2_BREAKOUT';
+      if (activeSmartZone === 'EARNINGS_SOON') return dte !== null && Number(dte) >= 0 && Number(dte) <= 7;
+      if (activeSmartZone === 'HIGH_URGENCY') return urg >= 55;
+      return true;
+    };
+
     const filteredPosts = posts.filter(post => {
+      if (!matchesSmartZone(post.symbol, post)) return false;
       if (activeTag !== 'ALL') {
         const hasTag = (post.tags || []).some(t => String(t).toLowerCase() === activeTag.toLowerCase());
         if (!hasTag) return false;
@@ -1648,6 +1765,7 @@
     });
 
     const filteredMatrix = matrix.filter(row => {
+      if (!matchesSmartZone(row.symbol, row)) return false;
       if (activeTag !== 'ALL') {
         const hasTag = (row.tags || []).some(t => String(t).toLowerCase() === activeTag.toLowerCase());
         if (!hasTag) return false;
@@ -1665,7 +1783,7 @@
     if (filteredPosts.length === 0) {
       cardsGrid.innerHTML = `
         <div class="col-span-full py-10 px-4 text-center rounded-2xl border border-white/[0.07] bg-white/[0.015] text-slate-400 text-xs">
-          No Hermes research cards match the current filter (${escapeHtml(activeTag)} ${q ? `/ "${escapeHtml(q)}"` : ''}).
+          No Hermes research cards match the current filter (${escapeHtml(activeTag)} / Zone: ${escapeHtml(activeSmartZone)} ${q ? `/ "${escapeHtml(q)}"` : ''}).
         </div>
       `;
     } else {
@@ -1683,6 +1801,9 @@
           const s3Val = sList[2]?.price || sList[0]?.price || price * 0.88;
           const r3Val = rList[2]?.price || rList[0]?.price || price * 1.12;
           const cursorPct = computeSrChannelCursorPct(price, s3Val, r3Val);
+          const sig = signalBySymbol.get(String(post.symbol || '').toUpperCase()) || {};
+          const watchPrefix = post.watchPrefix || sig.watchPrefix || '';
+          const urgencyScore = Number(post.urgencyScore ?? sig.urgencyScore ?? 0);
 
           const filterLevelByHorizon = lvl => {
             if (activeHorizon === 'ALL') return true;
@@ -1726,7 +1847,7 @@
               <!-- Top Ribbon: Symbol, Scope, Bias & Live Price -->
               <div>
                 <div class="flex items-start justify-between gap-2">
-                  <div class="flex items-center gap-2 flex-wrap">
+                  <div class="flex items-center gap-1.5 flex-wrap">
                     <span class="font-mono text-base font-extrabold tracking-tight text-white px-2.5 py-0.5 rounded-lg bg-white/[0.06] border border-white/10">${escapeHtml(post.symbol)}</span>
                     ${
                       post.pinned
@@ -1739,6 +1860,16 @@
                         : `<span class="text-[9px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded bg-white/[0.05] text-slate-400 border border-white/10">SHARED FEED</span>`
                     }
                     <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${biasStyle.pill}">${biasStyle.label} · ${Number(post.confidence || 80)}%</span>
+                    ${
+                      watchPrefix
+                        ? `<span class="text-[9px] font-mono font-semibold px-1.5 py-0.5 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30" title="Auto-Synced Garmin Watch Tactical Prefix (watch.m)">⌚ ${escapeHtml(watchPrefix)}</span>`
+                        : ''
+                    }
+                    ${
+                      urgencyScore > 0
+                        ? `<span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30">Urgency ${urgencyScore}</span>`
+                        : ''
+                    }
                   </div>
                   <div class="text-right shrink-0">
                     <div class="font-mono text-sm font-bold text-white">${formatSrPrice(price, cur)}</div>
@@ -1820,8 +1951,15 @@
                       })
                       .join('')}
                   </div>
-                  <div class="flex items-center gap-1.5">
+                  <div class="flex items-center gap-1.5 flex-wrap">
                     <span class="text-[10px] text-slate-500 font-mono">By ${escapeHtml(post.author || 'Hermes Agent')}</span>
+                    <button
+                      type="button"
+                      data-ask-hermes-symbol="${escapeHtml(post.symbol)}"
+                      class="text-[10px] font-semibold px-2 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 transition"
+                      title="ให้ Hermes Agent คำนวณแนวรับ S1-S3 / แนวต้าน R1-R3 และอัปเดตสถานะนาฬิกาสดทันที">
+                      ⚡ วิเคราะห์สด
+                    </button>
                     <button
                       type="button"
                       data-apply-sr-symbol="${escapeHtml(post.symbol)}"
@@ -1841,6 +1979,12 @@
         btn.addEventListener('click', () => {
           state.hermesActiveTag = btn.getAttribute('data-card-tag') || 'ALL';
           renderHermesResearchSection();
+        });
+      });
+
+      cardsGrid.querySelectorAll('[data-ask-hermes-symbol]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          triggerAskHermesSymbol(btn.getAttribute('data-ask-hermes-symbol'));
         });
       });
 
@@ -1875,16 +2019,23 @@
           const qm = row.quantMetrics || {};
           const biasStyle = getBiasBadgeStyle(row.bias);
           const inMyPort = userSymbols.has(String(row.symbol).toUpperCase());
+          const watchPrefix = row.watchPrefix || '';
+          const urgencyScore = Number(row.urgencyScore || 0);
 
           return `
             <tr class="hover:bg-white/[0.03] transition">
               <td>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-1.5 flex-wrap">
                   <span class="font-mono font-bold text-white">${escapeHtml(row.symbol)}</span>
                   ${
                     inMyPort
                       ? `<span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">MY PORT</span>`
                       : `<span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-white/[0.05] text-slate-400">SHARED</span>`
+                  }
+                  ${
+                    watchPrefix
+                      ? `<span class="text-[9px] font-mono font-semibold px-1.5 py-0.2 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">⌚ ${escapeHtml(watchPrefix)}</span>`
+                      : ''
                   }
                 </div>
                 <div class="text-[10px] text-slate-400 truncate max-w-[150px]">${escapeHtml(row.name || row.symbol)}</div>
@@ -1921,11 +2072,20 @@
               </td>
               <td class="text-center font-mono">
                 <div class="text-xs font-bold text-cyan-300">${Number(qm.riskRewardRatio || 1.5).toFixed(2)}x</div>
-                <div class="text-[9px] text-slate-400">${escapeHtml(qm.bandLabel || 'CHANNEL')}</div>
+                <div class="text-[9px] text-slate-400">${escapeHtml(qm.bandLabel || 'CHANNEL')}${urgencyScore > 0 ? ` · U:${urgencyScore}` : ''}</div>
               </td>
               <td>
-                <div class="text-[11px] text-slate-200 font-medium truncate max-w-[240px]" title="${escapeHtml(row.signalMemo || row.headline || '')}">
-                  ${escapeHtml(row.signalMemo || row.headline || '')}
+                <div class="flex items-center justify-between gap-1.5">
+                  <div class="text-[11px] text-slate-200 font-medium truncate max-w-[200px]" title="${escapeHtml(row.signalMemo || row.headline || '')}">
+                    ${escapeHtml(row.signalMemo || row.headline || '')}
+                  </div>
+                  <button
+                    type="button"
+                    data-ask-hermes-symbol="${escapeHtml(row.symbol)}"
+                    class="shrink-0 text-[9px] font-mono font-semibold px-1.5 py-0.5 rounded bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 transition"
+                    title="สั่ง Hermes วิเคราะห์สดหุ้น ${escapeHtml(row.symbol)}">
+                    ⚡ วิเคราะห์สด
+                  </button>
                 </div>
                 <div class="text-[9px] font-mono text-emerald-300/90 mt-0.5">
                   📅 ${escapeHtml(formatThaiTimestamp(row.publishedAt || row.memoUpdatedAt || row.updatedAt))}
@@ -1949,6 +2109,12 @@
           `;
         })
         .join('');
+
+      matrixBody.querySelectorAll('[data-ask-hermes-symbol]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          triggerAskHermesSymbol(btn.getAttribute('data-ask-hermes-symbol'));
+        });
+      });
     }
   }
 
@@ -2161,6 +2327,26 @@
         state.hermesSrHorizon = btn.getAttribute('data-sr-horizon') || 'ALL';
         renderHermesResearchSection();
       });
+    });
+
+    document.querySelectorAll('#hermesSmartZoneFilterGroup [data-smart-zone]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.hermesSmartZone = btn.getAttribute('data-smart-zone') || 'ALL';
+        renderHermesResearchSection();
+      });
+    });
+
+    el('askHermesDeepDiveBtn')?.addEventListener('click', () => {
+      const sym = (el('askHermesSymbolInput')?.value || '').trim().toUpperCase();
+      triggerAskHermesSymbol(sym);
+    });
+
+    el('askHermesSymbolInput')?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const sym = (el('askHermesSymbolInput')?.value || '').trim().toUpperCase();
+        triggerAskHermesSymbol(sym);
+      }
     });
 
     el('hermesResearchSearchInput')?.addEventListener('input', e => {

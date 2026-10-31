@@ -1649,6 +1649,16 @@
                 <button
                   type="button"
                   data-cms-post-id="${escapeHtml(post.id)}"
+                  data-cms-symbol="${escapeHtml(post.symbol)}"
+                  data-cms-action="ANALYZE_SYMBOL_NOW"
+                  class="cms-post-action-btn rounded-lg bg-emerald/20 hover:bg-emerald/30 ring-1 ring-emerald/40 px-2.5 py-1 text-[11px] font-mono font-semibold text-emerald"
+                  title="สั่ง Hermes วิเคราะห์สดหุ้น ${escapeHtml(post.symbol)} และอัปเดต S1-S3 / R1-R3 ทันที"
+                >
+                  ⚡ วิเคราะห์สด
+                </button>
+                <button
+                  type="button"
+                  data-cms-post-id="${escapeHtml(post.id)}"
                   data-cms-action="EDIT"
                   class="cms-post-action-btn rounded-lg bg-cyan/20 hover:bg-cyan/30 ring-1 ring-cyan/40 px-2.5 py-1 text-[11px] font-mono font-semibold text-cyan"
                 >
@@ -1715,6 +1725,15 @@
         if (action === "EDIT") {
           const found = allPosts.find((p) => p.id === postId);
           if (found) populateCmsFormFromPost(found);
+          return;
+        }
+
+        if (action === "ANALYZE_SYMBOL_NOW") {
+          const sym = btn.getAttribute("data-cms-symbol") || "";
+          await executeCmsMutation(
+            { action: "ANALYZE_SYMBOL_NOW", symbol: sym, postId },
+            `⚡ Hermes วิเคราะห์สด ${sym} และอัปเดต S1-S3 / R1-R3 เรียบร้อยแล้ว`
+          );
           return;
         }
 

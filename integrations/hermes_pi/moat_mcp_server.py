@@ -216,6 +216,47 @@ TOOLS = [
             },
         },
     },
+    {
+        "name": "moat_scan_watchlist_signals",
+        "description": (
+            "Scan all watchlist & portfolio stocks and rank them by Smart Quant Urgency Score (0-100) "
+            "based on live S1-S2 support accumulate proximity, R1-R2 resistance breakout test, Risk/Reward ratio, "
+            "and upcoming earnings countdown (<= 7 days). Call this tool first so Hermes dynamically focuses "
+            "research and WebMemo updates on the highest-urgency stocks."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "zoneFilter": {
+                    "type": "string",
+                    "description": (
+                        "Optional filter: 'ALL', 'S1_S2_ACCUMULATE', 'R1_R2_BREAKOUT', "
+                        "'EARNINGS_SOON', or 'HIGH_URGENCY'."
+                    ),
+                },
+                "limit": {
+                    "type": "integer",
+                    "description": "Max number of ranked signals to return (default 12).",
+                },
+            },
+        },
+    },
+    {
+        "name": "moat_evaluate_sr_scorecard",
+        "description": (
+            "Evaluate Hermes S/R 1-2-3 accuracy & conviction scorecard comparing anchored S1-S3 / R1-R3 levels "
+            "against live market prices (supportHoldRatePct, directionalWinRatePct, R1/R2 hits, and per-symbol outcome)."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "symbol": {
+                    "type": "string",
+                    "description": "Optional ticker symbol filter.",
+                },
+            },
+        },
+    },
 ]
 
 
@@ -474,6 +515,24 @@ def call_tool(name: str, args: Dict[str, Any]) -> Dict[str, Any]:
                 "symbol": args.get("symbol"),
                 "tag": args.get("tag"),
                 "includeArchived": "1" if args.get("includeArchived") else None,
+            },
+        )
+    if name == "moat_scan_watchlist_signals":
+        return _api_request(
+            "GET",
+            "/api/integration/watchlist-signals",
+            query={
+                "zone": args.get("zoneFilter"),
+                "limit": str(args.get("limit")) if args.get("limit") else None,
+            },
+        )
+    if name == "moat_evaluate_sr_scorecard":
+        return _api_request(
+            "GET",
+            "/api/integration/watchlist-signals",
+            query={
+                "symbol": args.get("symbol"),
+                "view": "scorecard",
             },
         )
     return {"ok": False, "error": f"Unknown tool: {name}"}

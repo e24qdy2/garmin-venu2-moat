@@ -269,6 +269,8 @@
           memoRevision: Number(h.memoRevision ?? 0),
           memoUpdatedAt: h.memoUpdatedAt || undefined,
           memoSource: h.memoSource || undefined,
+          smartPrefix: h.smartPrefix || '',
+          daysToEarnings: h.daysToEarnings ?? null,
           sparkline: spark,
           sma20: sma20Val,
           smaPct: smaPctVal,
@@ -705,15 +707,20 @@
     if (el('watchDetailMemo')) {
       const memoEl = el('watchDetailMemo');
       const rawMemo = (item.note || item.m || '').trim();
-      const memoText = rawMemo || 'No WebMemo for this asset (Click Edit on web to add a memo)';
+      const prefix = String(item.smartPrefix || '').trim();
+      const prefixedMemo =
+        prefix && (!rawMemo || !rawMemo.startsWith('['))
+          ? rawMemo
+            ? `${prefix} ${rawMemo}`
+            : prefix
+          : rawMemo;
+      const memoText = prefixedMemo || 'No WebMemo for this asset (Click Edit on web to add a memo)';
       memoEl.textContent = memoText;
       const isLongMemo = memoText.length > 36;
       memoEl.className = isLongMemo
         ? 'text-[9.5px] text-alabaster leading-tight line-clamp-3 px-2 break-words'
         : 'text-[11px] text-alabaster leading-snug line-clamp-2 px-1 break-words';
       memoEl.dataset.fontTier = isLongMemo ? 'FontMemoXS-11px-3L' : 'FontMicro-14px-2L';
-      if (false) el('watchDetailMemo').textContent =
-        item.note || 'No WebMemo for this asset (Click Edit on web to add a memo)';
     }
 
     drawWatchSparkline(item, state.watchShowBb);

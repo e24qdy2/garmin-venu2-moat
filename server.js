@@ -376,7 +376,11 @@ async function handleRequest(req, res) {
   }
 
   // 0b. SCOPED WEBMEMO & RESEARCH FEED INTEGRATION API (Hermes Agent + Discord Approval)
-  if (pathname === "/api/integration" || pathname.startsWith("/api/integration/")) {
+  if (
+    pathname === "/api/integration" ||
+    pathname.startsWith("/api/integration/") ||
+    pathname === "/api/integrations/webmemo/watchlist-signals"
+  ) {
     let body = {};
     if (req.method === "POST" || req.method === "PUT" || req.method === "PATCH") {
       try {
@@ -384,6 +388,67 @@ async function handleRequest(req, res) {
       } catch (err) {
         return sendJson(res, 400, { ok: false, error: err.message, code: "INVALID_JSON" });
       }
+    }
+
+    if (
+      (pathname === "/api/integration/watchlist-signals" ||
+        pathname === "/api/integrations/webmemo/watchlist-signals") &&
+      req.method === "GET"
+    ) {
+      const portfoliosStore = readStore();
+      const researchStore = readResearchStore();
+      const cfg = resolveIntegrationConfig(process.env);
+      const authCheck = verifyIntegrationAuth(req.headers || {}, cfg, portfoliosStore);
+      if (!authCheck.ok) {
+        return sendJson(res, authCheck.status, {
+          ok: false,
+          code: authCheck.code,
+          error: authCheck.error
+        });
+      }
+      const query = parsedUrl.query || {};
+      const syncKey = String(query.key || "VENU2-88").trim().toUpperCase();
+      const feedPayload = buildPublicResearchFeedPayload({
+        researchStore,
+        portfoliosStore,
+        syncKey,
+        symbolFilter: query.symbol
+      });
+      const zoneFilter = String(query.zone || "ALL").trim().toUpperCase();
+      const symFilter = String(query.symbol || "").trim().toUpperCase();
+      const minUrgency = Number(query.minUrgency);
+      const maxLimit = Math.max(1, Math.min(50, Number(query.limit) || 15));
+      let signals = Array.isArray(feedPayload.smartRadar?.signals)
+        ? feedPayload.smartRadar.signals
+        : [];
+      if (symFilter) {
+        signals = signals.filter((s) => s.symbol === symFilter);
+      }
+      if (Number.isFinite(minUrgency) && minUrgency > 0) {
+        signals = signals.filter((s) => Number(s.urgencyScore) >= minUrgency);
+      }
+      if (zoneFilter && zoneFilter !== "ALL") {
+        signals = signals.filter((s) => {
+          if (zoneFilter === "HIGH_URGENCY") {
+            return s.urgencyTier === "CRITICAL" || s.urgencyTier === "HIGH" || s.urgencyScore >= 50;
+          }
+          if (zoneFilter === "EARNINGS_SOON") {
+            return s.zoneCategory === "EARNINGS_SOON" || (Number.isFinite(s.daysToEarnings) && s.daysToEarnings >= 0 && s.daysToEarnings <= 7);
+          }
+          return s.zoneCategory === zoneFilter;
+        });
+      }
+      const slicedSignals = signals.slice(0, maxLimit);
+      return sendJson(res, 200, {
+        ok: true,
+        zoneFilter,
+        count: slicedSignals.length,
+        signals: slicedSignals,
+        topPrioritySignals: slicedSignals,
+        recommendedHermesFocus: feedPayload.smartRadar?.recommendedHermesFocus || [],
+        smartRadar: feedPayload.smartRadar,
+        srScorecard: feedPayload.srScorecard
+      });
     }
 
     if (pathname === "/api/integration/research-posts") {
@@ -424,7 +489,7 @@ async function handleRequest(req, res) {
             source: body.source || "HERMES_AGENT",
             author: body.author || "Hermes Quant Research Agent"
           },
-          { actor: "hermes-agent" }
+          { actor: "hermes-agent", portfoliosStore }
         );
         if (!mutRes.ok) {
           return sendJson(res, mutRes.status || 400, mutRes);
@@ -438,7 +503,9 @@ async function handleRequest(req, res) {
         return sendJson(res, mutRes.status || 200, {
           ...mutRes,
           summary: feedPayload.summary,
-          policy: feedPayload.policy
+          policy: feedPayload.policy,
+          smartRadar: feedPayload.smartRadar,
+          srScorecard: feedPayload.srScorecard
         });
       }
     }
@@ -533,6 +600,73 @@ async function handleRequest(req, res) {
       writeResearchStore(researchStore);
     }
     return sendJson(res, 200, feedPayload);
+  }
+
+  // 0d. POST /api/research-feed/analyze-symbol (1-Click "Ask Hermes Deep-Dive" On-Demand Symbol Analysis)
+  if (pathname === "/api/research-feed/analyze-symbol" && req.method === "POST") {
+    try {
+      const body = await parseBody(req);
+      const symbol = String(body.symbol || "").trim().toUpperCase();
+      if (!symbol) {
+        return sendJson(res, 400, { ok: false, error: "symbol is required for on-demand analysis" });
+      }
+      const syncKey = String(body.syncKey || parsedUrl.query?.key || "VENU2-88").trim().toUpperCase();
+      getOrCreateProfile(syncKey);
+      const portfoliosStore = readStore();
+      const researchStore = readResearchStore();
+      let liveQuote = null;
+      try {
+        liveQuote = await fetchSymbolMarketData(symbol);
+      } catch (_) {}
+
+      const mutRes = mutateResearchStore(
+        researchStore,
+        {
+          ...body,
+          action: "ANALYZE_SYMBOL_NOW",
+          symbol,
+          syncKey,
+          livePrice: liveQuote?.price || body.livePrice
+        },
+        {
+          actor: "web-on-demand",
+          portfoliosStore,
+          liveQuotesMap: liveQuote ? { [symbol]: liveQuote } : {}
+        }
+      );
+      if (!mutRes.ok) {
+        return sendJson(res, mutRes.status || 400, mutRes);
+      }
+      writeResearchStore(researchStore);
+
+      const nodeState = readHermesNodeState();
+      const enq = enqueueHermesCommand(
+        nodeState,
+        {
+          action: "ANALYZE_SYMBOL_NOW",
+          symbol,
+          reason: body.focusNote || `1-Click Web On-Demand Deep-Dive for ${symbol}`
+        },
+        { actor: "web-on-demand" }
+      );
+      if (enq.ok) {
+        writeHermesNodeState(enq.state);
+      }
+
+      const researchFeed = buildPublicResearchFeedPayload({
+        researchStore,
+        portfoliosStore,
+        syncKey
+      });
+      return sendJson(res, 200, {
+        ...mutRes,
+        command: enq.ok ? enq.command : null,
+        hermesCommand: enq.ok ? enq.command : null,
+        researchFeed
+      });
+    } catch (err) {
+      return sendJson(res, 400, { ok: false, error: err.message });
+    }
   }
 
   // 1. GET /api/portfolio?key=VENU2-88 (Full Web Companion + Watch Preview Payload)
@@ -1046,7 +1180,8 @@ async function handleRequest(req, res) {
             action,
             reason: body.reason || "",
             jobId: body.jobId || "",
-            jobName: body.jobName || ""
+            jobName: body.jobName || "",
+            symbol: body.symbol || ""
           },
           { actor: auth.email || OWNER_EMAIL }
         );
@@ -1055,9 +1190,31 @@ async function handleRequest(req, res) {
         }
         nodeState = enq.state;
         writeHermesNodeState(nodeState);
+
+        let analyzedPost = null;
+        if (
+          (action === "ANALYZE_SYMBOL_NOW" || action === "ASK_HERMES_SYMBOL" || action === "ANALYZE_SYMBOL") &&
+          body.symbol
+        ) {
+          const mutRes = mutateResearchStore(
+            researchStore,
+            {
+              action: "ANALYZE_SYMBOL_NOW",
+              symbol: body.symbol,
+              focusNote: body.reason || ""
+            },
+            { actor: auth.email || OWNER_EMAIL, portfoliosStore }
+          );
+          if (mutRes.ok) {
+            writeResearchStore(researchStore);
+            analyzedPost = mutRes.post;
+          }
+        }
+
         return sendAdminJson(req, res, 200, {
           ok: true,
           command: enq.command,
+          analyzedPost,
           diagnosticReport,
           nodeStatus: buildHermesNodeStatusPayload(nodeState)
         });
@@ -1111,7 +1268,7 @@ async function handleRequest(req, res) {
         const mutRes = mutateResearchStore(
           researchStore,
           { ...body, action },
-          { actor: auth.email || OWNER_EMAIL }
+          { actor: auth.email || OWNER_EMAIL, portfoliosStore }
         );
         if (!mutRes.ok) {
           return sendAdminJson(req, res, mutRes.status || 400, mutRes);

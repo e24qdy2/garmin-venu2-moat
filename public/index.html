@@ -1377,6 +1377,94 @@
           </div>
         </div>
 
+        <!-- Hermes 4-Axis Smart Quant Radar & S/R 1-2-3 Conviction Scorecard -->
+        <div
+          id="hermesSmartQuantRadarBar"
+          class="mt-3.5 p-3 rounded-xl bg-slate-950/75 border border-cyan-500/20 flex flex-col gap-2.5"
+          aria-label="Hermes Smart Quant Radar and S/R 1-2-3 Accuracy Scorecard"
+        >
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold uppercase tracking-wider bg-cyan-500/15 text-cyan-300 border border-cyan-500/35">
+                <i class="ph-bold ph-radar mr-1"></i>Hermes Smart Quant Radar
+              </span>
+              <span
+                id="hermesScorecardSupportHoldBadge"
+                class="px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold bg-emerald-500/12 text-emerald-300 border border-emerald-500/30"
+                title="Percentage of tracked symbols holding above S2 structural support"
+              >
+                🎯 S1–S2 Hold Rate: 100%
+              </span>
+              <span
+                id="hermesScorecardWinRateBadge"
+                class="px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold bg-amber-500/12 text-amber-300 border border-amber-500/30"
+                title="Directional conviction win rate and R1/R2 target hits"
+              >
+                🏆 Win Rate: 85% · R1 Hits: 0
+              </span>
+              <span
+                id="hermesWatchPrefixStatusBadge"
+                class="px-2 py-0.5 rounded-md text-[10px] font-mono text-slate-300 bg-white/[0.04] border border-white/10"
+                title="Auto-synced tactical status prefix prepended to Garmin Watch WebMemo (<=90 chars)"
+              >
+                ⌚ Auto Watch Prefix: Active (≤90 chars)
+              </span>
+            </div>
+
+            <!-- 1-Click Ask Hermes On-Demand Deep-Dive Trigger -->
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <div id="hermesFocusPriorityChips" class="flex items-center gap-1 flex-wrap">
+                <!-- Populated dynamically with top Urgency symbols -->
+              </div>
+              <div class="flex items-center gap-1 bg-slate-900/90 border border-cyan-500/30 rounded-lg px-2 py-1">
+                <input
+                  id="askHermesSymbolInput"
+                  type="text"
+                  maxlength="12"
+                  placeholder="Ticker (e.g. NVDA)"
+                  class="w-28 bg-transparent text-[11px] font-mono font-bold text-white uppercase placeholder-slate-500 focus:outline-none"
+                />
+                <button
+                  id="askHermesDeepDiveBtn"
+                  type="button"
+                  class="px-2.5 py-1 rounded-md bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold text-[10px] font-mono transition flex items-center gap-1"
+                  title="Trigger 1-Click Ask Hermes Deep-Dive for this ticker right now"
+                >
+                  <i class="ph-bold ph-lightning"></i>
+                  <span>⚡ วิเคราะห์สด</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Smart S/R Zone Filter Strip -->
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800/70">
+            <div
+              id="hermesSmartZoneFilterGroup"
+              class="flex flex-wrap items-center gap-1.5"
+              role="group"
+              aria-label="Smart S/R Zone Radar Filter"
+            >
+              <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 mr-1">Smart Zone:</span>
+              <button type="button" data-smart-zone="ALL" class="mw-filter-pill text-[11px] py-1 px-2.5 active">
+                All Zones
+              </button>
+              <button type="button" data-smart-zone="S1_S2_ACCUMULATE" class="mw-filter-pill text-[11px] py-1 px-2.5">
+                🟢 โซนสะสม S1–S2 <span id="smartZoneCountAccum" class="opacity-75 font-mono ml-0.5">(0)</span>
+              </button>
+              <button type="button" data-smart-zone="R1_R2_BREAKOUT" class="mw-filter-pill text-[11px] py-1 px-2.5">
+                🚀 จ่อเบรก R1–R2 <span id="smartZoneCountBreakout" class="opacity-75 font-mono ml-0.5">(0)</span>
+              </button>
+              <button type="button" data-smart-zone="EARNINGS_SOON" class="mw-filter-pill text-[11px] py-1 px-2.5">
+                📅 งบออก ≤ 7 วัน <span id="smartZoneCountEarnings" class="opacity-75 font-mono ml-0.5">(0)</span>
+              </button>
+              <button type="button" data-smart-zone="HIGH_URGENCY" class="mw-filter-pill text-[11px] py-1 px-2.5">
+                🔥 Urgency สูง <span id="smartZoneCountUrgency" class="opacity-75 font-mono ml-0.5">(0)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
         <!-- Interactive Filter & Horizon Bar -->
         <div class="mw-sr-toolbar mt-3.5 pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2.5">
           <!-- View Mode Switcher -->
