@@ -1565,6 +1565,211 @@ async function runSdlcSuite() {
       assert.ok(mcpPySource.includes('"moat_evaluate_sr_scorecard"'), "moat_mcp_server.py must expose moat_evaluate_sr_scorecard");
 
       console.log("[PASS] 22. 4-Axis Smart Quant Suite (Watchlist Scanner, S/R Scorecard, Watch Prefix & 1-Click Analyze Symbol) verified");
+
+      // ==================================================================
+      // 23. Full End-to-End Verification: 8-Tool Python MCP Server (JSON-RPC) + Discord Hermes Approval + Web + Admin
+      // ==================================================================
+      const { spawn } = require("child_process");
+      const mcpScriptPath = path.join(__dirname, "..", "integrations", "hermes_pi", "moat_mcp_server.py");
+
+      const runMcpRpcBatch = (rpcMessages) =>
+        new Promise((resolve, reject) => {
+          const child = spawn("python", [mcpScriptPath], {
+            env: {
+              ...process.env,
+              PYTHONIOENCODING: "utf-8",
+              WEBMEMO_API_BASE: BASE_URL,
+              WEBMEMO_INTEGRATION_TOKEN: hermesToken,
+              DISCORD_BOT_TOKEN: ""
+            },
+            stdio: ["pipe", "pipe", "pipe"]
+          });
+          let stdoutBuf = "";
+          let stderrBuf = "";
+          child.stdout.on("data", (chunk) => {
+            stdoutBuf += chunk.toString("utf8");
+          });
+          child.stderr.on("data", (chunk) => {
+            stderrBuf += chunk.toString("utf8");
+          });
+          child.on("error", reject);
+          child.on("close", (code) => {
+            if (code !== 0) {
+              return reject(new Error(`moat_mcp_server.py exited with ${code}: ${stderrBuf}`));
+            }
+            const lines = stdoutBuf
+              .split(/\r?\n/)
+              .map((l) => l.trim())
+              .filter(Boolean)
+              .map((l) => JSON.parse(l));
+            resolve(lines);
+          });
+          for (const msg of rpcMessages) {
+            child.stdin.write(JSON.stringify(msg) + "\n");
+          }
+          child.stdin.end();
+        });
+
+      const mcpResponses = await runMcpRpcBatch([
+        { jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2024-11-05" } },
+        { jsonrpc: "2.0", id: 2, method: "tools/list", params: {} },
+        {
+          jsonrpc: "2.0",
+          id: 3,
+          method: "tools/call",
+          params: { name: "moat_get_account_portfolio", arguments: { symbol: "NVDA" } }
+        },
+        {
+          jsonrpc: "2.0",
+          id: 4,
+          method: "tools/call",
+          params: { name: "moat_get_holding_memo", arguments: { symbol: "NVDA", portfolioId: "us-moat" } }
+        },
+        {
+          jsonrpc: "2.0",
+          id: 5,
+          method: "tools/call",
+          params: { name: "moat_scan_watchlist_signals", arguments: { zoneFilter: "ALL", limit: 8 } }
+        },
+        {
+          jsonrpc: "2.0",
+          id: 6,
+          method: "tools/call",
+          params: { name: "moat_evaluate_sr_scorecard", arguments: {} }
+        },
+        {
+          jsonrpc: "2.0",
+          id: 7,
+          method: "tools/call",
+          params: {
+            name: "moat_propose_webmemo_draft",
+            arguments: {
+              symbol: "NVDA",
+              portfolioId: "us-moat",
+              proposedMemo: "รอจังหวะย่อสะสมแนวรับ S1 $186.99 เป้าหมาย R2 $212.19",
+              analysisSummary: "E2E MCP + Discord Approval Verification",
+              idempotencyKey: `idem_e2e_${Date.now()}`
+            }
+          }
+        },
+        {
+          jsonrpc: "2.0",
+          id: 8,
+          method: "tools/call",
+          params: { name: "moat_list_webmemo_drafts", arguments: { status: "PENDING", symbol: "NVDA" } }
+        },
+        {
+          jsonrpc: "2.0",
+          id: 9,
+          method: "tools/call",
+          params: {
+            name: "moat_publish_research_post",
+            arguments: {
+              symbol: "TSM",
+              companyName: "Taiwan Semiconductor",
+              headline: "TSM CoWoS Capacity Expansion — S/R 1-2-3 Quant Update",
+              summary: "MCP E2E test publishing S1-S3 and R1-R3 levels.",
+              signalMemo: "Accumulate near S1 $178; target R2 $210",
+              bias: "BULLISH",
+              confidence: 91,
+              referencePrice: 188.5,
+              s1: 178.0,
+              s2: 169.5,
+              s3: 158.0,
+              r1: 196.0,
+              r2: 210.0,
+              r3: 225.0,
+              tags: ["#hermes-daily", "#support-resistance", "#semiconductor-moat"]
+            }
+          }
+        },
+        {
+          jsonrpc: "2.0",
+          id: 10,
+          method: "tools/call",
+          params: { name: "moat_list_research_posts", arguments: { symbol: "TSM" } }
+        }
+      ]);
+
+      assert.strictEqual(mcpResponses.length, 10, "Must receive 10 JSON-RPC responses from moat_mcp_server.py");
+      const toolsListResp = mcpResponses.find((r) => r.id === 2);
+      assert.strictEqual(toolsListResp.result.tools.length, 8, "MCP server must expose all 8 tools");
+
+      const parseMcpToolResult = (id) => {
+        const resp = mcpResponses.find((r) => r.id === id);
+        assert.ok(resp && resp.result && resp.result.content?.[0]?.text, `Missing MCP tool result for id=${id}`);
+        assert.strictEqual(resp.result.isError, false, `MCP tool id=${id} returned error: ${resp.result.content[0].text}`);
+        return JSON.parse(resp.result.content[0].text);
+      };
+
+      const mcpAccount = parseMcpToolResult(3);
+      assert.strictEqual(mcpAccount.ok, true);
+      const mcpMemo = parseMcpToolResult(4);
+      assert.strictEqual(mcpMemo.ok, true);
+      const mcpSignals = parseMcpToolResult(5);
+      assert.strictEqual(mcpSignals.ok, true);
+      assert.ok(Array.isArray(mcpSignals.signals), "MCP moat_scan_watchlist_signals must return signals");
+      const mcpScorecard = parseMcpToolResult(6);
+      assert.strictEqual(mcpScorecard.ok, true);
+      assert.ok(mcpScorecard.srScorecard, "MCP moat_evaluate_sr_scorecard must return srScorecard");
+      const mcpDraftCreated = parseMcpToolResult(7);
+      assert.strictEqual(mcpDraftCreated.ok, true);
+      const createdDraftId = mcpDraftCreated.draft.draftId;
+      assert.ok(createdDraftId, "MCP moat_propose_webmemo_draft must return draftId");
+      const mcpDraftsList = parseMcpToolResult(8);
+      assert.strictEqual(mcpDraftsList.ok, true);
+      const mcpPublishedPost = parseMcpToolResult(9);
+      assert.strictEqual(mcpPublishedPost.ok, true);
+      assert.strictEqual(mcpPublishedPost.post.symbol, "TSM");
+      const mcpPostsList = parseMcpToolResult(10);
+      assert.strictEqual(mcpPostsList.ok, true);
+
+      // Verify Discord Hermes Button Approval flow (Unauthorized -> 403, Authorized Owner -> 200 + Syncs to Web & Watch)
+      const unauthDiscordRes = await httpRequest(
+        "POST",
+        `/api/integration/drafts/${createdDraftId}/decision`,
+        {
+          action: "APPROVE",
+          actorDiscordUserId: "111111111111111111",
+          discordUsername: "intruder"
+        },
+        { Authorization: `Bearer ${hermesToken}` }
+      );
+      assert.strictEqual(unauthDiscordRes.status, 403, "Unauthorized Discord user must be blocked from approving WebMemo draft");
+
+      const authDiscordRes = await httpRequest(
+        "POST",
+        `/api/integration/drafts/${createdDraftId}/decision`,
+        {
+          action: "APPROVE",
+          actorDiscordUserId: "932083816485519411",
+          discordUsername: "saharat_owner"
+        },
+        { Authorization: `Bearer ${hermesToken}` }
+      );
+      assert.strictEqual(authDiscordRes.status, 200);
+      assert.strictEqual(authDiscordRes.json.ok, true);
+      assert.strictEqual(authDiscordRes.json.decision, "APPROVED");
+      assert.strictEqual(authDiscordRes.json.readback.researchPostSynced, true, "Approved Discord draft must auto-sync to shared research feed");
+
+      // Verify Admin 1-Click ANALYZE_SYMBOL_NOW command & 8-Step Diagnostics
+      const adminAnalyzeCmdRes = await httpRequest(
+        "POST",
+        "/api/admin/hermes-node/command",
+        {
+          action: "ANALYZE_SYMBOL_NOW",
+          symbol: "TSM",
+          reason: "Admin 1-Click Deep-Dive Verification"
+        },
+        { "X-Admin-Token": adminToken }
+      );
+      assert.strictEqual(adminAnalyzeCmdRes.status, 200);
+      assert.strictEqual(adminAnalyzeCmdRes.json.ok, true);
+      assert.strictEqual(adminAnalyzeCmdRes.json.command.action, "ANALYZE_SYMBOL_NOW");
+      assert.strictEqual(adminAnalyzeCmdRes.json.command.status, "SUCCEEDED");
+      assert.strictEqual(adminAnalyzeCmdRes.json.analyzedPost.symbol, "TSM");
+
+      console.log("[PASS] 23. Full End-to-End Verification: 8-Tool Python MCP Server (JSON-RPC) + Discord Hermes Approval + Web + Admin verified");
     } finally {
       if (prevIntEnabled === undefined) delete process.env.WEBMEMO_INTEGRATION_ENABLED;
       else process.env.WEBMEMO_INTEGRATION_ENABLED = prevIntEnabled;
@@ -1588,7 +1793,7 @@ async function runSdlcSuite() {
   }
 
   console.log("\n==================================================================");
-  console.log("  ALL 22 SDLC + MULTI-USER + BI & HERMES CMS SUITES PASSED (100%)");
+  console.log("  ALL 23 SDLC + MULTI-USER + BI & HERMES CMS SUITES PASSED (100%)");
   console.log("==================================================================");
   if (ephemeralServer) {
     ephemeralServer.close();
