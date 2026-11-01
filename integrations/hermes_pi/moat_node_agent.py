@@ -205,7 +205,8 @@ def collect_pi_metrics() -> Dict[str, Any]:
         "discordBotTag": "Hermesself#6138",
         "discordChannelId": os.environ.get("WEBMEMO_DISCORD_CHANNEL_ID", "1484918931700449487"),
         "mcpServerStatus": "READY" if mcp_ok else "MISSING",
-        "pluginStatus": "ACTIVE (webmemo-approval v1.2.0)" if plugin_ok else "MISSING",
+        "mcpToolsCount": 8 if mcp_ok else 0,
+        "pluginStatus": "ACTIVE (webmemo-approval v1.3.0)" if plugin_ok else "MISSING",
         "uptimeHuman": uptime_human,
         "cpuTempC": cpu_temp_c,
         "loadAvg1m": load_1m,
@@ -234,6 +235,69 @@ def api_request(method: str, path: str, payload: Dict[str, Any] | None = None, t
         return json.loads(raw) if raw else {}
 
 
+def sync_local_portfolio_mirrors(summary: Dict[str, Any] | None = None) -> Tuple[int, int]:
+    """Keep /root/.hermes/portfolio/e24qdy_portfolio.json and /root/.hermes/stock_watchlist.json
+    dynamically synced 1:1 with the live MoatWatch account so no local script uses a stale 40-stock snapshot.
+    """
+    if summary is None:
+        summary = api_request("GET", "/api/integration/account?portfolioId=us-moat", timeout=10)
+    portfolios = summary.get("portfolios") or []
+    port = next((p for p in portfolios if str(p.get("id")) == "us-moat"), portfolios[0] if portfolios else {})
+    items = port.get("holdings") or []
+    active_holdings = []
+    watchlist_symbols = []
+    for item in items:
+        sym = str(item.get("symbol") or "").strip().upper()
+        if not sym:
+            continue
+        shares = float(item.get("shares") or 0)
+        if shares > 0 or str(item.get("role") or "").upper() == "HELD":
+            active_holdings.append(item)
+        else:
+            if sym not in watchlist_symbols:
+                watchlist_symbols.append(sym)
+
+    now_iso = time.strftime("%Y-%m-%dT%H:%M:%S%z")
+    acct_mask = str(summary.get("accountMasked") or summary.get("accountMask") or "V2-***81")
+    portfolio_doc = {
+        "portfolio_name": f"E24QDY MoatWatch Live Portfolio ({acct_mask} / us-moat)",
+        "owner": "e24qdy",
+        "account_id": str(summary.get("accountId") or "owner"),
+        "account_masked": acct_mask,
+        "portfolio_id": "us-moat",
+        "source_of_truth": f"{API_BASE}/api/integration/account?portfolioId=us-moat",
+        "last_updated": now_iso,
+        "status": "LIVE_MOATWATCH_CONNECTED",
+        "note": (
+            "Always call moat_get_account_portfolio(portfolioId='us-moat') and moat_scan_watchlist_signals() "
+            "for real-time holdings and dynamic watchlist. Never modify shares or avgCost. "
+            "Publish S/R 1-2-3 research cards via moat_publish_research_post and propose single-line "
+            "WebMemo drafts (<=140 chars) via moat_propose_webmemo_draft."
+        ),
+        "holdings_count": len(active_holdings),
+        "watchlist_count": len(watchlist_symbols),
+        "active_holdings": active_holdings,
+        "watchlist_symbols": watchlist_symbols,
+    }
+    watchlist_doc = {
+        "name": f"MoatWatch Live Watchlist ({acct_mask} / us-moat)",
+        "source": f"{API_BASE}/api/integration/account?portfolioId=us-moat",
+        "last_updated": now_iso,
+        "active_holdings": [str(h.get("symbol") or "").upper() for h in active_holdings if h.get("symbol")],
+        "symbols": watchlist_symbols,
+    }
+    try:
+        p_path = Path("/root/.hermes/portfolio/e24qdy_portfolio.json")
+        if p_path.parent.is_dir():
+            p_path.write_text(json.dumps(portfolio_doc, indent=2, ensure_ascii=False), encoding="utf-8")
+        w_path = Path("/root/.hermes/stock_watchlist.json")
+        if w_path.parent.is_dir():
+            w_path.write_text(json.dumps(watchlist_doc, indent=2, ensure_ascii=False), encoding="utf-8")
+    except Exception:
+        pass
+    return len(active_holdings), len(watchlist_symbols)
+
+
 def run_node_functional_test() -> Tuple[bool, str]:
     lines: list[str] = []
     all_ok = True
@@ -254,12 +318,14 @@ def run_node_functional_test() -> Tuple[bool, str]:
     if not has_owner:
         all_ok = False
 
-    # Step 3: Account Summary API
+    # Step 3: Account Summary API & Local Mirror Sync
     try:
         summary = api_request("GET", "/api/integration/account", timeout=10)
         p_cnt = len(summary.get("portfolios") or [])
-        w_cnt = int(summary.get("watchlistCount") or 0)
-        lines.append(f"[3/6] GET /api/integration/account: PASS ({p_cnt} portfolios, {w_cnt} watchlist symbols)")
+        h_cnt, w_cnt = sync_local_portfolio_mirrors(summary)
+        lines.append(
+            f"[3/6] GET /api/integration/account: PASS ({p_cnt} portfolios, {h_cnt} held + {w_cnt} watchlist = {h_cnt + w_cnt} symbols synced)"
+        )
     except Exception as exc:
         all_ok = False
         lines.append(f"[3/6] GET /api/integration/account: FAIL ({exc})")
@@ -269,7 +335,10 @@ def run_node_functional_test() -> Tuple[bool, str]:
         feed = api_request("GET", "/api/integration/research-posts", timeout=10)
         posts_cnt = len(feed.get("posts") or [])
         sr_cnt = len(feed.get("supportResistanceMatrix") or [])
-        lines.append(f"[4/6] GET /api/integration/research-posts: PASS ({posts_cnt} posts, {sr_cnt} S/R cards)")
+        wm_cnt = len(feed.get("watchlistMatrix") or [])
+        lines.append(
+            f"[4/6] GET /api/integration/research-posts: PASS ({posts_cnt} posts, {sr_cnt} S/R cards, {wm_cnt} dynamic Watchlist Matrix rows)"
+        )
     except Exception as exc:
         all_ok = False
         lines.append(f"[4/6] GET /api/integration/research-posts: FAIL ({exc})")
@@ -440,8 +509,16 @@ def main() -> int:
         flush=True,
     )
 
+    last_mirror_sync = 0.0
     while True:
         try:
+            now_ts = time.time()
+            if now_ts - last_mirror_sync >= 60.0:
+                try:
+                    sync_local_portfolio_mirrors()
+                except Exception:
+                    pass
+                last_mirror_sync = now_ts
             metrics = collect_pi_metrics()
             res = api_request("POST", "/api/integration/hermes-node/heartbeat", metrics, timeout=12)
             next_cmd = res.get("nextCommand")

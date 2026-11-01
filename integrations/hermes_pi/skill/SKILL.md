@@ -48,7 +48,11 @@ This skill connects Hermes Agent on Raspberry Pi 3B+ (`echo24`) to the owner's r
 - `moat_publish_research_post(symbol, headline, summary, signalMemo?, bias?, confidence?, referencePrice?, s1?, s2?, s3?, r1?, r2?, r3?, tags?, pinned?)`:
   Publishes or updates a shared **Support / Resistance Level 1–2–3 (ระยะสั้น S1/R1, ระยะกลาง S2/R2, ระยะยาว S3/R3)** & `#tag` research card on the MoatWatch Web App frontpage (visible across all SyncKeys).
 - `moat_list_research_posts(symbol?, tag?, includeArchived?)`:
-  Lists active/archived shared research posts and the full Watchlist S/R 1-2-3 matrix.
+  Lists active/archived shared research posts and the full dynamic 1:1 Watchlist S/R 1-2-3 matrix (`watchlistMatrix`).
+- `moat_scan_watchlist_signals(zoneFilter?, limit?)`:
+  Scans all live Watchlist & Portfolio stocks and ranks them by Smart Quant Urgency Score (`0-100`) based on S1-S2 support accumulate proximity, R1-R2 resistance breakout test, Risk/Reward ratio, and upcoming earnings countdown (`<= 7` days).
+- `moat_evaluate_sr_scorecard(symbol?)`:
+  Evaluates Hermes S/R 1-2-3 accuracy & conviction scorecard comparing anchored `S1-S3 / R1-R3` levels against live market prices.
 
 ## Workflow 1: On-Demand Stock Analysis & WebMemo Draft
 When the owner asks in Discord to analyze a symbol from the Watchlist/Portfolio or draft a WebMemo:

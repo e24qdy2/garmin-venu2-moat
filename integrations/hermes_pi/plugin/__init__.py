@@ -337,6 +337,30 @@ def _tool_list_research_posts(args: Dict[str, Any], **kwargs) -> str:
     return json.dumps(res, ensure_ascii=False, indent=2)
 
 
+def _tool_scan_watchlist_signals(args: Dict[str, Any], **kwargs) -> str:
+    res = _api_request(
+        "GET",
+        "/api/integration/watchlist-signals",
+        query={
+            "zone": args.get("zoneFilter"),
+            "limit": str(args.get("limit")) if args.get("limit") else None,
+        },
+    )
+    return json.dumps(res, ensure_ascii=False, indent=2)
+
+
+def _tool_evaluate_sr_scorecard(args: Dict[str, Any], **kwargs) -> str:
+    res = _api_request(
+        "GET",
+        "/api/integration/watchlist-signals",
+        query={
+            "symbol": args.get("symbol"),
+            "view": "scorecard",
+        },
+    )
+    return json.dumps(res, ensure_ascii=False, indent=2)
+
+
 def _handle_webmemo_slash_command(args_str: str) -> str:
     parts = [p for p in str(args_str or "").strip().split() if p]
     sub = parts[0].lower() if parts else "list"
@@ -830,6 +854,59 @@ def register(ctx) -> None:
             },
         },
         handler=_tool_list_research_posts,
+    )
+
+    ctx.register_tool(
+        name="moat_scan_watchlist_signals",
+        toolset="webmemo",
+        schema={
+            "name": "moat_scan_watchlist_signals",
+            "description": (
+                "Scan all watchlist & portfolio stocks and rank them by Smart Quant Urgency Score (0-100) "
+                "based on live S1-S2 support accumulate proximity, R1-R2 resistance breakout test, Risk/Reward ratio, "
+                "and upcoming earnings countdown (<= 7 days). Call this tool first so Hermes dynamically focuses "
+                "research and WebMemo updates on the highest-urgency stocks."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "zoneFilter": {
+                        "type": "string",
+                        "description": (
+                            "Optional filter: 'ALL', 'S1_S2_ACCUMULATE', 'R1_R2_BREAKOUT', "
+                            "'EARNINGS_SOON', or 'HIGH_URGENCY'."
+                        ),
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Max number of ranked signals to return (default 12).",
+                    },
+                },
+            },
+        },
+        handler=_tool_scan_watchlist_signals,
+    )
+
+    ctx.register_tool(
+        name="moat_evaluate_sr_scorecard",
+        toolset="webmemo",
+        schema={
+            "name": "moat_evaluate_sr_scorecard",
+            "description": (
+                "Evaluate Hermes S/R 1-2-3 accuracy & conviction scorecard comparing anchored S1-S3 / R1-R3 levels "
+                "against live market prices (supportHoldRatePct, directionalWinRatePct, R1/R2 hits, and per-symbol outcome)."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "symbol": {
+                        "type": "string",
+                        "description": "Optional ticker symbol filter.",
+                    },
+                },
+            },
+        },
+        handler=_tool_evaluate_sr_scorecard,
     )
 
     ctx.register_command(
