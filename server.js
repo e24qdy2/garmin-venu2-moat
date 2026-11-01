@@ -407,11 +407,12 @@ async function handleRequest(req, res) {
         });
       }
       const query = parsedUrl.query || {};
-      const syncKey = String(query.key || "VENU2-88").trim().toUpperCase();
+      const syncKey = String(query.key || cfg.allowedAccountKey || "VENU2-88").trim().toUpperCase();
       const feedPayload = buildPublicResearchFeedPayload({
         researchStore,
         portfoliosStore,
         syncKey,
+        ownerSyncKey: cfg.allowedAccountKey || "",
         symbolFilter: query.symbol
       });
       const zoneFilter = String(query.zone || "ALL").trim().toUpperCase();
@@ -465,11 +466,13 @@ async function handleRequest(req, res) {
       }
 
       const query = parsedUrl.query || {};
+      const defaultSyncKey = String(query.key || cfg.allowedAccountKey || "VENU2-88").trim().toUpperCase();
       if (req.method === "GET") {
         const feedPayload = buildPublicResearchFeedPayload({
           researchStore,
           portfoliosStore,
-          syncKey: "VENU2-88",
+          syncKey: defaultSyncKey,
+          ownerSyncKey: cfg.allowedAccountKey || "",
           tagFilter: query.tag,
           symbolFilter: query.symbol,
           includeArchived: query.includeArchived === "1" || query.includeArchived === "true"
@@ -498,7 +501,8 @@ async function handleRequest(req, res) {
         const feedPayload = buildPublicResearchFeedPayload({
           researchStore,
           portfoliosStore,
-          syncKey: "VENU2-88"
+          syncKey: defaultSyncKey,
+          ownerSyncKey: cfg.allowedAccountKey || ""
         });
         return sendJson(res, mutRes.status || 200, {
           ...mutRes,
@@ -584,7 +588,8 @@ async function handleRequest(req, res) {
   // 0c. GET SHARED RESEARCH FEED & WATCHLIST SUPPORT/RESISTANCE 1-2-3 (Accessible by all SyncKeys)
   if (pathname === "/api/research-feed" && req.method === "GET") {
     const query = parsedUrl.query || {};
-    const syncKey = String(query.key || "VENU2-88").trim().toUpperCase();
+    const cfg = resolveIntegrationConfig(process.env);
+    const syncKey = String(query.key || cfg.allowedAccountKey || "VENU2-88").trim().toUpperCase();
     getOrCreateProfile(syncKey);
     const portfoliosStore = readStore();
     const researchStore = readResearchStore();
@@ -592,6 +597,7 @@ async function handleRequest(req, res) {
       researchStore,
       portfoliosStore,
       syncKey,
+      ownerSyncKey: cfg.allowedAccountKey || "",
       tagFilter: query.tag,
       symbolFilter: query.symbol,
       includeArchived: query.includeArchived === "1" || query.includeArchived === "true"
@@ -610,7 +616,8 @@ async function handleRequest(req, res) {
       if (!symbol) {
         return sendJson(res, 400, { ok: false, error: "symbol is required for on-demand analysis" });
       }
-      const syncKey = String(body.syncKey || parsedUrl.query?.key || "VENU2-88").trim().toUpperCase();
+      const cfg = resolveIntegrationConfig(process.env);
+      const syncKey = String(body.syncKey || parsedUrl.query?.key || cfg.allowedAccountKey || "VENU2-88").trim().toUpperCase();
       getOrCreateProfile(syncKey);
       const portfoliosStore = readStore();
       const researchStore = readResearchStore();
@@ -656,7 +663,8 @@ async function handleRequest(req, res) {
       const researchFeed = buildPublicResearchFeedPayload({
         researchStore,
         portfoliosStore,
-        syncKey
+        syncKey,
+        ownerSyncKey: cfg.allowedAccountKey || ""
       });
       return sendJson(res, 200, {
         ...mutRes,
@@ -678,11 +686,13 @@ async function handleRequest(req, res) {
       activationKey: parsedUrl.query.akey,
       watchModel: parsedUrl.query.model
     });
+    const cfg = resolveIntegrationConfig(process.env);
     const researchStore = readResearchStore();
     const researchFeed = buildPublicResearchFeedPayload({
       researchStore,
       portfoliosStore: readStore(),
-      syncKey
+      syncKey,
+      ownerSyncKey: cfg.allowedAccountKey || ""
     });
     if (researchFeed.sweep && researchFeed.sweep.dirty) {
       writeResearchStore(researchStore);
@@ -1059,17 +1069,21 @@ async function handleRequest(req, res) {
       const nodeState = readHermesNodeState();
       const licensesData = licenseManager.listDevices();
       const draftsList = readDraftsStore();
+      const cfg = resolveIntegrationConfig(process.env);
+      const ownerSyncKey = cfg.allowedAccountKey || "";
       const researchFeed = buildPublicResearchFeedPayload({
         researchStore,
         portfoliosStore,
-        syncKey: "VENU2-88",
+        syncKey: ownerSyncKey || "VENU2-88",
+        ownerSyncKey,
         includeArchived: true
       });
       const biAnalytics = buildAdminBiAnalytics({
         portfoliosStore,
         licensesData,
         draftsList,
-        researchStore
+        researchStore,
+        ownerSyncKey
       });
       if (researchFeed.sweep && researchFeed.sweep.dirty) {
         writeResearchStore(researchStore);
@@ -1092,16 +1106,20 @@ async function handleRequest(req, res) {
       const nodeState = readHermesNodeState();
       const licensesData = licenseManager.listDevices();
       const draftsList = readDraftsStore();
+      const cfg = resolveIntegrationConfig(process.env);
+      const ownerSyncKey = cfg.allowedAccountKey || "";
       const biAnalytics = buildAdminBiAnalytics({
         portfoliosStore,
         licensesData,
         draftsList,
-        researchStore
+        researchStore,
+        ownerSyncKey
       });
       const researchFeed = buildPublicResearchFeedPayload({
         researchStore,
         portfoliosStore,
-        syncKey: "VENU2-88",
+        syncKey: ownerSyncKey || "VENU2-88",
+        ownerSyncKey,
         includeArchived: true
       });
       if (researchFeed.sweep && researchFeed.sweep.dirty) {
@@ -1227,10 +1245,13 @@ async function handleRequest(req, res) {
       const query = parsedUrl.query || {};
       const portfoliosStore = readStore();
       const researchStore = readResearchStore();
+      const cfg = resolveIntegrationConfig(process.env);
+      const ownerSyncKey = cfg.allowedAccountKey || "";
       const researchFeed = buildPublicResearchFeedPayload({
         researchStore,
         portfoliosStore,
-        syncKey: "VENU2-88",
+        syncKey: String(query.key || ownerSyncKey || "VENU2-88").trim().toUpperCase(),
+        ownerSyncKey,
         tagFilter: query.tag,
         symbolFilter: query.symbol,
         includeArchived: true
@@ -1241,7 +1262,8 @@ async function handleRequest(req, res) {
         portfoliosStore,
         licensesData,
         draftsList,
-        researchStore
+        researchStore,
+        ownerSyncKey
       });
       if (researchFeed.sweep && researchFeed.sweep.dirty) {
         writeResearchStore(researchStore);
@@ -1261,6 +1283,8 @@ async function handleRequest(req, res) {
         const body = await parseBody(req);
         const portfoliosStore = readStore();
         const researchStore = readResearchStore();
+        const cfg = resolveIntegrationConfig(process.env);
+        const ownerSyncKey = cfg.allowedAccountKey || "";
         const action =
           req.method === "DELETE"
             ? "DELETE"
@@ -1277,7 +1301,8 @@ async function handleRequest(req, res) {
         const researchFeed = buildPublicResearchFeedPayload({
           researchStore,
           portfoliosStore,
-          syncKey: "VENU2-88",
+          syncKey: ownerSyncKey || "VENU2-88",
+          ownerSyncKey,
           includeArchived: true
         });
         const licensesData = licenseManager.listDevices();
@@ -1286,7 +1311,8 @@ async function handleRequest(req, res) {
           portfoliosStore,
           licensesData,
           draftsList,
-          researchStore
+          researchStore,
+          ownerSyncKey
         });
         return sendAdminJson(req, res, mutRes.status || 200, {
           ...mutRes,

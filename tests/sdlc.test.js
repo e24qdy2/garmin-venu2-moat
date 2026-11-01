@@ -1770,6 +1770,90 @@ async function runSdlcSuite() {
       assert.strictEqual(adminAnalyzeCmdRes.json.analyzedPost.symbol, "TSM");
 
       console.log("[PASS] 23. Full End-to-End Verification: 8-Tool Python MCP Server (JSON-RPC) + Discord Hermes Approval + Web + Admin verified");
+
+      // 24. Dynamic 1:1 Watchlist Matrix Left-Join (No 40-item ceiling, includes BA on Owner Account, and reflects Add/Remove immediately)
+      const { buildWatchlistSupportResistanceMatrix, buildPublicResearchFeedPayload } = require("../lib/researchFeedManager");
+      const mockResearchStore = {
+        posts: [
+          {
+            id: "hermes-sr-ba",
+            symbol: "BA",
+            companyName: "Boeing Co",
+            title: "BA Aerospace Recovery & Order Backlog — S/R 1-2-3",
+            summary: "Widebody backlog supports long-term floor at S2.",
+            stance: "BULLISH",
+            status: "PUBLISHED",
+            confidence: 82,
+            supports: [165, 152, 138],
+            resistances: [188, 205, 225],
+            metrics: { livePrice: 176.4 }
+          }
+        ]
+      };
+      const base40Holdings = Array.from({ length: 40 }, (_, idx) => ({
+        symbol: `SYM${idx + 1}`,
+        name: `Symbol ${idx + 1}`,
+        shares: 10,
+        avgCost: 100,
+        currentPrice: 105
+      }));
+      const owner41Holdings = [
+        ...base40Holdings,
+        { symbol: "BA", name: "Boeing Co", shares: 15, avgCost: 170, currentPrice: 176.4, memo: "Aerospace duopoly" }
+      ];
+      const mockPortfoliosStore = {
+        "VENU2-88": {
+          syncKey: "VENU2-88",
+          portfolios: [{ id: "core", name: "Default 40", holdings: base40Holdings }]
+        },
+        "V2-07090781": {
+          syncKey: "V2-07090781",
+          portfolios: [{ id: "core", name: "Old Trial 40", holdings: base40Holdings }]
+        },
+        "V2-91260081": {
+          syncKey: "V2-91260081",
+          portfolios: [{ id: "core", name: "Active Owner 41", holdings: owner41Holdings }]
+        }
+      };
+
+      const ownerMatrixFeed = buildPublicResearchFeedPayload({
+        researchStore: mockResearchStore,
+        portfoliosStore: mockPortfoliosStore,
+        syncKey: "VENU2-88",
+        ownerSyncKey: "V2-91260081"
+      });
+      assert.strictEqual(
+        ownerMatrixFeed.watchlistMatrix.length,
+        41,
+        "Default/Integration feed must resolve active owner account V2-91260081 and return all 41 watchlist items"
+      );
+      assert.strictEqual(ownerMatrixFeed.watchlistMatrixCount, 41);
+      assert.strictEqual(ownerMatrixFeed.matrixSourceSyncKey, "V2-91260081");
+      const baRow = ownerMatrixFeed.watchlistMatrix.find((r) => r.symbol === "BA");
+      assert.ok(baRow, "BA must be present in watchlistMatrix when in owner's watchlist");
+      assert.strictEqual(baRow.hasResearchPost, true, "BA must join with its published research post");
+      assert.strictEqual(baRow.dataStatus, "READY");
+
+      // Verify deleting a stock from a profile immediately removes its row (no ghost row from 40-item seed)
+      const reduced39Holdings = owner41Holdings.filter((h) => h.symbol !== "SYM1" && h.symbol !== "SYM2");
+      mockPortfoliosStore["V2-CUSTOM39"] = {
+        syncKey: "V2-CUSTOM39",
+        portfolios: [{ id: "core", name: "Custom 39", holdings: reduced39Holdings }]
+      };
+      const custom39Matrix = buildWatchlistSupportResistanceMatrix({
+        portfoliosStore: mockPortfoliosStore,
+        researchStore: mockResearchStore,
+        syncKey: "V2-CUSTOM39",
+        ownerSyncKey: "V2-91260081"
+      });
+      assert.strictEqual(
+        custom39Matrix.length,
+        39,
+        "Deleting symbols from a profile watchlist must immediately reduce watchlistMatrix count (1:1 left-join without ghost seed rows)"
+      );
+      assert.ok(!custom39Matrix.some((r) => r.symbol === "SYM1" || r.symbol === "SYM2"));
+      assert.ok(custom39Matrix.some((r) => r.symbol === "BA"));
+      console.log("[PASS] 24. Dynamic 1:1 Watchlist Matrix Left-Join (41 items + BA on V2-91260081 & immediate add/remove sync) verified");
     } finally {
       if (prevIntEnabled === undefined) delete process.env.WEBMEMO_INTEGRATION_ENABLED;
       else process.env.WEBMEMO_INTEGRATION_ENABLED = prevIntEnabled;

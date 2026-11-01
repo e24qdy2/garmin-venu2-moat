@@ -505,11 +505,12 @@ export default {
             error: authCheck.error
           });
         }
-        const syncKey = String(query.key || "VENU2-88").trim().toUpperCase();
+        const syncKey = String(query.key || cfg.allowedAccountKey || "VENU2-88").trim().toUpperCase();
         const feedPayload = buildPublicResearchFeedPayload({
           researchStore: runtimeResearchStore,
           portfoliosStore: runtimePortfoliosStore,
           syncKey,
+          ownerSyncKey: cfg.allowedAccountKey || "",
           symbolFilter: query.symbol
         });
         const zoneFilter = String(query.zone || "ALL").trim().toUpperCase();
@@ -567,10 +568,12 @@ export default {
         }
 
         if (request.method === "GET") {
+          const syncKey = String(query.key || cfg.allowedAccountKey || "VENU2-88").trim().toUpperCase();
           const feedPayload = buildPublicResearchFeedPayload({
             researchStore: runtimeResearchStore,
             portfoliosStore: runtimePortfoliosStore,
-            syncKey: "VENU2-88",
+            syncKey,
+            ownerSyncKey: cfg.allowedAccountKey || "",
             tagFilter: query.tag,
             symbolFilter: query.symbol,
             includeArchived: query.includeArchived === "1" || query.includeArchived === "true"
@@ -596,10 +599,12 @@ export default {
             return jsonResponse(mutRes.status || 400, mutRes);
           }
           await persistKey(env, "research_feed", runtimeResearchStore);
+          const syncKey = String(body.syncKey || query.key || cfg.allowedAccountKey || "VENU2-88").trim().toUpperCase();
           const feedPayload = buildPublicResearchFeedPayload({
             researchStore: runtimeResearchStore,
             portfoliosStore: runtimePortfoliosStore,
-            syncKey: "VENU2-88"
+            syncKey,
+            ownerSyncKey: cfg.allowedAccountKey || ""
           });
           return jsonResponse(mutRes.status || 200, {
             ...mutRes,
@@ -696,12 +701,14 @@ export default {
       await refreshPortfoliosFromD1(env);
       await refreshResearchStoreFromD1(env);
       runtimePortfoliosDirty = false;
+      const cfg = resolveIntegrationConfig(env);
       const syncKey = String(query.key || "VENU2-88").trim().toUpperCase();
       getOrCreateProfile(syncKey);
       const feedPayload = buildPublicResearchFeedPayload({
         researchStore: runtimeResearchStore,
         portfoliosStore: runtimePortfoliosStore,
         syncKey,
+        ownerSyncKey: cfg.allowedAccountKey || "",
         tagFilter: query.tag,
         symbolFilter: query.symbol,
         includeArchived: query.includeArchived === "1" || query.includeArchived === "true"
@@ -770,10 +777,12 @@ export default {
           }
         });
 
+        const cfg = resolveIntegrationConfig(env);
         const researchFeed = buildPublicResearchFeedPayload({
           researchStore: runtimeResearchStore,
           portfoliosStore: runtimePortfoliosStore,
-          syncKey
+          syncKey,
+          ownerSyncKey: cfg.allowedAccountKey || ""
         });
         await flushStores(env, ctx, {
           includePortfolios: runtimePortfoliosDirty,
@@ -802,10 +811,12 @@ export default {
         activationKey: query.akey || query.licenseKey,
         watchModel: query.model || query.watchModel
       });
+      const cfg = resolveIntegrationConfig(env);
       const researchFeed = buildPublicResearchFeedPayload({
         researchStore: runtimeResearchStore,
         portfoliosStore: runtimePortfoliosStore,
-        syncKey
+        syncKey,
+        ownerSyncKey: cfg.allowedAccountKey || ""
       });
       payload.researchFeed = researchFeed;
       await flushStores(env, ctx, {
@@ -825,10 +836,12 @@ export default {
       clearMarketCache();
       const profile = getOrCreateProfile(syncKey);
       const payload = await buildEnrichedPayload(profile);
+      const cfg = resolveIntegrationConfig(env);
       const researchFeed = buildPublicResearchFeedPayload({
         researchStore: runtimeResearchStore,
         portfoliosStore: runtimePortfoliosStore,
-        syncKey
+        syncKey,
+        ownerSyncKey: cfg.allowedAccountKey || ""
       });
       payload.researchFeed = researchFeed;
       await flushStores(env, ctx, {
@@ -1233,20 +1246,24 @@ export default {
         await refreshPortfoliosFromD1(env);
         await refreshResearchStoreFromD1(env);
         await refreshHermesNodeStateFromD1(env);
+        const cfg = resolveIntegrationConfig(env);
+        const ownerSyncKey = cfg.allowedAccountKey || "";
         const meta = licenseManagerInstance.getAdminAuthMeta({ includeSensitive: true });
         const licensesData = licenseManagerInstance.listDevices();
         const draftsList = await buildIntegrationStore(env).listDrafts({ accountId: "owner", limit: 200 }).catch(() => []);
         const researchFeed = buildPublicResearchFeedPayload({
           researchStore: runtimeResearchStore,
           portfoliosStore: runtimePortfoliosStore,
-          syncKey: "VENU2-88",
+          syncKey: ownerSyncKey || "VENU2-88",
+          ownerSyncKey,
           includeArchived: true
         });
         const biAnalytics = buildAdminBiAnalytics({
           portfoliosStore: runtimePortfoliosStore,
           licensesData,
           draftsList,
-          researchStore: runtimeResearchStore
+          researchStore: runtimeResearchStore,
+          ownerSyncKey
         });
         if (researchFeed.sweep && researchFeed.sweep.dirty) {
           await persistKey(env, "research_feed", runtimeResearchStore);
@@ -1267,18 +1284,22 @@ export default {
         await refreshPortfoliosFromD1(env);
         await refreshResearchStoreFromD1(env);
         await refreshHermesNodeStateFromD1(env);
+        const cfg = resolveIntegrationConfig(env);
+        const ownerSyncKey = cfg.allowedAccountKey || "";
         const licensesData = licenseManagerInstance.listDevices();
         const draftsList = await buildIntegrationStore(env).listDrafts({ accountId: "owner", limit: 200 }).catch(() => []);
         const biAnalytics = buildAdminBiAnalytics({
           portfoliosStore: runtimePortfoliosStore,
           licensesData,
           draftsList,
-          researchStore: runtimeResearchStore
+          researchStore: runtimeResearchStore,
+          ownerSyncKey
         });
         const researchFeed = buildPublicResearchFeedPayload({
           researchStore: runtimeResearchStore,
           portfoliosStore: runtimePortfoliosStore,
-          syncKey: "VENU2-88",
+          syncKey: ownerSyncKey || "VENU2-88",
+          ownerSyncKey,
           includeArchived: true
         });
         if (researchFeed.sweep && researchFeed.sweep.dirty) {
@@ -1411,10 +1432,13 @@ export default {
       if (pathname === "/api/admin/research-posts" && request.method === "GET") {
         await refreshPortfoliosFromD1(env);
         await refreshResearchStoreFromD1(env);
+        const cfg = resolveIntegrationConfig(env);
+        const ownerSyncKey = cfg.allowedAccountKey || "";
         const researchFeed = buildPublicResearchFeedPayload({
           researchStore: runtimeResearchStore,
           portfoliosStore: runtimePortfoliosStore,
-          syncKey: "VENU2-88",
+          syncKey: ownerSyncKey || "VENU2-88",
+          ownerSyncKey,
           tagFilter: query.tag,
           symbolFilter: query.symbol,
           includeArchived: true
@@ -1425,7 +1449,8 @@ export default {
           portfoliosStore: runtimePortfoliosStore,
           licensesData,
           draftsList,
-          researchStore: runtimeResearchStore
+          researchStore: runtimeResearchStore,
+          ownerSyncKey
         });
         if (researchFeed.sweep && researchFeed.sweep.dirty) {
           await persistKey(env, "research_feed", runtimeResearchStore);
@@ -1444,6 +1469,8 @@ export default {
         try {
           await refreshPortfoliosFromD1(env);
           await refreshResearchStoreFromD1(env);
+          const cfg = resolveIntegrationConfig(env);
+          const ownerSyncKey = cfg.allowedAccountKey || "";
           const body = await parseRequestBody(request);
           const action =
             request.method === "DELETE"
@@ -1461,7 +1488,8 @@ export default {
           const researchFeed = buildPublicResearchFeedPayload({
             researchStore: runtimeResearchStore,
             portfoliosStore: runtimePortfoliosStore,
-            syncKey: "VENU2-88",
+            syncKey: ownerSyncKey || "VENU2-88",
+            ownerSyncKey,
             includeArchived: true
           });
           const licensesData = licenseManagerInstance.listDevices();
@@ -1470,7 +1498,8 @@ export default {
             portfoliosStore: runtimePortfoliosStore,
             licensesData,
             draftsList,
-            researchStore: runtimeResearchStore
+            researchStore: runtimeResearchStore,
+            ownerSyncKey
           });
           return adminJsonResponse(reqHeaders, mutRes.status || 200, {
             ...mutRes,
