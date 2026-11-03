@@ -28,9 +28,9 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_9_2
     }
     [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc"; @line = 13; @symbol_functiondef = [onUpdate,13,13,21]; @symbol_param<0> = [dc,13,22,24]; @symbol_param<0>_type<0> = [Dc,13,28,30]; ]
     function onUpdate(dc as Dc) as Void {
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_65_4_start:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_69_4_start:
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 14 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_65_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_65_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_69_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_69_4_stop" ]
         %h.1 = local;
         symbol [ h %h.1 14 12 13 ];
         %tmp.1 = lgetv %dc;
@@ -61,7 +61,7 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_
         %tmp.11 = getv function %tmp.10 :clear;
         invoke %tmp.10 %tmp.11();
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 18 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_65_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_65_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_69_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_69_4_stop" ]
         %cached.2 = local;
         symbol [ cached %cached.2 18 12 18 ];
         symbol [ Application %tmp.12 18 21 32 ];
@@ -102,486 +102,546 @@ D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_19_
         goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_19_8_21_8_if_end;
 D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_19_8_21_8_if_end:
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 22 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_65_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_65_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_69_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_69_4_stop" ]
         %netWorthStr.3 = local;
         symbol [ netWorthStr %netWorthStr.3 22 12 23 ];
         %tmp.27 = "THB 1,482,910";
         lputv %netWorthStr.3 %tmp.27;
         symbol [ netWorthStr %netWorthStr.3 22 12 23 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 23 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_65_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_65_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_69_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_69_4_stop" ]
         %dayPnlStr.4 = local;
         symbol [ dayPnlStr %dayPnlStr.4 23 12 21 ];
         %tmp.28 = "+18,420 (+1.25%)";
         lputv %dayPnlStr.4 %tmp.28;
         symbol [ dayPnlStr %dayPnlStr.4 23 12 21 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 24 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_65_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_65_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_69_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_69_4_stop" ]
         %isPositive.5 = local;
         symbol [ isPositive %isPositive.5 24 12 22 ];
         %tmp.29 = true;
         lputv %isPositive.5 %tmp.29;
         symbol [ isPositive %isPositive.5 24 12 22 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 25 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_65_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_65_4_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_69_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_69_4_stop" ]
         %isExpired.6 = local;
         symbol [ isExpired %isExpired.6 25 12 21 ];
         %tmp.30 = false;
         lputv %isExpired.6 %tmp.30;
         symbol [ isExpired %isExpired.6 25 12 21 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 27 8 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_27_8_51_8_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_27_8_55_8_if_stmt:
         %tmp.31 = lgetv %cached.2;
         symbol [ cached %tmp.31 27 12 18 ];
         %tmp.32 = null;
         %tmp.33 = ne %tmp.31 %tmp.32;
-        bf %tmp.33 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_27_8_51_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_27_8_51_8_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_27_28_51_8_start:
+        bf %tmp.33 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_27_8_55_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_27_8_55_8_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_27_28_55_8_start:
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 28 12 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_12_34_12_if_stmt:
-        %tmp.34 = lgetv %cached.2;
-        symbol [ cached %tmp.34 28 16 22 ];
-        %tmp.35 = as %tmp.34 { (!Null) };
-        symbol [ hasKey %tmp.36 28 23 29 ];
-        %tmp.36 = getv function %tmp.35 :hasKey;
-        %tmp.37 = "lic";
-        %tmp.38 = invoke %tmp.35 %tmp.36(%tmp.37);
-        bf %tmp.38 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_12_34_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_12_34_12_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_38_34_12_start:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_12_38_12_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_16_28_65_begin:
+        symbol [ BuildEdition %tmp.35 28 17 29 ];
+        %tmp.35 = getv ? :BuildEdition;
+        symbol [ IS_FREE_FULL %tmp.36 28 30 42 ];
+        %tmp.36 = getv %tmp.35 :IS_FREE_FULL;
+        %tmp.37 = not %tmp.36;
+        bf %tmp.37 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_12_38_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_46_28_65_true:
+        %tmp.38 = lgetv %cached.2;
+        symbol [ cached %tmp.38 28 46 52 ];
+        %tmp.39 = as %tmp.38 { (!Null) };
+        symbol [ hasKey %tmp.40 28 53 59 ];
+        %tmp.40 = getv function %tmp.39 :hasKey;
+        %tmp.41 = "lic";
+        %tmp.42 = invoke %tmp.39 %tmp.40(%tmp.41);
+        push %tmp.42;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_46_28_65_end:
+        %tmp.43 = phi [%tmp.37 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_16_28_65_begin] [%tmp.42 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_46_28_65_true] [%tmp.43 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_46_28_65_end];
+        bf %tmp.43 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_12_38_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_12_38_12_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_68_38_12_start:
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 29 16 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_38_34_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_38_34_12_stop" ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_68_38_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_68_38_12_stop" ]
         %lic.7 = local;
         symbol [ lic %lic.7 29 20 23 ];
-        %tmp.39 = lgetv %cached.2;
-        symbol [ cached %tmp.39 29 26 32 ];
-        %tmp.40 = as %tmp.39 { (!Null) };
-        symbol [ get %tmp.41 29 33 36 ];
-        %tmp.41 = getv function %tmp.40 :get;
-        %tmp.42 = "lic";
-        %tmp.43 = invoke %tmp.40 %tmp.41(%tmp.42);
-        %tmp.44 = as %tmp.43 Dictionary or Null;
-        symbol [ Dictionary %tmp.44 29 47 57 ];
-        lputv %lic.7 %tmp.44;
+        %tmp.44 = lgetv %cached.2;
+        symbol [ cached %tmp.44 29 26 32 ];
+        %tmp.45 = as %tmp.44 { (!Null) };
+        symbol [ get %tmp.46 29 33 36 ];
+        %tmp.46 = getv function %tmp.45 :get;
+        %tmp.47 = "lic";
+        %tmp.48 = invoke %tmp.45 %tmp.46(%tmp.47);
+        %tmp.49 = as %tmp.48 Dictionary or Null;
+        symbol [ Dictionary %tmp.49 29 47 57 ];
+        lputv %lic.7 %tmp.49;
         symbol [ lic %lic.7 29 20 23 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 30 16 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_16_33_16_if_stmt:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_20_30_51_begin:
-        %tmp.45 = lgetv %lic.7;
-        symbol [ lic %tmp.45 30 20 23 ];
-        %tmp.46 = null;
-        %tmp.47 = ne %tmp.45 %tmp.46;
-        bf %tmp.47 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_16_33_16_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_35_30_51_true:
-        %tmp.48 = lgetv %lic.7;
-        symbol [ lic %tmp.48 30 35 38 ];
-        %tmp.49 = as %tmp.48 { (!Null) };
-        symbol [ hasKey %tmp.50 30 39 45 ];
-        %tmp.50 = getv function %tmp.49 :hasKey;
-        %tmp.51 = "exp";
-        %tmp.52 = invoke %tmp.49 %tmp.50(%tmp.51);
-        push %tmp.52;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_35_30_51_end:
-        %tmp.53 = phi [%tmp.47 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_20_30_51_begin] [%tmp.52 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_35_30_51_true] [%tmp.53 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_35_30_51_end];
-        bf %tmp.53 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_16_33_16_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_16_33_16_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_54_33_16_start:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_16_37_16_if_stmt:
+        %tmp.50 = lgetv %lic.7;
+        symbol [ lic %tmp.50 30 20 23 ];
+        %tmp.51 = null;
+        %tmp.52 = ne %tmp.50 %tmp.51;
+        bf %tmp.52 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_16_37_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_16_37_16_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_33_37_16_start:
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 31 20 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_54_33_16_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_54_33_16_stop" ]
-        %expVal.8 = local;
-        symbol [ expVal %expVal.8 31 24 30 ];
-        %tmp.54 = lgetv %lic.7;
-        symbol [ lic %tmp.54 31 33 36 ];
-        %tmp.55 = as %tmp.54 { (!Null) };
-        symbol [ get %tmp.56 31 37 40 ];
-        %tmp.56 = getv function %tmp.55 :get;
-        %tmp.57 = "exp";
-        %tmp.58 = invoke %tmp.55 %tmp.56(%tmp.57);
-        %tmp.59 = as %tmp.58 Number or Null;
-        symbol [ Number %tmp.59 31 51 57 ];
-        lputv %expVal.8 %tmp.59;
-        symbol [ expVal %expVal.8 31 24 30 ];
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_33_37_16_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_33_37_16_stop" ]
+        %hideVal.8 = local;
+        symbol [ hideVal %hideVal.8 31 24 31 ];
+        %tmp.53 = lgetv %lic.7;
+        symbol [ lic %tmp.53 31 34 37 ];
+        %tmp.54 = as %tmp.53 { (!Null) };
+        symbol [ get %tmp.55 31 38 41 ];
+        %tmp.55 = getv function %tmp.54 :get;
+        %tmp.56 = "hide";
+        %tmp.57 = invoke %tmp.54 %tmp.55(%tmp.56);
+        %tmp.58 = as %tmp.57 Number or Null;
+        symbol [ Number %tmp.58 31 53 59 ];
+        lputv %hideVal.8 %tmp.58;
+        symbol [ hideVal %hideVal.8 31 24 31 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 32 20 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_32_33_32_61_begin:
-        %tmp.60 = lgetv %expVal.8;
-        symbol [ expVal %tmp.60 32 33 39 ];
-        %tmp.61 = null;
-        %tmp.62 = ne %tmp.60 %tmp.61;
-        %tmp.63 = dup %tmp.62;
-        bf %tmp.63 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_32_51_32_61_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_32_51_32_61_true:
-        %tmp.64 = lgetv %expVal.8;
-        symbol [ expVal %tmp.64 32 51 57 ];
-        %tmp.65 = as %tmp.64 { (!Null) };
-        %tmp.66 = 1;
-        %tmp.67 = eq %tmp.65 %tmp.66;
-        %tmp.68 = and %tmp.62 %tmp.67;
-        push %tmp.68;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_32_51_32_61_end:
-        %tmp.69 = phi [%tmp.63 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_32_33_32_61_begin] [%tmp.68 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_32_51_32_61_true] [%tmp.69 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_32_51_32_61_end];
-        lputv %isExpired.6 %tmp.69;
-        symbol [ isExpired %isExpired.6 32 20 29 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_54_33_16_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_16_33_16_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_16_33_16_if_end:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_38_34_12_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_12_34_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_12_34_12_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 35 12 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_35_12_50_12_if_stmt:
-        %tmp.70 = lgetv %isExpired.6;
-        symbol [ isExpired %tmp.70 35 16 25 ];
-        bf %tmp.70 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_35_12_50_12_if_false;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_35_12_50_12_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_35_27_39_12_start:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 36 16 ]
-        %tmp.71 = "TRIAL 14D EXPIRED";
-        lputv %netWorthStr.3 %tmp.71;
-        symbol [ netWorthStr %netWorthStr.3 36 16 27 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 37 16 ]
-        %tmp.72 = "saharat.bun@icloud.com";
-        lputv %dayPnlStr.4 %tmp.72;
-        symbol [ dayPnlStr %dayPnlStr.4 37 16 25 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 38 16 ]
-        %tmp.73 = false;
-        lputv %isPositive.5 %tmp.73;
-        symbol [ isPositive %isPositive.5 38 16 26 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_35_27_39_12_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_35_12_50_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_35_12_50_12_if_false:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 39 19 ]
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_19_50_12_if_stmt:
-        %tmp.74 = lgetv %cached.2;
-        symbol [ cached %tmp.74 39 23 29 ];
-        %tmp.75 = as %tmp.74 { (!Null) };
-        symbol [ hasKey %tmp.76 39 30 36 ];
-        %tmp.76 = getv function %tmp.75 :hasKey;
-        %tmp.77 = "tot";
-        %tmp.78 = invoke %tmp.75 %tmp.76(%tmp.77);
-        bf %tmp.78 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_19_50_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_19_50_12_if_true:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_45_50_12_start:
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_33_37_16_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_33_37_16_stop" ]
+        %isHiddenFree.9 = local;
+        symbol [ isHiddenFree %isHiddenFree.9 32 24 36 ];
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_32_40_32_70_begin:
+        %tmp.59 = lgetv %hideVal.8;
+        symbol [ hideVal %tmp.59 32 40 47 ];
+        %tmp.60 = null;
+        %tmp.61 = ne %tmp.59 %tmp.60;
+        %tmp.62 = dup %tmp.61;
+        bf %tmp.62 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_32_59_32_70_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_32_59_32_70_true:
+        %tmp.63 = lgetv %hideVal.8;
+        symbol [ hideVal %tmp.63 32 59 66 ];
+        %tmp.64 = as %tmp.63 { (!Null) };
+        %tmp.65 = 1;
+        %tmp.66 = eq %tmp.64 %tmp.65;
+        %tmp.67 = and %tmp.61 %tmp.66;
+        push %tmp.67;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_32_59_32_70_end:
+        %tmp.68 = phi [%tmp.62 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_32_40_32_70_begin] [%tmp.67 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_32_59_32_70_true] [%tmp.68 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_32_59_32_70_end];
+        lputv %isHiddenFree.9 %tmp.68;
+        symbol [ isHiddenFree %isHiddenFree.9 32 24 36 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 33 20 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_33_20_36_20_if_stmt:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_33_24_33_57_begin:
+        %tmp.69 = lgetv %isHiddenFree.9;
+        symbol [ isHiddenFree %tmp.69 33 25 37 ];
+        %tmp.70 = not %tmp.69;
+        bf %tmp.70 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_33_20_36_20_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_33_41_33_57_true:
+        %tmp.71 = lgetv %lic.7;
+        symbol [ lic %tmp.71 33 41 44 ];
+        %tmp.72 = as %tmp.71 { (!Null) };
+        symbol [ hasKey %tmp.73 33 45 51 ];
+        %tmp.73 = getv function %tmp.72 :hasKey;
+        %tmp.74 = "exp";
+        %tmp.75 = invoke %tmp.72 %tmp.73(%tmp.74);
+        push %tmp.75;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_33_41_33_57_end:
+        %tmp.76 = phi [%tmp.70 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_33_24_33_57_begin] [%tmp.75 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_33_41_33_57_true] [%tmp.76 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_33_41_33_57_end];
+        bf %tmp.76 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_33_20_36_20_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_33_20_36_20_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_33_60_36_20_start:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 34 24 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_33_60_36_20_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_33_60_36_20_stop" ]
+        %expVal.10 = local;
+        symbol [ expVal %expVal.10 34 28 34 ];
+        %tmp.77 = lgetv %lic.7;
+        symbol [ lic %tmp.77 34 37 40 ];
+        %tmp.78 = as %tmp.77 { (!Null) };
+        symbol [ get %tmp.79 34 41 44 ];
+        %tmp.79 = getv function %tmp.78 :get;
+        %tmp.80 = "exp";
+        %tmp.81 = invoke %tmp.78 %tmp.79(%tmp.80);
+        %tmp.82 = as %tmp.81 Number or Null;
+        symbol [ Number %tmp.82 34 55 61 ];
+        lputv %expVal.10 %tmp.82;
+        symbol [ expVal %expVal.10 34 28 34 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 35 24 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_35_37_35_65_begin:
+        %tmp.83 = lgetv %expVal.10;
+        symbol [ expVal %tmp.83 35 37 43 ];
+        %tmp.84 = null;
+        %tmp.85 = ne %tmp.83 %tmp.84;
+        %tmp.86 = dup %tmp.85;
+        bf %tmp.86 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_35_55_35_65_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_35_55_35_65_true:
+        %tmp.87 = lgetv %expVal.10;
+        symbol [ expVal %tmp.87 35 55 61 ];
+        %tmp.88 = as %tmp.87 { (!Null) };
+        %tmp.89 = 1;
+        %tmp.90 = eq %tmp.88 %tmp.89;
+        %tmp.91 = and %tmp.85 %tmp.90;
+        push %tmp.91;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_35_55_35_65_end:
+        %tmp.92 = phi [%tmp.86 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_35_37_35_65_begin] [%tmp.91 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_35_55_35_65_true] [%tmp.92 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_35_55_35_65_end];
+        lputv %isExpired.6 %tmp.92;
+        symbol [ isExpired %isExpired.6 35 24 33 ];
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_33_60_36_20_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_33_20_36_20_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_33_20_36_20_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_33_37_16_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_16_37_16_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_30_16_37_16_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_68_38_12_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_12_38_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_28_12_38_12_if_end:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 39 12 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_12_54_12_if_stmt:
+        %tmp.93 = lgetv %isExpired.6;
+        symbol [ isExpired %tmp.93 39 16 25 ];
+        bf %tmp.93 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_12_54_12_if_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_12_54_12_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_27_43_12_start:
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 40 16 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_45_50_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_45_50_12_stop" ]
-        %bc.9 = local;
-        symbol [ bc %bc.9 40 20 22 ];
-        %tmp.79 = lgetv %cached.2;
-        symbol [ cached %tmp.79 40 25 31 ];
-        %tmp.80 = as %tmp.79 { (!Null) };
-        symbol [ get %tmp.81 40 32 35 ];
-        %tmp.81 = getv function %tmp.80 :get;
-        %tmp.82 = "bc";
-        %tmp.83 = invoke %tmp.80 %tmp.81(%tmp.82);
-        %tmp.84 = as %tmp.83 String or Null;
-        symbol [ String %tmp.84 40 45 51 ];
-        lputv %bc.9 %tmp.84;
-        symbol [ bc %bc.9 40 20 22 ];
+        %tmp.94 = "TRIAL 14D EXPIRED";
+        lputv %netWorthStr.3 %tmp.94;
+        symbol [ netWorthStr %netWorthStr.3 40 16 27 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 41 16 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_45_50_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_45_50_12_stop" ]
-        %curPrefix.10 = local;
-        symbol [ curPrefix %curPrefix.10 41 20 29 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_41_32_41_73_begin:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_41_33_41_62_begin:
-        %tmp.85 = lgetv %bc.9;
-        symbol [ bc %tmp.85 41 33 35 ];
-        %tmp.86 = null;
-        %tmp.87 = ne %tmp.85 %tmp.86;
-        bf %tmp.87 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_41_32_41_73_else_false;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_41_47_41_62_true:
-        %tmp.88 = lgetv %bc.9;
-        symbol [ bc %tmp.88 41 47 49 ];
-        %tmp.89 = as %tmp.88 { (!Null) };
-        symbol [ equals %tmp.90 41 50 56 ];
-        %tmp.90 = getv function %tmp.89 :equals;
-        %tmp.91 = "USD";
-        %tmp.92 = invoke %tmp.89 %tmp.90(%tmp.91);
-        push %tmp.92;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_41_47_41_62_end:
-        %tmp.93 = phi [%tmp.87 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_41_33_41_62_begin] [%tmp.92 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_41_47_41_62_true] [%tmp.93 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_41_47_41_62_end];
-        bf %tmp.93 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_41_32_41_73_else_false;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_41_32_41_73_true:
-        %tmp.94 = "$";
-        push %tmp.94;
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_41_32_41_73_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_41_32_41_73_else_false:
-        %tmp.95 = "฿";
-        push %tmp.95;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_41_32_41_73_end:
-        %tmp.96 = phi [%tmp.93 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_41_32_41_73_begin] [%tmp.94 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_41_32_41_73_true] [%tmp.95 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_41_32_41_73_else_false] [%tmp.96 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_41_32_41_73_end];
-        lputv %curPrefix.10 %tmp.96;
-        symbol [ curPrefix %curPrefix.10 41 20 29 ];
+        %tmp.95 = "saharat.bun@icloud.com";
+        lputv %dayPnlStr.4 %tmp.95;
+        symbol [ dayPnlStr %dayPnlStr.4 41 16 25 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 42 16 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_45_50_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_45_50_12_stop" ]
-        %tot.11 = local;
-        symbol [ tot %tot.11 42 20 23 ];
+        %tmp.96 = false;
+        lputv %isPositive.5 %tmp.96;
+        symbol [ isPositive %isPositive.5 42 16 26 ];
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_27_43_12_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_12_54_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_12_54_12_if_false:
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 43 19 ]
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_43_19_54_12_if_stmt:
         %tmp.97 = lgetv %cached.2;
-        symbol [ cached %tmp.97 42 26 32 ];
+        symbol [ cached %tmp.97 43 23 29 ];
         %tmp.98 = as %tmp.97 { (!Null) };
-        symbol [ get %tmp.99 42 33 36 ];
-        %tmp.99 = getv function %tmp.98 :get;
+        symbol [ hasKey %tmp.99 43 30 36 ];
+        %tmp.99 = getv function %tmp.98 :hasKey;
         %tmp.100 = "tot";
         %tmp.101 = invoke %tmp.98 %tmp.99(%tmp.100);
-        %tmp.102 = as %tmp.101 Dictionary;
-        symbol [ Dictionary %tmp.102 42 47 57 ];
-        lputv %tot.11 %tmp.102;
-        symbol [ tot %tot.11 42 20 23 ];
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 43 16 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_45_50_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_45_50_12_stop" ]
-        %val.12 = local;
-        symbol [ val %val.12 43 20 23 ];
-        %tmp.103 = lgetv %tot.11;
-        symbol [ tot %tmp.103 43 26 29 ];
-        symbol [ get %tmp.104 43 30 33 ];
-        %tmp.104 = getv function %tmp.103 :get;
-        %tmp.105 = "val";
-        %tmp.106 = invoke %tmp.103 %tmp.104(%tmp.105);
-        %tmp.107 = as %tmp.106 Number;
-        symbol [ Number %tmp.107 43 44 50 ];
-        lputv %val.12 %tmp.107;
-        symbol [ val %val.12 43 20 23 ];
+        bf %tmp.101 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_43_19_54_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_43_19_54_12_if_true:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_43_45_54_12_start:
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 44 16 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_45_50_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_45_50_12_stop" ]
-        %dp.13 = local;
-        symbol [ dp %dp.13 44 20 22 ];
-        %tmp.108 = lgetv %tot.11;
-        symbol [ tot %tmp.108 44 25 28 ];
-        symbol [ get %tmp.109 44 29 32 ];
-        %tmp.109 = getv function %tmp.108 :get;
-        %tmp.110 = "dp";
-        %tmp.111 = invoke %tmp.108 %tmp.109(%tmp.110);
-        %tmp.112 = as %tmp.111 Number;
-        symbol [ Number %tmp.112 44 42 48 ];
-        lputv %dp.13 %tmp.112;
-        symbol [ dp %dp.13 44 20 22 ];
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_43_45_54_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_43_45_54_12_stop" ]
+        %bc.11 = local;
+        symbol [ bc %bc.11 44 20 22 ];
+        %tmp.102 = lgetv %cached.2;
+        symbol [ cached %tmp.102 44 25 31 ];
+        %tmp.103 = as %tmp.102 { (!Null) };
+        symbol [ get %tmp.104 44 32 35 ];
+        %tmp.104 = getv function %tmp.103 :get;
+        %tmp.105 = "bc";
+        %tmp.106 = invoke %tmp.103 %tmp.104(%tmp.105);
+        %tmp.107 = as %tmp.106 String or Null;
+        symbol [ String %tmp.107 44 45 51 ];
+        lputv %bc.11 %tmp.107;
+        symbol [ bc %bc.11 44 20 22 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 45 16 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_45_50_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_45_50_12_stop" ]
-        %dPct.14 = local;
-        symbol [ dPct %dPct.14 45 20 24 ];
-        %tmp.113 = lgetv %tot.11;
-        symbol [ tot %tmp.113 45 27 30 ];
-        symbol [ get %tmp.114 45 31 34 ];
-        %tmp.114 = getv function %tmp.113 :get;
-        %tmp.115 = "dPct";
-        %tmp.116 = invoke %tmp.113 %tmp.114(%tmp.115);
-        %tmp.117 = as %tmp.116 Float;
-        symbol [ Float %tmp.117 45 46 51 ];
-        lputv %dPct.14 %tmp.117;
-        symbol [ dPct %dPct.14 45 20 24 ];
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_43_45_54_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_43_45_54_12_stop" ]
+        %curPrefix.12 = local;
+        symbol [ curPrefix %curPrefix.12 45 20 29 ];
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_45_32_45_73_begin:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_45_33_45_62_begin:
+        %tmp.108 = lgetv %bc.11;
+        symbol [ bc %tmp.108 45 33 35 ];
+        %tmp.109 = null;
+        %tmp.110 = ne %tmp.108 %tmp.109;
+        bf %tmp.110 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_45_32_45_73_else_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_45_47_45_62_true:
+        %tmp.111 = lgetv %bc.11;
+        symbol [ bc %tmp.111 45 47 49 ];
+        %tmp.112 = as %tmp.111 { (!Null) };
+        symbol [ equals %tmp.113 45 50 56 ];
+        %tmp.113 = getv function %tmp.112 :equals;
+        %tmp.114 = "USD";
+        %tmp.115 = invoke %tmp.112 %tmp.113(%tmp.114);
+        push %tmp.115;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_45_47_45_62_end:
+        %tmp.116 = phi [%tmp.110 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_45_33_45_62_begin] [%tmp.115 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_45_47_45_62_true] [%tmp.116 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_45_47_45_62_end];
+        bf %tmp.116 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_45_32_45_73_else_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_45_32_45_73_true:
+        %tmp.117 = "$";
+        push %tmp.117;
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_45_32_45_73_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_45_32_45_73_else_false:
+        %tmp.118 = "฿";
+        push %tmp.118;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_45_32_45_73_end:
+        %tmp.119 = phi [%tmp.116 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_45_32_45_73_begin] [%tmp.117 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_45_32_45_73_true] [%tmp.118 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_45_32_45_73_else_false] [%tmp.119 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_45_32_45_73_end];
+        lputv %curPrefix.12 %tmp.119;
+        symbol [ curPrefix %curPrefix.12 45 20 29 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 46 16 ]
-        %tmp.118 = lgetv %dp.13;
-        symbol [ dp %tmp.118 46 30 32 ];
-        %tmp.119 = 0;
-        %tmp.120 = gte %tmp.118 %tmp.119;
-        lputv %isPositive.5 %tmp.120;
-        symbol [ isPositive %isPositive.5 46 16 26 ];
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_43_45_54_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_43_45_54_12_stop" ]
+        %tot.13 = local;
+        symbol [ tot %tot.13 46 20 23 ];
+        %tmp.120 = lgetv %cached.2;
+        symbol [ cached %tmp.120 46 26 32 ];
+        %tmp.121 = as %tmp.120 { (!Null) };
+        symbol [ get %tmp.122 46 33 36 ];
+        %tmp.122 = getv function %tmp.121 :get;
+        %tmp.123 = "tot";
+        %tmp.124 = invoke %tmp.121 %tmp.122(%tmp.123);
+        %tmp.125 = as %tmp.124 Dictionary;
+        symbol [ Dictionary %tmp.125 46 47 57 ];
+        lputv %tot.13 %tmp.125;
+        symbol [ tot %tot.13 46 20 23 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 47 16 ]
-        %tmp.121 = lgetv %curPrefix.10;
-        symbol [ curPrefix %tmp.121 47 30 39 ];
-        %tmp.122 = lgetv %val.12;
-        symbol [ val %tmp.122 47 42 45 ];
-        symbol [ toString %tmp.123 47 46 54 ];
-        %tmp.123 = getv function %tmp.122 :toString;
-        %tmp.124 = invoke %tmp.122 %tmp.123();
-        %tmp.125 = add %tmp.121 %tmp.124;
-        lputv %netWorthStr.3 %tmp.125;
-        symbol [ netWorthStr %netWorthStr.3 47 16 27 ];
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_43_45_54_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_43_45_54_12_stop" ]
+        %val.14 = local;
+        symbol [ val %val.14 47 20 23 ];
+        %tmp.126 = lgetv %tot.13;
+        symbol [ tot %tmp.126 47 26 29 ];
+        symbol [ get %tmp.127 47 30 33 ];
+        %tmp.127 = getv function %tmp.126 :get;
+        %tmp.128 = "val";
+        %tmp.129 = invoke %tmp.126 %tmp.127(%tmp.128);
+        %tmp.130 = as %tmp.129 Number;
+        symbol [ Number %tmp.130 47 44 50 ];
+        lputv %val.14 %tmp.130;
+        symbol [ val %val.14 47 20 23 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 48 16 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_45_50_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_45_50_12_stop" ]
-        %sign.15 = local;
-        symbol [ sign %sign.15 48 20 24 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_48_27_48_46_begin:
-        %tmp.126 = lgetv %isPositive.5;
-        symbol [ isPositive %tmp.126 48 27 37 ];
-        bf %tmp.126 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_48_27_48_46_else_false;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_48_27_48_46_true:
-        %tmp.127 = "+";
-        push %tmp.127;
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_48_27_48_46_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_48_27_48_46_else_false:
-        %tmp.128 = "";
-        push %tmp.128;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_48_27_48_46_end:
-        %tmp.129 = phi [%tmp.126 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_48_27_48_46_begin] [%tmp.127 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_48_27_48_46_true] [%tmp.128 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_48_27_48_46_else_false] [%tmp.129 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_48_27_48_46_end];
-        lputv %sign.15 %tmp.129;
-        symbol [ sign %sign.15 48 20 24 ];
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_43_45_54_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_43_45_54_12_stop" ]
+        %dp.15 = local;
+        symbol [ dp %dp.15 48 20 22 ];
+        %tmp.131 = lgetv %tot.13;
+        symbol [ tot %tmp.131 48 25 28 ];
+        symbol [ get %tmp.132 48 29 32 ];
+        %tmp.132 = getv function %tmp.131 :get;
+        %tmp.133 = "dp";
+        %tmp.134 = invoke %tmp.131 %tmp.132(%tmp.133);
+        %tmp.135 = as %tmp.134 Number;
+        symbol [ Number %tmp.135 48 42 48 ];
+        lputv %dp.15 %tmp.135;
+        symbol [ dp %dp.15 48 20 22 ];
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 49 16 ]
-        %tmp.130 = lgetv %sign.15;
-        symbol [ sign %tmp.130 49 28 32 ];
-        %tmp.131 = lgetv %curPrefix.10;
-        symbol [ curPrefix %tmp.131 49 35 44 ];
-        %tmp.132 = add %tmp.130 %tmp.131;
-        %tmp.133 = lgetv %dp.13;
-        symbol [ dp %tmp.133 49 47 49 ];
-        symbol [ toString %tmp.134 49 50 58 ];
-        %tmp.134 = getv function %tmp.133 :toString;
-        %tmp.135 = invoke %tmp.133 %tmp.134();
-        %tmp.136 = add %tmp.132 %tmp.135;
-        %tmp.137 = " (";
-        %tmp.138 = add %tmp.136 %tmp.137;
-        %tmp.139 = lgetv %sign.15;
-        symbol [ sign %tmp.139 49 70 74 ];
-        %tmp.140 = add %tmp.138 %tmp.139;
-        %tmp.141 = lgetv %dPct.14;
-        symbol [ dPct %tmp.141 49 77 81 ];
-        symbol [ format %tmp.142 49 82 88 ];
-        %tmp.142 = getv function %tmp.141 :format;
-        %tmp.143 = "%.2f";
-        %tmp.144 = invoke %tmp.141 %tmp.142(%tmp.143);
-        %tmp.145 = add %tmp.140 %tmp.144;
-        %tmp.146 = "%)";
-        %tmp.147 = add %tmp.145 %tmp.146;
-        lputv %dayPnlStr.4 %tmp.147;
-        symbol [ dayPnlStr %dayPnlStr.4 49 16 25 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_45_50_12_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_19_50_12_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_19_50_12_if_end:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_35_12_50_12_if_end:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_27_28_51_8_stop:
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_27_8_51_8_if_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_27_8_51_8_if_end:
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 54 8 ]
-        %tmp.148 = lgetv %dc;
-        symbol [ dc %tmp.148 54 8 10 ];
-        symbol [ setColor %tmp.149 54 11 19 ];
-        %tmp.149 = getv function %tmp.148 :setColor;
-        %tmp.150 = 0x06B6D4;
-        symbol [ Graphics %tmp.151 54 30 38 ];
-        %tmp.151 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.152 54 39 56 ];
-        %tmp.152 = getv %tmp.151 :COLOR_TRANSPARENT;
-        invoke %tmp.148 %tmp.149(%tmp.150, %tmp.152);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 55 8 ]
-        %tmp.153 = lgetv %dc;
-        symbol [ dc %tmp.153 55 8 10 ];
-        symbol [ drawText %tmp.154 55 11 19 ];
-        %tmp.154 = getv function %tmp.153 :drawText;
-        %tmp.155 = 4;
-        %tmp.156 = 6;
-        symbol [ Graphics %tmp.157 55 26 34 ];
-        %tmp.157 = getm $.Toybox.Graphics;
-        symbol [ FONT_XTINY %tmp.158 55 35 45 ];
-        %tmp.158 = getv %tmp.157 :FONT_XTINY;
-        %tmp.159 = "MOATWATCH PORTFOLIO";
-        symbol [ Graphics %tmp.160 55 70 78 ];
-        %tmp.160 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_LEFT %tmp.161 55 79 96 ];
-        %tmp.161 = getv %tmp.160 :TEXT_JUSTIFY_LEFT;
-        invoke %tmp.153 %tmp.154(%tmp.155, %tmp.156, %tmp.158, %tmp.159, %tmp.161);
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_43_45_54_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_43_45_54_12_stop" ]
+        %dPct.16 = local;
+        symbol [ dPct %dPct.16 49 20 24 ];
+        %tmp.136 = lgetv %tot.13;
+        symbol [ tot %tmp.136 49 27 30 ];
+        symbol [ get %tmp.137 49 31 34 ];
+        %tmp.137 = getv function %tmp.136 :get;
+        %tmp.138 = "dPct";
+        %tmp.139 = invoke %tmp.136 %tmp.137(%tmp.138);
+        %tmp.140 = as %tmp.139 Float;
+        symbol [ Float %tmp.140 49 46 51 ];
+        lputv %dPct.16 %tmp.140;
+        symbol [ dPct %dPct.16 49 20 24 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 50 16 ]
+        %tmp.141 = lgetv %dp.15;
+        symbol [ dp %tmp.141 50 30 32 ];
+        %tmp.142 = 0;
+        %tmp.143 = gte %tmp.141 %tmp.142;
+        lputv %isPositive.5 %tmp.143;
+        symbol [ isPositive %isPositive.5 50 16 26 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 51 16 ]
+        %tmp.144 = lgetv %curPrefix.12;
+        symbol [ curPrefix %tmp.144 51 30 39 ];
+        %tmp.145 = lgetv %val.14;
+        symbol [ val %tmp.145 51 42 45 ];
+        symbol [ toString %tmp.146 51 46 54 ];
+        %tmp.146 = getv function %tmp.145 :toString;
+        %tmp.147 = invoke %tmp.145 %tmp.146();
+        %tmp.148 = add %tmp.144 %tmp.147;
+        lputv %netWorthStr.3 %tmp.148;
+        symbol [ netWorthStr %netWorthStr.3 51 16 27 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 52 16 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_43_45_54_12_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_43_45_54_12_stop" ]
+        %sign.17 = local;
+        symbol [ sign %sign.17 52 20 24 ];
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_52_27_52_46_begin:
+        %tmp.149 = lgetv %isPositive.5;
+        symbol [ isPositive %tmp.149 52 27 37 ];
+        bf %tmp.149 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_52_27_52_46_else_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_52_27_52_46_true:
+        %tmp.150 = "+";
+        push %tmp.150;
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_52_27_52_46_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_52_27_52_46_else_false:
+        %tmp.151 = "";
+        push %tmp.151;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_52_27_52_46_end:
+        %tmp.152 = phi [%tmp.149 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_52_27_52_46_begin] [%tmp.150 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_52_27_52_46_true] [%tmp.151 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_52_27_52_46_else_false] [%tmp.152 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_52_27_52_46_end];
+        lputv %sign.17 %tmp.152;
+        symbol [ sign %sign.17 52 20 24 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 53 16 ]
+        %tmp.153 = lgetv %sign.17;
+        symbol [ sign %tmp.153 53 28 32 ];
+        %tmp.154 = lgetv %curPrefix.12;
+        symbol [ curPrefix %tmp.154 53 35 44 ];
+        %tmp.155 = add %tmp.153 %tmp.154;
+        %tmp.156 = lgetv %dp.15;
+        symbol [ dp %tmp.156 53 47 49 ];
+        symbol [ toString %tmp.157 53 50 58 ];
+        %tmp.157 = getv function %tmp.156 :toString;
+        %tmp.158 = invoke %tmp.156 %tmp.157();
+        %tmp.159 = add %tmp.155 %tmp.158;
+        %tmp.160 = " (";
+        %tmp.161 = add %tmp.159 %tmp.160;
+        %tmp.162 = lgetv %sign.17;
+        symbol [ sign %tmp.162 53 70 74 ];
+        %tmp.163 = add %tmp.161 %tmp.162;
+        %tmp.164 = lgetv %dPct.16;
+        symbol [ dPct %tmp.164 53 77 81 ];
+        symbol [ format %tmp.165 53 82 88 ];
+        %tmp.165 = getv function %tmp.164 :format;
+        %tmp.166 = "%.2f";
+        %tmp.167 = invoke %tmp.164 %tmp.165(%tmp.166);
+        %tmp.168 = add %tmp.163 %tmp.167;
+        %tmp.169 = "%)";
+        %tmp.170 = add %tmp.168 %tmp.169;
+        lputv %dayPnlStr.4 %tmp.170;
+        symbol [ dayPnlStr %dayPnlStr.4 53 16 25 ];
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_43_45_54_12_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_43_19_54_12_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_43_19_54_12_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_39_12_54_12_if_end:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_27_28_55_8_stop:
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_27_8_55_8_if_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_27_8_55_8_if_end:
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 58 8 ]
-        %tmp.162 = lgetv %dc;
-        symbol [ dc %tmp.162 58 8 10 ];
-        symbol [ setColor %tmp.163 58 11 19 ];
-        %tmp.163 = getv function %tmp.162 :setColor;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_58_20_58_52_begin:
-        %tmp.164 = lgetv %isExpired.6;
-        symbol [ isExpired %tmp.164 58 20 29 ];
-        bf %tmp.164 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_58_20_58_52_else_false;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_58_20_58_52_true:
-        %tmp.165 = 0xF43F5E;
-        push %tmp.165;
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_58_20_58_52_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_58_20_58_52_else_false:
-        symbol [ Graphics %tmp.166 58 43 51 ];
-        %tmp.166 = getm $.Toybox.Graphics;
-        symbol [ COLOR_WHITE %tmp.167 58 52 63 ];
-        %tmp.167 = getv %tmp.166 :COLOR_WHITE;
-        push %tmp.167;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_58_20_58_52_end:
-        %tmp.168 = phi [%tmp.164 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_58_20_58_52_begin] [%tmp.165 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_58_20_58_52_true] [%tmp.167 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_58_20_58_52_else_false] [%tmp.168 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_58_20_58_52_end];
-        symbol [ Graphics %tmp.169 58 65 73 ];
-        %tmp.169 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.170 58 74 91 ];
-        %tmp.170 = getv %tmp.169 :COLOR_TRANSPARENT;
-        invoke %tmp.162 %tmp.163(%tmp.168, %tmp.170);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 59 8 ]
         %tmp.171 = lgetv %dc;
-        symbol [ dc %tmp.171 59 8 10 ];
-        symbol [ drawText %tmp.172 59 11 19 ];
-        %tmp.172 = getv function %tmp.171 :drawText;
-        %tmp.173 = 4;
-        %tmp.174 = lgetv %h.1;
-        symbol [ h %tmp.174 59 23 24 ];
-        %tmp.175 = 2;
-        %tmp.176 = div %tmp.174 %tmp.175;
-        %tmp.177 = 10;
-        %tmp.178 = sub %tmp.176 %tmp.177;
-        symbol [ Graphics %tmp.179 59 35 43 ];
-        %tmp.179 = getm $.Toybox.Graphics;
-        symbol [ FONT_SMALL %tmp.180 59 44 54 ];
-        %tmp.180 = getv %tmp.179 :FONT_SMALL;
-        %tmp.181 = lgetv %netWorthStr.3;
-        symbol [ netWorthStr %tmp.181 59 56 67 ];
-        symbol [ Graphics %tmp.182 59 69 77 ];
-        %tmp.182 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_LEFT %tmp.183 59 78 95 ];
-        %tmp.183 = getv %tmp.182 :TEXT_JUSTIFY_LEFT;
-        invoke %tmp.171 %tmp.172(%tmp.173, %tmp.178, %tmp.180, %tmp.181, %tmp.183);
+        symbol [ dc %tmp.171 58 8 10 ];
+        symbol [ setColor %tmp.172 58 11 19 ];
+        %tmp.172 = getv function %tmp.171 :setColor;
+        %tmp.173 = 0x06B6D4;
+        symbol [ Graphics %tmp.174 58 30 38 ];
+        %tmp.174 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.175 58 39 56 ];
+        %tmp.175 = getv %tmp.174 :COLOR_TRANSPARENT;
+        invoke %tmp.171 %tmp.172(%tmp.173, %tmp.175);
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 59 8 ]
+        %tmp.176 = lgetv %dc;
+        symbol [ dc %tmp.176 59 8 10 ];
+        symbol [ drawText %tmp.177 59 11 19 ];
+        %tmp.177 = getv function %tmp.176 :drawText;
+        %tmp.178 = 4;
+        %tmp.179 = 6;
+        symbol [ Graphics %tmp.180 59 26 34 ];
+        %tmp.180 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.181 59 35 45 ];
+        %tmp.181 = getv %tmp.180 :FONT_XTINY;
+        %tmp.182 = "MOATWATCH PORTFOLIO";
+        symbol [ Graphics %tmp.183 59 70 78 ];
+        %tmp.183 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_LEFT %tmp.184 59 79 96 ];
+        %tmp.184 = getv %tmp.183 :TEXT_JUSTIFY_LEFT;
+        invoke %tmp.176 %tmp.177(%tmp.178, %tmp.179, %tmp.181, %tmp.182, %tmp.184);
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 62 8 ]
-        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_65_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_65_4_stop" ]
-        %deltaColor.16 = local;
-        symbol [ deltaColor %deltaColor.16 62 12 22 ];
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_25_62_81_begin:
-        %tmp.184 = lgetv %isExpired.6;
-        symbol [ isExpired %tmp.184 62 25 34 ];
-        bf %tmp.184 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_25_62_81_else_false;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_25_62_81_true:
-        %tmp.185 = 0x06B6D4;
-        push %tmp.185;
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_25_62_81_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_25_62_81_else_false:
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_49_62_73_begin:
-        %tmp.186 = lgetv %isPositive.5;
-        symbol [ isPositive %tmp.186 62 49 59 ];
-        bf %tmp.186 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_49_62_73_else_false;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_49_62_73_true:
-        %tmp.187 = 0x10B981;
-        push %tmp.187;
-        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_49_62_73_end;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_49_62_73_else_false:
+        %tmp.185 = lgetv %dc;
+        symbol [ dc %tmp.185 62 8 10 ];
+        symbol [ setColor %tmp.186 62 11 19 ];
+        %tmp.186 = getv function %tmp.185 :setColor;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_20_62_52_begin:
+        %tmp.187 = lgetv %isExpired.6;
+        symbol [ isExpired %tmp.187 62 20 29 ];
+        bf %tmp.187 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_20_62_52_else_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_20_62_52_true:
         %tmp.188 = 0xF43F5E;
         push %tmp.188;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_49_62_73_end:
-        %tmp.189 = phi [%tmp.186 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_49_62_73_begin] [%tmp.187 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_49_62_73_true] [%tmp.188 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_49_62_73_else_false] [%tmp.189 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_49_62_73_end];
-        push %tmp.189;
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_25_62_81_end:
-        %tmp.190 = phi [%tmp.184 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_25_62_81_begin] [%tmp.185 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_25_62_81_true] [%tmp.189 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_25_62_81_else_false] [%tmp.190 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_25_62_81_end];
-        lputv %deltaColor.16 %tmp.190;
-        symbol [ deltaColor %deltaColor.16 62 12 22 ];
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_20_62_52_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_20_62_52_else_false:
+        symbol [ Graphics %tmp.189 62 43 51 ];
+        %tmp.189 = getm $.Toybox.Graphics;
+        symbol [ COLOR_WHITE %tmp.190 62 52 63 ];
+        %tmp.190 = getv %tmp.189 :COLOR_WHITE;
+        push %tmp.190;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_20_62_52_end:
+        %tmp.191 = phi [%tmp.187 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_20_62_52_begin] [%tmp.188 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_20_62_52_true] [%tmp.190 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_20_62_52_else_false] [%tmp.191 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_62_20_62_52_end];
+        symbol [ Graphics %tmp.192 62 65 73 ];
+        %tmp.192 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.193 62 74 91 ];
+        %tmp.193 = getv %tmp.192 :COLOR_TRANSPARENT;
+        invoke %tmp.185 %tmp.186(%tmp.191, %tmp.193);
 [ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 63 8 ]
-        %tmp.191 = lgetv %dc;
-        symbol [ dc %tmp.191 63 8 10 ];
-        symbol [ setColor %tmp.192 63 11 19 ];
-        %tmp.192 = getv function %tmp.191 :setColor;
-        %tmp.193 = lgetv %deltaColor.16;
-        symbol [ deltaColor %tmp.193 63 20 30 ];
-        symbol [ Graphics %tmp.194 63 32 40 ];
-        %tmp.194 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.195 63 41 58 ];
-        %tmp.195 = getv %tmp.194 :COLOR_TRANSPARENT;
-        invoke %tmp.191 %tmp.192(%tmp.193, %tmp.195);
-[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 64 8 ]
-        %tmp.196 = lgetv %dc;
-        symbol [ dc %tmp.196 64 8 10 ];
-        symbol [ drawText %tmp.197 64 11 19 ];
-        %tmp.197 = getv function %tmp.196 :drawText;
-        %tmp.198 = 4;
-        %tmp.199 = lgetv %h.1;
-        symbol [ h %tmp.199 64 23 24 ];
-        %tmp.200 = 24;
+        %tmp.194 = lgetv %dc;
+        symbol [ dc %tmp.194 63 8 10 ];
+        symbol [ drawText %tmp.195 63 11 19 ];
+        %tmp.195 = getv function %tmp.194 :drawText;
+        %tmp.196 = 4;
+        %tmp.197 = lgetv %h.1;
+        symbol [ h %tmp.197 63 23 24 ];
+        %tmp.198 = 2;
+        %tmp.199 = div %tmp.197 %tmp.198;
+        %tmp.200 = 10;
         %tmp.201 = sub %tmp.199 %tmp.200;
-        symbol [ Graphics %tmp.202 64 31 39 ];
+        symbol [ Graphics %tmp.202 63 35 43 ];
         %tmp.202 = getm $.Toybox.Graphics;
-        symbol [ FONT_XTINY %tmp.203 64 40 50 ];
-        %tmp.203 = getv %tmp.202 :FONT_XTINY;
-        %tmp.204 = lgetv %dayPnlStr.4;
-        symbol [ dayPnlStr %tmp.204 64 52 61 ];
-        symbol [ Graphics %tmp.205 64 63 71 ];
+        symbol [ FONT_SMALL %tmp.203 63 44 54 ];
+        %tmp.203 = getv %tmp.202 :FONT_SMALL;
+        %tmp.204 = lgetv %netWorthStr.3;
+        symbol [ netWorthStr %tmp.204 63 56 67 ];
+        symbol [ Graphics %tmp.205 63 69 77 ];
         %tmp.205 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_LEFT %tmp.206 64 72 89 ];
+        symbol [ TEXT_JUSTIFY_LEFT %tmp.206 63 78 95 ];
         %tmp.206 = getv %tmp.205 :TEXT_JUSTIFY_LEFT;
-        invoke %tmp.196 %tmp.197(%tmp.198, %tmp.201, %tmp.203, %tmp.204, %tmp.206);
-D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_65_4_stop:
+        invoke %tmp.194 %tmp.195(%tmp.196, %tmp.201, %tmp.203, %tmp.204, %tmp.206);
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 66 8 ]
+        [ "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_69_4_start" "D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_69_4_stop" ]
+        %deltaColor.18 = local;
+        symbol [ deltaColor %deltaColor.18 66 12 22 ];
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_66_25_66_81_begin:
+        %tmp.207 = lgetv %isExpired.6;
+        symbol [ isExpired %tmp.207 66 25 34 ];
+        bf %tmp.207 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_66_25_66_81_else_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_66_25_66_81_true:
+        %tmp.208 = 0x06B6D4;
+        push %tmp.208;
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_66_25_66_81_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_66_25_66_81_else_false:
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_66_49_66_73_begin:
+        %tmp.209 = lgetv %isPositive.5;
+        symbol [ isPositive %tmp.209 66 49 59 ];
+        bf %tmp.209 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_66_49_66_73_else_false;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_66_49_66_73_true:
+        %tmp.210 = 0x10B981;
+        push %tmp.210;
+        goto @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_66_49_66_73_end;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_66_49_66_73_else_false:
+        %tmp.211 = 0xF43F5E;
+        push %tmp.211;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_66_49_66_73_end:
+        %tmp.212 = phi [%tmp.209 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_66_49_66_73_begin] [%tmp.210 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_66_49_66_73_true] [%tmp.211 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_66_49_66_73_else_false] [%tmp.212 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_66_49_66_73_end];
+        push %tmp.212;
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_66_25_66_81_end:
+        %tmp.213 = phi [%tmp.207 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_66_25_66_81_begin] [%tmp.208 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_66_25_66_81_true] [%tmp.212 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_66_25_66_81_else_false] [%tmp.213 @D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_66_25_66_81_end];
+        lputv %deltaColor.18 %tmp.213;
+        symbol [ deltaColor %deltaColor.18 66 12 22 ];
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 67 8 ]
+        %tmp.214 = lgetv %dc;
+        symbol [ dc %tmp.214 67 8 10 ];
+        symbol [ setColor %tmp.215 67 11 19 ];
+        %tmp.215 = getv function %tmp.214 :setColor;
+        %tmp.216 = lgetv %deltaColor.18;
+        symbol [ deltaColor %tmp.216 67 20 30 ];
+        symbol [ Graphics %tmp.217 67 32 40 ];
+        %tmp.217 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.218 67 41 58 ];
+        %tmp.218 = getv %tmp.217 :COLOR_TRANSPARENT;
+        invoke %tmp.214 %tmp.215(%tmp.216, %tmp.218);
+[ "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc" 68 8 ]
+        %tmp.219 = lgetv %dc;
+        symbol [ dc %tmp.219 68 8 10 ];
+        symbol [ drawText %tmp.220 68 11 19 ];
+        %tmp.220 = getv function %tmp.219 :drawText;
+        %tmp.221 = 4;
+        %tmp.222 = lgetv %h.1;
+        symbol [ h %tmp.222 68 23 24 ];
+        %tmp.223 = 24;
+        %tmp.224 = sub %tmp.222 %tmp.223;
+        symbol [ Graphics %tmp.225 68 31 39 ];
+        %tmp.225 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.226 68 40 50 ];
+        %tmp.226 = getv %tmp.225 :FONT_XTINY;
+        %tmp.227 = lgetv %dayPnlStr.4;
+        symbol [ dayPnlStr %tmp.227 68 52 61 ];
+        symbol [ Graphics %tmp.228 68 63 71 ];
+        %tmp.228 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_LEFT %tmp.229 68 72 89 ];
+        %tmp.229 = getv %tmp.228 :TEXT_JUSTIFY_LEFT;
+        invoke %tmp.219 %tmp.220(%tmp.221, %tmp.224, %tmp.226, %tmp.227, %tmp.229);
+D__all_workspace_garmin_venu2_garmin_venu2_app_source_Venu2MoatGlanceView_mc_13_40_69_4_stop:
     }
 }
 [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\Venu2MoatGlanceView.mc"; @line = 1; ]

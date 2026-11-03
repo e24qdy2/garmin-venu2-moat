@@ -1088,15 +1088,64 @@ async function handleRequest(req, res) {
       if (researchFeed.sweep && researchFeed.sweep.dirty) {
         writeResearchStore(researchStore);
       }
+      let appPackages = null;
+      const packagesJsonFile = path.join(PUBLIC_DIR, "downloads", "packages.json");
+      if (fs.existsSync(packagesJsonFile)) {
+        try {
+          appPackages = JSON.parse(fs.readFileSync(packagesJsonFile, "utf8"));
+        } catch (_) {}
+      }
       return sendAdminJson(req, res, 200, {
         ok: true,
         admin: { ...auth, ...meta },
         ...licensesData,
+        appPackages,
         compatibleDevices: COMPATIBLE_GARMIN_DEVICES,
         smtpConfig: emailService.getSmtpConfig(false),
         researchFeed,
         biAnalytics,
         hermesNode: buildHermesNodeStatusPayload(nodeState)
+      });
+    }
+
+    if (pathname === "/api/admin/billing-mode" && req.method === "GET") {
+      return sendAdminJson(req, res, 200, {
+        ...licenseManager.getBillingMode(),
+        summary: licenseManager.listDevices().summary
+      });
+    }
+
+    if (pathname === "/api/admin/billing-mode" && (req.method === "POST" || req.method === "PUT")) {
+      try {
+        const body = await parseBody(req);
+        const requestedMode =
+          body.mode ||
+          body.billingMode ||
+          (body.hideLicenseUi === true ? "FREE" : body.hideLicenseUi === false ? "PAID" : "FREE");
+        const updated = licenseManager.setBillingMode(requestedMode, {
+          actor: auth.email || OWNER_EMAIL
+        });
+        return sendAdminJson(req, res, 200, {
+          ...updated,
+          ...licenseManager.listDevices()
+        });
+      } catch (err) {
+        return sendAdminJson(req, res, 400, { ok: false, error: err.message });
+      }
+    }
+
+    if (pathname === "/api/admin/app-packages" && req.method === "GET") {
+      const packagesJsonFile = path.join(PUBLIC_DIR, "downloads", "packages.json");
+      let appPackages = { generatedAt: new Date().toISOString(), editions: [] };
+      if (fs.existsSync(packagesJsonFile)) {
+        try {
+          appPackages = JSON.parse(fs.readFileSync(packagesJsonFile, "utf8"));
+        } catch (_) {}
+      }
+      return sendAdminJson(req, res, 200, {
+        ok: true,
+        appPackages,
+        ...appPackages
       });
     }
 
@@ -1545,9 +1594,16 @@ async function handleRequest(req, res) {
     }
     const ext = path.extname(filePath).toLowerCase();
     const isDynamicAsset = [".html", ".js", ".css", ".json"].includes(ext);
+    const isWatchBinary = ext === ".iq" || ext === ".prg";
     res.writeHead(200, {
       ...SECURITY_HEADERS,
       "Content-Type": MIME_TYPES[ext] || "application/octet-stream",
+      ...(isWatchBinary
+        ? {
+            "Content-Disposition": `attachment; filename="${path.basename(filePath)}"`,
+            "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0"
+          }
+        : {}),
       ...(isDynamicAsset
         ? {
             "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",

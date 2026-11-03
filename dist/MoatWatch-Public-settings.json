@@ -1,0 +1,46 @@
+{
+  "settings" : [ {
+    "key" : "syncKey",
+    "valueType" : "string",
+    "defaultValue" : "\n  ",
+    "configTitle" : "SyncKeyTitle",
+    "configPrompt" : null,
+    "configType" : "alphaNumeric",
+    "configError" : null,
+    "configHelpUrl" : null,
+    "configReadonly" : false,
+    "configRequired" : false,
+    "configOptions" : null,
+    "configMin" : null,
+    "configMax" : null,
+    "configMaxLength" : 24
+  }, {
+    "key" : "apiUrl",
+    "valueType" : "string",
+    "defaultValue" : "https://moat.readybyte.top",
+    "configTitle" : "ApiUrlTitle",
+    "configPrompt" : null,
+    "configType" : "alphaNumeric",
+    "configError" : null,
+    "configHelpUrl" : null,
+    "configReadonly" : false,
+    "configRequired" : false,
+    "configOptions" : null,
+    "configMin" : null,
+    "configMax" : null,
+    "configMaxLength" : 160
+  } ],
+  "supportsLiveValidation" : false,
+  "languages" : {
+    "valyrian" : {
+      "AutoSwipeEnabledTitle" : "Auto-Swipe Next Screen",
+      "ShowBollingerTitle" : "Show SMA20 + Bollinger Bands",
+      "AutoSwipeSecTitle" : "Auto-Swipe Interval (Seconds)",
+      "ApiUrlTitle" : "Server HTTPS Base URL",
+      "ActivationKeyTitle" : "Device Activation Code (Paid)",
+      "SyncKeyTitle" : "Sync Key (Blank = Auto Device ID)",
+      "AlwaysOnDisplayTitle" : "Always-On Screen While Open",
+      "AppName" : "MoatWatch"
+    }
+  }
+}

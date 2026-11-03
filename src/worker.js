@@ -1268,15 +1268,73 @@ export default {
         if (researchFeed.sweep && researchFeed.sweep.dirty) {
           await persistKey(env, "research_feed", runtimeResearchStore);
         }
+        let appPackages = null;
+        if (env && env.ASSETS && typeof env.ASSETS.fetch === "function") {
+          try {
+            const pkgUrl = new URL("/downloads/packages.json", request.url);
+            const pkgRes = await env.ASSETS.fetch(new Request(pkgUrl.toString()));
+            if (pkgRes && pkgRes.ok) {
+              appPackages = await pkgRes.json();
+            }
+          } catch (_) {}
+        }
         return adminJsonResponse(reqHeaders, 200, {
           ok: true,
           admin: { ...auth, ...meta },
           ...licensesData,
+          appPackages,
           compatibleDevices: COMPATIBLE_GARMIN_DEVICES,
           smtpConfig: emailServiceInstance.getSmtpConfig(false),
           researchFeed,
           biAnalytics,
           hermesNode: buildHermesNodeStatusPayload(runtimeHermesNodeState)
+        });
+      }
+
+      if (pathname === "/api/admin/billing-mode" && request.method === "GET") {
+        await refreshLicensesFromD1(env);
+        return adminJsonResponse(reqHeaders, 200, {
+          ...licenseManagerInstance.getBillingMode(),
+          summary: licenseManagerInstance.listDevices().summary
+        });
+      }
+
+      if (pathname === "/api/admin/billing-mode" && (request.method === "POST" || request.method === "PUT")) {
+        try {
+          await refreshLicensesFromD1(env);
+          const body = await parseRequestBody(request);
+          const requestedMode =
+            body.mode ||
+            body.billingMode ||
+            (body.hideLicenseUi === true ? "FREE" : body.hideLicenseUi === false ? "PAID" : "FREE");
+          const updated = licenseManagerInstance.setBillingMode(requestedMode, {
+            actor: auth.email || OWNER_EMAIL
+          });
+          await flushStores(env, ctx);
+          return adminJsonResponse(reqHeaders, 200, {
+            ...updated,
+            ...licenseManagerInstance.listDevices()
+          });
+        } catch (err) {
+          return adminJsonResponse(reqHeaders, 400, { ok: false, error: err.message });
+        }
+      }
+
+      if (pathname === "/api/admin/app-packages" && request.method === "GET") {
+        let appPackages = { generatedAt: new Date().toISOString(), editions: [] };
+        if (env && env.ASSETS && typeof env.ASSETS.fetch === "function") {
+          try {
+            const pkgUrl = new URL("/downloads/packages.json", request.url);
+            const pkgRes = await env.ASSETS.fetch(new Request(pkgUrl.toString()));
+            if (pkgRes && pkgRes.ok) {
+              appPackages = await pkgRes.json();
+            }
+          } catch (_) {}
+        }
+        return adminJsonResponse(reqHeaders, 200, {
+          ok: true,
+          appPackages,
+          ...appPackages
         });
       }
 
@@ -1725,6 +1783,11 @@ export default {
       newHeaders.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
       newHeaders.set("CDN-Cache-Control", "no-store");
       newHeaders.set("Cloudflare-CDN-Cache-Control", "no-store");
+      if (assetPath.endsWith(".iq") || assetPath.endsWith(".prg")) {
+        const dlName = assetPath.split("/").pop() || "MoatWatch.iq";
+        newHeaders.set("Content-Type", "application/octet-stream");
+        newHeaders.set("Content-Disposition", `attachment; filename="${dlName}"`);
+      }
       return new Response(assetRes.body, {
         status: assetRes.status,
         headers: newHeaders

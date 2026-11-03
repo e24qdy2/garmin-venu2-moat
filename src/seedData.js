@@ -74,6 +74,7 @@ const INITIAL_LICENSES_STORE = {
   ownerEmail: "saharat.bun@icloud.com",
   notifyEmail: "e24qdy2@gmail.com",
   trialDays: 14,
+  billingMode: "FREE",
   adminAuth: {
     salt: "8afc87357768566c22f9d55428097c5e",
     passwordHash: "6bc377e4ee79f520056be39c161efd03b0d2b20aed9fa717342465653d8239ad3b77561bc7dd10b43638b7e16f19a855d73c613dedf5609bc10a086afbc75450",

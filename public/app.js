@@ -1310,8 +1310,12 @@
       status: 'TRIAL',
       daysRemaining: 14,
       isExpired: false,
+      billingMode: 'FREE',
+      hideLicenseUi: true,
       ownerEmail: 'saharat.bun@icloud.com'
     };
+
+    const isFreeMode = lic.hideLicenseUi !== false && (Boolean(lic.hideLicenseUi) || lic.billingMode === 'FREE');
 
     if (el('autoSwipeToggle')) el('autoSwipeToggle').checked = Boolean(ws.autoSwipeEnabled);
     if (el('autoSwipeSecInput')) el('autoSwipeSecInput').value = ws.autoSwipeSec || 5;
@@ -1342,8 +1346,32 @@
         : `Manual · ${sortOrder}`;
     }
 
-    // License Badges
+    // Toggle PaidMode vs FreeMode visibility
+    const headerBadgeBtn = el('headerLicenseBadge');
+    const purchaseSec = el('deviceLicensePurchaseSection');
     const badgeEl = el('licenseStatusBadge');
+    const cardTitleEl = el('deviceLicenseCardTitle');
+    const dockTabLabelEl = el('dockTabDeviceLabel');
+
+    if (isFreeMode) {
+      headerBadgeBtn?.classList.add('hidden');
+      headerBadgeBtn?.classList.remove('sm:inline-flex');
+      purchaseSec?.classList.add('hidden');
+      badgeEl?.classList.add('hidden');
+      if (cardTitleEl) cardTitleEl.textContent = 'Garmin Device ID & Sync';
+      if (dockTabLabelEl) dockTabLabelEl.textContent = 'Device';
+      el('licenseRequestModal')?.classList.add('hidden');
+      el('licenseRequestModal')?.classList.remove('flex');
+    } else {
+      headerBadgeBtn?.classList.remove('hidden');
+      headerBadgeBtn?.classList.add('sm:inline-flex');
+      purchaseSec?.classList.remove('hidden');
+      badgeEl?.classList.remove('hidden');
+      if (cardTitleEl) cardTitleEl.textContent = 'Device License & Trial';
+      if (dockTabLabelEl) dockTabLabelEl.textContent = 'Device & Key';
+    }
+
+    // License Badges (Rendered when PaidMode is active)
     const headerBadgeText = el('headerLicenseBadgeText');
     const statusTextEl = el('licenseStatusText');
     const daysTextEl = el('licenseDaysRemainingText');
@@ -1352,7 +1380,7 @@
     if (lic.status === 'ACTIVE') {
       if (badgeEl) {
         badgeEl.textContent = 'PRO ACTIVE · UNLIMITED';
-        badgeEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+        badgeEl.className = `${isFreeMode ? 'hidden ' : ''}px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40`;
       }
       if (headerBadgeText) headerBadgeText.textContent = 'PRO ACTIVE';
       if (statusTextEl) statusTextEl.textContent = `Device ${maskSecretIdentifier(lic.deviceId)} is permanently unlocked.`;
@@ -1361,7 +1389,7 @@
     } else if (lic.isExpired || lic.status === 'EXPIRED') {
       if (badgeEl) {
         badgeEl.textContent = 'TRIAL EXPIRED';
-        badgeEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40';
+        badgeEl.className = `${isFreeMode ? 'hidden ' : ''}px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40`;
       }
       if (headerBadgeText) headerBadgeText.textContent = 'TRIAL EXPIRED';
       if (statusTextEl) statusTextEl.textContent = `14-day free trial for ${maskSecretIdentifier(lic.deviceId)} has expired.`;
@@ -1372,7 +1400,7 @@
       const pct = Math.max(8, Math.min(100, Math.round((rem / 14) * 100)));
       if (badgeEl) {
         badgeEl.textContent = `FREE TRIAL · ${rem}D LEFT`;
-        badgeEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40';
+        badgeEl.className = `${isFreeMode ? 'hidden ' : ''}px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40`;
       }
       if (headerBadgeText) headerBadgeText.textContent = `TRIAL · ${rem}D`;
       if (statusTextEl) statusTextEl.textContent = `14-Day Free Trial active on ${maskSecretIdentifier(lic.deviceId)}.`;

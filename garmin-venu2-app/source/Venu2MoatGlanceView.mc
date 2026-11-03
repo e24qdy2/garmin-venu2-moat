@@ -25,11 +25,15 @@ class Venu2MoatGlanceView extends WatchUi.GlanceView {
         var isExpired = false;
 
         if (cached != null) {
-            if (cached.hasKey("lic")) {
+            if (!BuildEdition.IS_FREE_FULL && cached.hasKey("lic")) {
                 var lic = cached.get("lic") as Dictionary?;
-                if (lic != null && lic.hasKey("exp")) {
-                    var expVal = lic.get("exp") as Number?;
-                    isExpired = (expVal != null && expVal == 1);
+                if (lic != null) {
+                    var hideVal = lic.get("hide") as Number?;
+                    var isHiddenFree = (hideVal != null && hideVal == 1);
+                    if (!isHiddenFree && lic.hasKey("exp")) {
+                        var expVal = lic.get("exp") as Number?;
+                        isExpired = (expVal != null && expVal == 1);
+                    }
                 }
             }
             if (isExpired) {

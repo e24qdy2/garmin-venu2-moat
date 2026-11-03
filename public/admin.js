@@ -17,6 +17,7 @@
     passwordUpdatedAt: "",
     isDefaultPassword: false,
     summary: null,
+    appPackages: null,
     devices: [],
     selectedDeviceIds: new Set(),
     customerRequests: [],
@@ -762,6 +763,7 @@
     }
     const data = await res.json();
     state.summary = data.summary || {};
+    if (data.appPackages) state.appPackages = data.appPackages;
     state.devices = data.devices || [];
     state.customerRequests = data.customerRequests || [];
     state.emailLogs = data.emailLogs || [];
@@ -2018,6 +2020,211 @@
     return true;
   }
 
+  function renderBillingModeControl() {
+    const s = state.summary || {};
+    const isFree = s.hideLicenseUi !== false && (s.billingMode || "FREE") === "FREE";
+    const cardEl = el("adminBillingModeCard");
+    const badgeEl = el("adminBillingModeBadge");
+    const descEl = el("adminBillingModeDesc");
+    const freeBtn = el("setBillingModeFreeBtn");
+    const paidBtn = el("setBillingModePaidBtn");
+
+    if (cardEl) {
+      cardEl.className = isFree
+        ? "mw-glass-card p-6 border border-emerald-500/35"
+        : "mw-glass-card p-6 border border-amber-500/35";
+    }
+    if (badgeEl) {
+      badgeEl.textContent = isFree
+        ? "HIDE (FREEMODE · FULL LIFETIME UNLOCKED)"
+        : "UNHIDE (PAIDMODE · 14D TRIAL & PRO KEY ACTIVE)";
+      badgeEl.className = isFree
+        ? "font-mono text-xs px-3 py-1 rounded-full bg-emerald/20 ring-1 ring-emerald/45 text-emerald font-bold"
+        : "font-mono text-xs px-3 py-1 rounded-full bg-amber/20 ring-1 ring-amber/45 text-amber font-bold";
+    }
+    if (descEl) {
+      descEl.innerHTML = isFree
+        ? `ขณะนี้อยู่ในโหมด <strong class="text-emerald">Hide (FreeMode)</strong> — ซ่อนปุ่มซื้อ Activation Key, ซ่อนปุ่มขอขยายเวลา Trial 14 วัน, ซ่อนช่องกรอก Pro Key และปลดล็อก Full Lifetime อัตโนมัติทั้งบนหน้าเว็บหลักและนาฬิกา Garmin ทุกเครื่อง (คงเหลือเฉพาะ Device ID และ Sync Key สำหรับเชื่อมต่อพอร์ต)`
+        : `ขณะนี้อยู่ในโหมด <strong class="text-amber">Unhide (PaidMode)</strong> — แสดงปุ่มซื้อ Activation Key, ปุ่มขอขยายเวลา Trial 14 วัน, ช่องกรอกรหัส Pro Key และบังคับใช้ระบบทดลองใช้ 14 วันตามปกติ`;
+    }
+    if (freeBtn) {
+      freeBtn.className = isFree
+        ? "rounded-xl bg-emerald text-slate-950 font-bold px-4 py-2.5 text-xs hover:brightness-110 transition-all flex items-center gap-2 shadow-lg shadow-emerald/25 ring-2 ring-emerald"
+        : "rounded-xl bg-white/[0.06] hover:bg-emerald/20 text-slate-200 hover:text-emerald ring-1 ring-white/15 hover:ring-emerald/40 font-semibold px-4 py-2.5 text-xs transition-all flex items-center gap-2";
+    }
+    if (paidBtn) {
+      paidBtn.className = !isFree
+        ? "rounded-xl bg-amber text-slate-950 font-bold px-4 py-2.5 text-xs hover:brightness-110 transition-all flex items-center gap-2 shadow-lg shadow-amber/25 ring-2 ring-amber"
+        : "rounded-xl bg-white/[0.06] hover:bg-amber/20 text-slate-200 hover:text-amber ring-1 ring-white/15 hover:ring-amber/40 font-semibold px-4 py-2.5 text-xs transition-all flex items-center gap-2";
+    }
+  }
+
+  async function setAdminBillingMode(mode) {
+    const normalized = String(mode || "").toUpperCase() === "PAID" ? "PAID" : "FREE";
+    const res = await fetch("/api/admin/billing-mode", {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify({ mode: normalized })
+    });
+    const data = await res.json();
+    if (!res.ok || !data.ok) {
+      showToast(data.error || "Unable to update License UI Billing Mode.");
+      return;
+    }
+    state.summary = data.summary || state.summary;
+    state.devices = data.devices || state.devices;
+    state.auditLogs = data.auditLogs || state.auditLogs;
+    renderDashboard();
+    showToast(
+      normalized === "FREE"
+        ? "Switched to Hide (FreeMode): ซ่อนข้อความซื้อ Key บนเว็บ และปลดล็อก Full Lifetime แล้ว"
+        : "Switched to Unhide (PaidMode): แสดงข้อความซื้อ Key และเปิดระบบ Trial 14 วันแล้ว"
+    );
+  }
+
+  function formatBytesShort(bytes) {
+    const b = Number(bytes) || 0;
+    if (b >= 1024 * 1024) return `${(b / (1024 * 1024)).toFixed(2)} MB`;
+    if (b >= 1024) return `${Math.round(b / 1024)} KB`;
+    return `${b} B`;
+  }
+
+  function renderAppPackagesDownloadCenter() {
+    const pkgManifest = state.appPackages;
+    const gridEl = el("adminAppPackagesGrid");
+    const badgeEl = el("adminAppPackagesBuiltAtBadge");
+    if (!gridEl || !pkgManifest || !Array.isArray(pkgManifest.editions) || !pkgManifest.editions.length) {
+      return;
+    }
+
+    if (badgeEl) {
+      const dtRaw = pkgManifest.builtAt || pkgManifest.generatedAt;
+      const dtStr = dtRaw ? new Date(dtRaw).toLocaleString("en-GB") : "";
+      badgeEl.textContent = `v${pkgManifest.version || "1.0.2"} · ${pkgManifest.editions.length} Editions${dtStr ? " · Built " + dtStr : ""}`;
+    }
+
+    const accentMap = {
+      freefull: {
+        ring: "ring-emerald/40",
+        badgeBg: "bg-emerald/20 text-emerald",
+        titleColor: "text-emerald",
+        primaryBtn: "bg-emerald/20 hover:bg-emerald/30 ring-1 ring-emerald/45 text-emerald font-bold"
+      },
+      beta: {
+        ring: "ring-cyan/35",
+        badgeBg: "bg-cyan/20 text-cyan",
+        titleColor: "text-cyan",
+        primaryBtn: "bg-cyan/20 hover:bg-cyan/30 ring-1 ring-cyan/45 text-cyan font-bold"
+      },
+      public: {
+        ring: "ring-emerald/35",
+        badgeBg: "bg-emerald/20 text-emerald",
+        titleColor: "text-emerald",
+        primaryBtn: "bg-emerald/20 hover:bg-emerald/30 ring-1 ring-emerald/45 text-emerald font-bold"
+      },
+      paid: {
+        ring: "ring-amber/35",
+        badgeBg: "bg-amber/20 text-amber",
+        titleColor: "text-amber",
+        primaryBtn: "bg-amber/20 hover:bg-amber/30 ring-1 ring-amber/45 text-amber font-bold"
+      }
+    };
+
+    gridEl.innerHTML = pkgManifest.editions
+      .map((ed) => {
+        const style = accentMap[ed.id] || accentMap.freefull;
+        const files = ed.files || {};
+        const primaryIq = files.iqPublic || files.iq || null;
+        const betaIq = files.iqBeta || null;
+        const prgObj = files.prg || null;
+
+        const iqFile = primaryIq?.fileName || ed.iqFile || "";
+        const iqUrl = primaryIq?.url || (iqFile ? `/downloads/${encodeURIComponent(iqFile)}` : "");
+        const iqSizeBytes = primaryIq?.sizeBytes || ed.iqSizeBytes || 0;
+        const iqSha256 = primaryIq?.sha256 || ed.iqSha256 || "";
+
+        const betaIqFile = betaIq?.fileName || ed.betaIqFile || "";
+        const betaIqUrl = betaIq?.url || (betaIqFile ? `/downloads/${encodeURIComponent(betaIqFile)}` : "");
+        const betaIqSizeBytes = betaIq?.sizeBytes || ed.betaIqSizeBytes || 0;
+
+        const prgFile = prgObj?.fileName || ed.prgFile || "";
+        const prgUrl = prgObj?.url || (prgFile ? `/downloads/${encodeURIComponent(prgFile)}` : "");
+        const prgSizeBytes = prgObj?.sizeBytes || ed.prgSizeBytes || 0;
+
+        return `
+          <div class="rounded-2xl bg-void/80 ring-1 ${style.ring} p-4 space-y-3 flex flex-col justify-between">
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between gap-2">
+                <span class="font-mono text-xs font-bold ${style.titleColor} uppercase">${escapeHtml(ed.id)} EDITION</span>
+                <span class="font-mono text-[10px] px-2 py-0.5 rounded-full ${style.badgeBg} font-semibold">${escapeHtml(ed.badge || ed.licenseMode || "")}</span>
+              </div>
+              <h3 class="font-display text-sm font-bold text-alabaster">${escapeHtml(ed.name)}</h3>
+              <p class="text-[11px] text-slate-300 leading-relaxed">${escapeHtml(ed.description || "")}</p>
+              <div class="pt-1 text-[10px] font-mono text-slate-400 space-y-0.5">
+                <div>UUID: <span class="text-slate-200">${escapeHtml(ed.manifestAppId || "-")}</span></div>
+                ${iqSha256 ? `<div>SHA256: <span class="text-cyan">${escapeHtml(iqSha256)}</span></div>` : ""}
+              </div>
+            </div>
+
+            <div class="space-y-1.5 pt-2 border-t border-white/[0.06]">
+              ${
+                iqUrl
+                  ? `<a
+                      href="${iqUrl}"
+                      download="${escapeHtml(iqFile)}"
+                      class="w-full rounded-xl ${style.primaryBtn} px-3 py-2 text-xs font-mono flex items-center justify-between transition-all"
+                    >
+                      <span>⬇ ${escapeHtml(iqFile)}</span>
+                      <span class="text-[10px] opacity-85">${formatBytesShort(iqSizeBytes)}</span>
+                    </a>`
+                  : ""
+              }
+              ${
+                betaIqUrl
+                  ? `<a
+                      href="${betaIqUrl}"
+                      download="${escapeHtml(betaIqFile)}"
+                      class="w-full rounded-xl bg-cyan/15 hover:bg-cyan/25 ring-1 ring-cyan/35 px-3 py-1.5 text-[11px] font-mono font-semibold text-cyan flex items-center justify-between transition-all"
+                    >
+                      <span>⬇ ${escapeHtml(betaIqFile)} (Beta UUID)</span>
+                      <span class="text-[10px] opacity-85">${formatBytesShort(betaIqSizeBytes)}</span>
+                    </a>`
+                  : ""
+              }
+              ${
+                prgUrl
+                  ? `<a
+                      href="${prgUrl}"
+                      download="${escapeHtml(prgFile)}"
+                      class="w-full rounded-xl bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/15 px-3 py-1.5 text-[11px] font-mono text-slate-200 flex items-center justify-between transition-all"
+                    >
+                      <span>⌚ ${escapeHtml(prgFile)} (Sideload)</span>
+                      <span class="text-[10px] text-slate-400">${formatBytesShort(prgSizeBytes)}</span>
+                    </a>`
+                  : ""
+              }
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+  }
+
+  async function fetchAppPackages(silent = false) {
+    try {
+      const res = await fetch("/api/admin/app-packages", { headers: authHeaders() });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data && data.ok && data.appPackages) {
+        state.appPackages = data.appPackages;
+        renderAppPackagesDownloadCenter();
+        if (!silent) {
+          showToast(`Loaded ${data.appPackages.editions?.length || 4} Garmin App Package editions`);
+        }
+      }
+    } catch (_) {}
+  }
+
   function renderDashboard() {
     const s = state.summary || {};
     el("kpiTotalDevices").textContent = String(s.totalDevices ?? 0);
@@ -2028,6 +2235,8 @@
       el("kpiPendingRequests").textContent = String(s.pendingRequests ?? 0);
     }
 
+    renderBillingModeControl();
+    renderAppPackagesDownloadCenter();
     renderHermesControlSection();
     renderBiDashboard();
     renderHermesCmsSection();
@@ -2951,6 +3160,11 @@
       await navigator.clipboard.writeText(state.lastGeneratedKey);
       showToast(`Copied key ${state.lastGeneratedKey}`);
     });
+
+    // 10. License & Purchase UI Billing Mode Toggle (Hide FreeMode / Unhide PaidMode) + App Packages Refresh
+    el("setBillingModeFreeBtn")?.addEventListener("click", () => setAdminBillingMode("FREE"));
+    el("setBillingModePaidBtn")?.addEventListener("click", () => setAdminBillingMode("PAID"));
+    el("refreshAppPackagesBtn")?.addEventListener("click", () => fetchAppPackages(false));
   }
 
   document.addEventListener("DOMContentLoaded", async () => {

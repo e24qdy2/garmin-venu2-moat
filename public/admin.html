@@ -1124,6 +1124,172 @@
            SECTION 3: CUSTOMER REQUESTS QUEUE & REGISTERED GARMIN WATCH DEVICES
            =================================================================== -->
       <div id="section-admin-devices" class="space-y-6">
+        <!-- License & Purchase UI Visibility Control (Hide FreeMode / Unhide PaidMode) -->
+        <div id="adminBillingModeCard" class="mw-glass-card p-6 border border-emerald-500/30">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div class="space-y-1.5 max-w-3xl">
+              <div class="flex flex-wrap items-center gap-2.5">
+                <i class="ph-light ph-SlidersHorizontal text-emerald text-lg"></i>
+                <span class="text-xs font-mono uppercase tracking-wider text-emerald font-bold">WEB &amp; WATCH LICENSE DISPLAY MODE</span>
+                <span id="adminBillingModeBadge" class="font-mono text-xs px-3 py-1 rounded-full bg-emerald/20 ring-1 ring-emerald/45 text-emerald font-bold">
+                  HIDE (FREEMODE · FULL LIFETIME UNLOCKED)
+                </span>
+              </div>
+              <h2 class="font-display text-lg font-bold text-alabaster">
+                ตั้งค่าการแสดงผลระบบซื้อ Activation Key บนหน้าเว็บ &amp; นาฬิกา (Hide FreeMode / Unhide PaidMode)
+              </h2>
+              <p id="adminBillingModeDesc" class="text-xs text-slate-300 leading-relaxed">
+                ขณะนี้อยู่ในโหมด <strong class="text-emerald">Hide (FreeMode)</strong> — ซ่อนปุ่มซื้อ Activation Key, ซ่อนปุ่มขอขยายเวลา Trial 14 วัน, ซ่อนช่องกรอก Pro Key และปลดล็อก Full Lifetime อัตโนมัติทั้งบนหน้าเว็บหลักและนาฬิกา Garmin ทุกเครื่อง (คงเหลือเฉพาะ Device ID และ Sync Key สำหรับเชื่อมต่อพอร์ต)
+              </p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2.5">
+              <button
+                id="setBillingModeFreeBtn"
+                type="button"
+                class="rounded-xl bg-emerald text-slate-950 font-semibold px-4 py-2.5 text-xs hover:brightness-110 transition-all flex items-center gap-2 shadow-lg shadow-emerald/20"
+              >
+                <i class="ph-bold ph-eye-slash"></i>
+                <span>Hide (FreeMode · Full Lifetime)</span>
+              </button>
+              <button
+                id="setBillingModePaidBtn"
+                type="button"
+                class="rounded-xl bg-white/[0.06] hover:bg-amber/20 text-slate-200 hover:text-amber ring-1 ring-white/15 hover:ring-amber/40 font-semibold px-4 py-2.5 text-xs transition-all flex items-center gap-2"
+              >
+                <i class="ph-bold ph-eye"></i>
+                <span>Unhide (PaidMode · 14d Trial &amp; Key)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Garmin Connect IQ App Packages (.iq & .prg) Download Center -->
+        <div id="adminAppPackagesCard" class="mw-glass-card p-6 space-y-4 border border-cyan-500/25">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <i class="ph-light ph-package text-cyan text-lg"></i>
+                <span class="text-xs font-mono uppercase tracking-wider text-cyan font-bold">GARMIN CONNECT IQ STORE (.IQ) &amp; SIDELOAD (.PRG) REPOSITORY</span>
+              </div>
+              <h2 class="font-display text-lg font-bold text-alabaster mt-0.5">
+                Garmin Watch App Packages Download Center (FreeFull · Beta · Public · Paid)
+              </h2>
+              <p class="text-xs text-slate-400 mt-0.5">
+                ดาวน์โหลดไฟล์ <code class="font-mono text-cyan">.iq</code> สำหรับอัปโหลดขึ้น Garmin Connect IQ Developer Store (30 รุ่นนาฬิกา) หรือไฟล์ <code class="font-mono text-emerald">.prg</code> สำหรับวางในโฟลเดอร์ <code class="font-mono text-alabaster">GARMIN/APPS</code> บนนาฬิกาโดยตรง
+              </p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="adminAppPackagesBuiltAtBadge" class="font-mono text-[11px] px-3 py-1 rounded-full bg-cyan/15 ring-1 ring-cyan/35 text-cyan">
+                v1.0.2 · 4 Editions Ready
+              </span>
+              <button
+                id="refreshAppPackagesBtn"
+                type="button"
+                class="rounded-xl bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/15 px-3 py-1.5 text-xs font-mono text-slate-200 flex items-center gap-1.5"
+              >
+                <i class="ph-light ph-arrows-clockwise"></i>
+                <span>Refresh</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="adminAppPackagesGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+            <!-- Populated dynamically by admin.js (with static fallback links below) -->
+            <div class="rounded-2xl bg-void/80 ring-1 ring-emerald/35 p-4 space-y-3 flex flex-col justify-between">
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-mono text-xs font-bold text-emerald uppercase">FREEFULL EDITION</span>
+                  <span class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-emerald/20 text-emerald font-semibold">LIFETIME UNLOCKED</span>
+                </div>
+                <h3 class="font-display text-sm font-bold text-alabaster">Full Lifetime (No Key Required)</h3>
+                <p class="text-[11px] text-slate-400 leading-relaxed">ปลดล็อกถาวรในตัวแอปนาฬิกา ไม่ถามหา Activation Key และไม่มีวันหมดอายุ</p>
+              </div>
+              <div class="space-y-1.5 pt-2 border-t border-white/[0.06]">
+                <a href="/downloads/MoatWatch-FreeFull.iq" download="MoatWatch-FreeFull.iq" class="w-full rounded-xl bg-emerald/20 hover:bg-emerald/30 ring-1 ring-emerald/45 px-3 py-2 text-xs font-mono font-bold text-emerald flex items-center justify-between">
+                  <span>⬇ MoatWatch-FreeFull.iq (Public UUID)</span>
+                  <span class="text-[10px] opacity-80">1.11 MB</span>
+                </a>
+                <a href="/downloads/MoatWatch-FreeFull-Beta.iq" download="MoatWatch-FreeFull-Beta.iq" class="w-full rounded-xl bg-cyan/15 hover:bg-cyan/25 ring-1 ring-cyan/35 px-3 py-2 text-xs font-mono font-semibold text-cyan flex items-center justify-between">
+                  <span>⬇ MoatWatch-FreeFull-Beta.iq (Beta UUID)</span>
+                  <span class="text-[10px] opacity-80">1.11 MB</span>
+                </a>
+                <a href="/downloads/MoatWatch-FreeFull.prg" download="MoatWatch-FreeFull.prg" class="w-full rounded-xl bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/15 px-3 py-1.5 text-[11px] font-mono text-slate-200 flex items-center justify-between">
+                  <span>⌚ Sideload .PRG (GARMIN/APPS)</span>
+                  <span class="text-[10px] text-slate-400">165 KB</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="rounded-2xl bg-void/80 ring-1 ring-cyan/30 p-4 space-y-3 flex flex-col justify-between">
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-mono text-xs font-bold text-cyan uppercase">BETA EDITION</span>
+                  <span class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-cyan/20 text-cyan font-semibold">UUID 83e22c8d...</span>
+                </div>
+                <h3 class="font-display text-sm font-bold text-alabaster">Garmin Beta Store (Full Lifetime)</h3>
+                <p class="text-[11px] text-slate-400 leading-relaxed">สำหรับอัปโหลดขึ้นช่องทาง Beta App บน Garmin Developer Store (UUID 83e22c8d-edfe-40f4-9d8a-16a5fd99cbfa)</p>
+              </div>
+              <div class="space-y-1.5 pt-2 border-t border-white/[0.06]">
+                <a href="/downloads/MoatWatch-Beta.iq" download="MoatWatch-Beta.iq" class="w-full rounded-xl bg-cyan/20 hover:bg-cyan/30 ring-1 ring-cyan/45 px-3 py-2 text-xs font-mono font-bold text-cyan flex items-center justify-between">
+                  <span>⬇ MoatWatch-Beta.iq</span>
+                  <span class="text-[10px] opacity-80">1.11 MB</span>
+                </a>
+                <a href="/downloads/MoatWatch-Beta.prg" download="MoatWatch-Beta.prg" class="w-full rounded-xl bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/15 px-3 py-1.5 text-[11px] font-mono text-slate-200 flex items-center justify-between">
+                  <span>⌚ MoatWatch-Beta.prg (Sideload)</span>
+                  <span class="text-[10px] text-slate-400">165 KB</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="rounded-2xl bg-void/80 ring-1 ring-emerald/30 p-4 space-y-3 flex flex-col justify-between">
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-mono text-xs font-bold text-emerald uppercase">PUBLIC EDITION</span>
+                  <span class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-emerald/20 text-emerald font-semibold">UUID 94f33d9e...</span>
+                </div>
+                <h3 class="font-display text-sm font-bold text-alabaster">Garmin Public Store (Full Lifetime)</h3>
+                <p class="text-[11px] text-slate-400 leading-relaxed">สำหรับอัปโหลดขึ้นหน้าร้าน Public Store Listing (UUID 94f33d9e-fe0f-41a5-8e9b-27b6fe00dc0b) แบบปลดล็อกถาวร</p>
+              </div>
+              <div class="space-y-1.5 pt-2 border-t border-white/[0.06]">
+                <a href="/downloads/MoatWatch-Public.iq" download="MoatWatch-Public.iq" class="w-full rounded-xl bg-emerald/20 hover:bg-emerald/30 ring-1 ring-emerald/45 px-3 py-2 text-xs font-mono font-bold text-emerald flex items-center justify-between">
+                  <span>⬇ MoatWatch-Public.iq</span>
+                  <span class="text-[10px] opacity-80">1.11 MB</span>
+                </a>
+                <a href="/downloads/MoatWatch-Public.prg" download="MoatWatch-Public.prg" class="w-full rounded-xl bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/15 px-3 py-1.5 text-[11px] font-mono text-slate-200 flex items-center justify-between">
+                  <span>⌚ MoatWatch-Public.prg (Sideload)</span>
+                  <span class="text-[10px] text-slate-400">165 KB</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="rounded-2xl bg-void/80 ring-1 ring-amber/30 p-4 space-y-3 flex flex-col justify-between">
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-mono text-xs font-bold text-amber uppercase">PAID EDITION</span>
+                  <span class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-amber/20 text-amber font-semibold">14D TRIAL + KEY</span>
+                </div>
+                <h3 class="font-display text-sm font-bold text-alabaster">Paid / 14-Day Trial + Pro Key</h3>
+                <p class="text-[11px] text-slate-400 leading-relaxed">รุ่นมาตรฐานที่มีระบบทดลองใช้ 14 วัน และตรวจสอบรหัส Pro Activation Key ผูกกับ Device ID</p>
+              </div>
+              <div class="space-y-1.5 pt-2 border-t border-white/[0.06]">
+                <a href="/downloads/MoatWatch-Paid.iq" download="MoatWatch-Paid.iq" class="w-full rounded-xl bg-amber/20 hover:bg-amber/30 ring-1 ring-amber/45 px-3 py-2 text-xs font-mono font-bold text-amber flex items-center justify-between">
+                  <span>⬇ MoatWatch-Paid.iq (Public UUID)</span>
+                  <span class="text-[10px] opacity-80">1.12 MB</span>
+                </a>
+                <a href="/downloads/MoatWatch-Paid-Beta.iq" download="MoatWatch-Paid-Beta.iq" class="w-full rounded-xl bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/15 px-3 py-1.5 text-[11px] font-mono text-amber flex items-center justify-between">
+                  <span>⬇ MoatWatch-Paid-Beta.iq (Beta UUID)</span>
+                  <span class="text-[10px] opacity-80">1.12 MB</span>
+                </a>
+                <a href="/downloads/MoatWatch-Paid.prg" download="MoatWatch-Paid.prg" class="w-full rounded-xl bg-white/[0.06] hover:bg-white/[0.12] ring-1 ring-white/15 px-3 py-1.5 text-[11px] font-mono text-slate-200 flex items-center justify-between">
+                  <span>⌚ MoatWatch-Paid.prg (Sideload)</span>
+                  <span class="text-[10px] text-slate-400">165 KB</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Customer Requests Approval Queue -->
         <div class="mw-glass-card p-6">
           <div class="flex flex-wrap items-center justify-between gap-3 mb-4">

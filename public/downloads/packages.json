@@ -1,0 +1,137 @@
+{
+  "generatedAt": "2026-11-03T04:34:32.498Z",
+  "sdkVersion": "8.4.1",
+  "supportedModelsCount": 20,
+  "editions": [
+    {
+      "id": "freefull",
+      "name": "FreeFull (Full Lifetime Unlocked)",
+      "badge": "FREEFULL LIFETIME",
+      "channel": "Public + Beta Store & USB Sideload",
+      "licenseMode": "FREEFULL_LIFETIME",
+      "requiresActivationKey": false,
+      "manifestAppId": "94f33d9e-fe0f-41a5-8e9b-27b6fe00dc0b",
+      "betaManifestAppId": "83e22c8d-edfe-40f4-9d8a-16a5fd99cbfa",
+      "description": "ปลดล็อก Full Lifetime ถาวรในตัวแอป ไม่ต้องกรอก Activation Key ไม่มีวันหมดอายุ (แม้ใช้งาน Offline) และซ่อนช่องกรอกคีย์ใน Connect IQ Settings",
+      "files": {
+        "iqPublic": {
+          "fileName": "MoatWatch-FreeFull.iq",
+          "url": "/downloads/MoatWatch-FreeFull.iq",
+          "sizeBytes": 1158639,
+          "sizeKb": 1131.5,
+          "sha256": "afdb9759e2b382fc",
+          "updatedAt": "2026-11-03T04:31:52.589Z"
+        },
+        "iqBeta": {
+          "fileName": "MoatWatch-FreeFull-Beta.iq",
+          "url": "/downloads/MoatWatch-FreeFull-Beta.iq",
+          "sizeBytes": 1158606,
+          "sizeKb": 1131.5,
+          "sha256": "58d37890fa27d937",
+          "updatedAt": "2026-11-03T04:30:42.769Z"
+        },
+        "prg": {
+          "fileName": "MoatWatch-FreeFull.prg",
+          "url": "/downloads/MoatWatch-FreeFull.prg",
+          "sizeBytes": 169644,
+          "sizeKb": 165.7,
+          "sha256": "18bcc761c83baac5",
+          "updatedAt": "2026-11-03T04:29:38.013Z"
+        }
+      }
+    },
+    {
+      "id": "beta",
+      "name": "Beta Channel (Garmin Store Beta)",
+      "badge": "BETA CHANNEL",
+      "channel": "Garmin Connect IQ Beta Store",
+      "licenseMode": "FREEFULL_LIFETIME",
+      "requiresActivationKey": false,
+      "manifestAppId": "83e22c8d-edfe-40f4-9d8a-16a5fd99cbfa",
+      "description": "แพ็กเกจสำหรับอัปโหลดขึ้น Garmin Connect IQ Developer Portal ช่องทาง Beta App (UUID: 83e22c8d-edfe-40f4-9d8a-16a5fd99cbfa) ปลดล็อก Full Lifetime",
+      "files": {
+        "iq": {
+          "fileName": "MoatWatch-Beta.iq",
+          "url": "/downloads/MoatWatch-Beta.iq",
+          "sizeBytes": 1158606,
+          "sizeKb": 1131.5,
+          "sha256": "58d37890fa27d937",
+          "updatedAt": "2026-11-03T04:30:42.769Z"
+        },
+        "prg": {
+          "fileName": "MoatWatch-Beta.prg",
+          "url": "/downloads/MoatWatch-Beta.prg",
+          "sizeBytes": 169644,
+          "sizeKb": 165.7,
+          "sha256": "18bcc761c83baac5",
+          "updatedAt": "2026-11-03T04:29:38.013Z"
+        }
+      }
+    },
+    {
+      "id": "public",
+      "name": "Public Channel (Garmin Store Public)",
+      "badge": "PUBLIC STORE",
+      "channel": "Garmin Connect IQ Public Store",
+      "licenseMode": "FREEFULL_LIFETIME",
+      "requiresActivationKey": false,
+      "manifestAppId": "94f33d9e-fe0f-41a5-8e9b-27b6fe00dc0b",
+      "description": "แพ็กเกจสำหรับอัปโหลดขึ้น Garmin Connect IQ Store สาธารณะ (UUID: 94f33d9e-fe0f-41a5-8e9b-27b6fe00dc0b) รองรับนาฬิกา 20 รุ่น ปลดล็อก Full Lifetime",
+      "files": {
+        "iq": {
+          "fileName": "MoatWatch-Public.iq",
+          "url": "/downloads/MoatWatch-Public.iq",
+          "sizeBytes": 1158639,
+          "sizeKb": 1131.5,
+          "sha256": "afdb9759e2b382fc",
+          "updatedAt": "2026-11-03T04:31:52.589Z"
+        },
+        "prg": {
+          "fileName": "MoatWatch-Public.prg",
+          "url": "/downloads/MoatWatch-Public.prg",
+          "sizeBytes": 169644,
+          "sizeKb": 165.7,
+          "sha256": "e94fe851d6190f25",
+          "updatedAt": "2026-11-03T04:32:02.447Z"
+        }
+      }
+    },
+    {
+      "id": "paid",
+      "name": "Paid / Pro Key Edition (14D Trial + Key)",
+      "badge": "PAID / PRO KEY",
+      "channel": "Commercial / Key-Gated Release",
+      "licenseMode": "TRIAL_14D_PRO_KEY",
+      "requiresActivationKey": true,
+      "manifestAppId": "94f33d9e-fe0f-41a5-8e9b-27b6fe00dc0b",
+      "betaManifestAppId": "83e22c8d-edfe-40f4-9d8a-16a5fd99cbfa",
+      "description": "เวอร์ชันระบบสมาชิก ทดลองใช้ฟรี 14 วัน พร้อมหน้าจอแจ้งเตือนเมื่อหมดอายุและช่องใส่รหัส Pro Activation Key (ทำงานร่วมกับปุ่ม Unhide PaidMode บน Admin Panel)",
+      "files": {
+        "iqPublic": {
+          "fileName": "MoatWatch-Paid.iq",
+          "url": "/downloads/MoatWatch-Paid.iq",
+          "sizeBytes": 1170959,
+          "sizeKb": 1143.5,
+          "sha256": "5cca5f6111c64598",
+          "updatedAt": "2026-11-03T04:33:09.784Z"
+        },
+        "iqBeta": {
+          "fileName": "MoatWatch-Paid-Beta.iq",
+          "url": "/downloads/MoatWatch-Paid-Beta.iq",
+          "sizeBytes": 1171941,
+          "sizeKb": 1144.5,
+          "sha256": "6fb590c250706373",
+          "updatedAt": "2026-11-03T04:34:31.774Z"
+        },
+        "prg": {
+          "fileName": "MoatWatch-Paid.prg",
+          "url": "/downloads/MoatWatch-Paid.prg",
+          "sizeBytes": 169644,
+          "sizeKb": 165.7,
+          "sha256": "e7fe818813b7cc04",
+          "updatedAt": "2026-11-03T04:33:20.158Z"
+        }
+      }
+    }
+  ]
+}

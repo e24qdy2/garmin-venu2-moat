@@ -45,8 +45,8 @@ class Venu2MoatView extends WatchUi.View {
         dc.setColor(0x94A3B8, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, (h * 5) / 100, fMicro, timeStr + modeFlags, Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Enforce 14-Day Trial Expiration Lock Screen
-        if (_store.trialExpired) {
+        // Enforce 14-Day Trial Expiration Lock Screen (Bypassed in FreeFull build or when server FreeMode is active)
+        if (!BuildEdition.IS_FREE_FULL && !_store.hideLicenseUi && _store.trialExpired) {
             MoatWatchLayout.drawTrialExpiredScreen(dc, _store, w, h, cx);
             return;
         }

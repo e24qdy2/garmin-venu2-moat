@@ -523,7 +523,8 @@
     if (el('watchListClock')) el('watchListClock').textContent = clockStr;
     if (el('watchListSyncKey')) el('watchListSyncKey').textContent = p.syncKey;
 
-    const isTrialExpired = Boolean(state.license?.isExpired);
+    const isFreeMode = Boolean(state.license?.hideLicenseUi) || state.license?.billingMode === 'FREE';
+    const isTrialExpired = !isFreeMode && Boolean(state.license?.isExpired);
     const expiredView = el('watchViewExpired');
     const expDid = el('watchExpiredDeviceId');
     if (expDid) {

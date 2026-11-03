@@ -46,9 +46,10 @@ class PortfolioStore {
     public var hardwareDeviceId as String = "V2-88VENU20";
     public var deviceId as String = "V2-88VENU20";
     public var activationKey as String = "";
-    public var licenseStatus as String = "TRIAL";
-    public var trialDaysLeft as Number = 14;
+    public var licenseStatus as String = BuildEdition.IS_FREE_FULL ? "FREEFULL" : "TRIAL";
+    public var trialDaysLeft as Number = BuildEdition.IS_FREE_FULL ? 9999 : 14;
     public var trialExpired as Boolean = false;
+    public var hideLicenseUi as Boolean = BuildEdition.IS_FREE_FULL;
     public var ownerEmail as String = "saharat.bun@icloud.com";
 
     private var _runtimeTimer as Timer.Timer?;
@@ -270,29 +271,58 @@ class PortfolioStore {
                         deviceId = didStr;
                     }
                 }
-                if (lic.hasKey("st")) {
-                    var stStr = lic.get("st") as String?;
-                    if (stStr != null) {
-                        licenseStatus = stStr;
-                    }
-                }
-                if (lic.hasKey("days")) {
-                    var dLeft = lic.get("days") as Number?;
-                    if (dLeft != null) {
-                        trialDaysLeft = dLeft;
-                    }
-                }
-                if (lic.hasKey("exp")) {
-                    var expVal = lic.get("exp") as Number?;
-                    trialExpired = (expVal != null && expVal == 1);
-                }
                 if (lic.hasKey("own")) {
                     var ownStr = lic.get("own") as String?;
                     if (ownStr != null && ownStr.length() > 0) {
                         ownerEmail = ownStr;
                     }
                 }
+                var serverHide = false;
+                if (lic.hasKey("hide")) {
+                    var hideVal = lic.get("hide") as Number?;
+                    serverHide = (hideVal != null && hideVal == 1);
+                }
+                if (lic.hasKey("mode")) {
+                    var modeStr = lic.get("mode") as String?;
+                    if (modeStr != null && modeStr.equals("FREE")) {
+                        serverHide = true;
+                    }
+                }
+                if (BuildEdition.IS_FREE_FULL || serverHide) {
+                    licenseStatus = "FREEFULL";
+                    trialDaysLeft = 9999;
+                    trialExpired = false;
+                    hideLicenseUi = true;
+                } else {
+                    hideLicenseUi = false;
+                    if (lic.hasKey("st")) {
+                        var stStr = lic.get("st") as String?;
+                        if (stStr != null) {
+                            licenseStatus = stStr;
+                        }
+                    }
+                    if (lic.hasKey("days")) {
+                        var dLeft = lic.get("days") as Number?;
+                        if (dLeft != null) {
+                            trialDaysLeft = dLeft;
+                        }
+                    } else if (lic.hasKey("d")) {
+                        var dShort = lic.get("d") as Number?;
+                        if (dShort != null) {
+                            trialDaysLeft = dShort;
+                        }
+                    }
+                    if (lic.hasKey("exp")) {
+                        var expVal = lic.get("exp") as Number?;
+                        trialExpired = (expVal != null && expVal == 1);
+                    }
+                }
             }
+        } else if (BuildEdition.IS_FREE_FULL) {
+            licenseStatus = "FREEFULL";
+            trialDaysLeft = 9999;
+            trialExpired = false;
+            hideLicenseUi = true;
         }
 
         if (data.hasKey("fg")) {

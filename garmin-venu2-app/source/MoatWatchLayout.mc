@@ -131,6 +131,9 @@ module MoatWatchLayout {
         } else if (store.sortByPctOrder.equals("DESC")) {
             modeFlags = modeFlags + " · ▼%";
         }
+        if (BuildEdition.IS_FREE_FULL || store.hideLicenseUi || store.licenseStatus.equals("FREEFULL")) {
+            return modeFlags;
+        }
         if (store.licenseStatus.equals("ACTIVE")) {
             modeFlags = modeFlags + " · PRO";
         } else if (!store.trialExpired) {

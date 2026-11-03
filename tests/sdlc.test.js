@@ -229,7 +229,13 @@ async function runSdlcSuite() {
   assert.strictEqual(restorePwdRes.json.isDefaultPassword, true);
   console.log("[PASS] 4. Admin Password Login (.env secret) + Change Password + HttpOnly Cookie");
 
-  // 5. 14-Day Free Trial Initialization & Expiration Lock Screen
+  // 5. 14-Day Free Trial Initialization & Expiration Lock Screen (Tested under PaidMode)
+  await httpRequest(
+    "POST",
+    "/api/admin/billing-mode",
+    { mode: "PAID" },
+    { "X-Admin-Token": adminToken }
+  );
   await httpRequest(
     "POST",
     "/api/admin/devices/update",
@@ -1854,6 +1860,101 @@ async function runSdlcSuite() {
       assert.ok(!custom39Matrix.some((r) => r.symbol === "SYM1" || r.symbol === "SYM2"));
       assert.ok(custom39Matrix.some((r) => r.symbol === "BA"));
       console.log("[PASS] 24. Dynamic 1:1 Watchlist Matrix Left-Join (41 items + BA on V2-91260081 & immediate add/remove sync) verified");
+
+      // -----------------------------------------------------------------------
+      // 25. ADMIN BILLING MODE TOGGLE (HIDE FREEMODE / UNHIDE PAIDMODE) & .IQ APP PACKAGES DOWNLOAD CENTER
+      // -----------------------------------------------------------------------
+      // Expire the test device first under PAID mode, then switch to FREE mode and verify it unlocks!
+      await httpRequest(
+        "POST",
+        "/api/admin/billing-mode",
+        { mode: "PAID" },
+        { "X-Admin-Token": adminToken }
+      );
+      await httpRequest(
+        "POST",
+        "/api/admin/devices/update",
+        { action: "EXPIRE_TRIAL", deviceId: testDeviceId },
+        { "X-Admin-Token": adminToken }
+      );
+      const paidWatchExpired = await httpRequest(
+        "GET",
+        `/api/watch?key=VENU2-88&did=${encodeURIComponent(testDeviceId)}`
+      );
+      assert.strictEqual(paidWatchExpired.json.lic.exp, 1, "Under PAID mode, expired trial device must return exp=1");
+      assert.strictEqual(paidWatchExpired.json.lic.hide, 0, "Under PAID mode, hide flag must be 0");
+
+      // Now switch to Hide (FreeMode) via Admin API
+      const setFreeRes = await httpRequest(
+        "POST",
+        "/api/admin/billing-mode",
+        { mode: "FREE" },
+        { "X-Admin-Token": adminToken }
+      );
+      assert.strictEqual(setFreeRes.status, 200);
+      assert.strictEqual(setFreeRes.json.ok, true);
+      assert.strictEqual(setFreeRes.json.billingMode, "FREE");
+      assert.strictEqual(setFreeRes.json.hideLicenseUi, true);
+      assert.strictEqual(setFreeRes.json.summary.billingMode, "FREE");
+      assert.strictEqual(setFreeRes.json.summary.hideLicenseUi, true);
+
+      // Verify /api/watch under FREE mode unlocks even an expired trial device (exp=0, hide=1, mode="FREE")
+      const freeWatchUnlocked = await httpRequest(
+        "GET",
+        `/api/watch?key=VENU2-88&did=${encodeURIComponent(testDeviceId)}`
+      );
+      assert.strictEqual(freeWatchUnlocked.status, 200);
+      assert.strictEqual(freeWatchUnlocked.json.lic.exp, 0, "Under FREE mode, watch must never be locked (exp=0)");
+      assert.strictEqual(freeWatchUnlocked.json.lic.hide, 1, "Under FREE mode, watch must receive hide=1");
+      assert.strictEqual(freeWatchUnlocked.json.lic.mode, "FREE");
+
+      // Verify /api/portfolio returns web.license.hideLicenseUi === true
+      const freePortRes = await httpRequest(
+        "GET",
+        `/api/portfolio?key=VENU2-88&did=${encodeURIComponent(testDeviceId)}`
+      );
+      assert.strictEqual(freePortRes.status, 200);
+      assert.strictEqual(freePortRes.json.web.license.billingMode, "FREE");
+      assert.strictEqual(freePortRes.json.web.license.hideLicenseUi, true);
+      assert.strictEqual(freePortRes.json.web.license.isExpired, false);
+
+      // Reset testDeviceId back to normal trial so it's clean
+      await httpRequest(
+        "POST",
+        "/api/admin/devices/update",
+        { action: "RESET_TRIAL", deviceId: testDeviceId },
+        { "X-Admin-Token": adminToken }
+      );
+
+      // Verify /api/admin/app-packages returns all 4 editions (freefull, beta, public, paid)
+      const pkgRes = await httpRequest("GET", "/api/admin/app-packages", null, {
+        "X-Admin-Token": adminToken
+      });
+      assert.strictEqual(pkgRes.status, 200);
+      assert.strictEqual(pkgRes.json.ok, true);
+      const editions = pkgRes.json.appPackages?.editions || [];
+      assert.strictEqual(editions.length, 4, "App packages manifest must expose all 4 editions (freefull, beta, public, paid)");
+      const editionIds = editions.map((e) => e.id);
+      assert.deepStrictEqual(editionIds, ["freefull", "beta", "public", "paid"]);
+
+      // Verify direct binary downloads of .iq and .prg files
+      for (const dlPath of [
+        "/downloads/MoatWatch-FreeFull.iq",
+        "/downloads/MoatWatch-FreeFull-Beta.iq",
+        "/downloads/MoatWatch-Beta.iq",
+        "/downloads/MoatWatch-Public.iq",
+        "/downloads/MoatWatch-Paid.iq",
+        "/downloads/MoatWatch-FreeFull.prg"
+      ]) {
+        const dlRes = await httpRequest("GET", dlPath);
+        assert.strictEqual(dlRes.status, 200, `Download ${dlPath} must return HTTP 200`);
+        assert.ok(
+          String(dlRes.headers["content-disposition"] || "").includes("attachment"),
+          `Download ${dlPath} must include Content-Disposition: attachment header`
+        );
+        assert.ok(dlRes.raw.length > 50000, `Download ${dlPath} must return non-empty binary payload`);
+      }
+      console.log("[PASS] 25. Admin Billing Mode Toggle (Hide FreeMode / Unhide PaidMode) & 4-Edition .IQ/.PRG Download Center verified");
     } finally {
       if (prevIntEnabled === undefined) delete process.env.WEBMEMO_INTEGRATION_ENABLED;
       else process.env.WEBMEMO_INTEGRATION_ENABLED = prevIntEnabled;

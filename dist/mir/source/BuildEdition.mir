@@ -1,0 +1,15 @@
+[ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\BuildEdition.mc"; @line = 1; @symbol_importdef<0> = [Toybox,1,7,13]; @symbol_importdef<1> = [Lang,1,14,18]; ]
+import Toybox.Lang;
+[ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\BuildEdition.mc"; @line = 4; glance = true; @symbol_moduledef = [BuildEdition,4,7,19]; ]
+module BuildEdition {
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\BuildEdition.mc"; @line = 4; ]
+    <init> {
+    }
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\BuildEdition.mc"; @line = 6; @position = 10; @symbol_constdef = [IS_FREE_FULL,6,10,22]; ]
+    const IS_FREE_FULL = false;
+    [ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\BuildEdition.mc"; @line = 7; @position = 10; @symbol_constdef = [EDITION_CODE,7,10,22]; ]
+    const EDITION_CODE = "PAID_PRO";
+}
+[ @file = "D:\all-workspace\garmin-venu2\garmin-venu2-app\source\BuildEdition.mc"; @line = 1; ]
+<init> {
+}

@@ -184,11 +184,11 @@
           </button>
         </div>
 
-        <!-- Header License Status Badge -->
+        <!-- Header License Status Badge (Hidden in FreeMode, Visible in PaidMode) -->
         <button
           id="headerLicenseBadge"
           type="button"
-          class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/25 transition"
+          class="hidden items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/25 transition"
           title="View Garmin Device License Status"
         >
           <i class="ph-fill ph-shield-check text-xs"></i>
@@ -655,7 +655,7 @@
               <i class="ph-bold ph-note mr-1"></i>WebMemo
             </button>
             <button type="button" class="mw-dock-tab-btn" data-dock-tab="device">
-              <i class="ph-bold ph-gear-six mr-1"></i>Device &amp; Key
+              <i class="ph-bold ph-gear-six mr-1"></i><span id="dockTabDeviceLabel">Device</span>
             </button>
           </div>
 
@@ -1211,34 +1211,20 @@
               </div>
             </div>
 
-            <!-- Device License & 14-Day Trial Activation Panel -->
+            <!-- Device ID & Optional License/Purchase Panel (Purchase UI Hidden in FreeMode) -->
             <div class="p-3.5 rounded-xl bg-[#070D17] border border-slate-800 space-y-3">
               <div class="flex items-center justify-between gap-2">
                 <h4 class="text-xs font-bold text-white flex items-center gap-1.5">
-                  <i class="ph-bold ph-keyhole text-amber-400"></i>
-                  <span>Device License &amp; Trial</span>
+                  <i class="ph-bold ph-watch text-cyan-400"></i>
+                  <span id="deviceLicenseCardTitle">Garmin Device ID &amp; Sync</span>
                 </h4>
                 <span
                   id="licenseStatusBadge"
-                  class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40"
+                  class="hidden px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40"
                 >14-DAY FREE TRIAL</span>
               </div>
 
-              <p id="licenseStatusText" class="text-[11px] text-slate-300 leading-relaxed">
-                Checking Garmin Device License status...
-              </p>
-
-              <div>
-                <div class="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
-                  <div id="licenseCountdownBar" class="h-full bg-amber-400 transition-all duration-500" style="width: 100%"></div>
-                </div>
-                <div class="flex items-center justify-between text-[10px] font-mono text-slate-400 mt-1">
-                  <span id="licenseDaysRemainingText">14 days remaining</span>
-                  <a href="/admin" class="text-cyan-400 hover:underline">Admin Portal →</a>
-                </div>
-              </div>
-
-              <div class="space-y-2 pt-1">
+              <div class="space-y-2 pt-0.5">
                 <div>
                   <label for="watchDeviceIdInput" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
                     Garmin Device ID
@@ -1260,44 +1246,61 @@
                   </div>
                 </div>
 
-                <div>
-                  <label for="activationKeyInput" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-                    Pro Activation Key
-                  </label>
-                  <div class="flex gap-1.5">
-                    <input
-                      id="activationKeyInput"
-                      type="text"
-                      placeholder="MOAT-XXXX-XXXX-XXXX"
-                      class="flex-1 bg-[#0A111C] border border-slate-700 rounded-lg px-2.5 py-1.5 font-mono text-xs text-white uppercase"
-                    />
+                <!-- PaidMode License Countdown, Pro Key Input & Purchase Buttons (Hidden when Admin sets FreeMode) -->
+                <div id="deviceLicensePurchaseSection" class="hidden space-y-2.5 pt-2 border-t border-slate-800/80">
+                  <p id="licenseStatusText" class="text-[11px] text-slate-300 leading-relaxed">
+                    Checking Garmin Device License status...
+                  </p>
+
+                  <div>
+                    <div class="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                      <div id="licenseCountdownBar" class="h-full bg-amber-400 transition-all duration-500" style="width: 100%"></div>
+                    </div>
+                    <div class="flex items-center justify-between text-[10px] font-mono text-slate-400 mt-1">
+                      <span id="licenseDaysRemainingText">14 days remaining</span>
+                      <a href="/admin" class="text-cyan-400 hover:underline">Admin Portal →</a>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label for="activationKeyInput" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                      Pro Activation Key
+                    </label>
+                    <div class="flex gap-1.5">
+                      <input
+                        id="activationKeyInput"
+                        type="text"
+                        placeholder="MOAT-XXXX-XXXX-XXXX"
+                        class="flex-1 bg-[#0A111C] border border-slate-700 rounded-lg px-2.5 py-1.5 font-mono text-xs text-white uppercase"
+                      />
+                      <button
+                        id="activateDeviceBtn"
+                        type="button"
+                        class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition"
+                      >
+                        Activate
+                      </button>
+                    </div>
+                  </div>
+
+                  <p id="licenseFeedbackMsg" class="hidden text-[11px] font-mono"></p>
+
+                  <div class="grid grid-cols-2 gap-2 pt-1">
                     <button
-                      id="activateDeviceBtn"
+                      id="openTrialExtendModalBtn"
                       type="button"
-                      class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition"
+                      class="py-1.5 px-2 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 font-semibold text-[11px] transition"
                     >
-                      Activate
+                      + Request Trial Extend
+                    </button>
+                    <button
+                      id="openPurchaseFormModalBtn"
+                      type="button"
+                      class="py-1.5 px-2 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 font-semibold text-[11px] transition"
+                    >
+                      ★ Purchase Pro Key
                     </button>
                   </div>
-                </div>
-
-                <p id="licenseFeedbackMsg" class="hidden text-[11px] font-mono"></p>
-
-                <div class="grid grid-cols-2 gap-2 pt-1">
-                  <button
-                    id="openTrialExtendModalBtn"
-                    type="button"
-                    class="py-1.5 px-2 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 font-semibold text-[11px] transition"
-                  >
-                    + Request Trial Extend
-                  </button>
-                  <button
-                    id="openPurchaseFormModalBtn"
-                    type="button"
-                    class="py-1.5 px-2 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 font-semibold text-[11px] transition"
-                  >
-                    ★ Purchase Pro Key
-                  </button>
                 </div>
               </div>
             </div>
@@ -2229,7 +2232,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="/watchSimulator.js?v=20261030-app5"></script>
-  <script src="/app.js?v=20261030-app5"></script>
+  <script src="/watchSimulator.js?v=20261103-freefull1"></script>
+  <script src="/app.js?v=20261103-freefull1"></script>
 </body>
 </html>
