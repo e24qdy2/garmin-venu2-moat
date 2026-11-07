@@ -1,6 +1,29 @@
 import Toybox.Lang;
 import Toybox.WatchUi;
 
+class SyncKeyTextPickerDelegate extends WatchUi.TextPickerDelegate {
+    private var _store as PortfolioStore;
+
+    function initialize(store as PortfolioStore) {
+        TextPickerDelegate.initialize();
+        _store = store;
+    }
+
+    function onTextEntered(text as String, changed as Boolean) as Boolean {
+        if (text != null && text.length() > 0) {
+            _store.setCustomSyncKey(text);
+        } else {
+            _store.setSyncKeyAuto();
+        }
+        return true;
+    }
+
+    function onCancel() as Boolean {
+        WatchUi.requestUpdate();
+        return true;
+    }
+}
+
 class Venu2MoatDelegate extends WatchUi.BehaviorDelegate {
     private var _store as PortfolioStore;
 
@@ -9,9 +32,46 @@ class Venu2MoatDelegate extends WatchUi.BehaviorDelegate {
         _store = store;
     }
 
+    function launchSyncKeyTextPicker() as Void {
+        if (WatchUi has :TextPicker) {
+            var initialKey = (_store.configuredSyncKey.length() > 0)
+                ? _store.configuredSyncKey
+                : _store.hardwareDeviceId;
+            WatchUi.pushView(
+                new WatchUi.TextPicker(initialKey),
+                new SyncKeyTextPickerDelegate(_store),
+                WatchUi.SLIDE_UP
+            );
+        } else {
+            _store.loadLocalProperties();
+            if (_store.needsSyncKeySetup) {
+                _store.setSyncKeyAuto();
+            } else {
+                _store.closeSyncKeySetup();
+                _store.fetchRemote();
+            }
+        }
+    }
+
     // Physical Top-Right / START Button (handled via KeyEvent so BehaviorDelegate does not intercept touchscreen taps on Venu 2)
     function onKey(evt as KeyEvent) as Boolean {
         var key = evt.getKey();
+        if (_store.isSyncKeySetupActive()) {
+            _store.applyBacklightIfEnabled();
+            if (key == WatchUi.KEY_ENTER || key == WatchUi.KEY_START) {
+                if (_store.syncSetupSelectedOption == 0) {
+                    _store.setSyncKeyAuto();
+                } else {
+                    launchSyncKeyTextPicker();
+                }
+                return true;
+            } else if (key == WatchUi.KEY_DOWN || key == WatchUi.KEY_UP) {
+                _store.syncSetupSelectedOption = (_store.syncSetupSelectedOption == 0) ? 1 : 0;
+                WatchUi.requestUpdate();
+                return true;
+            }
+            return false;
+        }
         if (key == WatchUi.KEY_ENTER || key == WatchUi.KEY_START) {
             _store.resetSwipeTimer();
             _store.applyBacklightIfEnabled();
@@ -26,10 +86,17 @@ class Venu2MoatDelegate extends WatchUi.BehaviorDelegate {
         return false;
     }
 
-    // Long-press Menu -> Trigger fresh network sync & license check
+    function onBack() as Boolean {
+        if (_store.isSyncKeySetupActive() && !_store.needsSyncKeySetup) {
+            return _store.closeSyncKeySetup();
+        }
+        return false;
+    }
+
+    // Long-press Menu -> Open SyncKey Setup / Switcher (AUTO or Custom Key)
     function onMenu() as Boolean {
         _store.resetSwipeTimer();
-        _store.fetchRemote();
+        _store.openSyncKeySetup();
         return true;
     }
 
@@ -37,6 +104,11 @@ class Venu2MoatDelegate extends WatchUi.BehaviorDelegate {
     function onNextPage() as Boolean {
         _store.resetSwipeTimer();
         _store.applyBacklightIfEnabled();
+        if (_store.isSyncKeySetupActive()) {
+            _store.syncSetupSelectedOption = (_store.syncSetupSelectedOption == 0) ? 1 : 0;
+            WatchUi.requestUpdate();
+            return true;
+        }
         if (_store.trialExpired) {
             return true;
         }
@@ -57,6 +129,11 @@ class Venu2MoatDelegate extends WatchUi.BehaviorDelegate {
     function onPreviousPage() as Boolean {
         _store.resetSwipeTimer();
         _store.applyBacklightIfEnabled();
+        if (_store.isSyncKeySetupActive()) {
+            _store.syncSetupSelectedOption = (_store.syncSetupSelectedOption == 0) ? 1 : 0;
+            WatchUi.requestUpdate();
+            return true;
+        }
         if (_store.trialExpired) {
             return true;
         }
@@ -73,6 +150,16 @@ class Venu2MoatDelegate extends WatchUi.BehaviorDelegate {
     function onSwipe(evt as SwipeEvent) as Boolean {
         _store.resetSwipeTimer();
         _store.applyBacklightIfEnabled();
+        if (_store.isSyncKeySetupActive()) {
+            var sDir = evt.getDirection();
+            if (sDir == WatchUi.SWIPE_UP || sDir == WatchUi.SWIPE_DOWN) {
+                _store.syncSetupSelectedOption = (_store.syncSetupSelectedOption == 0) ? 1 : 0;
+                WatchUi.requestUpdate();
+            } else if (sDir == WatchUi.SWIPE_RIGHT && !_store.needsSyncKeySetup) {
+                _store.closeSyncKeySetup();
+            }
+            return true;
+        }
         if (_store.trialExpired) {
             return true;
         }
@@ -115,11 +202,6 @@ class Venu2MoatDelegate extends WatchUi.BehaviorDelegate {
         _store.resetSwipeTimer();
         _store.applyBacklightIfEnabled();
 
-        if (_store.trialExpired) {
-            _store.fetchRemote();
-            return true;
-        }
-
         var coords = evt.getCoordinates();
         if (coords == null || coords.size() < 2) {
             return false;
@@ -128,6 +210,39 @@ class Venu2MoatDelegate extends WatchUi.BehaviorDelegate {
         var y = coords[1];
         var w = _store.screenW;
         var h = _store.screenH;
+
+        // Handle Touch Tap on First-Run / Change SyncKey Setup Screen
+        if (_store.isSyncKeySetupActive()) {
+            // Button 1: [1. AUTO (Hardware Device ID)] at y = 35%..53%
+            if (y >= (h * 33) / 100 && y <= (h * 55) / 100) {
+                _store.syncSetupSelectedOption = 0;
+                _store.setSyncKeyAuto();
+                return true;
+            }
+            // Button 2: [2. SET SYNC KEY] at y = 56%..74%
+            if (y > (h * 55) / 100 && y <= (h * 78) / 100) {
+                _store.syncSetupSelectedOption = 1;
+                launchSyncKeyTextPicker();
+                return true;
+            }
+            // Tapping bottom KEY bar closes modal if already configured
+            if (y >= (h * 86) / 100 && !_store.needsSyncKeySetup) {
+                _store.closeSyncKeySetup();
+                return true;
+            }
+            return true;
+        }
+
+        // Tap on Bottom-Most SyncKey Bar (y >= 88%) opens SyncKey Setup / Switcher anytime
+        if (y >= (h * 88) / 100) {
+            _store.openSyncKeySetup();
+            return true;
+        }
+
+        if (_store.trialExpired) {
+            _store.fetchRemote();
+            return true;
+        }
 
         // Tap on top clock/mode bar toggles Auto-Swipe on/off quickly on watch
         if (y < (h * 8) / 100) {

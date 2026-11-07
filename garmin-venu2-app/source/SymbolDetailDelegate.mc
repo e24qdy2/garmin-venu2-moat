@@ -30,7 +30,15 @@ class SymbolDetailDelegate extends WatchUi.BehaviorDelegate {
         return false;
     }
 
-    // Touch tap on top header returns to list; tap on chart toggles SMA20 + Bollinger overlay
+    // Long-press Menu -> Open SyncKey Setup / Switcher
+    function onMenu() as Boolean {
+        _store.inDetailView = false;
+        _store.openSyncKeySetup();
+        WatchUi.popView(WatchUi.SLIDE_RIGHT);
+        return true;
+    }
+
+    // Touch tap on top header returns to list; tap on bottom SyncKey bar opens SyncKey Setup; tap on chart toggles SMA20 + Bollinger overlay
     function onTap(evt as ClickEvent) as Boolean {
         _store.resetSwipeTimer();
         _store.applyBacklightIfEnabled();
@@ -40,6 +48,12 @@ class SymbolDetailDelegate extends WatchUi.BehaviorDelegate {
             var h = _store.screenH;
             if (y < (h * 12) / 100) {
                 _store.inDetailView = false;
+                WatchUi.popView(WatchUi.SLIDE_RIGHT);
+                return true;
+            }
+            if (y >= (h * 88) / 100) {
+                _store.inDetailView = false;
+                _store.openSyncKeySetup();
                 WatchUi.popView(WatchUi.SLIDE_RIGHT);
                 return true;
             }

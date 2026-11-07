@@ -13,7 +13,9 @@ class Venu2MoatApp extends Application.AppBase {
         _store = new PortfolioStore();
         _store.loadCached();
         _store.startRuntimeTimer();
-        _store.fetchRemote();
+        if (!_store.needsSyncKeySetup) {
+            _store.fetchRemote();
+        }
     }
 
     function onStop(state as Dictionary?) as Void {
@@ -25,7 +27,9 @@ class Venu2MoatApp extends Application.AppBase {
     function onSettingsChanged() as Void {
         if (_store != null) {
             _store.loadLocalProperties();
-            _store.fetchRemote();
+            if (!_store.needsSyncKeySetup) {
+                _store.fetchRemote();
+            }
         }
         WatchUi.requestUpdate();
     }

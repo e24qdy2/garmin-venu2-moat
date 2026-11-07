@@ -522,6 +522,16 @@
     if (el('watchGlanceClock')) el('watchGlanceClock').textContent = clockStr;
     if (el('watchListClock')) el('watchListClock').textContent = clockStr;
     if (el('watchListSyncKey')) el('watchListSyncKey').textContent = p.syncKey;
+    if (el('watchBottomSyncKeyText')) el('watchBottomSyncKeyText').textContent = p.syncKey;
+    if (el('watchDetailBottomSyncKeyText')) el('watchDetailBottomSyncKeyText').textContent = p.syncKey;
+    if (el('watchSyncSetupBottomKeyText')) el('watchSyncSetupBottomKeyText').textContent = p.syncKey;
+    const hwAutoId = state.license?.deviceId || state.watchSettings?.deviceId || 'V2-88VENU20';
+    if (el('watchSyncSetupCurrentLabel')) {
+      el('watchSyncSetupCurrentLabel').textContent = `Current: ${p.syncKey} · Auto ID: ${hwAutoId}`;
+    }
+    if (el('watchSyncSetupAutoTitle')) {
+      el('watchSyncSetupAutoTitle').textContent = `1. AUTO (${hwAutoId})`;
+    }
 
     const isFreeMode = Boolean(state.license?.hideLicenseUi) || state.license?.billingMode === 'FREE';
     const isTrialExpired = !isFreeMode && Boolean(state.license?.isExpired);
@@ -539,6 +549,7 @@
       el('watchViewGlance')?.classList.add('hidden');
       el('watchViewList')?.classList.add('hidden');
       el('watchViewDetail')?.classList.add('hidden');
+      el('watchViewSyncSetup')?.classList.add('hidden');
       expiredView.classList.remove('hidden');
       return;
     }
@@ -557,6 +568,7 @@
     el('watchViewGlance')?.classList.toggle('hidden', state.watchMode !== 'glance');
     el('watchViewList')?.classList.toggle('hidden', state.watchMode !== 'list');
     el('watchViewDetail')?.classList.toggle('hidden', state.watchMode !== 'detail');
+    el('watchViewSyncSetup')?.classList.toggle('hidden', state.watchMode !== 'sync-setup');
 
     // 1. Render Glance Widget View
     const s = p.summary || {};

@@ -89,6 +89,7 @@ class SymbolDetailView extends WatchUi.View {
         if (item == null) {
             dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
             dc.drawText(cx, h / 2, fVal, "No Symbol Data", Graphics.TEXT_JUSTIFY_CENTER);
+            MoatWatchLayout.drawBottomSyncKeyBar(dc, _store, w, h, cx);
             return;
         }
 

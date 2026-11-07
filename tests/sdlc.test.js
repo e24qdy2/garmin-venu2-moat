@@ -1955,6 +1955,65 @@ async function runSdlcSuite() {
         assert.ok(dlRes.raw.length > 50000, `Download ${dlPath} must return non-empty binary payload`);
       }
       console.log("[PASS] 25. Admin Billing Mode Toggle (Hide FreeMode / Unhide PaidMode) & 4-Edition .IQ/.PRG Download Center verified");
+
+      // ==================================================================
+      // 26. Always-At-Bottom Watch SyncKey Bar & First-Run Mandatory SyncKey Setup (AUTO / Custom Key)
+      // ==================================================================
+      const storeMcContent = fs.readFileSync(
+        path.join(__dirname, "..", "garmin-venu2-app", "source", "PortfolioStore.mc"),
+        "utf8"
+      );
+      const delegateMcContent = fs.readFileSync(
+        path.join(__dirname, "..", "garmin-venu2-app", "source", "Venu2MoatDelegate.mc"),
+        "utf8"
+      );
+      const detailDelegateMcContent = fs.readFileSync(
+        path.join(__dirname, "..", "garmin-venu2-app", "source", "SymbolDetailDelegate.mc"),
+        "utf8"
+      );
+      const latestLayoutMcContent = fs.readFileSync(
+        path.join(__dirname, "..", "garmin-venu2-app", "source", "MoatWatchLayout.mc"),
+        "utf8"
+      );
+      const latestIndexHtml = fs.readFileSync(
+        path.join(__dirname, "..", "public", "index.html"),
+        "utf8"
+      );
+
+      assert.ok(
+        latestLayoutMcContent.includes("function drawBottomSyncKeyBar("),
+        "MoatWatchLayout.mc must define drawBottomSyncKeyBar for bottom-most SyncKey display"
+      );
+      assert.ok(
+        latestLayoutMcContent.includes("function drawSyncKeySetupScreen("),
+        "MoatWatchLayout.mc must define drawSyncKeySetupScreen for first-run AUTO / Custom SyncKey selection"
+      );
+      assert.ok(
+        storeMcContent.includes("needsSyncKeySetup") &&
+          storeMcContent.includes("function setSyncKeyAuto(") &&
+          storeMcContent.includes("function setCustomSyncKey(") &&
+          storeMcContent.includes("function openSyncKeySetup("),
+        "PortfolioStore.mc must manage first-run needsSyncKeySetup state and AUTO/Custom SyncKey persistence"
+      );
+      assert.ok(
+        delegateMcContent.includes("class SyncKeyTextPickerDelegate") &&
+          delegateMcContent.includes("launchSyncKeyTextPicker") &&
+          delegateMcContent.includes("_store.openSyncKeySetup()"),
+        "Venu2MoatDelegate.mc must support on-watch TextPicker and bottom SyncKey tap to open setup"
+      );
+      assert.ok(
+        detailDelegateMcContent.includes("_store.openSyncKeySetup()"),
+        "SymbolDetailDelegate.mc must allow tapping bottom SyncKey bar to open SyncKey setup"
+      );
+      assert.ok(
+        latestIndexHtml.includes("watchBottomSyncKeyBtn") &&
+          latestIndexHtml.includes("watchDetailBottomSyncKeyBtn") &&
+          latestIndexHtml.includes("watchViewSyncSetup") &&
+          latestIndexHtml.includes("watchSyncSetupAutoBtn") &&
+          latestIndexHtml.includes("watchSyncSetupCustomBtn"),
+        "public/index.html Virtual Watch must render bottom SyncKey bar and SyncKey Setup view"
+      );
+      console.log("[PASS] 26. Always-At-Bottom Watch SyncKey Bar & First-Run SyncKey Setup (AUTO / Custom Key) verified");
     } finally {
       if (prevIntEnabled === undefined) delete process.env.WEBMEMO_INTEGRATION_ENABLED;
       else process.env.WEBMEMO_INTEGRATION_ENABLED = prevIntEnabled;

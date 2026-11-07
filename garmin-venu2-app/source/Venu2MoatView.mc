@@ -45,6 +45,12 @@ class Venu2MoatView extends WatchUi.View {
         dc.setColor(0x94A3B8, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, (h * 5) / 100, fMicro, timeStr + modeFlags, Graphics.TEXT_JUSTIFY_CENTER);
 
+        // First-Run Mandatory SyncKey Setup or Anytime SyncKey Switcher Modal
+        if (_store.isSyncKeySetupActive()) {
+            MoatWatchLayout.drawSyncKeySetupScreen(dc, _store, w, h, cx);
+            return;
+        }
+
         // Enforce 14-Day Trial Expiration Lock Screen (Bypassed in FreeFull build or when server FreeMode is active)
         if (!BuildEdition.IS_FREE_FULL && !_store.hideLicenseUi && _store.trialExpired) {
             MoatWatchLayout.drawTrialExpiredScreen(dc, _store, w, h, cx);
@@ -56,9 +62,10 @@ class Venu2MoatView extends WatchUi.View {
             dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
             dc.drawText(cx, h / 2 - 24, fVal, "MoatWatch", Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(0x06B6D4, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, h / 2 + 6, fRow, "Key: " + _store.getSyncKey(), Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, h / 2 + 6, fRow, "Syncing Portfolio...", Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(0x64748B, Graphics.COLOR_TRANSPARENT);
             dc.drawText(cx, h / 2 + 30, fMicro, "ID: " + _store.deviceId, Graphics.TEXT_JUSTIFY_CENTER);
+            MoatWatchLayout.drawBottomSyncKeyBar(dc, _store, w, h, cx);
             return;
         }
 

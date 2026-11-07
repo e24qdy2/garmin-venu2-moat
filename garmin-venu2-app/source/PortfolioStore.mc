@@ -45,6 +45,10 @@ class PortfolioStore {
     // 14-Day Trial & Per-Device Activation Key State (Owner: saharat.bun@icloud.com)
     public var hardwareDeviceId as String = "V2-88VENU20";
     public var deviceId as String = "V2-88VENU20";
+    public var configuredSyncKey as String = "";
+    public var needsSyncKeySetup as Boolean = true;
+    public var isSyncKeyModalOpen as Boolean = true;
+    public var syncSetupSelectedOption as Number = 0; // 0 = AUTO (Hardware ID), 1 = SET CUSTOM KEY
     public var activationKey as String = "";
     public var licenseStatus as String = BuildEdition.IS_FREE_FULL ? "FREEFULL" : "TRIAL";
     public var trialDaysLeft as Number = BuildEdition.IS_FREE_FULL ? 9999 : 14;
@@ -144,6 +148,105 @@ class PortfolioStore {
         if (propKey != null && propKey.length() > 0) {
             activationKey = propKey;
         }
+
+        // Check if SyncKey is set in Garmin Connect App Properties or saved in Watch Storage
+        var propSyncKey = Application.Properties.getValue("syncKey") as String?;
+        if (propSyncKey != null && propSyncKey.length() > 0) {
+            if (propSyncKey.equals("AUTO") || propSyncKey.equals("auto")) {
+                configuredSyncKey = hardwareDeviceId;
+            } else {
+                configuredSyncKey = propSyncKey.toUpper();
+            }
+            needsSyncKeySetup = false;
+            isSyncKeyModalOpen = false;
+            persistSyncKeyToStorage(configuredSyncKey);
+        } else {
+            var savedCfg = false;
+            var savedKey = "" as String?;
+            try {
+                var cfgFlag = Application.Storage.getValue("venu2moat_synckey_cfg") as Boolean?;
+                if (cfgFlag != null && cfgFlag) {
+                    savedCfg = true;
+                }
+                savedKey = Application.Storage.getValue("venu2moat_synckey_val") as String?;
+            } catch (ex) {
+                // Ignore storage read errors
+            }
+            if (savedCfg && savedKey != null && savedKey.length() > 0) {
+                configuredSyncKey = savedKey;
+                needsSyncKeySetup = false;
+                isSyncKeyModalOpen = false;
+            } else {
+                // First time entering the app: force SyncKey Setup (AUTO or Custom Key)
+                configuredSyncKey = "";
+                needsSyncKeySetup = true;
+                isSyncKeyModalOpen = true;
+                syncSetupSelectedOption = 0;
+            }
+        }
+    }
+
+    function persistSyncKeyToStorage(keyVal as String) as Void {
+        try {
+            Application.Storage.setValue("venu2moat_synckey_val", keyVal);
+            Application.Storage.setValue("venu2moat_synckey_cfg", true);
+        } catch (ex1) {
+            // Ignore storage write errors
+        }
+        try {
+            Application.Properties.setValue("syncKey", keyVal);
+        } catch (ex2) {
+            // Ignore if Properties.setValue is read-only on older firmware
+        }
+    }
+
+    function isSyncKeySetupActive() as Boolean {
+        return needsSyncKeySetup || isSyncKeyModalOpen;
+    }
+
+    function setSyncKeyAuto() as Void {
+        configuredSyncKey = hardwareDeviceId;
+        needsSyncKeySetup = false;
+        isSyncKeyModalOpen = false;
+        syncSetupSelectedOption = 0;
+        persistSyncKeyToStorage(configuredSyncKey);
+        resetSwipeTimer();
+        fetchRemote();
+        WatchUi.requestUpdate();
+    }
+
+    function setCustomSyncKey(customKey as String) as Void {
+        var cleanKey = customKey;
+        if (cleanKey == null || cleanKey.length() == 0 || cleanKey.equals("AUTO") || cleanKey.equals("auto")) {
+            cleanKey = hardwareDeviceId;
+        } else {
+            cleanKey = cleanKey.toUpper();
+        }
+        configuredSyncKey = cleanKey;
+        needsSyncKeySetup = false;
+        isSyncKeyModalOpen = false;
+        syncSetupSelectedOption = 0;
+        persistSyncKeyToStorage(configuredSyncKey);
+        resetSwipeTimer();
+        fetchRemote();
+        WatchUi.requestUpdate();
+    }
+
+    function openSyncKeySetup() as Void {
+        isSyncKeyModalOpen = true;
+        syncSetupSelectedOption = 0;
+        resetSwipeTimer();
+        WatchUi.requestUpdate();
+    }
+
+    function closeSyncKeySetup() as Boolean {
+        if (needsSyncKeySetup) {
+            return false;
+        }
+        isSyncKeyModalOpen = false;
+        resetSwipeTimer();
+        WatchUi.requestUpdate();
+        return true;
     }
 
     function startRuntimeTimer() as Void {
@@ -186,7 +289,7 @@ class PortfolioStore {
         }
 
         // 2. Auto-Swipe Next Screen / Portfolio every autoSwipeSec (default 5s)
-        if (autoSwipeEnabled && !trialExpired && !inDetailView) {
+        if (autoSwipeEnabled && !trialExpired && !inDetailView && !isSyncKeySetupActive()) {
             _swipeElapsedSec += 1;
             if (_swipeElapsedSec >= autoSwipeSec) {
                 _swipeElapsedSec = 0;
@@ -198,7 +301,7 @@ class PortfolioStore {
         _quoteRefreshSec += 1;
         if (_quoteRefreshSec >= 60) {
             _quoteRefreshSec = 0;
-            if (!isSyncing) {
+            if (!isSyncing && !needsSyncKeySetup) {
                 fetchRemote();
             }
         }
@@ -368,11 +471,14 @@ class PortfolioStore {
     }
 
     function getSyncKey() as String {
+        if (configuredSyncKey.length() > 0) {
+            return configuredSyncKey;
+        }
         var key = Application.Properties.getValue("syncKey") as String?;
-        if (key == null || key.length() == 0 || key.equals("AUTO")) {
+        if (key == null || key.length() == 0 || key.equals("AUTO") || key.equals("auto")) {
             return hardwareDeviceId;
         }
-        return key;
+        return key.toUpper();
     }
 
     function getApiBaseUrl() as String {

@@ -187,6 +187,76 @@ module MoatWatchLayout {
         dc.drawText(cx, (h * 70) / 100, fMicro, "Activate via Web Settings", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x10B981, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, (h * 77) / 100, fMicro, "Press SELECT to Verify", Graphics.TEXT_JUSTIFY_CENTER);
+        drawBottomSyncKeyBar(dc, store, w, h, cx);
+    }
+
+    // First-Run Mandatory SyncKey Setup & Anytime SyncKey Switcher Screen
+    // Option 0: [1. AUTO (Hardware ID)] | Option 1: [2. SET SYNC KEY (Keyboard / Connect App)]
+    function drawSyncKeySetupScreen(dc as Dc, store as PortfolioStore, w as Number, h as Number, cx as Number) as Void {
+        var fMicro = store.fontMicro;
+        var fRow = (w >= 340) ? store.fontRow : store.fontMicro;
+        var fMemoXs = store.fontMemoXs;
+
+        // Outer Cyan Accent Ring
+        dc.setColor(0x06B6D4, Graphics.COLOR_TRANSPARENT);
+        dc.setPenWidth(2);
+        dc.drawCircle(cx, h / 2, (w / 2) - 6);
+        dc.setPenWidth(1);
+
+        var pillW = (w * 56) / 100;
+        var pillH = (h * 7) / 100;
+        var pillY = (h * 11) / 100;
+        dc.setColor(0x082F49, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(cx - (pillW / 2), pillY, pillW, pillH, 10);
+        dc.setColor(0x38BDF8, Graphics.COLOR_TRANSPARENT);
+        var badgeTitle = store.needsSyncKeySetup ? "FIRST-TIME SETUP" : "CHANGE SYNC KEY";
+        dc.drawText(cx, pillY + 3, fMemoXs, badgeTitle, Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, (h * 20) / 100, fRow, "Select Watch SyncKey", Graphics.TEXT_JUSTIFY_CENTER);
+
+        var curKeyLabel = (store.configuredSyncKey.length() > 0)
+            ? ("Current: " + store.configuredSyncKey)
+            : ("Auto ID: " + store.hardwareDeviceId);
+        dc.setColor(0x94A3B8, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, (h * 27) / 100, fMicro, curKeyLabel, Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Button 1: [1. AUTO (Hardware Device ID)]
+        var btnW = (w * 74) / 100;
+        var btnH = (h * 18) / 100;
+        var btn1Y = (h * 35) / 100;
+        var isOpt0 = (store.syncSetupSelectedOption == 0);
+        dc.setColor(isOpt0 ? 0x064E3B : 0x0D131C, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(cx - (btnW / 2), btn1Y, btnW, btnH, 12);
+        dc.setColor(isOpt0 ? 0x10B981 : 0x334155, Graphics.COLOR_TRANSPARENT);
+        dc.setPenWidth(isOpt0 ? 2 : 1);
+        dc.drawRoundedRectangle(cx - (btnW / 2), btn1Y, btnW, btnH, 12);
+        dc.setPenWidth(1);
+
+        dc.setColor(isOpt0 ? 0x34D399 : Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, btn1Y + ((btnH * 14) / 100), fRow, "1. AUTO (" + store.hardwareDeviceId + ")", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(isOpt0 ? 0xA7F3D0 : 0x94A3B8, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, btn1Y + ((btnH * 56) / 100), fMemoXs, "Tap or Press SELECT for Auto", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Button 2: [2. SET SYNC KEY (On-Watch Keyboard / Garmin Connect)]
+        var btn2Y = (h * 56) / 100;
+        var isOpt1 = (store.syncSetupSelectedOption == 1);
+        dc.setColor(isOpt1 ? 0x082F49 : 0x0D131C, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(cx - (btnW / 2), btn2Y, btnW, btnH, 12);
+        dc.setColor(isOpt1 ? 0x06B6D4 : 0x334155, Graphics.COLOR_TRANSPARENT);
+        dc.setPenWidth(isOpt1 ? 2 : 1);
+        dc.drawRoundedRectangle(cx - (btnW / 2), btn2Y, btnW, btnH, 12);
+        dc.setPenWidth(1);
+
+        dc.setColor(isOpt1 ? 0x38BDF8 : Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, btn2Y + ((btnH * 14) / 100), fRow, "2. SET SYNC KEY", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(isOpt1 ? 0xBAE6FD : 0x94A3B8, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, btn2Y + ((btnH * 56) / 100), fMemoXs, "Keyboard / Garmin Connect App", Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0x64748B, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, (h * 78) / 100, fMemoXs, "Tap button or UP/DOWN + SELECT", Graphics.TEXT_JUSTIFY_CENTER);
+
+        drawBottomSyncKeyBar(dc, store, w, h, cx);
     }
 
     // Draw Single Responsive Holding Row Card (Circle-Safe Inset + Dynamic Collision Prevention)
@@ -306,16 +376,31 @@ module MoatWatchLayout {
         }
     }
 
-    // Bottom Portfolio Pagination Dots Indicator + Active Sync Key / Device ID Badge
-    function drawPortfolioDots(dc as Dc, store as PortfolioStore, h as Number, cx as Number) as Void {
-        var syncKeyLabel = "KEY: " + store.getSyncKey();
-        dc.setColor(0x64748B, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, (h * 86) / 100, store.fontMicro, syncKeyLabel, Graphics.TEXT_JUSTIFY_CENTER);
+    // Always-Visible Bottom-Most SyncKey Bar (rendered at the very bottom of every watch screen)
+    function drawBottomSyncKeyBar(dc as Dc, store as PortfolioStore, w as Number, h as Number, cx as Number) as Void {
+        var fKey = (h < 300) ? store.fontMemoXs : store.fontMicro;
+        var keyFontH = dc.getFontHeight(fKey);
+        var activeKey = store.getSyncKey();
+        var syncKeyLabel = "KEY: " + activeKey;
+        var textW = dc.getTextWidthInPixels(syncKeyLabel, fKey);
+        var barY = h - keyFontH - ((h * 3) / 100);
+        if (barY > (h * 90) / 100) {
+            barY = (h * 90) / 100;
+        }
+        var pillW = textW + 18;
+        var pillH = keyFontH + 2;
+        dc.setColor(0x0B1524, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(cx - (pillW / 2), barY - 1, pillW, pillH, 8);
+        dc.setColor(0x38BDF8, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, barY, fKey, syncKeyLabel, Graphics.TEXT_JUSTIFY_CENTER);
+    }
 
+    // Bottom Portfolio Pagination Dots Indicator + Always-At-Bottom SyncKey Bar
+    function drawPortfolioDots(dc as Dc, store as PortfolioStore, h as Number, cx as Number) as Void {
         var allPorts = store.getPortfolios();
         var dotSpan = allPorts.size() * 14;
         var dotStartX = cx - (dotSpan / 2) + 7;
-        var dotBarY = h - ((h * 5) / 100);
+        var dotBarY = (h * 86) / 100;
         for (var pIdx = 0; pIdx < allPorts.size(); pIdx++) {
             if (pIdx == store.activePortfolioIdx) {
                 dc.setColor(0x06B6D4, Graphics.COLOR_TRANSPARENT);
@@ -325,6 +410,8 @@ module MoatWatchLayout {
                 dc.fillCircle(dotStartX + pIdx * 14, dotBarY, 3);
             }
         }
+
+        drawBottomSyncKeyBar(dc, store, store.screenW, h, cx);
     }
 
     // Draw 20D Sparkline + SMA20 + Bollinger Bands Chart Box in SymbolDetailView
@@ -618,9 +705,9 @@ module MoatWatchLayout {
         var fMemoXs = store.fontMemoXs;
 
         dc.setColor(0x06B6D4, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, (h * 64) / 100, fMemoXs, "WEBMEMO", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, (h * 63) / 100, fMemoXs, "WEBMEMO", Graphics.TEXT_JUSTIFY_CENTER);
 
-        var startYMicro = (h * 70) / 100;
+        var startYMicro = (h * 68) / 100;
         var stepMicro = dc.getFontHeight(fMicro) - 1;
         if (stepMicro < 14) { stepMicro = 14; }
 
@@ -632,7 +719,7 @@ module MoatWatchLayout {
         var activeStep = stepMicro;
 
         if (tier1Trunc) {
-            var startYXs = (h * 69) / 100;
+            var startYXs = (h * 67) / 100;
             var stepXs = dc.getFontHeight(fMemoXs) - 1;
             if (stepXs < 12) { stepXs = 12; }
             var tier2 = wrapCircleMemoLines(dc, store, note, fMemoXs, startYXs, stepXs, 3, w);
@@ -652,5 +739,7 @@ module MoatWatchLayout {
                 activeLines[i]
             );
         }
+
+        drawBottomSyncKeyBar(dc, store, w, h, cx);
     }
 }

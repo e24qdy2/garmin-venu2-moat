@@ -2643,16 +2643,53 @@
       renderGarminVenu2Watch();
     });
 
+    el('watchBottomSyncKeyBtn')?.addEventListener('click', () => {
+      state.watchMode = 'sync-setup';
+      resetAutoSwipeCountdown();
+      renderGarminVenu2Watch();
+    });
+
+    el('watchDetailBottomSyncKeyBtn')?.addEventListener('click', () => {
+      state.watchMode = 'sync-setup';
+      resetAutoSwipeCountdown();
+      renderGarminVenu2Watch();
+    });
+
+    el('watchSyncSetupBottomKeyBtn')?.addEventListener('click', () => {
+      state.watchMode = 'list';
+      resetAutoSwipeCountdown();
+      renderGarminVenu2Watch();
+    });
+
+    el('watchSyncSetupAutoBtn')?.addEventListener('click', async () => {
+      const autoKey = String(state.license?.deviceId || state.watchSettings?.deviceId || state.syncKey || 'V2-88VENU20')
+        .trim()
+        .toUpperCase();
+      state.syncKey = autoKey;
+      localStorage.setItem('venu2moat_synckey', autoKey);
+      state.watchMode = 'list';
+      resetAutoSwipeCountdown();
+      await loadServerPortfolio(autoKey, false);
+      showToast(`Watch SyncKey set to AUTO (${autoKey})`);
+    });
+
+    el('watchSyncSetupCustomBtn')?.addEventListener('click', () => {
+      el('openSyncModalBtn')?.click();
+    });
+
     el('venuBtnTop')?.addEventListener('click', () => {
       if (state.watchMode === 'glance') state.watchMode = 'list';
-      else if (state.watchMode === 'list') state.watchPnlMode = state.watchPnlMode === 'day' ? 'total' : 'day';
+      else if (state.watchMode === 'sync-setup') {
+        el('watchSyncSetupAutoBtn')?.click();
+        return;
+      } else if (state.watchMode === 'list') state.watchPnlMode = state.watchPnlMode === 'day' ? 'total' : 'day';
       else if (state.watchMode === 'detail') state.watchShowBb = !state.watchShowBb;
       resetAutoSwipeCountdown();
       renderGarminVenu2Watch();
     });
 
     el('venuBtnBottom')?.addEventListener('click', () => {
-      if (state.watchMode === 'detail') state.watchMode = 'list';
+      if (state.watchMode === 'detail' || state.watchMode === 'sync-setup') state.watchMode = 'list';
       else if (state.watchMode === 'list') state.watchMode = 'glance';
       else state.watchMode = 'list';
       resetAutoSwipeCountdown();

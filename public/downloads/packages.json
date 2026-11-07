@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-03T04:34:32.498Z",
+  "generatedAt": "2026-11-07T10:56:10.459Z",
   "sdkVersion": "8.4.1",
   "supportedModelsCount": 20,
   "editions": [
@@ -12,31 +12,31 @@
       "requiresActivationKey": false,
       "manifestAppId": "94f33d9e-fe0f-41a5-8e9b-27b6fe00dc0b",
       "betaManifestAppId": "83e22c8d-edfe-40f4-9d8a-16a5fd99cbfa",
-      "description": "ปลดล็อก Full Lifetime ถาวรในตัวแอป ไม่ต้องกรอก Activation Key ไม่มีวันหมดอายุ (แม้ใช้งาน Offline) และซ่อนช่องกรอกคีย์ใน Connect IQ Settings",
+      "description": "เธเธฅเธ”เธฅเนเธญเธ Full Lifetime เธ–เธฒเธงเธฃเนเธเธ•เธฑเธงเนเธญเธ เนเธกเนเธ•เนเธญเธเธเธฃเธญเธ Activation Key เนเธกเนเธกเธตเธงเธฑเธเธซเธกเธ”เธญเธฒเธขเธธ (เนเธกเนเนเธเนเธเธฒเธ Offline) เนเธฅเธฐเธเนเธญเธเธเนเธญเธเธเธฃเธญเธเธเธตเธขเนเนเธ Connect IQ Settings",
       "files": {
         "iqPublic": {
           "fileName": "MoatWatch-FreeFull.iq",
           "url": "/downloads/MoatWatch-FreeFull.iq",
-          "sizeBytes": 1158639,
-          "sizeKb": 1131.5,
-          "sha256": "afdb9759e2b382fc",
-          "updatedAt": "2026-11-03T04:31:52.589Z"
+          "sizeBytes": 1241819,
+          "sizeKb": 1212.7,
+          "sha256": "61a5dba410e87d31",
+          "updatedAt": "2026-11-07T10:53:47.285Z"
         },
         "iqBeta": {
           "fileName": "MoatWatch-FreeFull-Beta.iq",
           "url": "/downloads/MoatWatch-FreeFull-Beta.iq",
-          "sizeBytes": 1158606,
-          "sizeKb": 1131.5,
-          "sha256": "58d37890fa27d937",
-          "updatedAt": "2026-11-03T04:30:42.769Z"
+          "sizeBytes": 1242002,
+          "sizeKb": 1212.9,
+          "sha256": "6a1cd6f9fc53b8db",
+          "updatedAt": "2026-11-07T10:52:20.503Z"
         },
         "prg": {
           "fileName": "MoatWatch-FreeFull.prg",
           "url": "/downloads/MoatWatch-FreeFull.prg",
-          "sizeBytes": 169644,
-          "sizeKb": 165.7,
-          "sha256": "18bcc761c83baac5",
-          "updatedAt": "2026-11-03T04:29:38.013Z"
+          "sizeBytes": 178796,
+          "sizeKb": 174.6,
+          "sha256": "3b5dddea4726c125",
+          "updatedAt": "2026-11-07T10:51:04.186Z"
         }
       }
     },
@@ -48,23 +48,23 @@
       "licenseMode": "FREEFULL_LIFETIME",
       "requiresActivationKey": false,
       "manifestAppId": "83e22c8d-edfe-40f4-9d8a-16a5fd99cbfa",
-      "description": "แพ็กเกจสำหรับอัปโหลดขึ้น Garmin Connect IQ Developer Portal ช่องทาง Beta App (UUID: 83e22c8d-edfe-40f4-9d8a-16a5fd99cbfa) ปลดล็อก Full Lifetime",
+      "description": "เนเธเนเธเน€เธเธเธชเธณเธซเธฃเธฑเธเธญเธฑเธเนเธซเธฅเธ”เธเธถเนเธ Garmin Connect IQ Developer Portal เธเนเธญเธเธ—เธฒเธ Beta App (UUID: 83e22c8d-edfe-40f4-9d8a-16a5fd99cbfa) เธเธฅเธ”เธฅเนเธญเธ Full Lifetime",
       "files": {
         "iq": {
           "fileName": "MoatWatch-Beta.iq",
           "url": "/downloads/MoatWatch-Beta.iq",
-          "sizeBytes": 1158606,
-          "sizeKb": 1131.5,
-          "sha256": "58d37890fa27d937",
-          "updatedAt": "2026-11-03T04:30:42.769Z"
+          "sizeBytes": 1242002,
+          "sizeKb": 1212.9,
+          "sha256": "6a1cd6f9fc53b8db",
+          "updatedAt": "2026-11-07T10:52:20.503Z"
         },
         "prg": {
           "fileName": "MoatWatch-Beta.prg",
           "url": "/downloads/MoatWatch-Beta.prg",
-          "sizeBytes": 169644,
-          "sizeKb": 165.7,
-          "sha256": "18bcc761c83baac5",
-          "updatedAt": "2026-11-03T04:29:38.013Z"
+          "sizeBytes": 178796,
+          "sizeKb": 174.6,
+          "sha256": "3b5dddea4726c125",
+          "updatedAt": "2026-11-07T10:51:04.186Z"
         }
       }
     },
@@ -76,23 +76,23 @@
       "licenseMode": "FREEFULL_LIFETIME",
       "requiresActivationKey": false,
       "manifestAppId": "94f33d9e-fe0f-41a5-8e9b-27b6fe00dc0b",
-      "description": "แพ็กเกจสำหรับอัปโหลดขึ้น Garmin Connect IQ Store สาธารณะ (UUID: 94f33d9e-fe0f-41a5-8e9b-27b6fe00dc0b) รองรับนาฬิกา 20 รุ่น ปลดล็อก Full Lifetime",
+      "description": "เนเธเนเธเน€เธเธเธชเธณเธซเธฃเธฑเธเธญเธฑเธเนเธซเธฅเธ”เธเธถเนเธ Garmin Connect IQ Store เธชเธฒเธเธฒเธฃเธ“เธฐ (UUID: 94f33d9e-fe0f-41a5-8e9b-27b6fe00dc0b) เธฃเธญเธเธฃเธฑเธเธเธฒเธฌเธดเธเธฒ 20 เธฃเธธเนเธ เธเธฅเธ”เธฅเนเธญเธ Full Lifetime",
       "files": {
         "iq": {
           "fileName": "MoatWatch-Public.iq",
           "url": "/downloads/MoatWatch-Public.iq",
-          "sizeBytes": 1158639,
-          "sizeKb": 1131.5,
-          "sha256": "afdb9759e2b382fc",
-          "updatedAt": "2026-11-03T04:31:52.589Z"
+          "sizeBytes": 1241819,
+          "sizeKb": 1212.7,
+          "sha256": "61a5dba410e87d31",
+          "updatedAt": "2026-11-07T10:53:47.285Z"
         },
         "prg": {
           "fileName": "MoatWatch-Public.prg",
           "url": "/downloads/MoatWatch-Public.prg",
-          "sizeBytes": 169644,
-          "sizeKb": 165.7,
-          "sha256": "e94fe851d6190f25",
-          "updatedAt": "2026-11-03T04:32:02.447Z"
+          "sizeBytes": 178796,
+          "sizeKb": 174.6,
+          "sha256": "8724f6e53b5f7833",
+          "updatedAt": "2026-11-07T10:53:58.608Z"
         }
       }
     },
@@ -105,31 +105,31 @@
       "requiresActivationKey": true,
       "manifestAppId": "94f33d9e-fe0f-41a5-8e9b-27b6fe00dc0b",
       "betaManifestAppId": "83e22c8d-edfe-40f4-9d8a-16a5fd99cbfa",
-      "description": "เวอร์ชันระบบสมาชิก ทดลองใช้ฟรี 14 วัน พร้อมหน้าจอแจ้งเตือนเมื่อหมดอายุและช่องใส่รหัส Pro Activation Key (ทำงานร่วมกับปุ่ม Unhide PaidMode บน Admin Panel)",
+      "description": "เน€เธงเธญเธฃเนเธเธฑเธเธฃเธฐเธเธเธชเธกเธฒเธเธดเธ เธ—เธ”เธฅเธญเธเนเธเนเธเธฃเธต 14 เธงเธฑเธ เธเธฃเนเธญเธกเธซเธเนเธฒเธเธญเนเธเนเธเน€เธ•เธทเธญเธเน€เธกเธทเนเธญเธซเธกเธ”เธญเธฒเธขเธธเนเธฅเธฐเธเนเธญเธเนเธชเนเธฃเธซเธฑเธช Pro Activation Key (เธ—เธณเธเธฒเธเธฃเนเธงเธกเธเธฑเธเธเธธเนเธก Unhide PaidMode เธเธ Admin Panel)",
       "files": {
         "iqPublic": {
           "fileName": "MoatWatch-Paid.iq",
           "url": "/downloads/MoatWatch-Paid.iq",
-          "sizeBytes": 1170959,
-          "sizeKb": 1143.5,
-          "sha256": "5cca5f6111c64598",
-          "updatedAt": "2026-11-03T04:33:09.784Z"
+          "sizeBytes": 1254103,
+          "sizeKb": 1224.7,
+          "sha256": "383b8810c1100d4a",
+          "updatedAt": "2026-11-07T10:55:03.020Z"
         },
         "iqBeta": {
           "fileName": "MoatWatch-Paid-Beta.iq",
           "url": "/downloads/MoatWatch-Paid-Beta.iq",
-          "sizeBytes": 1171941,
-          "sizeKb": 1144.5,
-          "sha256": "6fb590c250706373",
-          "updatedAt": "2026-11-03T04:34:31.774Z"
+          "sizeBytes": 1254057,
+          "sizeKb": 1224.7,
+          "sha256": "a058b1749b2ccb6e",
+          "updatedAt": "2026-11-07T10:56:09.880Z"
         },
         "prg": {
           "fileName": "MoatWatch-Paid.prg",
           "url": "/downloads/MoatWatch-Paid.prg",
-          "sizeBytes": 169644,
-          "sizeKb": 165.7,
-          "sha256": "e7fe818813b7cc04",
-          "updatedAt": "2026-11-03T04:33:20.158Z"
+          "sizeBytes": 178796,
+          "sizeKb": 174.6,
+          "sha256": "4f2378dc153fa774",
+          "updatedAt": "2026-11-07T10:55:11.585Z"
         }
       }
     }
